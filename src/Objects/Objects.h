@@ -44,7 +44,7 @@ template<typename Derived>
 std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddComponent(Component* Comp) 
 {
     std::shared_ptr<Derived> PushedBackComp((Derived*)Comp);
-    Components.push_back(std::shared_ptr<Derived>(PushedBackComp.get()));
+    Components.push_back(PushedBackComp);
     Comp = nullptr;
     delete(Comp);
 

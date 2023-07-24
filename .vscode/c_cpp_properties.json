@@ -3,9 +3,9 @@
         {
             "name": "Win32",
             "includePath": [
-                "D:/Gelis/Programs/SapphireEngine/src/**",
-                "D:/Gelis/Programs/SapphireEngine/**",
-                "D:/Gelis/Programs/SapphireEngine/include/**"
+                "D:/Gelis/Programs/Sapphire Engine/src/**",
+                "D:/Gelis/Programs/Sapphire Engine/**",
+                "D:/Gelis/Programs/Sapphire Engine/include/**"
             ],
             "defines": [
                 "_DEBUG",

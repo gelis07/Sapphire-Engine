@@ -141,8 +141,6 @@ void Scene::Load(std::string FilePath, GLFWwindow* window)
             }
         }
 
-        int test = NULL;
-
         obj->GetComponent<Renderer>()->shape = shape;
         Objects.push_back(obj);
     }
