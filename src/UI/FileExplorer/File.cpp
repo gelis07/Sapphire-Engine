@@ -13,12 +13,13 @@ std::shared_ptr<File> File::CreateFile(const std::string &extension, std::string
         std::shared_ptr NewFile = creationFunction->second();
         NewFile->Name = NewName;
         NewFile->Path = NewPath;
+        NewFile->SetIconPos();
         return NewFile;
     }
     return nullptr; // Unsupported file type
 }
 
-void File::RenderGUI(std::filesystem::__cxx11::directory_entry entry, ImVec2 Position)
+void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, TextureAtlas& IconAtlas)
 {
     ImGui::SetCursorPos(Position);
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
@@ -30,8 +31,9 @@ void File::RenderGUI(std::filesystem::__cxx11::directory_entry entry, ImVec2 Pos
     // }
     ImGui::BeginChild(entry.path().string().c_str(), ImVec2(130, 150), true);
 
-    glm::vec4 IconUVs = Utilities::LoadIconFromAtlas(glm::vec2(Windows::IconsAtlas.IconSize.x * IconPos.x, Windows::IconsAtlas.IconSize.y* IconPos.y), glm::vec2(Windows::IconsAtlas.IconSize.x, Windows::IconsAtlas.IconSize.y), Windows::IconsAtlas.AtlasSize); 
-    ImGui::Image(reinterpret_cast<ImTextureID>(Windows::IconsAtlas.AtlasID), ImVec2(100, 100), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+
+    glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(IconAtlas.IconSize.x * IconPos.x, IconAtlas.IconSize.y* IconPos.y), glm::vec2(IconAtlas.IconSize.x, IconAtlas.IconSize.y), IconAtlas.AtlasSize); 
+    ImGui::Image(reinterpret_cast<ImTextureID>(IconAtlas.AtlasID), ImVec2(100, 100), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
     ImGui::TextUnformatted(entry.path().filename().string().c_str());
     // if(entry.path().string() == SelectedFile){
     //     ImGui::PopStyleVar();

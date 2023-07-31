@@ -1,7 +1,14 @@
 #pragma once
-#include "Utilities.hpp"
+#define GLEW_STATIC
 #include <GL/glew.h>
+#include "Utilities.hpp"
 #include "stb_image.h"
+
+
+//The shapes class needs a refrence to an object because it neeeds to access its position and scale
+class Object;
+
+
 struct Vertex{
     float Pos[2];
 };
@@ -10,12 +17,6 @@ struct TextureAtlas{
     glm::vec2 AtlasSize;
     GLuint AtlasID;
 };
-
-struct Camera{
-    float Zoom = 1;
-    glm::vec3 position;
-};
-
 
 static unsigned int CreateFBO(unsigned int texture){
     unsigned int fbo;
@@ -42,7 +43,7 @@ static unsigned int LoadTexture(std::string FilePath)
     int width, height, channels;
     unsigned char* image = stbi_load(FilePath.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
-    GLuint textureID;
+    unsigned int textureID;
     glGenTextures(1, &textureID);
 
     glBindTexture(GL_TEXTURE_2D, textureID);
@@ -60,7 +61,6 @@ static unsigned int LoadTexture(std::string FilePath)
 }
 namespace Shapes
 {
-    inline Camera ViewportCamera; //This Camera is only for the viewport NOT the game's camera
     inline unsigned int BasicShader;
     inline unsigned int CircleShader;
     inline unsigned int GridShader;
@@ -68,51 +68,38 @@ namespace Shapes
         RectangleT=1,CircleT=2,Null=-1
     };
     class Shape{
+        public:
+            Shapes::Type ShapeType = Shapes::Null;
+
+            Shape(unsigned int sh, std::shared_ptr<Object>& NewObj);
+
+            // Thats the function that actually render's a shape
+            void RenderShape(std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom,bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport = true);
+
+            // Here is a virtual constructor for every sub class to do it's own calculations before passing in the data on RenderShape()
+            virtual void Render(const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) {} 
+        protected:
+            std::shared_ptr<Object> Obj;
         private:
+            unsigned int shader  = 1;
             unsigned int VertexBuffer = 1;
             unsigned int VertexArray = 1;
             unsigned int IndexBuffer = 1;
-            unsigned int shader = 1;
             glm::mat4 proj;
             glm::vec2 size;
-        public:
-            Shapes::Type ShapeType = Shapes::Null;
-            inline void SetType(Shapes::Type argType) { ShapeType = argType;}
-            void SetSize(glm::vec2 &ArgSize) {size = ArgSize;}
-            void Construct(unsigned int sh); // Basically a virtual constructor
-            virtual void SetUniforms(unsigned int shader, glm::mat4 &mvp, glm::vec2 &size, glm::vec2 startPoint, bool Viewport) {}
-            // Thats the function that actually render's a shape
-            void RenderShape(std::vector<Vertex> vertices,glm::vec4 c ,const glm::vec3 &pos,const glm::vec3 &CamPos ,bool WireFrame, bool ActualWireFrame = false, bool Viewport = true); 
-            // Here is a virtual constructor for every sub class to do it's own calculations before passing in the data on RenderShape()
-            virtual void Render(glm::vec2 Size, glm::vec4 Color,const glm::vec3 pos, float angle, const glm::vec3 &CamPos,bool WireFrame, bool ActualWireFrame = false, bool Viewport = true) {} 
     };
 
     class Rectangle : public Shape
-    {  
-        
+    {
         public:
-            Rectangle(unsigned int sh);
-            void SetUniforms(unsigned int shader, glm::mat4 &mvp, glm::vec2 &size, glm::vec2 startPoint, bool Viewport) override {
-                GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1,GL_FALSE, &mvp[0][0]));
-            }
-            void Render(glm::vec2 Size, glm::vec4 Color, const glm::vec3 pos, float angle,const glm::vec3 &CamPos ,bool WireFrame, bool ActualWireFrame = false, bool Viewport = true) override;
+            Rectangle(unsigned int sh, std::shared_ptr<Object>& NewObj) : Shape(sh, NewObj) {ShapeType = RectangleT;}
+            void Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
     };
     class Circle : public Shape
     {
         public:
-            Circle(unsigned int sh);
-            void SetUniforms(unsigned int shader, glm::mat4 &mvp, glm::vec2 &size, glm::vec2 startPoint, bool IsViewport) override {
-                GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1,GL_FALSE, &mvp[0][0]));
-                GLCall(glUniform1f(glGetUniformLocation(shader, "RectWidth"), size.x));
-                GLCall(glUniform1f(glGetUniformLocation(shader, "RectHeight"), size.y));
-                GLCall(glUniform2f(glGetUniformLocation(shader, "StartPoint"), startPoint.x, startPoint.y));
-                if(IsViewport){
-                    GLCall(glUniform1f(glGetUniformLocation(shader, "CameraZoom"), Shapes::ViewportCamera.Zoom));
-                }else{
-                    GLCall(glUniform1f(glGetUniformLocation(shader, "CameraZoom"), 1));
-                }
-            }
-            void Render(glm::vec2 Size, glm::vec4 Color, const glm::vec3 pos, float angle, const glm::vec3 &CamPos,bool WireFrame, bool ActualWireFrame = false, bool Viewport = true) override;
+            Circle(unsigned int sh, std::shared_ptr<Object>& NewObj) : Shape(sh, NewObj) {ShapeType = CircleT;}
+            void Render(const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
     };
 
 }

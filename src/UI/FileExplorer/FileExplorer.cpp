@@ -6,14 +6,16 @@ namespace fs = std::filesystem;
 
 
 
-void Init(){
+void FileExplorer::Init(){
     File::RegisterFile(".lua", SET_FILE(LuaFile));
     File::RegisterFile(".scene", SET_FILE(SceneFile));
+    IconAtlas.AtlasID = LoadTexture("Assets/IconsAtlas.png");
+    IconAtlas.AtlasSize = glm::vec2(1095.0f,539.0f);
+    IconAtlas.IconSize = glm::vec2(579.0f,537.0f);
 }
 
 void FileExplorer::Open(std::string path)
 {
-    Init();
     ImGui::Begin("File Explorer");
     ImVec2 Position = ImVec2(0, 30);
     int rows = 1;
@@ -24,7 +26,7 @@ void FileExplorer::Open(std::string path)
         {
             Files[FileName] = File::CreateFile(entry.path().extension().string(), entry.path().string(), FileName);
         }
-        Files[FileName]->RenderGUI(entry, Position);
+        Files[FileName]->RenderGUI(entry, Position, IconAtlas);
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
         {
             ImGui::OpenPopup(entry.path().filename().string().c_str());

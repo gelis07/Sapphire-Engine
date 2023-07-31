@@ -7,7 +7,8 @@
 #define GetVariable(component, name, type) \
     std::get<type>(component->Variables[name].Contents)
 
-class Object;
+    
+
 struct Variable{
     int Type;
     std::variant<float, bool, std::string, std::vector<LuaTableIt>, glm::vec2, glm::vec3, glm::vec4> Contents; // The value of the lua variable
@@ -43,7 +44,7 @@ class Component
 
 template <typename T>
 inline void AssignValue(Variable& NewVar, const nlohmann::json& jsonArray){
-    Utilities::Log(std::string(typeid(T).name()) + " cannot be loaded from the selected scene.", Utilities::Error);
+    SapphireEngine::Log(std::string(typeid(T).name()) + " cannot be loaded from the selected scene.", SapphireEngine::Error);
 }
 template <>
 inline void AssignValue<float>(Variable& NewVar, const nlohmann::json& jsonArray) {
@@ -116,5 +117,5 @@ class Renderer : public Component
         std::shared_ptr<Shapes::Shape> shape;
         Shapes::Type Type;
         glm::vec4 Color = glm::vec4(0);
-        void Render(Object* Obj,GLFWwindow* window,glm::vec3 CameraPos, std::shared_ptr<Object> SelectedObj, bool Viewport);
+        void Render(bool&& IsSelected,glm::vec3 CameraPos,float CameraZoom, bool Viewport);
 };

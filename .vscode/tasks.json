@@ -7,7 +7,7 @@
 		"command": "make",
 		"args": [],
 		"options": {
-			"cwd": "${workspaceFolder}/bin"
+			"cwd": "${workspaceFolder}/bin",
 		},
 		"group": {
 			"kind": "build",

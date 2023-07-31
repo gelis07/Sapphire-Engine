@@ -57,10 +57,10 @@ RM = C:/mingw64/bin/cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "D:/Gelis/Programs/Sapphire Engine"
+CMAKE_SOURCE_DIR = D:/Gelis/Programs/Sapphire-Engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "D:/Gelis/Programs/Sapphire Engine/bin"
+CMAKE_BINARY_DIR = D:/Gelis/Programs/Sapphire-Engine/bin
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -87,9 +87,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" "D:/Gelis/Programs/Sapphire Engine/bin//CMakeFiles/progress.marks"
+	$(CMAKE_COMMAND) -E cmake_progress_start D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles D:/Gelis/Programs/Sapphire-Engine/bin//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -128,6 +128,45 @@ Sapphire-Engine: cmake_check_build_system
 Sapphire-Engine/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/build
 .PHONY : Sapphire-Engine/fast
+
+# target to build an object file
+cmake_pch.hxx.gch:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
+.PHONY : cmake_pch.hxx.gch
+
+# target to preprocess a source file
+cmake_pch.hxx.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.i
+.PHONY : cmake_pch.hxx.i
+
+# target to generate assembly for a file
+cmake_pch.hxx.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.s
+.PHONY : cmake_pch.hxx.s
+
+include/Imgui/ImGuizmo.obj: include/Imgui/ImGuizmo.cpp.obj
+.PHONY : include/Imgui/ImGuizmo.obj
+
+# target to build an object file
+include/Imgui/ImGuizmo.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj
+.PHONY : include/Imgui/ImGuizmo.cpp.obj
+
+include/Imgui/ImGuizmo.i: include/Imgui/ImGuizmo.cpp.i
+.PHONY : include/Imgui/ImGuizmo.i
+
+# target to preprocess a source file
+include/Imgui/ImGuizmo.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.i
+.PHONY : include/Imgui/ImGuizmo.cpp.i
+
+include/Imgui/ImGuizmo.s: include/Imgui/ImGuizmo.cpp.s
+.PHONY : include/Imgui/ImGuizmo.s
+
+# target to generate assembly for a file
+include/Imgui/ImGuizmo.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.s
+.PHONY : include/Imgui/ImGuizmo.cpp.s
 
 include/Imgui/imgui.obj: include/Imgui/imgui.cpp.obj
 .PHONY : include/Imgui/imgui.obj
@@ -321,29 +360,77 @@ src/Engine/Scenes.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.s
 .PHONY : src/Engine/Scenes.cpp.s
 
-src/Engine/Views.obj: src/Engine/Views.cpp.obj
-.PHONY : src/Engine/Views.obj
+src/Engine/Views/PlayMode.obj: src/Engine/Views/PlayMode.cpp.obj
+.PHONY : src/Engine/Views/PlayMode.obj
 
 # target to build an object file
-src/Engine/Views.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj
-.PHONY : src/Engine/Views.cpp.obj
+src/Engine/Views/PlayMode.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj
+.PHONY : src/Engine/Views/PlayMode.cpp.obj
 
-src/Engine/Views.i: src/Engine/Views.cpp.i
-.PHONY : src/Engine/Views.i
+src/Engine/Views/PlayMode.i: src/Engine/Views/PlayMode.cpp.i
+.PHONY : src/Engine/Views/PlayMode.i
 
 # target to preprocess a source file
-src/Engine/Views.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.i
-.PHONY : src/Engine/Views.cpp.i
+src/Engine/Views/PlayMode.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.i
+.PHONY : src/Engine/Views/PlayMode.cpp.i
 
-src/Engine/Views.s: src/Engine/Views.cpp.s
-.PHONY : src/Engine/Views.s
+src/Engine/Views/PlayMode.s: src/Engine/Views/PlayMode.cpp.s
+.PHONY : src/Engine/Views/PlayMode.s
 
 # target to generate assembly for a file
-src/Engine/Views.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.s
-.PHONY : src/Engine/Views.cpp.s
+src/Engine/Views/PlayMode.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.s
+.PHONY : src/Engine/Views/PlayMode.cpp.s
+
+src/Engine/Views/SceneEditor.obj: src/Engine/Views/SceneEditor.cpp.obj
+.PHONY : src/Engine/Views/SceneEditor.obj
+
+# target to build an object file
+src/Engine/Views/SceneEditor.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj
+.PHONY : src/Engine/Views/SceneEditor.cpp.obj
+
+src/Engine/Views/SceneEditor.i: src/Engine/Views/SceneEditor.cpp.i
+.PHONY : src/Engine/Views/SceneEditor.i
+
+# target to preprocess a source file
+src/Engine/Views/SceneEditor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.i
+.PHONY : src/Engine/Views/SceneEditor.cpp.i
+
+src/Engine/Views/SceneEditor.s: src/Engine/Views/SceneEditor.cpp.s
+.PHONY : src/Engine/Views/SceneEditor.s
+
+# target to generate assembly for a file
+src/Engine/Views/SceneEditor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.s
+.PHONY : src/Engine/Views/SceneEditor.cpp.s
+
+src/Graphics/Grid.obj: src/Graphics/Grid.cpp.obj
+.PHONY : src/Graphics/Grid.obj
+
+# target to build an object file
+src/Graphics/Grid.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj
+.PHONY : src/Graphics/Grid.cpp.obj
+
+src/Graphics/Grid.i: src/Graphics/Grid.cpp.i
+.PHONY : src/Graphics/Grid.i
+
+# target to preprocess a source file
+src/Graphics/Grid.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.i
+.PHONY : src/Graphics/Grid.cpp.i
+
+src/Graphics/Grid.s: src/Graphics/Grid.cpp.s
+.PHONY : src/Graphics/Grid.s
+
+# target to generate assembly for a file
+src/Graphics/Grid.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.s
+.PHONY : src/Graphics/Grid.cpp.s
 
 src/Graphics/Shapes.obj: src/Graphics/Shapes.cpp.obj
 .PHONY : src/Graphics/Shapes.obj
@@ -618,6 +705,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Sapphire-Engine"
+	@echo "... cmake_pch.hxx.gch"
+	@echo "... cmake_pch.hxx.i"
+	@echo "... cmake_pch.hxx.s"
+	@echo "... include/Imgui/ImGuizmo.obj"
+	@echo "... include/Imgui/ImGuizmo.i"
+	@echo "... include/Imgui/ImGuizmo.s"
 	@echo "... include/Imgui/imgui.obj"
 	@echo "... include/Imgui/imgui.i"
 	@echo "... include/Imgui/imgui.s"
@@ -642,9 +735,15 @@ help:
 	@echo "... src/Engine/Scenes.obj"
 	@echo "... src/Engine/Scenes.i"
 	@echo "... src/Engine/Scenes.s"
-	@echo "... src/Engine/Views.obj"
-	@echo "... src/Engine/Views.i"
-	@echo "... src/Engine/Views.s"
+	@echo "... src/Engine/Views/PlayMode.obj"
+	@echo "... src/Engine/Views/PlayMode.i"
+	@echo "... src/Engine/Views/PlayMode.s"
+	@echo "... src/Engine/Views/SceneEditor.obj"
+	@echo "... src/Engine/Views/SceneEditor.i"
+	@echo "... src/Engine/Views/SceneEditor.s"
+	@echo "... src/Graphics/Grid.obj"
+	@echo "... src/Graphics/Grid.i"
+	@echo "... src/Graphics/Grid.s"
 	@echo "... src/Graphics/Shapes.obj"
 	@echo "... src/Graphics/Shapes.i"
 	@echo "... src/Graphics/Shapes.s"

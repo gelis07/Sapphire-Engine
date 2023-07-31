@@ -2,7 +2,7 @@
 #include "Utilities.hpp"
 #include <functional>
 #include "Objects/Objects.h"
-#include "Engine/Views.h"
+#include "Engine/Views/SceneEditor.h"
 #include "Graphics/Shapes.h"
 
 namespace LuaUtilities{

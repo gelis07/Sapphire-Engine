@@ -1,6 +1,6 @@
 #pragma once
 #include "Windows.h"
-#include "Engine/Views.h"
+#include "Engine/Views/SceneEditor.h"
 
 
 template <typename T>
@@ -25,7 +25,7 @@ template <typename T>
 T *DragAndDrop<T>::ReceiveDrop(ImGuiWindow *window)
 {
     double xpos, ypos;
-    glfwGetCursorPos(Viewport::window, &xpos, &ypos);
+    glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
     glm::vec2 CursorPos(xpos, ypos);
     glm::vec2 D(window->Pos.x, window->Pos.y); // Bottom left corner of window
     glm::vec2 A(window->Pos.x + window->Size.x, window->Pos.y + window->Size.y); // Top right corner

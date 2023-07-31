@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "d:/Gelis/Programs/Sapphire Engine/build"
+			"value" : "d:/Gelis/Programs/Sapphire-Engine/build"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -575,7 +575,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Gelis/Programs/Sapphire Engine/build/CMakeFiles/pkgRedirects"
+			"value" : "D:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -647,7 +647,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "D:/Gelis/Programs/Sapphire Engine"
+			"value" : "D:/Gelis/Programs/Sapphire-Engine"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1267,7 +1267,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Gelis/Programs/Sapphire Engine/build"
+			"value" : "D:/Gelis/Programs/Sapphire-Engine/build"
 		},
 		{
 			"name" : "Sapphire-Engine_IS_TOP_LEVEL",
@@ -1291,7 +1291,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "D:/Gelis/Programs/Sapphire Engine"
+			"value" : "D:/Gelis/Programs/Sapphire-Engine"
 		},
 		{
 			"name" : "_CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED",

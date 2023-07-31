@@ -54,10 +54,10 @@ RM = C:/mingw64/bin/cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "D:/Gelis/Programs/Sapphire Engine"
+CMAKE_SOURCE_DIR = D:/Gelis/Programs/Sapphire-Engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "D:/Gelis/Programs/Sapphire Engine/bin"
+CMAKE_BINARY_DIR = D:/Gelis/Programs/Sapphire-Engine/bin
 
 #=============================================================================
 # Directory level rules for the build root directory
@@ -81,14 +81,14 @@ clean: CMakeFiles/Sapphire-Engine.dir/clean
 CMakeFiles/Sapphire-Engine.dir/all:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/depend
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21 "Built target Sapphire-Engine"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25 "Built target Sapphire-Engine"
 .PHONY : CMakeFiles/Sapphire-Engine.dir/all
 
 # Build rule for subdir invocation for target.
 CMakeFiles/Sapphire-Engine.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" 21
+	$(CMAKE_COMMAND) -E cmake_progress_start D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles 25
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/Sapphire-Engine.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start "D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" 0
+	$(CMAKE_COMMAND) -E cmake_progress_start D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles 0
 .PHONY : CMakeFiles/Sapphire-Engine.dir/rule
 
 # Convenience name for target.

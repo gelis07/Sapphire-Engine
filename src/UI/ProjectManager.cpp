@@ -35,7 +35,7 @@ nlohmann::json Projects;
 void ProjectManager::SaveJson(std::string Name){
     std::ofstream stream("Projects.sp", std::ios::trunc);
     nlohmann::json Settings;
-    Settings["Windows::MainPath"] = Windows::MainPath + "/" + Name;
+    Settings["MainPath"] = Path + "/" + Name;
     Settings["Name"] = Name;
     ProjectsSize++;
     Projects["Project " + std::to_string(ProjectsSize)] = Settings;
@@ -64,9 +64,9 @@ std::string ProjectManager::Run()
             ImGui::InputText("Projet Name", ProjectName, sizeof(ProjectPath));
             ImGui::InputText("Projet Path", ProjectPath, sizeof(ProjectPath));
             if(ImGui::Button("Create Project")){
-                Windows::MainPath = std::string(ProjectPath);
+                Path = std::string(ProjectPath);
                 std::replace( Name.begin(), Name.end(), ' ', '_');
-                fs::create_directories(Windows::MainPath + "/" + Name + "/Assets/");
+                fs::create_directories(Path + "/" + Name + "/Assets/");
                 SaveJson(Name);
             }
             ImGui::EndPopup();
@@ -81,11 +81,11 @@ std::string ProjectManager::Run()
             ImGui::InputText("Projet Path##3", ProjectPath, sizeof(char) * 256);
             std::string Name;
             if(ImGui::Button("Open")){
-                Windows::MainPath = std::string(ProjectPath);
-                fs::path path = Windows::MainPath;
+                Path = std::string(ProjectPath);
+                fs::path path = Path;
                 Name = path.root_name().string();
                 std::replace( Name.begin(), Name.end(), ' ', '_');
-                fs::create_directories(Windows::MainPath + "/" + Name + "/Assets/");
+                fs::create_directories(Path + "/" + Name + "/Assets/");
                 SaveJson(Name);
             }
 
@@ -101,7 +101,7 @@ std::string ProjectManager::Run()
         {
             if(ImGui::Button(Project.value()["Name"].get<std::string>().c_str()))
             {
-                Windows::MainPath = Project.value()["MainPath"].get<std::string>() + "/Assets/";
+                Path = Project.value()["MainPath"].get<std::string>() + "/Assets/";
                 CloseApp = false;
                 glfwSetWindowShouldClose(window, GLFW_TRUE);
             }
@@ -124,5 +124,5 @@ std::string ProjectManager::Run()
         std::exit(0);
     }
 
-    return Windows::MainPath;
+    return Path;
 }

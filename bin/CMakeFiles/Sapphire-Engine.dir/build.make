@@ -53,10 +53,10 @@ RM = C:/mingw64/bin/cmake.exe -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = "D:/Gelis/Programs/Sapphire Engine"
+CMAKE_SOURCE_DIR = D:/Gelis/Programs/Sapphire-Engine
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = "D:/Gelis/Programs/Sapphire Engine/bin"
+CMAKE_BINARY_DIR = D:/Gelis/Programs/Sapphire-Engine/bin
 
 # Include any dependencies generated for this target.
 include CMakeFiles/Sapphire-Engine.dir/depend.make
@@ -69,305 +69,412 @@ include CMakeFiles/Sapphire-Engine.dir/progress.make
 # Include the compile flags for this target's objects.
 include CMakeFiles/Sapphire-Engine.dir/flags.make
 
+CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch: CMakeFiles/Sapphire-Engine.dir/flags.make
+CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
+CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.cxx
+CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch -MF CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch.d -o CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch -c D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.cxx
+
+CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.i"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.cxx > CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.i
+
+CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.s"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -x c++-header -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.cxx -o CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.s
+
 CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/main.cpp
+CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/main.cpp
+CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_1) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/main.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/main.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/main.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/main.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/main.cpp" > CMakeFiles/Sapphire-Engine.dir/src/main.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/main.cpp > CMakeFiles/Sapphire-Engine.dir/src/main.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/main.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/main.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/main.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/main.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/main.cpp -o CMakeFiles/Sapphire-Engine.dir/src/main.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/Graphics/Shapes.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_2) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/Graphics/Shapes.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/Graphics/Shapes.cpp" > CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.cpp > CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/Graphics/Shapes.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/Engine/Scenes.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_3) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/Engine/Scenes.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/Engine/Scenes.cpp" > CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.cpp > CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/Engine/Scenes.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/Engine/Engine.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Engine/Engine.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/Engine/Engine.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Engine/Engine.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/Engine/Engine.cpp" > CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Engine/Engine.cpp > CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/Engine/Engine.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Engine/Engine.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.s
 
-CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
-CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/Engine/Views.cpp
-CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/Engine/Views.cpp"
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.cpp
 
-CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/Engine/Views.cpp" > CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.i
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.i"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.cpp > CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.i
 
-CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/Engine/Views.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.s
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.s"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.s
+
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.cpp
+
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.i"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.cpp > CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.i
+
+CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.s"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.s
+
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Grid.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Grid.cpp
+
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.i"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Grid.cpp > CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.i
+
+CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.s"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Grid.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/Scripting/Scripting.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/Scripting/Scripting.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/Scripting/Scripting.cpp" > CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.cpp > CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/Scripting/Scripting.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/Objects/Objects.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_7) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/Objects/Objects.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/Objects/Objects.cpp" > CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.cpp > CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/Objects/Objects.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/Scripting/LuaUtilities.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Scripting/LuaUtilities.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_8) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/Scripting/LuaUtilities.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Scripting/LuaUtilities.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/Scripting/LuaUtilities.cpp" > CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Scripting/LuaUtilities.cpp > CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/Scripting/LuaUtilities.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Scripting/LuaUtilities.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/Scripting/Components.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.cpp
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_9) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/Scripting/Components.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/Scripting/Components.cpp" > CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.cpp > CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/Scripting/Components.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.cpp -o CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/UI/FileExplorer/File.cpp
+CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/File.cpp
+CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/UI/FileExplorer/File.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/File.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/UI/FileExplorer/File.cpp" > CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/File.cpp > CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/UI/FileExplorer/File.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/File.cpp -o CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/UI/Windows.cpp
+CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/UI/Windows.cpp
+CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_11) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/UI/Windows.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/UI/Windows.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/UI/Windows.cpp" > CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/UI/Windows.cpp > CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/UI/Windows.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/UI/Windows.cpp -o CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/UI/FileExplorer/FileExplorer.cpp
+CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/FileExplorer.cpp
+CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_12) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/UI/FileExplorer/FileExplorer.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/FileExplorer.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/UI/FileExplorer/FileExplorer.cpp" > CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/FileExplorer.cpp > CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/UI/FileExplorer/FileExplorer.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/FileExplorer.cpp -o CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/UI/ProjectManager.cpp
+CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/UI/ProjectManager.cpp
+CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_13) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/UI/ProjectManager.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/UI/ProjectManager.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/UI/ProjectManager.cpp" > CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/UI/ProjectManager.cpp > CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/UI/ProjectManager.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/UI/ProjectManager.cpp -o CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/src/stb_image.cpp
+CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/src/stb_image.cpp
+CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_14) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/src/stb_image.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/src/stb_image.cpp
 
 CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/src/stb_image.cpp" > CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/src/stb_image.cpp > CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/src/stb_image.cpp" -o CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/src/stb_image.cpp -o CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/include/Imgui/imgui_draw.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_draw.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_15) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_draw.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_draw.cpp
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_draw.cpp" > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_draw.cpp > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_draw.cpp" -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_draw.cpp -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/include/Imgui/imgui_impl_glfw.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_16) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_impl_glfw.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.cpp
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_impl_glfw.cpp" > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.cpp > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_impl_glfw.cpp" -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.cpp -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/include/Imgui/imgui_impl_opengl3.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_17) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_impl_opengl3.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.cpp
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_impl_opengl3.cpp" > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.cpp > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_impl_opengl3.cpp" -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.cpp -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/include/Imgui/imgui.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_18) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_21) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.cpp
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui.cpp" > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.cpp > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui.cpp" -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.cpp -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/include/Imgui/imgui_tables.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_tables.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_19) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_tables.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_22) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_tables.cpp
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_tables.cpp" > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_tables.cpp > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_tables.cpp" -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_tables.cpp -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.s
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj: D:/Gelis/Programs/Sapphire\ Engine/include/Imgui/imgui_widgets.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_widgets.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_20) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj -c "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_widgets.cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_23) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_widgets.cpp
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.i"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_widgets.cpp" > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.i
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_widgets.cpp > CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.i
 
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.s"
-	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S "D:/Gelis/Programs/Sapphire Engine/include/Imgui/imgui_widgets.cpp" -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.s
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_widgets.cpp -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.s
+
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj: D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.cpp
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_24) "Building CXX object CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj -MF CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj.d -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj -c D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.cpp
+
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.i"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.cpp > CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.i
+
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.s"
+	C:/mingw64/bin/c++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.cpp -o CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.s
 
 # Object files for target Sapphire-Engine
 Sapphire__Engine_OBJECTS = \
@@ -375,7 +482,9 @@ Sapphire__Engine_OBJECTS = \
 "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj" \
-"CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj" \
+"CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj" \
+"CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj" \
+"CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj" \
@@ -390,16 +499,20 @@ Sapphire__Engine_OBJECTS = \
 "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj" \
-"CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj"
+"CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj" \
+"CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj"
 
 # External object files for target Sapphire-Engine
 Sapphire__Engine_EXTERNAL_OBJECTS =
 
+Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj
-Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Engine/Views.cpp.obj
+Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj
+Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj
+Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj
@@ -415,10 +528,11 @@ Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_ope
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj
+Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/build.make
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/linkLibs.rsp
 Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/objects1.rsp
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir="D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles" --progress-num=$(CMAKE_PROGRESS_21) "Linking CXX executable Sapphire-Engine.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles --progress-num=$(CMAKE_PROGRESS_25) "Linking CXX executable Sapphire-Engine.exe"
 	C:/mingw64/bin/cmake.exe -E rm -f CMakeFiles/Sapphire-Engine.dir/objects.a
 	C:/mingw64/bin/ar.exe qc CMakeFiles/Sapphire-Engine.dir/objects.a @CMakeFiles/Sapphire-Engine.dir/objects1.rsp
 	C:/mingw64/bin/c++.exe  -Wno-dev -Wl,--whole-archive CMakeFiles/Sapphire-Engine.dir/objects.a -Wl,--no-whole-archive -o Sapphire-Engine.exe -Wl,--out-implib,libSapphire-Engine.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles/Sapphire-Engine.dir/linkLibs.rsp
@@ -432,6 +546,6 @@ CMakeFiles/Sapphire-Engine.dir/clean:
 .PHONY : CMakeFiles/Sapphire-Engine.dir/clean
 
 CMakeFiles/Sapphire-Engine.dir/depend:
-	$(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" "D:/Gelis/Programs/Sapphire Engine" "D:/Gelis/Programs/Sapphire Engine" "D:/Gelis/Programs/Sapphire Engine/bin" "D:/Gelis/Programs/Sapphire Engine/bin" "D:/Gelis/Programs/Sapphire Engine/bin/CMakeFiles/Sapphire-Engine.dir/DependInfo.cmake" --color=$(COLOR)
+	$(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" D:/Gelis/Programs/Sapphire-Engine D:/Gelis/Programs/Sapphire-Engine D:/Gelis/Programs/Sapphire-Engine/bin D:/Gelis/Programs/Sapphire-Engine/bin D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/Sapphire-Engine.dir/depend
 

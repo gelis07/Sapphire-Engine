@@ -1,11 +1,4 @@
 #pragma once
-#include <iostream>
-#include <string>
-#include <vector>
-#include <typeinfo>
-#include <unordered_map>
-#include <map>
-#include <variant>
 #include "Utilities.hpp"
 
 struct LuaTableIt{

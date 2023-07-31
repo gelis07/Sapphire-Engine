@@ -1,7 +1,6 @@
 #include "Windows.h"
-#include "Graphics/Shapes.h"
 
-void Windows::Init(std::string Path){
+void Windows::Init(std::string&& Path){
 
     IMGUI_CHECKVERSION();
     DefaultContext = ImGui::CreateContext();
@@ -18,12 +17,10 @@ void Windows::Init(std::string Path){
     io.FontDefault = io.Fonts->Fonts.back();
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     bool dockspaceOpen = true;
+    this->MainPath = Path;
     ImGuiWindowFlags dockspaceFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-    Windows::IconsAtlas.AtlasID = LoadTexture("Images/IconsAtlas.png");
-    Windows::IconsAtlas.AtlasSize = glm::vec2(1095.0f,539.0f);
-    Windows::IconsAtlas.IconSize = glm::vec2(579.0f,537.0f);
-    ImGuiStyle& style = ImGui::GetStyle();
 
+    ImGuiStyle& style = ImGui::GetStyle();
 }
 void Windows::DockSpace()
 {
@@ -38,8 +35,8 @@ void Windows::DockSpace()
 void Windows::LogWindow()
 {
     std::string windowName = "Logs";
-    if (Utilities::Logs.size() <= 999) {
-        windowName += " (" + std::to_string(Utilities::Logs.size()) + ")";
+    if (SapphireEngine::Logs.size() <= 999) {
+        windowName += " (" + std::to_string(SapphireEngine::Logs.size()) + ")";
     } else {
         windowName += " (999+)";
     }
@@ -49,26 +46,26 @@ void Windows::LogWindow()
     ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - 100.0f, ImGui::GetScrollY() + 20.0f));
     if (ImGui::Button("Clear"))
     {
-        Utilities::Logs.clear();
+        SapphireEngine::Logs.clear();
     }
     ImGui::SetCursorPos(ImVec2(5, 30));
-    for (size_t i = 0; i < Utilities::Logs.size(); i++)
+    for (size_t i = 0; i < SapphireEngine::Logs.size(); i++)
     {
-        switch (Utilities::Logs[i].second)
+        switch (SapphireEngine::Logs[i].second)
         {
-        case Utilities::Info:
+        case SapphireEngine::Info:
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-            ImGui::TextUnformatted(Utilities::Logs[i].first.c_str());
+            ImGui::TextUnformatted(SapphireEngine::Logs[i].first.c_str());
             ImGui::PopStyleColor();
             break;
-        case Utilities::Warning:
+        case SapphireEngine::Warning:
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-            ImGui::TextUnformatted(Utilities::Logs[i].first.c_str());
+            ImGui::TextUnformatted(SapphireEngine::Logs[i].first.c_str());
             ImGui::PopStyleColor();
             break;
-        case Utilities::Error:
+        case SapphireEngine::Error:
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-            ImGui::TextUnformatted(Utilities::Logs[i].first.c_str());
+            ImGui::TextUnformatted(SapphireEngine::Logs[i].first.c_str());
             ImGui::PopStyleColor();
             break;
         default:

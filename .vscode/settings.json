@@ -65,7 +65,11 @@
         "typeinfo": "cpp",
         "valarray": "cpp",
         "variant": "cpp",
-        "filesystem": "cpp"
+        "filesystem": "cpp",
+        "set": "cpp"
     },
-    "cmake.sourceDirectory": "D:/Gelis/Programs/Sapphire Engine"
+    "cmake.sourceDirectory": "D:/Gelis/Programs/Sapphire-Engine",
+    "cSpell.words": [
+        "pushlightuserdata"
+    ]
 }

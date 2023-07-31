@@ -1,4 +1,3 @@
-#include "Objects/Objects.h"
 #include <stdint.h>
 #include <cstring>
 #include "Components.h"
@@ -108,36 +107,34 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
     //Setting up the component to access from lua.
     auto ComponentIndex = [](lua_State* L) -> int
     {
-        Component* comp = (Component*)lua_touserdata(L, -2);
-        const char* index = lua_tostring(L, -1);
+        // Get the component table from the Lua stack
+        luaL_checktype(L, 1, LUA_TTABLE);
 
-        for(auto &var : comp->Variables)
-        {
-            if (strcmp(index, var.first.c_str()) == 0)
-            {
-                GET_VAR_FROM_LUA(L, var.second);
-                return 1;
-            }
+        // Check if the component table has the '__userdata' field (the component pointer)
+        lua_getfield(L, 1, "__userdata");
+        Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        const char* index = luaL_checkstring(L, 2);
+        if(comp->Variables.find(index) != comp->Variables.end()){
+            GET_VAR_FROM_LUA(L, comp->Variables.at(index));
+            return 1;
         }
-        delete(index);
-        delete(comp);
         return 0;
     };
     auto ComponentNewIndex = [](lua_State* L) -> int
     {
-        Component* comp = (Component*)lua_touserdata(L, -3);
-        const char* index = lua_tostring(L, -2);
-        const char*  test = lua_tostring(L, -1);
-        for(auto &var : comp->Variables)
-        {
-            if (strcmp(index, var.first.c_str()) == 0)
-            {
-                SET_VAR_FROM_LUA(L, comp, var.second, std::string(index));
-                return 0;
-            }
+        // Get the component table from the Lua stack
+        luaL_checktype(L, 1, LUA_TTABLE);
+
+        // Check if the component table has the '__userdata' field (the component pointer)
+        lua_getfield(L, 1, "__userdata");
+        Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        const char* index = luaL_checkstring(L, 2);
+
+        if(comp->Variables.find(index) != comp->Variables.end()){
+            SET_VAR_FROM_LUA(L, comp, comp->Variables.at(index), std::string(index));
         }
-        delete(index);
-        delete(comp);
         return 0;
     };
 
@@ -216,7 +213,7 @@ bool Component::GetLuaVariables()
     if (luaL_loadfile(L, LuaFile.c_str()) || lua_pcall(L, 0, 0, 0)) {
         std::stringstream ss;
         ss<< "Error loading script: " << lua_tostring(L, -1) << std::endl;
-        Utilities::Log(ss.str(), Utilities::Error);
+        SapphireEngine::Log(ss.str(), SapphireEngine::Error);
         lua_pop(L, 1);
         return false;
     }
@@ -274,12 +271,15 @@ void Component::SetLuaComponent(lua_State* ComponentsState)
 {
     if(L != nullptr) return;
     
+    lua_newtable(ComponentsState);
+    int componentTableIdx = lua_gettop(ComponentsState);
+
     lua_pushlightuserdata(ComponentsState, this);
+    lua_setfield(ComponentsState, componentTableIdx, "__userdata");
 
     luaL_getmetatable(ComponentsState, "Component");
-    lua_setmetatable(ComponentsState, -2);
+    lua_setmetatable(ComponentsState, componentTableIdx);
 
-    lua_setfield(ComponentsState, -2, Name.c_str());
 }
 nlohmann::json SaveTable(std::vector<LuaTableIt> &Var){
     nlohmann::json Table;
@@ -385,18 +385,18 @@ void Component::Load(nlohmann::json JSON){
         else if(jsonArray[1].is_number_float()){ AssignValue<float>(NewVar.second, jsonArray); } 
         else if(jsonArray[1].is_string()){ AssignValue<std::string>(NewVar.second, jsonArray); }
         else if(jsonArray[1].is_boolean()){ AssignValue<bool>(NewVar.second, jsonArray); }
-        else {Utilities::Log(std::string(jsonArray[1].type_name()) + " cannot be loaded from the selected scene.", Utilities::Error);}
+        else {SapphireEngine::Log(std::string(jsonArray[1].type_name()) + " cannot be loaded from the selected scene.", SapphireEngine::Error);}
         Variables[NewVar.first] = NewVar.second;
     }
 }
 
-void Renderer::Render(Object* Obj,GLFWwindow* window, glm::vec3 CameraPos, std::shared_ptr<Object> SelectedObj, bool IsViewport)
+void Renderer::Render(bool&& IsSelected ,glm::vec3 CameraPos,float CameraZoom, bool IsViewport)
 {
     //That means that the object is an empty
     if(shape == nullptr) return;
     // Here it renders the object's outline to indicate that the current object is selected
-    if(SelectedObj.get() == Obj){
-        shape->Render(GetVariable(Obj->GetComponent<Transform>(), "Size", glm::vec2), GetVariable(this, "Color", glm::vec4), GetVariable(Obj->GetComponent<Transform>(), "Position", glm::vec3), GetVariable(Obj->GetComponent<Transform>(), "Rotation", glm::vec3).z, CameraPos ,true, false, IsViewport);
+    if(IsSelected){
+        shape->Render(CameraPos ,CameraZoom,true, false, IsViewport);
     }
-    shape->Render(GetVariable(Obj->GetComponent<Transform>(), "Size", glm::vec2), GetVariable(this, "Color", glm::vec4), GetVariable(Obj->GetComponent<Transform>(), "Position", glm::vec3), GetVariable(Obj->GetComponent<Transform>(), "Rotation", glm::vec3).z, CameraPos ,false, false, IsViewport);
+    shape->Render(CameraPos ,CameraZoom,false, false, IsViewport);
 }

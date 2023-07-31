@@ -1,26 +1,27 @@
 #pragma once
-#include <iostream>
-#include <filesystem>
-#include <string>
-#include <cstring>
 #include "Imgui/imgui_markdown.h"
 #include "Imgui/imgui_impl_glfw.h"
 #include "Imgui/imgui_impl_opengl3.h"
 #include "Imgui/imgui_internal.h"
 #include "Imgui/imconfig.h"
-#include <iostream>
+#include "Imgui/ImGuizmo.h"
+
 #include "Utilities.hpp"
 #include "Graphics/Shapes.h"
 
-namespace Windows{
-    void Init(std::string Path);
-    void DockSpace();
-    void LogWindow();
-    inline std::string MainPath;
-    inline TextureAtlas IconsAtlas;
-
-    inline ImGuiContext* DefaultContext;
-    inline ImGuiIO* IO;
+class Windows{
+    public:
+        void Init(std::string&& Path);
+        void DockSpace();
+        void LogWindow();
+        std::string MainPath;
+        ImGuiContext* GetContext() {return DefaultContext;}
+        ImGuiIO* GetWindowIO() {return IO;}
+    private:
+        ImGuiContext* DefaultContext;
+        ImGuiIO* IO;
 
     //* Set up the Themes
 };
+
+const std::string& GetMainPath();

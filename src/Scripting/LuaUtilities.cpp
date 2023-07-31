@@ -16,11 +16,11 @@ int LuaUtilities::log(lua_State* L) {
         Type = luaL_checkstring(L, 2);
     }
     if(std::string(Type) == "Info"){
-        Utilities::Log(std::string(message), Utilities::Info);
+        SapphireEngine::Log(std::string(message), SapphireEngine::Info);
     }else if(std::string(Type) == "Warning"){
-        Utilities::Log(std::string(message), Utilities::Warning);
+        SapphireEngine::Log(std::string(message), SapphireEngine::Warning);
     }else if(std::string(Type) == "Error"){
-        Utilities::Log(std::string(message), Utilities::Error);
+        SapphireEngine::Log(std::string(message), SapphireEngine::Error);
     }else{
         std::stringstream error;
         error << Type << " type doesn't exist";
@@ -49,7 +49,7 @@ int LuaUtilities::KeyPress(lua_State* L) {
 
     const char* message = luaL_checkstring(L, 1);
     if (Keys.find(std::string(message)) != Keys.end()) {
-        bool test = glfwGetKey(Viewport::window, Keys[std::string(message)]);
+        bool test = glfwGetKey(glfwGetCurrentContext(), Keys[std::string(message)]);
         lua_pushboolean(L, test);
     }
     else {
@@ -67,7 +67,7 @@ int LuaUtilities::LoadScene(lua_State* L) {
 
     const char* Scene = luaL_checkstring(L, 1);
 
-    Viewport::CurrentScene->Load(std::string(Scene) + ".scene", Viewport::window);    
+    GetActiveScene()->Load(std::string(Scene) + ".scene", GetMainPath() ,glfwGetCurrentContext());    
     return 0;
 }
 int LuaUtilities::GetObject(lua_State * L)
@@ -80,25 +80,29 @@ int LuaUtilities::GetObject(lua_State * L)
     const char* ObjNameCstr = luaL_checkstring(L, 1);
     std::string ObjName = std::string(ObjNameCstr);
     bool foundObj = false;
-    for (size_t i = 0; i < Viewport::CurrentScene->Objects.size(); i++)
+    for (size_t i = 0; i < GetActiveScene()->Objects.size(); i++)
     {
-        if(ObjName == Viewport::CurrentScene->Objects[i]->Name){
-            std::shared_ptr<Object> obj = Viewport::CurrentScene->Objects[i];
+        if(ObjName == GetActiveScene()->Objects[i]->Name){
+            std::shared_ptr<Object> obj = GetActiveScene()->Objects[i];
             lua_pushlightuserdata(L, obj.get());
+            luaL_getmetatable(L, "ObjectMetaTable");
+            lua_istable(L, -1);
+            lua_setmetatable(L, -2);
             return 1;
         }
     }
     if(!foundObj)
-        Log("The object with the name \"" + ObjName + "\" cannot be found", Utilities::Error);
+        Log("The object with the name \"" + ObjName + "\" cannot be found", SapphireEngine::Error);
     return 0;
 }
 int LuaUtilities::GetCurrentScene(lua_State *L)
 {
     int n = lua_gettop(L);
     if (n != 0) {
+        SapphireEngine::Log(std::string("Expected 0 argument, got %d", n), SapphireEngine::Error);
         return luaL_error(L, "Expected 0 argument, got %d", n);
     }
-    lua_pushstring(L, Viewport::CurrentScene->SceneFile.c_str());
+    lua_pushstring(L, GetActiveScene()->SceneFile.c_str());
     return 1;
 }
 int LuaUtilities::GetCameraPos(lua_State *L)
@@ -137,15 +141,17 @@ int LuaUtilities::CreateObject(lua_State *L)
     }
     const char* ObjName = lua_tostring(L, -2);
     const char* ObjShape = lua_tostring(L, -1);
-    // std::shared_ptr<Shapes::Shape> shape;
-    // if(std::string(ObjShape) == "Rectangle"){
-    //     shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
-    // }else{
-    //     shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
-    // }
-    // lua_pushlightuserdata(L, Object::CreateObject(Viewport::CurrentScene->Objects, std::string(ObjName), shape).get());
-    // luaL_getmetatable(L, "ObjectMetaTable");
-    // lua_setmetatable(L, -2);
+    std::shared_ptr<Object> obj = Object::CreateObject(GetActiveScene()->Objects, std::string(ObjName));
+    std::shared_ptr<Shapes::Shape> shape;
+    if(std::string(ObjShape) == "Rectangle"){
+        shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, obj);
+    }else{
+        shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader, obj);
+    }
+    obj->GetComponent<Renderer>()->shape = shape;
+    lua_pushlightuserdata(L, obj.get());
+    luaL_getmetatable(L, "ObjectMetaTable");
+    lua_setmetatable(L, -2);
 
     return 1;
 }
@@ -159,8 +165,8 @@ int LuaUtilities::LoadObjectPrefab(lua_State *L)
 
     // std::shared_ptr<Object> obj = std::make_shared<Object>();
 
-    // obj->LoadPrefab(std::string(ObjName) + ".obj", Viewport::CurrentScene->Objects.size(), Viewport::window);
-    // Viewport::CurrentScene->Objects.push_back(obj);
+    // obj->LoadPrefab(std::string(ObjName) + ".obj", GetActiveScene()->Objects.size(), Viewport::window);
+    // GetActiveScene()->Objects.push_back(obj);
     // lua_pushlightuserdata(L, obj.get());
     // luaL_getmetatable(L, "ObjectMetaTable");
     // lua_setmetatable(L, -2);

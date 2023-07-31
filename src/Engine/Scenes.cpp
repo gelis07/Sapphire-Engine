@@ -3,8 +3,6 @@
 #include "json.hpp"
 #include <vector>
 
-
-
 //* Not the best name but it just gets the stored value of the variant and stores it in a json accordingly
 void SetJSONVariable(Variable &var, const std::string name,nlohmann::json &Variables){
     if(std::holds_alternative<float>(var.Contents)){
@@ -63,10 +61,10 @@ void SetJSONVariable(Variable &var, const std::string name,nlohmann::json &Varia
 
 
 
-void Scene::Save(std::string FilePath)
+void Scene::Save(const std::string FilePath,const std::string& MainPath)
 {
     this->SceneFile = FilePath;
-    std::ofstream stream(Windows::MainPath + FilePath, std::ofstream::trunc);
+    std::ofstream stream(MainPath + FilePath, std::ofstream::trunc);
     nlohmann::json Data;
     unsigned int i = 0;
     nlohmann::json JsonObj;
@@ -96,10 +94,10 @@ void Scene::Save(std::string FilePath)
     stream.close();
 }
 
-void Scene::Load(std::string FilePath, GLFWwindow* window)
+void Scene::Load(const std::string FilePath, const std::string& MainPath,GLFWwindow* window)
 {
     this->SceneFile = FilePath;
-    std::ifstream stream(Windows::MainPath + FilePath);
+    std::ifstream stream(MainPath + FilePath);
     nlohmann::json Data;
     stream >> Data;
     stream.close();
@@ -111,32 +109,36 @@ void Scene::Load(std::string FilePath, GLFWwindow* window)
         nlohmann::json JsonObj = Data[ss.str().c_str()];
 
         std::shared_ptr<Shapes::Shape> shape;
+        std::shared_ptr<Object> obj = std::make_shared<Object>(JsonObj["Name"]);
         switch (JsonObj["shape"].get<int>())
         {
             case Shapes::CircleT:
-                shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
+                shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader, obj);
                 break;
             case Shapes::RectangleT:
-                shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
+                shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, obj);
                 break;
             default:
                 shape = nullptr;
         }
         nlohmann::json& JsonComp = JsonObj["Components"];
-        std::shared_ptr<Object> obj = std::make_shared<Object>(std::move(JsonObj["Name"]));
         for (auto& element : JsonObj["Components"].items()) {
-            Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), true);
-            comp->Load(element.value()["Variables"]);
             //! Got to find a better way to handle this!
-            if(comp->Name == "Renderer")
+            if(element.key() == "Renderer")
             {
-                obj->AddComponent<Renderer>((Renderer*)comp);
+                Renderer* comp = new Renderer(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
+                comp->Load(element.value()["Variables"]);
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Renderer>(dynamic_cast<Renderer*>(comp))));
             }
-            else if(comp->Name == "Transform")
+            else if(element.key() == "Transform")
             {
-                obj->AddComponent<Transform>((Transform*)comp);
+                Transform* comp = new Transform(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
+                comp->Load(element.value()["Variables"]);
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
             }else
             {
+                Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
+                comp->Load(element.value()["Variables"]);
                 obj->AddComponent<Component>(comp);
             }
         }
@@ -177,19 +179,21 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            Object::CreateObject(Objects, ss.str(), nullptr);
+            Object::CreateObject(Objects, ss.str());
         }
         if (ImGui::MenuItem("Create Circle"))
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            Object::CreateObject(Objects, ss.str(), std::make_shared<Shapes::Circle>(Shapes::CircleShader));
+            std::shared_ptr<Object> Obj = Object::CreateObject(Objects, ss.str());
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader, Obj);
         }
         if (ImGui::MenuItem("Create Rectangle"))
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            Object::CreateObject(Objects, ss.str(), std::make_shared<Shapes::Rectangle>(Shapes::BasicShader));
+            std::shared_ptr<Object> Obj = Object::CreateObject(Objects, ss.str());
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, Obj);
         }
         ImGui::Separator();
         // if(ImGui::MenuItem("Duplicate")){

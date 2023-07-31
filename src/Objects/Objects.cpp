@@ -1,4 +1,4 @@
-#include "../Engine/Scenes.h"
+#include "Engine/Scenes.h"
 #include "json.hpp"
 #include "UI/FileExplorer/FileExplorer.h"
 #include "Objects.h"
@@ -8,18 +8,7 @@ Object::Object(std::string &&Name)
     this->Name = Name;
 }
 
-template <typename T>
-std::shared_ptr<T> Object::GetComponent()
-{
-    for (std::shared_ptr<Component> Component : Components)
-    {
-        if (std::shared_ptr<T> SpecificComponent = std::dynamic_pointer_cast<T>(Component))
-        {
-            return SpecificComponent;
-        }
-    }
-    return nullptr;
-}
+
 
 void Object::RemoveComponent(unsigned int id)
 {
@@ -32,6 +21,7 @@ void Object::SetUpObject(Object *obj, lua_State *L, std::string Name)
     luaL_getmetatable(L, "ObjectMetaTable");
     lua_istable(L, -1);
     lua_setmetatable(L, -2);
+    lua_setglobal(L, Name.c_str());
 }
 //! CREATE A MACRO TO REDUCE THIS REPETETIVE CODE
 void Object::OnCollision(Object *other)
@@ -59,7 +49,7 @@ void Object::OnStart()
         {
             std::stringstream ss;
             ss << "Error loading script: " << lua_tostring(L, -1) << std::endl;
-            Log(ss.str(), Utilities::Error);
+            Log(ss.str(), SapphireEngine::Error);
             lua_pop(L, 1);
         }
         Components[i]->ExecuteFunction("OnStart");
@@ -77,15 +67,14 @@ void Object::OnUpdate()
     }
 }
 
-std::shared_ptr<Object> Object::CreateObject(std::vector<std::shared_ptr<Object>> &Objects, std::string &&ObjName, std::shared_ptr<Shapes::Shape> &&NewShape)
+std::shared_ptr<Object> Object::CreateObject(std::vector<std::shared_ptr<Object>> &Objects, std::string &&ObjName)
 {
-    std::shared_ptr<Object> NewObj = std::make_unique<Object>(std::move(ObjName));
+    std::shared_ptr<Object> NewObj = std::make_shared<Object>(std::move(ObjName));
     NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0, false)));
     NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer", 0, false)));
 
     GetVariable(NewObj->GetComponent<Renderer>(), "Color", glm::vec4) = glm::vec4(1);
     GetVariable(NewObj->GetComponent<Transform>(), "Position", glm::vec3) = glm::vec3(0);
-    NewObj->GetComponent<Renderer>()->shape = NewShape;
     GetVariable(NewObj->GetComponent<Transform>(), "Size", glm::vec2) = glm::vec2(20.0f, 20.0f);
     Objects.push_back(NewObj);
     return NewObj;
@@ -126,7 +115,7 @@ void Object::Inspect()
 
 void Object::SavePrefab(std::string path)
 {
-    std::ofstream stream(path + Utilities::Replace(this->Name, ' ', '_') + ".obj");
+    std::ofstream stream(path + SapphireEngine::Replace(this->Name, ' ', '_') + ".obj");
 
     nlohmann::json JsonObj;
 
@@ -134,7 +123,7 @@ void Object::SavePrefab(std::string path)
     stream.close();
 }
 
-void Object::LoadPrefab(std::string path, std::string FilePath, unsigned int ObjectsSize, GLFWwindow *window)
+void Object::LoadPrefab(std::string path, std::string FilePath, unsigned int ObjectsSize)
 {
     std::ifstream stream(path + FilePath, std::ios::binary);
     nlohmann::json JsonObj;

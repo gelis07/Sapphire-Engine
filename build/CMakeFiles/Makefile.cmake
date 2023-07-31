@@ -28,7 +28,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "C:/mingw64/share/cmake-3.26/Modules/Platform/Windows-windres.cmake"
   "C:/mingw64/share/cmake-3.26/Modules/Platform/Windows.cmake"
   "C:/mingw64/share/cmake-3.26/Modules/Platform/WindowsPaths.cmake"
-  "D:/Gelis/Programs/Sapphire Engine/CMakeLists.txt"
+  "D:/Gelis/Programs/Sapphire-Engine/CMakeLists.txt"
   "CMakeFiles/3.26.3/CMakeCCompiler.cmake"
   "CMakeFiles/3.26.3/CMakeCXXCompiler.cmake"
   "CMakeFiles/3.26.3/CMakeRCCompiler.cmake"

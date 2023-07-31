@@ -6,7 +6,7 @@ bool ScriptingEngine::CheckLua(lua_State *L, int r){
     {
         std::string errormsg = lua_tostring(L, -1);
         std::cout << errormsg << std::endl;
-        Log(std::move(errormsg), Utilities::Error);
+        Log(std::move(errormsg), SapphireEngine::Error);
         return false;
     }
     return true;

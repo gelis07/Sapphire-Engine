@@ -1,8 +1,5 @@
 #pragma once
-#include <math.h>
-#include "Graphics/ShaderFunc.h"
-#include <GLFW/glfw3.h>
-#include <memory>
+#include "Graphics/Shapes.h"
 #include "Scripting/Components.h"
 
 class Object
@@ -13,23 +10,21 @@ class Object
         Object(std::string&& Name);
 
         void RemoveComponent(unsigned int id);
-
         // void Run();
         void RenderGUI(); // render the object on the ImGUI inspector
         void Inspect();
         static void SetUpObject(Object* obj,lua_State* L,std::string Name);
 
         void SavePrefab(std::string path);
-        void LoadPrefab(std::string path,std::string FilePath, unsigned int ObjectsSize, GLFWwindow* window);
+        void LoadPrefab(std::string path,std::string FilePath, unsigned int ObjectsSize);
 
         template<typename T>
         std::shared_ptr<T> GetComponent();
         template<typename Derived>
-        std::enable_if_t<std::is_base_of_v<Component, Derived>, void> AddComponent(Component* Comp);
-        std::vector<std::shared_ptr<Component>> GetComponents() {return Components;}
-        void SetComponents(std::vector<std::shared_ptr<Component>> Args) { Components = Args;}
+        std::enable_if_t<std::is_base_of_v<Component, Derived>, void> AddComponent(Derived* Comp);
+        std::vector<std::shared_ptr<Component>>& GetComponents() {return Components;}
         
-        static std::shared_ptr<Object> CreateObject(std::vector<std::shared_ptr<Object>> &Objects, std::string &&ObjName, std::shared_ptr<Shapes::Shape> &&NewShape);
+        static std::shared_ptr<Object> CreateObject(std::vector<std::shared_ptr<Object>> &Objects, std::string &&ObjName);
 
         void OnCollision(Object* other);
         void OnUpdate();
@@ -40,30 +35,47 @@ class Object
         std::vector<std::shared_ptr<Component>> Components;
 };
 
-template<typename Derived>
-std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddComponent(Component* Comp) 
+template <typename T>
+std::shared_ptr<T> Object::GetComponent()
 {
-    std::shared_ptr<Derived> PushedBackComp((Derived*)Comp);
-    Components.push_back(PushedBackComp);
-    Comp = nullptr;
-    delete(Comp);
-
-    lua_State* L = PushedBackComp->GetState();
-    lua_newtable(L);
-    // int objectTableidx = lua_gettop(L);
-    // lua_pushvalue(L, objectTableidx);
-
-    for(auto &comp : Components){
-        comp->SetLuaComponent(L);
+    for (std::shared_ptr<Component> component : Components)
+    {
+        if (std::shared_ptr<T> SpecificComponent = std::dynamic_pointer_cast<T>(component))
+        {
+            return SpecificComponent;
+        }
     }
-    
+    return nullptr;
+}
+static int GetComponentFromObject(lua_State* L) {
+    Object* obj = static_cast<Object*>(lua_touserdata(L, 1));
 
-    lua_setglobal(L, "this");
-    // luaL_newmetatable(L, "ObjectMetaTable");
+    const char* VariableName = lua_tostring(L, 2);
 
-    // lua_pushstring(L, "__index");
-    // lua_pushvalue(L, objectTableidx);
-    // lua_settable(L, -3);
+    for(auto &comp : obj->GetComponents()){
+        if(comp->Name == std::string(VariableName))
+        {
+            comp->SetLuaComponent(L);
+            return 1;
+        }
+    }
 
-    // SetUpObject(this, L,"this");
+    return 0;
+}
+template<typename Derived>
+std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddComponent(Derived* Comp) 
+{
+    Components.push_back(std::shared_ptr<Derived>(Comp));
+
+    if(Components.back()->GetState() == nullptr) return;
+    lua_State* L = Components.back()->GetState();
+    lua_pushlightuserdata(L, this);
+    luaL_newmetatable(L, "ObjectMetaTable");
+
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, GetComponentFromObject);
+    lua_settable(L, -3);
+
+    lua_setmetatable(L, -2);
+    lua_setglobal(L, Name.c_str());
 }

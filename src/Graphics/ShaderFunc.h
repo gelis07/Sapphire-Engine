@@ -1,8 +1,6 @@
 #pragma once
-#include <iostream>
+
 #include "Shapes.h"
-#include <fstream>
-#include <string>
 struct ShaderProgramSource
 {
     std::string VertexSource;    

@@ -8,7 +8,9 @@ class FileExplorer
 {
     public:
         static void Open(std::string path);
+        static void Init();
     private:
+        inline static TextureAtlas IconAtlas;
         inline static char NewFileName[256]; // The editing file name of the ImGui pop up
         inline static std::unordered_map<std::string, std::shared_ptr<File>> Files;
         inline static bool RightClicked;

@@ -12,7 +12,9 @@ add_executable(Sapphire-Engine
     src/Graphics/Shapes.cpp
     src/Engine/Scenes.cpp
     src/Engine/Engine.cpp
-    src/Engine/Views.cpp
+    src/Engine/Views/PlayMode.cpp
+    src/Engine/Views/SceneEditor.cpp
+    src/Graphics/Grid.cpp
     src/Scripting/Scripting.cpp
     src/Objects/Objects.cpp
     src/Scripting/LuaUtilities.cpp
@@ -28,6 +30,7 @@ add_executable(Sapphire-Engine
     include/imgui/imgui.cpp
     include/imgui/imgui_tables.cpp
     include/imgui/imgui_widgets.cpp
+    include/imgui/ImGuizmo.cpp
 )
 
 # Add include directories
@@ -57,6 +60,9 @@ target_compile_options(Sapphire-Engine PRIVATE
     -DEXPORT=0
     -mwindows
 )
+
+target_precompile_headers(Sapphire-Engine
+  PRIVATE src/pch.h)
 
 # Set the output directory for the executable
 set_target_properties(Sapphire-Engine PROPERTIES
