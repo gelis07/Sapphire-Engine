@@ -2,37 +2,37 @@
 
 void PlayMode::Init(Scene* activeScene)
 {
-    Window = glfwGetCurrentContext();
-    ActiveScene = activeScene;
-    Texture = CreateViewportTexture();
-    FBO = CreateFBO(Texture);
+    m_Window = glfwGetCurrentContext();
+    m_ActiveScene = activeScene;
+    m_Texture = CreateViewportTexture();
+    m_FBO = CreateFBO(m_Texture);
 }
 
 void PlayMode::Render(std::string& MainPath) //Here we need the main path because we load the scene after the user hops out of play mode
 {
-    if(!ImGuiRender(Texture, MainPath)) return;
-    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, FBO));
+    if(!ImGuiRender(m_Texture, MainPath)) return;
+    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
 
     GLCall(glClearColor(0, 0, 0, 1));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-    if(Paused && !Start){
+    if(Paused && !m_Start){
         //This indicates that the game has been paused and we should reset the start boolean so next time the user hits play
         //The start functions get called
-        ActiveScene->Load(ActiveScene->SceneFile, MainPath,Window);
-        Start = true;
+        m_ActiveScene->Load(m_ActiveScene->SceneFile, MainPath,m_Window);
+        m_Start = true;
     } 
     try {
-        for (size_t i = 0; i < ActiveScene->Objects.size(); i++)
+        for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
         {
-            ActiveScene->Objects[i]->GetComponent<Renderer>()->Render(false, glm::vec3(0), 1.0f,false);
+            m_ActiveScene->Objects[i]->GetComponent<Renderer>()->Render(false, glm::vec3(0), 1.0f,false);
             if(!Paused){
-                ActiveScene->Objects[i]->OnStart();
-                ActiveScene->Objects[i]->OnUpdate();
+                m_ActiveScene->Objects[i]->OnStart();
+                m_ActiveScene->Objects[i]->OnUpdate();
             }
         }
         //Changing the start bool to false here so all of the start functions get executed
-        if(!Paused) Start = false;
+        if(!Paused) m_Start = false;
     }
     catch (const char* msg) {
         Paused = true;
@@ -60,19 +60,19 @@ bool PlayMode::ImGuiRender(unsigned int texture, std::string& MainPath)
     //Set the ImGui Button to play the game
     if (ImGui::Button(Label.c_str()))
     {
-        if(ActiveScene->SceneFile == ""){
+        if(m_ActiveScene->SceneFile == ""){
             ImGui::OpenPopup("Save Menu");
         }else{
-            if(Paused) ActiveScene->Save(ActiveScene->SceneFile, MainPath);
+            if(Paused) m_ActiveScene->Save(m_ActiveScene->SceneFile, MainPath);
             Paused = !Paused;
         }
     }
     if (ImGui::BeginPopup("Save Menu"))
     {
         ImGui::InputText("Scene Name", Name, sizeof(Name), ImGuiInputTextFlags_CharsNoBlank);
-        if (ImGui::MenuItem("Save") || glfwGetKey(Window, GLFW_KEY_ENTER) == GLFW_PRESS)
+        if (ImGui::MenuItem("Save") || glfwGetKey(m_Window, GLFW_KEY_ENTER) == GLFW_PRESS)
         {
-            ActiveScene->Save(std::string(Name) + ".scene", MainPath);
+            m_ActiveScene->Save(std::string(Name) + ".scene", MainPath);
             Paused = !Paused;
             ImGui::CloseCurrentPopup();
         }

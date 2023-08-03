@@ -12,6 +12,6 @@ class ProjectManager{
     private:
         void SaveJson(std::string Name);
         GLFWwindow* window;
-        ImGuiIO* NewIo;
+        ImGuiIO* IO;
         std::string Path;
 };

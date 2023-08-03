@@ -10,10 +10,10 @@ class PlayMode{
         bool ImGuiRender(unsigned int texture, std::string& MainPath);
         bool Paused = true;
     private:
-        unsigned int Texture; 
-        unsigned int FBO;
+        unsigned int m_Texture; 
+        unsigned int m_FBO;
         ImVec2 ScaleWindow();
-        Scene* ActiveScene;
-        GLFWwindow* Window;
-        bool Start = true;
+        Scene* m_ActiveScene;
+        GLFWwindow* m_Window;
+        bool m_Start = true;
 };

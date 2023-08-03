@@ -5,15 +5,12 @@
 class Object
 {
     public:
-        unsigned int id;
-        bool CalledStart = false;
         Object(std::string&& Name);
 
         void RemoveComponent(unsigned int id);
-        // void Run();
         void RenderGUI(); // render the object on the ImGUI inspector
         void Inspect();
-        static void SetUpObject(Object* obj,lua_State* L,std::string Name);
+        static void SetUpObject(Object* obj,lua_State* L,const std::string& Name);
 
         void SavePrefab(std::string path);
         void LoadPrefab(std::string path,std::string FilePath, unsigned int ObjectsSize);
@@ -30,8 +27,10 @@ class Object
         void OnUpdate();
         void OnStart();
 
-        std::string Name = "";
+        unsigned int id;
+        std::string Name;
     private:
+        bool CalledStart = false;
         std::vector<std::shared_ptr<Component>> Components;
 };
 
@@ -77,5 +76,5 @@ std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddCompone
     lua_settable(L, -3);
 
     lua_setmetatable(L, -2);
-    lua_setglobal(L, Name.c_str());
+    lua_setglobal(L, "this");
 }

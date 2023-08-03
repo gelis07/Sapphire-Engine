@@ -22,14 +22,14 @@ class File{
         std::string Path;
         std::string Name;
     protected:
-        glm::vec2 IconPos;
+        glm::vec2 m_IconPos;
 };
 
 
 class LuaFile : public File
 {
     public:
-        void SetIconPos() override{ IconPos = glm::vec2(1,0);}
+        void SetIconPos() override{ m_IconPos = glm::vec2(1,0);}
         void OnClick(std::filesystem::directory_entry entry) 
         {
 
@@ -44,7 +44,7 @@ class LuaFile : public File
 class SceneFile : public File
 {
     public:
-        void SetIconPos() override{ IconPos = glm::vec2(0,0);}
+        void SetIconPos() override{ m_IconPos = glm::vec2(0,0);}
         void OnClick(std::filesystem::directory_entry entry) override
         {
 

@@ -123,13 +123,13 @@ void Scene::Load(const std::string FilePath, const std::string& MainPath,GLFWwin
             {
                 Renderer* comp = new Renderer(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Renderer>(dynamic_cast<Renderer*>(comp))));
-                obj->GetComponent<Renderer>()->Load(element.value()["Variables"]);
+                obj->GetComponents().back()->Load(element.value()["Variables"]);
             }
             else if(element.key() == "Transform")
             {
                 Transform* comp = new Transform(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
-                obj->GetComponent<Transform>()->Load(element.value()["Variables"]);
+                obj->GetComponents().back()->Load(element.value()["Variables"]);
             }else
             {
                 Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");

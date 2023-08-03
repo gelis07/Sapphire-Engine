@@ -19,15 +19,15 @@ class Component
         bool Active = true;
 
         lua_State* GetState() {return L;}
-        std::string GetFile() {return LuaFile;}
+        std::string GetFile() {return m_LuaFile;}
         std::string Name;
         std::unordered_map<std::string, SapphireEngine::Variable*> Variables;
         std::unordered_map<std::string, lua_CFunction> Functions;
     protected:
-        virtual void test() {}
+        virtual void test() {} //! This... is just so dumb.
         lua_State* L = nullptr;
-        std::string LuaFile = "";
-        unsigned int id;
+        std::string m_LuaFile = "";
+        unsigned int m_ID;
 
 };
 

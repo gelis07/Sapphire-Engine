@@ -3,13 +3,13 @@
 
 void SceneEditor::Init(Scene* activeScene)
 {
-    Window = glfwGetCurrentContext();
-    ActiveScene = activeScene;
+    m_Window = glfwGetCurrentContext();
+    m_ActiveScene = activeScene;
     //Create a framebuffer object to create a texture and render it on the ImGui window
-    Texture = CreateViewportTexture();
-    FBO = CreateFBO(Texture);
+    m_Texture = CreateViewportTexture();
+    m_FBO = CreateFBO(m_Texture);
 
-    grid.Init();
+    m_Grid.Init();
 }
 
 ImVec2 SceneEditor::ScaleWindow(){
@@ -41,26 +41,26 @@ ImVec2 SceneEditor::ScaleWindow(){
     {
         centerPos.x += 7.0f;
     }
-    ViewportPos = glm::vec2(ImGui::GetWindowPos().x + centerPos.x, ImGui::GetWindowPos().y + centerPos.y + textureSize.y);
-    TextureSize = glm::vec2(textureSize.x , textureSize.y);
+    m_ViewportPosition = glm::vec2(ImGui::GetWindowPos().x + centerPos.x, ImGui::GetWindowPos().y + centerPos.y + textureSize.y);
+    m_ViewportSize = glm::vec2(textureSize.x , textureSize.y);
     ImGui::SetCursorPos(centerPos);
     return textureSize;
 }
 
-// This is basically the code for the "Viewport" Window
+// This is basically the code for the "Viewport" m_Window
 static bool pressed = false;
 static bool FirstTimeClicking = true; // Indicates the first time the user clicks on the SelectedObj
 static glm::vec2 LastPos;
 void SceneEditor::MoveCamera(){
 
     double xpos, ypos;
-    glfwGetCursorPos(Window, &xpos, &ypos);
+    glfwGetCursorPos(m_Window, &xpos, &ypos);
     glm::vec2 CursorPos(xpos, ypos);
-    float scalor = SCREEN_WIDTH/TextureSize.x;
-    glm::vec2 CursorPosToWind((CursorPos.x - ViewportPos.x) * scalor, (ViewportPos.y - CursorPos.y) * scalor);
+    float scalor = SCREEN_WIDTH/m_ViewportSize.x;
+    glm::vec2 CursorPosToWind((CursorPos.x - m_ViewportPosition.x) * scalor, (m_ViewportPosition.y - CursorPos.y) * scalor);
     if(CursorPosToWind.x > 0 && CursorPosToWind.x < SCREEN_WIDTH && CursorPosToWind.y > 0 && CursorPosToWind.y < SCREEN_HEIGHT)
     {
-        if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
+        if(glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
             if(FirstTimeClicking){
                 LastPos = CursorPosToWind - glm::vec2(ViewportCamera.position);
                 FirstTimeClicking = false;
@@ -68,7 +68,7 @@ void SceneEditor::MoveCamera(){
             ViewportCamera.position = glm::vec3(CursorPosToWind.x - LastPos.x, CursorPosToWind.y - LastPos.y, 0);
         }
     }
-    if(glfwGetMouseButton(Window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && !FirstTimeClicking) FirstTimeClicking = true;
+    if(glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && !FirstTimeClicking) FirstTimeClicking = true;
 
 }
 
@@ -120,28 +120,28 @@ static void Default(GLFWwindow* window, double xoffset, double yoffset){
 
 void SceneEditor::Render()
 {
-    if(!ImGuiRender(Texture)) return;
-    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, FBO)); // Creating a different frame buffer
+    if(!ImGuiRender(m_Texture)) return;
+    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO)); // Creating a different frame buffer
 
     std::stringstream ss;
     ss << ClickedOnObj;
     double xpos, ypos;
-    glfwGetCursorPos(Window, &xpos, &ypos);
+    glfwGetCursorPos(m_Window, &xpos, &ypos);
     glm::vec2 CursorPos(xpos, ypos);
 
-    if(!ClickedOnObj && !FirstTime) FirstTime = true;
+    if(!ClickedOnObj && !m_FirstTime) m_FirstTime = true;
     MoveCamera();
-    glfwSetWindowUserPointer(Window, &ViewportCamera);
-    glfwSetScrollCallback(Window, IsViewportHovered ? Zooming : Default);
-    // HandleObject(SelectedObj, ActiveScene->Objects);
+    glfwSetWindowUserPointer(m_Window, &ViewportCamera);
+    glfwSetScrollCallback(m_Window, IsViewportHovered ? Zooming : Default);
+    // HandleObject(SelectedObj, m_ActiveScene->Objects);
     GLCall(glClearColor(0, 0, 0, 1));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
-    grid.Render(ViewportCamera.position, ViewportCamera.Zoom);
-    for (size_t i = 0; i < ActiveScene->Objects.size(); i++)
+    m_Grid.Render(ViewportCamera.position, ViewportCamera.Zoom);
+    for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
     {
-        ActiveScene->Objects[i]->GetComponent<Renderer>()->Render(ActiveScene->Objects[i] == SelectedObj, ViewportCamera.position, ViewportCamera.Zoom, true);
+        m_ActiveScene->Objects[i]->GetComponent<Renderer>()->Render(m_ActiveScene->Objects[i] == SelectedObj, ViewportCamera.position, ViewportCamera.Zoom, true);
         //^ Should store the renderer on a variable and not search for it every frame
-        ActiveScene->Objects[i]->id = i;
+        m_ActiveScene->Objects[i]->id = i;
     }
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

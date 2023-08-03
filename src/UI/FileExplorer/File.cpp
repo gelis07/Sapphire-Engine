@@ -32,7 +32,7 @@ void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, Te
     ImGui::BeginChild(entry.path().string().c_str(), ImVec2(130, 150), true);
 
 
-    glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(IconAtlas.IconSize.x * IconPos.x, IconAtlas.IconSize.y* IconPos.y), glm::vec2(IconAtlas.IconSize.x, IconAtlas.IconSize.y), IconAtlas.AtlasSize); 
+    glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(IconAtlas.IconSize.x * m_IconPos.x, IconAtlas.IconSize.y* m_IconPos.y), glm::vec2(IconAtlas.IconSize.x, IconAtlas.IconSize.y), IconAtlas.AtlasSize); 
     ImGui::Image(reinterpret_cast<ImTextureID>(IconAtlas.AtlasID), ImVec2(100, 100), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
     ImGui::TextUnformatted(entry.path().filename().string().c_str());
     // if(entry.path().string() == SelectedFile){

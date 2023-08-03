@@ -5,7 +5,7 @@
 #include <typeinfo>
 
 
-Component::Component(std::string File,std::string ArgName, unsigned int ArgId, bool luaComp) :LuaFile(File), Name(ArgName), id(ArgId)
+Component::Component(std::string File,std::string ArgName, unsigned int ArgId, bool luaComp) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
 {
     if(!luaComp) return;
     L = luaL_newstate();
@@ -24,7 +24,7 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
         lua_pop(L, 1);
         const char* index = luaL_checkstring(L, 2);
         if(comp->Variables.find(index) != comp->Variables.end()){
-            comp->Variables.at(index)->GetFromLua(L);
+            comp->Variables.at(index)->SendToLua(L);
             return 1;
         }
         return 0;
@@ -41,7 +41,7 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
         const char* index = luaL_checkstring(L, 2);
 
         if(comp->Variables.find(index) != comp->Variables.end()){
-            comp->Variables.at(index)->SendToLua(L);
+            comp->Variables.at(index)->GetFromLua(L);
         }
         return 0;
     };
@@ -67,7 +67,7 @@ Component::~Component()
 
 void Component::ExecuteFunction(std::string Name)
 {
-    std::string FullPath = LuaFile;
+    std::string FullPath = m_LuaFile;
     UpdateLuaVariables();
     ScriptingEngine::LuaFunction(L, Name);
 }
@@ -78,38 +78,6 @@ void Component::UpdateLuaVariables()
     for(auto const& Var : Variables)
     {
         Var.second->SendToLua(L);
-        // if(Var.second.Type == LUA_TTABLE)
-        // {
-        //     lua_newtable(L);
-        //     for(const LuaTableIt& TableVariable : std::get<std::vector<LuaTableIt>>(Var.second.Contents))
-        //     {
-        //         if(TableVariable.Type == LUA_TSTRING){
-        //             if(std::holds_alternative<int>(TableVariable.Key)){
-        //                 lua_pushstring(L, std::to_string(std::get<int>(TableVariable.Key)).c_str());
-        //             }else if(std::holds_alternative<std::string>(TableVariable.Key)){
-        //                 lua_pushstring(L, std::get<std::string>(TableVariable.Key).c_str());
-        //             }
-        //             lua_pushstring(L, std::get<std::string>(TableVariable.Contents).c_str());
-        //             lua_settable(L, -3);
-        //         }else if(TableVariable.Type == LUA_TNUMBER){ 
-        //             if(std::holds_alternative<int>(TableVariable.Key)){
-        //                 lua_pushstring(L, std::to_string(std::get<int>(TableVariable.Key)).c_str());
-        //             }else if(std::holds_alternative<std::string>(TableVariable.Key)){
-        //                 lua_pushstring(L, std::get<std::string>(TableVariable.Key).c_str());
-        //             }
-        //             lua_pushnumber(L, std::get<float>(TableVariable.Contents));
-        //             lua_settable(L, -3);
-        //         }else if(TableVariable.Type == LUA_TBOOLEAN){
-        //             if(std::holds_alternative<int>(TableVariable.Key)){
-        //                 lua_pushstring(L, std::to_string(std::get<int>(TableVariable.Key)).c_str());
-        //             }else if(std::holds_alternative<std::string>(TableVariable.Key)){
-        //                 lua_pushstring(L, std::get<std::string>(TableVariable.Key).c_str());
-        //             }
-        //             lua_pushboolean(L, std::get<bool>(TableVariable.Contents));
-        //             lua_settable(L, -3);
-        //         }
-        //     }
-        // }
         lua_setglobal(L, Var.first.c_str());
     }
 }
@@ -125,7 +93,7 @@ struct LuaVariable{
 
 bool Component::GetLuaVariables()
 {
-    if (luaL_loadfile(L, LuaFile.c_str()) || lua_pcall(L, 0, 0, 0)) {
+    if (luaL_loadfile(L, m_LuaFile.c_str()) || lua_pcall(L, 0, 0, 0)) {
         std::stringstream ss;
         ss<< "Error loading script: " << lua_tostring(L, -1) << std::endl;
         SapphireEngine::Log(ss.str(), SapphireEngine::Error);
@@ -257,6 +225,7 @@ void Component::Load(nlohmann::json JSON)
         SapphireEngine::Variable* CurrentlyEditedVariable = Variables[JSONVariable.key()];
 
         //At least at my knowledge of programming/c++, I couldn't find a way to remove this repetetive code.
+        //TODO NVM I'm dumb create a simple template :)
         if(JsonArray[0] == typeid(SapphireEngine::Float).hash_code()){ 
             if(CurrentlyEditedVariable == nullptr)
                 CurrentlyEditedVariable = new SapphireEngine::Float(JSONVariable.key(), Variables);
@@ -264,6 +233,10 @@ void Component::Load(nlohmann::json JSON)
         }else if(JsonArray[0] == typeid(SapphireEngine::Bool).hash_code()){
             if(CurrentlyEditedVariable == nullptr)
                 CurrentlyEditedVariable = new SapphireEngine::Bool(JSONVariable.key(), Variables);
+            CurrentlyEditedVariable->Load(JsonArray);
+        }else if(JsonArray[0] == typeid(SapphireEngine::String).hash_code()){
+            if(CurrentlyEditedVariable == nullptr)
+                CurrentlyEditedVariable = new SapphireEngine::String(JSONVariable.key(), Variables);
             CurrentlyEditedVariable->Load(JsonArray);
         }else if(JsonArray[0] == typeid(SapphireEngine::Vec2).hash_code()){
             if(CurrentlyEditedVariable == nullptr)

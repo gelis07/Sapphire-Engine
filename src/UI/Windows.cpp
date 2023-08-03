@@ -26,7 +26,7 @@ void Windows::DockSpace()
 {
     ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
     ImGui::SetNextWindowPos(ImVec2(0, 0));
-    ImGui::Begin("DockSpace", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_MenuBar);
+    ImGui::Begin("DockSpace", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus | ImGuiWindowFlags_MenuBar);
     ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
     ImGui::End();
@@ -79,3 +79,86 @@ void Windows::LogWindow()
 
     ImGui::End();
 }
+
+void Windows::Toolbar()
+{
+    if (ImGui::BeginMainMenuBar())
+    {
+//        FileMenu();
+//        if(Get->SceneFile == ""){
+//            ImGui::Text("No scene loaded");
+//        }else{
+//            ImGui::Text(std::string("Viewing scene: " + CurrentScene->SceneFile).c_str());
+//        }
+        ImGui::EndMainMenuBar();
+    }
+}
+//void Windows::FileMenu() const {
+//    if (ImGui::BeginMenu("File"))
+//    {
+//        if(ImGui::Selectable("Save"))
+//        {
+//            ImGui::OpenPopup("Save Menu");
+//        }
+//        if (ImGui::BeginPopup("Save Menu"))
+//        {
+//            ImGui::InputText("Scene Name", Name);
+//            if (ImGui::MenuItem("Save"))
+//            {
+//                CurrentScene->Save(std::string(Name) + ".scene");
+//            }
+//
+//            ImGui::EndPopup();
+//        }
+//        if(ImGui::Selectable("Load"))
+//        {
+//            ImGui::OpenPopup("Load Menu");
+//        }
+//        if (ImGui::BeginPopup("Load Menu"))
+//        {
+//            ImGui::InputText("Scene Name", Name, sizeof(Name));
+//            if (ImGui::MenuItem("Load"))
+//            {
+//                CurrentScene->Load(std::string(Name), window);
+//            }
+//
+//            ImGui::EndPopup();
+//        }
+//
+//        ImGui::EndMenu();
+//    }
+//}
+//
+//void Windows::File() const{if (ImGui::BeginMenu("File"))
+//        {
+//            if(ImGui::Selectable("Save"))
+//            {
+//                ImGui::OpenPopup("Save Menu");
+//            }
+//            if (ImGui::BeginPopup("Save Menu"))
+//            {
+//                ImGui::InputText("Scene Name", Name, sizeof(Name), ImGuiInputTextFlags_CharsNoBlank);
+//                if (ImGui::MenuItem("Save"))
+//                {
+//                    CurrentScene->Save(std::string(Name) + ".scene");
+//                }
+//
+//                ImGui::EndPopup();
+//            }
+//            if(ImGui::Selectable("Load"))
+//            {
+//                ImGui::OpenPopup("Load Menu");
+//            }
+//            if (ImGui::BeginPopup("Load Menu"))
+//            {
+//                ImGui::InputText("Scene Name", Name, sizeof(Name));
+//                if (ImGui::MenuItem("Load"))
+//                {
+//                    CurrentScene->Load(std::string(Name), window);
+//                }
+//
+//                ImGui::EndPopup();
+//            }
+//
+//            ImGui::EndMenu();
+//        }}

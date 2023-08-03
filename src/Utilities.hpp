@@ -3,7 +3,6 @@
 #define SCREEN_WIDTH 960.0f
 #define SCREEN_HEIGHT 540.0f
 #define EXPORT 0
-
 #define GLCall(x) \
     x; \
     { \

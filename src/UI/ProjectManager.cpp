@@ -13,7 +13,7 @@ ProjectManager::ProjectManager()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
-    NewIo = &io;
+    IO = &io;
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     io.DisplaySize = ImVec2(600, 400);
     ImFontConfig config;
@@ -54,7 +54,7 @@ std::string ProjectManager::Run()
         ImGui::GetIO().DisplaySize = ImVec2(x, y);
         ImGui::SetNextWindowSize(ImGui::GetIO().DisplaySize);
         ImGui::SetNextWindowPos(ImVec2(0, 0));
-        ImGui::Begin("Fullscreen Window", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
+        ImGui::Begin("Fullscreen m_Window", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoDecoration);
         ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - 20 - 30, 30));
         if(ImGui::Button("Create", ImVec2(30,30))){
             ImGui::OpenPopup("Create Project Popup");

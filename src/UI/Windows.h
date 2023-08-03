@@ -13,6 +13,7 @@
 class Windows{
     public:
         void Init(std::string&& Path);
+        void Toolbar();
         void DockSpace();
         void LogWindow();
         std::string MainPath;
@@ -21,8 +22,8 @@ class Windows{
     private:
         ImGuiContext* DefaultContext;
         ImGuiIO* IO;
-
-    //* Set up the Themes
+        void FileMenu() const;
+        //* Set up the Themes
 };
 
 const std::string& GetMainPath();

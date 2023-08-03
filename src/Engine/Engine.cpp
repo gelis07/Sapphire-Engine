@@ -11,8 +11,8 @@ Engine::Engine(std::string Path)
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
-    MainWindow = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Sapphire Engine", NULL, NULL);
-    glfwMakeContextCurrent(MainWindow);
+    m_Window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Sapphire Engine", NULL, NULL);
+    glfwMakeContextCurrent(m_Window);
     glfwSwapInterval(1);
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
@@ -22,25 +22,25 @@ Engine::Engine(std::string Path)
     LoadShader(Shapes::BasicShader, "Shaders/Basic.glsl");
     LoadShader(Shapes::GridShader, "Shaders/Grid.glsl");
 
-    windows.Init(std::move(Path));
-    viewport.Init(&ActiveScene);
-    playMode.Init(&ActiveScene);
-    MainPath = windows.MainPath;
-    ActiveScenePtr = &ActiveScene;
-    ImGui_ImplGlfw_InitForOpenGL(MainWindow, true);
+    m_Windows.Init(std::move(Path));
+    m_Viewport.Init(&m_ActiveScene);
+    m_PlayMode.Init(&m_ActiveScene);
+    MainPath = m_Windows.MainPath;
+    ActiveScenePtr = &m_ActiveScene;
+    ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init((char *)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
 
 
-    if(!EXPORT) glfwMaximizeWindow(MainWindow);
-    if(!EXPORT) FileExplorer::Init();
+    glfwMaximizeWindow(m_Window);
+    FileExplorer::Init();
 }
 
 void Engine::Run()
 {
     //The main loop.
-    while (!glfwWindowShouldClose(MainWindow))
+    while (!glfwWindowShouldClose(m_Window))
     {
-        ImGui::SetCurrentContext(windows.GetContext());
+        ImGui::SetCurrentContext(m_Windows.GetContext());
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
 
@@ -49,24 +49,24 @@ void Engine::Run()
         LastTime = currentTime;
 
         int NewWidth, NewHeight; 
-        glfwGetWindowSize(MainWindow, &NewWidth, &NewHeight); // Getting the size of the window
-        windows.GetWindowIO()->DisplaySize = ImVec2(NewWidth, NewHeight); // Setting ImGUI to acccess the whole window's place
+        glfwGetWindowSize(m_Window, &NewWidth, &NewHeight); // Getting the size of the window
+        m_Windows.GetWindowIO()->DisplaySize = ImVec2(NewWidth, NewHeight); // Setting ImGUI to acccess the whole window's place
         
-        if(!EXPORT) windows.DockSpace();
-        if(!EXPORT) FileExplorer::Open(windows.MainPath);
-        if(viewport.SelectedObj != nullptr)viewport.SelectedObj->Inspect();
-        if(!EXPORT) windows.LogWindow();
-        if(!EXPORT) ActiveScene.Hierechy(viewport.SelectedObj);
+        m_Windows.DockSpace();
+        FileExplorer::Open(m_Windows.MainPath);
+        if(m_Viewport.SelectedObj != nullptr)m_Viewport.SelectedObj->Inspect();
+        m_Windows.LogWindow();
+        m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
 
-        //* The viewport is the actual game scene
-        if(!EXPORT) viewport.Render();
-        if(!EXPORT) playMode.Render(windows.MainPath);
-        ImGui::SetCurrentContext(windows.GetContext());
-        if(!EXPORT) GLCall(glClearColor(0.3f, 0.5f, 0.4f, 1.0f));
-        if(!EXPORT) GLCall(glClear(GL_COLOR_BUFFER_BIT));
+        //* The m_Viewport is the actual game scene
+        m_Viewport.Render();
+        m_PlayMode.Render(m_Windows.MainPath);
+        ImGui::SetCurrentContext(m_Windows.GetContext());
+        GLCall(glClearColor(0.3f, 0.5f, 0.4f, 1.0f));
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        GLCall(glfwSwapBuffers(MainWindow));
+        GLCall(glfwSwapBuffers(m_Window));
         GLCall(glfwPollEvents());
     }
     ImGui_ImplOpenGL3_Shutdown();

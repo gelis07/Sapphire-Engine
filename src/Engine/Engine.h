@@ -8,13 +8,15 @@ class Engine{
     public:
         Engine(std::string Path);
         void Run();
+        static Scene* GetActiveScene();
+        static const std::string& GetMainPath();
     private:
-        Scene ActiveScene;
         float DeltaTime;
         float LastTime;
         glm::vec4 BackgroundColor;
-        GLFWwindow* MainWindow;
-        Windows windows;
-        SceneEditor viewport;
-        PlayMode playMode;
+        Scene m_ActiveScene;
+        GLFWwindow* m_Window;
+        Windows m_Windows;
+        SceneEditor m_Viewport;
+        PlayMode m_PlayMode;
 };
