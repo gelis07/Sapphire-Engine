@@ -110,7 +110,6 @@ void SceneEditor::Zooming(GLFWwindow* window, double xoffset, double yoffset){
     ImGuiIO& io = ImGui::GetIO();
     io.MouseWheelH += static_cast<float>(xoffset);
     io.MouseWheel += static_cast<float>(yoffset);
-    delete(camera);
 }
 
 static void Default(GLFWwindow* window, double xoffset, double yoffset){

@@ -73,9 +73,9 @@ std::shared_ptr<Object> Object::CreateObject(std::vector<std::shared_ptr<Object>
     NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0, false)));
     NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer", 0, false)));
 
-    GetVariable(NewObj->GetComponent<Renderer>(), "Color", glm::vec4) = glm::vec4(1);
-    GetVariable(NewObj->GetComponent<Transform>(), "Position", glm::vec3) = glm::vec3(0);
-    GetVariable(NewObj->GetComponent<Transform>(), "Size", glm::vec2) = glm::vec2(20.0f, 20.0f);
+    NewObj->GetComponent<Renderer>()->Color.AnyValue() = glm::vec4(1);
+    NewObj->GetComponent<Transform>()->Position.AnyValue() = glm::vec3(0);
+    NewObj->GetComponent<Transform>()->Size.AnyValue() = glm::vec3(20.0f, 20.0f, 0.0f);
     Objects.push_back(NewObj);
     return NewObj;
 }
@@ -91,11 +91,7 @@ void Object::Inspect()
 {
     ImGui::Begin("Inspect");
 
-    char *ObjName = new char[Name.length() + 1];
-    strcpy(ObjName, Name.c_str());
-
-    ImGui::InputText("Object Name", ObjName, sizeof(char) * 256, ImGuiInputTextFlags_CharsNoBlank);
-    this->Name = std::string(ObjName);
+    ImGui::InputText("Object Name", &Name);
     // if(ImGui::Button("Create Prefab")){
     //     SavePrefab();
     // }

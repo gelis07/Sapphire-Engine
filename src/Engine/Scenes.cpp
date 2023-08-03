@@ -4,59 +4,59 @@
 #include <vector>
 
 //* Not the best name but it just gets the stored value of the variant and stores it in a json accordingly
-void SetJSONVariable(Variable &var, const std::string name,nlohmann::json &Variables){
-    if(std::holds_alternative<float>(var.Contents)){
-        Variables[name] = {var.Type, std::get<float>(var.Contents)};
-    }
-    else if(std::holds_alternative<std::string>(var.Contents)){
-        Variables[name] = {var.Type, std::get<std::string>(var.Contents)};
-    }
-    else if(std::holds_alternative<bool>(var.Contents)){
-        Variables[name] = {var.Type, std::get<bool>(var.Contents)};
-    }
-    else if(std::holds_alternative<std::vector<LuaTableIt>>(var.Contents)){
-        nlohmann::json Table;
-        for(auto const& TableVariable : std::get<std::vector<LuaTableIt>>(var.Contents)){
-            std::string VarName;
-            if(std::holds_alternative<int>(TableVariable.Key)){
-                VarName = std::to_string(std::get<int>(TableVariable.Key));
-            }else if(std::holds_alternative<std::string>(TableVariable.Key)){
-                VarName = std::get<std::string>(TableVariable.Key);
-            }
-            if(TableVariable.Type == LUA_TNUMBER){
-                Table[VarName] = {TableVariable.Type, std::get<float>(TableVariable.Contents)};
-            }
-            else if(TableVariable.Type == LUA_TSTRING){
-                Table[VarName] = {TableVariable.Type, std::get<std::string>(TableVariable.Contents)};
-            }
-            else if(TableVariable.Type == LUA_TBOOLEAN){
-                Table[VarName] = {TableVariable.Type, std::get<bool>(TableVariable.Contents)};
-            }
-        }
-        Variables[name] = {LUA_TTABLE, std::get<std::string>(var.Contents)};
-    }else if(std::holds_alternative<glm::vec2>(var.Contents)){
-        nlohmann::json vector;
-        glm::vec2 VariableVector = std::get<glm::vec2>(var.Contents);
-        vector["x"] = VariableVector.x;
-        vector["y"] = VariableVector.y;
-        Variables[name] = {LUA_TTABLE, vector};
-    }else if(std::holds_alternative<glm::vec3>(var.Contents)){
-        nlohmann::json vector;
-        glm::vec3 VariableVector = std::get<glm::vec3>(var.Contents);
-        vector["x"] = VariableVector.x;
-        vector["y"] = VariableVector.y;
-        vector["z"] = VariableVector.z;
-        Variables[name] = {LUA_TTABLE, vector};
-    }else if(std::holds_alternative<glm::vec4>(var.Contents)){
-        nlohmann::json vector;
-        glm::vec4 VariableVector = std::get<glm::vec4>(var.Contents);
-        vector["x"] = VariableVector.x;
-        vector["y"] = VariableVector.y;
-        vector["z"] = VariableVector.z;
-        vector["w"] = VariableVector.w;
-        Variables[name] = {LUA_TTABLE, vector};
-    }
-}
+// void SetJSONVariable(Variable &var, const std::string name, nlohmann::json &Variables){
+//     if(std::holds_alternative<float>(var.Contents)){
+//         Variables[name] = {var.Type, std::get<float>(var.Contents)};
+//     }
+//     else if(std::holds_alternative<std::string>(var.Contents)){
+//         Variables[name] = {var.Type, std::get<std::string>(var.Contents)};
+//     }
+//     else if(std::holds_alternative<bool>(var.Contents)){
+//         Variables[name] = {var.Type, std::get<bool>(var.Contents)};
+//     }
+//     else if(std::holds_alternative<std::vector<LuaTableIt>>(var.Contents)){
+//         nlohmann::json Table;
+//         for(auto const& TableVariable : std::get<std::vector<LuaTableIt>>(var.Contents)){
+//             std::string VarName;
+//             if(std::holds_alternative<int>(TableVariable.Key)){
+//                 VarName = std::to_string(std::get<int>(TableVariable.Key));
+//             }else if(std::holds_alternative<std::string>(TableVariable.Key)){
+//                 VarName = std::get<std::string>(TableVariable.Key);
+//             }
+//             if(TableVariable.Type == LUA_TNUMBER){
+//                 Table[VarName] = {TableVariable.Type, std::get<float>(TableVariable.Contents)};
+//             }
+//             else if(TableVariable.Type == LUA_TSTRING){
+//                 Table[VarName] = {TableVariable.Type, std::get<std::string>(TableVariable.Contents)};
+//             }
+//             else if(TableVariable.Type == LUA_TBOOLEAN){
+//                 Table[VarName] = {TableVariable.Type, std::get<bool>(TableVariable.Contents)};
+//             }
+//         }
+//         Variables[name] = {LUA_TTABLE, std::get<std::string>(var.Contents)};
+//     }else if(std::holds_alternative<glm::vec2>(var.Contents)){
+//         nlohmann::json vector;
+//         glm::vec2 VariableVector = std::get<glm::vec2>(var.Contents);
+//         vector["x"] = VariableVector.x;
+//         vector["y"] = VariableVector.y;
+//         Variables[name] = {LUA_TTABLE, vector};
+//     }else if(std::holds_alternative<glm::vec3>(var.Contents)){
+//         nlohmann::json vector;
+//         glm::vec3 VariableVector = std::get<glm::vec3>(var.Contents);
+//         vector["x"] = VariableVector.x;
+//         vector["y"] = VariableVector.y;
+//         vector["z"] = VariableVector.z;
+//         Variables[name] = {LUA_TTABLE, vector};
+//     }else if(std::holds_alternative<glm::vec4>(var.Contents)){
+//         nlohmann::json vector;
+//         glm::vec4 VariableVector = std::get<glm::vec4>(var.Contents);
+//         vector["x"] = VariableVector.x;
+//         vector["y"] = VariableVector.y;
+//         vector["z"] = VariableVector.z;
+//         vector["w"] = VariableVector.w;
+//         Variables[name] = {LUA_TTABLE, vector};
+//     }
+// }
     
 
 
@@ -75,12 +75,7 @@ void Scene::Save(const std::string FilePath,const std::string& MainPath)
         {
             nlohmann::json JsonComp;
             JsonComp["path"] = component->GetFile();
-            nlohmann::json Variables;
-            for (auto &variable : component->Variables)
-            {
-                SetJSONVariable(variable.second, variable.first, Variables);
-            }
-            JsonComp["Variables"] = Variables;
+            JsonComp["Variables"] = component->Save(); // component->Save returns a json with all the variables
             JsonComponents[component->Name] = JsonComp;
         }
         JsonObj["Components"] = JsonComponents;
@@ -127,14 +122,14 @@ void Scene::Load(const std::string FilePath, const std::string& MainPath,GLFWwin
             if(element.key() == "Renderer")
             {
                 Renderer* comp = new Renderer(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
-                comp->Load(element.value()["Variables"]);
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Renderer>(dynamic_cast<Renderer*>(comp))));
+                obj->GetComponent<Renderer>()->Load(element.value()["Variables"]);
             }
             else if(element.key() == "Transform")
             {
                 Transform* comp = new Transform(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
-                comp->Load(element.value()["Variables"]);
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
+                obj->GetComponent<Transform>()->Load(element.value()["Variables"]);
             }else
             {
                 Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");

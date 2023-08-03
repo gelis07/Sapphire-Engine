@@ -55,6 +55,12 @@
 },
 {
   "directory": "D:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Scripting\\Variables.cpp.obj -c D:\\Gelis\\Programs\\Sapphire-Engine\\src\\Scripting\\Variables.cpp",
+  "file": "D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.obj"
+},
+{
+  "directory": "D:/Gelis/Programs/Sapphire-Engine/build",
   "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Objects\\Objects.cpp.obj -c D:\\Gelis\\Programs\\Sapphire-Engine\\src\\Objects\\Objects.cpp",
   "file": "D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.cpp",
   "output": "CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj"
@@ -124,6 +130,12 @@
   "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui.cpp.obj -c D:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui.cpp",
   "file": "D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.cpp",
   "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj"
+},
+{
+  "directory": "D:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -Winvalid-pch -include D:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui_stdlib.cpp.obj -c D:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui_stdlib.cpp",
+  "file": "D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_stdlib.cpp.obj"
 },
 {
   "directory": "D:/Gelis/Programs/Sapphire-Engine/build",

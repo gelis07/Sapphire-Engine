@@ -34,7 +34,7 @@ void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &C
 {
     proj = glm::ortho(0.0f, Viewport ? SCREEN_WIDTH / CameraZoom : SCREEN_WIDTH, 0.0f, Viewport ? SCREEN_HEIGHT / CameraZoom : SCREEN_HEIGHT, -1.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, GetVariable(Obj->GetComponent<Transform>(), "Position", glm::vec3));
+    model = glm::translate(model, Obj->GetComponent<Transform>()->Position.value<glm::vec3>());
     glm::mat4 view = glm::translate(glm::mat4(1.0f), CamPos);
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer));
     
@@ -69,13 +69,13 @@ void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &C
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuffer));
 
     //Here is the standard model view projection matrix
-    glm::vec3& Pos = GetVariable(Obj->GetComponent<Transform>(), "Position", glm::vec3);
+    glm::vec3& Pos = Obj->GetComponent<Transform>()->Position.value<glm::vec3>();
     glm::mat4 mvp = proj * view * model;
 
     GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1,GL_FALSE, &mvp[0][0]));
     SetUpUniforms(shader);
 
-    glm::vec4& Color = GetVariable(Obj->GetComponent<Renderer>(), "Color", glm::vec4);
+    glm::vec4& Color = Obj->GetComponent<Renderer>()->Color.value<glm::vec4>();
     if(WireFrame){
         GLCall(glUniform4f(glGetUniformLocation(shader, "u_Color"), LineColor.r, LineColor.g, LineColor.b, LineColor.a));
     }else{
@@ -96,14 +96,14 @@ void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &C
 
 void Shapes::Rectangle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
     std::array<glm::vec2, 4> RectPoints;
-    glm::vec2& ObjectSize = GetVariable(Obj->GetComponent<Transform>(), "Size", glm::vec2);
+    glm::vec3& ObjectSize = Obj->GetComponent<Transform>()->Size.value<glm::vec3>();
     //Getting each point of the rectangle
     RectPoints[0] = glm::vec2(ObjectSize.x/2, ObjectSize.y/2);
     RectPoints[1] = glm::vec2(-ObjectSize.x/2, ObjectSize.y/2);
     RectPoints[2] = glm::vec2(ObjectSize.x/2, -ObjectSize.y/2);
     RectPoints[3] = glm::vec2(-ObjectSize.x/2, -ObjectSize.y/2);
 
-    float& ObjectRotation = GetVariable(Obj->GetComponent<Transform>(), "Rotation", glm::vec3).z;
+    float& ObjectRotation = Obj->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
     std::array<glm::vec2, 4> NewRectPoints;
     NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[0].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
@@ -123,15 +123,15 @@ void Shapes::Rectangle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool Ou
 
 void Shapes::Circle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
     std::array<glm::vec2, 4> RectPoints;
-    glm::vec2 ObjectSize = GetVariable(Obj->GetComponent<Transform>(), "Size", glm::vec2);
-    glm::vec3 ObjectPos = GetVariable(Obj->GetComponent<Transform>(), "Position", glm::vec3);
+    glm::vec3& ObjectSize = Obj->GetComponent<Transform>()->Size.value<glm::vec3>();
+    glm::vec3& ObjectPos = Obj->GetComponent<Transform>()->Position.value<glm::vec3>();
     //Getting each point of the rectangle
     RectPoints[0] = glm::vec2(ObjectSize.x/2, ObjectSize.y/2);
     RectPoints[1] = glm::vec2(-ObjectSize.x/2, ObjectSize.y/2);
     RectPoints[2] = glm::vec2(ObjectSize.x/2, -ObjectSize.y/2);
     RectPoints[3] = glm::vec2(-ObjectSize.x/2, -ObjectSize.y/2);
 
-    float& ObjectRotation = GetVariable(Obj->GetComponent<Transform>(), "Rotation", glm::vec3).z;
+    float& ObjectRotation = Obj->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
     std::array<glm::vec2, 4> NewRectPoints;
     NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[0].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));

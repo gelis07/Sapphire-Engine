@@ -263,6 +263,30 @@ include/Imgui/imgui_impl_opengl3.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.s
 .PHONY : include/Imgui/imgui_impl_opengl3.cpp.s
 
+include/Imgui/imgui_stdlib.obj: include/Imgui/imgui_stdlib.cpp.obj
+.PHONY : include/Imgui/imgui_stdlib.obj
+
+# target to build an object file
+include/Imgui/imgui_stdlib.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_stdlib.cpp.obj
+.PHONY : include/Imgui/imgui_stdlib.cpp.obj
+
+include/Imgui/imgui_stdlib.i: include/Imgui/imgui_stdlib.cpp.i
+.PHONY : include/Imgui/imgui_stdlib.i
+
+# target to preprocess a source file
+include/Imgui/imgui_stdlib.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_stdlib.cpp.i
+.PHONY : include/Imgui/imgui_stdlib.cpp.i
+
+include/Imgui/imgui_stdlib.s: include/Imgui/imgui_stdlib.cpp.s
+.PHONY : include/Imgui/imgui_stdlib.s
+
+# target to generate assembly for a file
+include/Imgui/imgui_stdlib.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_stdlib.cpp.s
+.PHONY : include/Imgui/imgui_stdlib.cpp.s
+
 include/Imgui/imgui_tables.obj: include/Imgui/imgui_tables.cpp.obj
 .PHONY : include/Imgui/imgui_tables.obj
 
@@ -551,6 +575,30 @@ src/Scripting/Scripting.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.s
 .PHONY : src/Scripting/Scripting.cpp.s
 
+src/Scripting/Variables.obj: src/Scripting/Variables.cpp.obj
+.PHONY : src/Scripting/Variables.obj
+
+# target to build an object file
+src/Scripting/Variables.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.obj
+.PHONY : src/Scripting/Variables.cpp.obj
+
+src/Scripting/Variables.i: src/Scripting/Variables.cpp.i
+.PHONY : src/Scripting/Variables.i
+
+# target to preprocess a source file
+src/Scripting/Variables.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.i
+.PHONY : src/Scripting/Variables.cpp.i
+
+src/Scripting/Variables.s: src/Scripting/Variables.cpp.s
+.PHONY : src/Scripting/Variables.s
+
+# target to generate assembly for a file
+src/Scripting/Variables.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.s
+.PHONY : src/Scripting/Variables.cpp.s
+
 src/UI/FileExplorer/File.obj: src/UI/FileExplorer/File.cpp.obj
 .PHONY : src/UI/FileExplorer/File.obj
 
@@ -722,6 +770,9 @@ help:
 	@echo ... include/Imgui/imgui_impl_opengl3.obj
 	@echo ... include/Imgui/imgui_impl_opengl3.i
 	@echo ... include/Imgui/imgui_impl_opengl3.s
+	@echo ... include/Imgui/imgui_stdlib.obj
+	@echo ... include/Imgui/imgui_stdlib.i
+	@echo ... include/Imgui/imgui_stdlib.s
 	@echo ... include/Imgui/imgui_tables.obj
 	@echo ... include/Imgui/imgui_tables.i
 	@echo ... include/Imgui/imgui_tables.s
@@ -758,6 +809,9 @@ help:
 	@echo ... src/Scripting/Scripting.obj
 	@echo ... src/Scripting/Scripting.i
 	@echo ... src/Scripting/Scripting.s
+	@echo ... src/Scripting/Variables.obj
+	@echo ... src/Scripting/Variables.i
+	@echo ... src/Scripting/Variables.s
 	@echo ... src/UI/FileExplorer/File.obj
 	@echo ... src/UI/FileExplorer/File.i
 	@echo ... src/UI/FileExplorer/File.s

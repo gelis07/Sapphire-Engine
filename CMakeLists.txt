@@ -16,6 +16,7 @@ add_executable(Sapphire-Engine
     src/Engine/Views/SceneEditor.cpp
     src/Graphics/Grid.cpp
     src/Scripting/Scripting.cpp
+    src/Scripting/Variables.cpp
     src/Objects/Objects.cpp
     src/Scripting/LuaUtilities.cpp
     src/Scripting/Components.cpp
@@ -28,6 +29,7 @@ add_executable(Sapphire-Engine
     include/imgui/imgui_impl_glfw.cpp
     include/imgui/imgui_impl_opengl3.cpp
     include/imgui/imgui.cpp
+    include/imgui/imgui_stdlib.cpp
     include/imgui/imgui_tables.cpp
     include/imgui/imgui_widgets.cpp
     include/imgui/ImGuizmo.cpp

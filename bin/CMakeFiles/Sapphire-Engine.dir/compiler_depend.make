@@ -1243,6 +1243,24 @@ CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj: CMakeFi
   C:/mingw64/x86_64-w64-mingw32/include/imm.h \
   C:/mingw64/include/c++/12.2.0/stdlib.h
 
+CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_stdlib.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.cpp \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imconfig.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h \
+  C:/mingw64/x86_64-w64-mingw32/include/float.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stddef.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stddef.h \
+  C:/mingw64/x86_64-w64-mingw32/include/crtdefs.h \
+  C:/mingw64/x86_64-w64-mingw32/include/string.h \
+  C:/mingw64/x86_64-w64-mingw32/include/assert.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  C:/mingw64/include/c++/12.2.0/string
+
 CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_tables.cpp \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.h \
@@ -1576,11 +1594,12 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: CMakeFiles/Sapphire-En
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  C:/mingw64/include/c++/12.2.0/string \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Utilities.hpp \
   D:/Gelis/Programs/Sapphire-Engine/src/pch.h \
   C:/mingw64/include/c++/12.2.0/filesystem \
-  C:/mingw64/include/c++/12.2.0/string \
   C:/mingw64/include/c++/12.2.0/cstring \
   C:/mingw64/include/c++/12.2.0/x86_64-w64-mingw32/bits/c++config.h \
   C:/mingw64/include/c++/12.2.0/memory \
@@ -1603,12 +1622,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: CMakeFiles/Sapphire-En
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -1682,6 +1696,12 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj: CMakeFiles/Sapphire-En
   C:/mingw64/include/c++/12.2.0/iomanip \
   C:/mingw64/include/c++/12.2.0/any \
   C:/mingw64/include/c++/12.2.0/string_view \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GLFW/glfw3.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.h \
   D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/FileExplorer.h \
@@ -1867,17 +1887,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: CMakeFiles/Sapphire-En
   C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
   C:/mingw64/include/c++/12.2.0/stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -1958,9 +1968,14 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: CMakeFiles/Sapphire-En
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imconfig.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h \
   C:/mingw64/x86_64-w64-mingw32/include/float.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_internal.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/immintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/x86gprintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/ia32intrin.h \
@@ -2048,7 +2063,14 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj: CMakeFiles/Sapphire-En
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h
 
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx \
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.cpp \
@@ -2180,6 +2202,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sap
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GL/glew.h \
@@ -2190,12 +2213,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sap
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -2269,6 +2287,12 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj: CMakeFiles/Sap
   C:/mingw64/include/c++/12.2.0/iomanip \
   C:/mingw64/include/c++/12.2.0/any \
   C:/mingw64/include/c++/12.2.0/string_view \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GLFW/glfw3.h
 
 CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx \
@@ -2384,12 +2408,13 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  C:/mingw64/include/c++/12.2.0/string \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Utilities.hpp \
   D:/Gelis/Programs/Sapphire-Engine/src/pch.h \
   C:/mingw64/include/c++/12.2.0/iostream \
   C:/mingw64/include/c++/12.2.0/filesystem \
-  C:/mingw64/include/c++/12.2.0/string \
   C:/mingw64/include/c++/12.2.0/cstring \
   C:/mingw64/include/c++/12.2.0/x86_64-w64-mingw32/bits/c++config.h \
   C:/mingw64/include/c++/12.2.0/memory \
@@ -2412,12 +2437,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -2491,6 +2511,12 @@ CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj: CMakeFiles/
   C:/mingw64/include/c++/12.2.0/iomanip \
   C:/mingw64/include/c++/12.2.0/any \
   C:/mingw64/include/c++/12.2.0/string_view \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GLFW/glfw3.h
 
 CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx \
@@ -2564,17 +2590,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: CMakeFiles/Sapphire-
   C:/mingw64/include/c++/12.2.0/stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -2655,9 +2671,14 @@ CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: CMakeFiles/Sapphire-
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imconfig.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h \
   C:/mingw64/x86_64-w64-mingw32/include/float.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_internal.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/immintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/x86gprintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/ia32intrin.h \
@@ -2745,7 +2766,14 @@ CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj: CMakeFiles/Sapphire-
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h
 
 CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.cpp \
@@ -2783,17 +2811,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-
   C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
   C:/mingw64/include/c++/12.2.0/stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -2874,9 +2892,14 @@ CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imconfig.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h \
   C:/mingw64/x86_64-w64-mingw32/include/float.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_internal.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/immintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/x86gprintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/ia32intrin.h \
@@ -2964,7 +2987,14 @@ CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj: CMakeFiles/Sapphire-
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/FileExplorer.h \
   D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/File.h \
   C:/mingw64/include/c++/12.2.0/typeindex \
@@ -3123,7 +3153,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapp
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
   C:/mingw64/include/c++/12.2.0/map \
   C:/mingw64/include/c++/12.2.0/variant \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Utilities.hpp \
   D:/Gelis/Programs/Sapphire-Engine/src/pch.h \
   C:/mingw64/include/c++/12.2.0/math.h \
@@ -3138,20 +3168,6 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapp
   C:/mingw64/include/c++/12.2.0/functional \
   C:/mingw64/include/c++/12.2.0/typeinfo \
   C:/mingw64/include/c++/12.2.0/unordered_map \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stddef.h \
-  C:/mingw64/x86_64-w64-mingw32/include/stddef.h \
-  C:/mingw64/x86_64-w64-mingw32/include/crtdefs.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -3214,6 +3230,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapp
   C:/mingw64/x86_64-w64-mingw32/include/assert.h \
   C:/mingw64/include/c++/12.2.0/limits \
   C:/mingw64/include/c++/12.2.0/cstdio \
+  C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
   C:/mingw64/include/c++/12.2.0/istream \
   C:/mingw64/include/c++/12.2.0/clocale \
   C:/mingw64/x86_64-w64-mingw32/include/locale.h \
@@ -3232,10 +3249,18 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapp
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imconfig.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h \
   C:/mingw64/x86_64-w64-mingw32/include/float.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stddef.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stddef.h \
+  C:/mingw64/x86_64-w64-mingw32/include/crtdefs.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_internal.h \
   C:/mingw64/include/c++/12.2.0/stdlib.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/immintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/x86gprintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/ia32intrin.h \
@@ -3323,6 +3348,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapp
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GL/glew.h \
@@ -3330,6 +3356,12 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj: CMakeFiles/Sapp
   C:/mingw64/x86_64-w64-mingw32/include/GL/glu.h \
   C:/mingw64/x86_64-w64-mingw32/include/GL/gl.h \
   D:/Gelis/Programs/Sapphire-Engine/include/stb_image.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/LuaUtilities.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.h \
@@ -3373,17 +3405,7 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: CMakeFiles/Sa
   C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
   C:/mingw64/include/c++/12.2.0/stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
-  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -3464,9 +3486,14 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: CMakeFiles/Sa
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imconfig.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h \
   C:/mingw64/x86_64-w64-mingw32/include/float.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_internal.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/immintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/x86gprintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/ia32intrin.h \
@@ -3554,7 +3581,14 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj: CMakeFiles/Sa
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Grid.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.h \
@@ -3594,6 +3628,224 @@ CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj: CMakeFiles/Sapph
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
   C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h
+
+CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.cpp \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Utilities.hpp \
+  D:/Gelis/Programs/Sapphire-Engine/src/pch.h \
+  C:/mingw64/include/c++/12.2.0/math.h \
+  C:/mingw64/include/c++/12.2.0/iostream \
+  C:/mingw64/include/c++/12.2.0/filesystem \
+  C:/mingw64/include/c++/12.2.0/string \
+  C:/mingw64/include/c++/12.2.0/cstring \
+  C:/mingw64/include/c++/12.2.0/x86_64-w64-mingw32/bits/c++config.h \
+  C:/mingw64/x86_64-w64-mingw32/include/string.h \
+  C:/mingw64/include/c++/12.2.0/memory \
+  C:/mingw64/include/c++/12.2.0/fstream \
+  C:/mingw64/include/c++/12.2.0/sstream \
+  C:/mingw64/include/c++/12.2.0/array \
+  C:/mingw64/include/c++/12.2.0/vector \
+  C:/mingw64/include/c++/12.2.0/functional \
+  C:/mingw64/include/c++/12.2.0/typeinfo \
+  C:/mingw64/include/c++/12.2.0/map \
+  C:/mingw64/include/c++/12.2.0/variant \
+  C:/mingw64/include/c++/12.2.0/unordered_map \
+  D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
+  C:/mingw64/include/c++/12.2.0/algorithm \
+  C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
+  C:/mingw64/include/c++/12.2.0/bits/stl_algo.h \
+  C:/mingw64/include/c++/12.2.0/pstl/glue_algorithm_defs.h \
+  C:/mingw64/include/c++/12.2.0/bits/stl_pair.h \
+  C:/mingw64/include/c++/12.2.0/pstl/execution_defs.h \
+  C:/mingw64/include/c++/12.2.0/cstddef \
+  C:/mingw64/include/c++/12.2.0/initializer_list \
+  C:/mingw64/include/c++/12.2.0/iosfwd \
+  C:/mingw64/include/c++/12.2.0/iterator \
+  C:/mingw64/include/c++/12.2.0/bits/stl_iterator_base_types.h \
+  C:/mingw64/include/c++/12.2.0/bits/stl_iterator_base_funcs.h \
+  C:/mingw64/include/c++/12.2.0/bits/stl_iterator.h \
+  C:/mingw64/include/c++/12.2.0/bits/stream_iterator.h \
+  C:/mingw64/include/c++/12.2.0/debug/debug.h \
+  C:/mingw64/include/c++/12.2.0/bits/streambuf_iterator.h \
+  C:/mingw64/include/c++/12.2.0/bits/range_access.h \
+  C:/mingw64/include/c++/12.2.0/numeric \
+  C:/mingw64/include/c++/12.2.0/bits/stl_numeric.h \
+  C:/mingw64/include/c++/12.2.0/bits/concept_check.h \
+  C:/mingw64/include/c++/12.2.0/bits/move.h \
+  C:/mingw64/include/c++/12.2.0/type_traits \
+  C:/mingw64/include/c++/12.2.0/bit \
+  C:/mingw64/include/c++/12.2.0/ext/numeric_traits.h \
+  C:/mingw64/include/c++/12.2.0/bits/stl_function.h \
+  C:/mingw64/include/c++/12.2.0/pstl/glue_numeric_defs.h \
+  C:/mingw64/include/c++/12.2.0/utility \
+  C:/mingw64/include/c++/12.2.0/bits/stl_relops.h \
+  C:/mingw64/include/c++/12.2.0/bits/utility.h \
+  C:/mingw64/include/c++/12.2.0/forward_list \
+  C:/mingw64/include/c++/12.2.0/bits/forward_list.h \
+  C:/mingw64/include/c++/12.2.0/bits/allocator.h \
+  C:/mingw64/include/c++/12.2.0/ext/alloc_traits.h \
+  C:/mingw64/include/c++/12.2.0/ext/aligned_buffer.h \
+  C:/mingw64/include/c++/12.2.0/bits/forward_list.tcc \
+  C:/mingw64/include/c++/12.2.0/tuple \
+  C:/mingw64/include/c++/12.2.0/valarray \
+  C:/mingw64/include/c++/12.2.0/cmath \
+  C:/mingw64/include/c++/12.2.0/bits/cpp_type_traits.h \
+  C:/mingw64/include/c++/12.2.0/ext/type_traits.h \
+  C:/mingw64/x86_64-w64-mingw32/include/math.h \
+  C:/mingw64/include/c++/12.2.0/bits/std_abs.h \
+  C:/mingw64/include/c++/12.2.0/bits/valarray_array.h \
+  C:/mingw64/include/c++/12.2.0/cstdlib \
+  C:/mingw64/include/c++/12.2.0/new \
+  C:/mingw64/include/c++/12.2.0/bits/valarray_array.tcc \
+  C:/mingw64/include/c++/12.2.0/bits/valarray_before.h \
+  C:/mingw64/include/c++/12.2.0/bits/slice_array.h \
+  C:/mingw64/include/c++/12.2.0/bits/valarray_after.h \
+  C:/mingw64/include/c++/12.2.0/bits/gslice.h \
+  C:/mingw64/include/c++/12.2.0/bits/gslice_array.h \
+  C:/mingw64/include/c++/12.2.0/bits/mask_array.h \
+  C:/mingw64/include/c++/12.2.0/bits/indirect_array.h \
+  C:/mingw64/include/c++/12.2.0/exception \
+  C:/mingw64/include/c++/12.2.0/stdexcept \
+  C:/mingw64/include/c++/12.2.0/cstdint \
+  C:/mingw64/include/c++/12.2.0/version \
+  C:/mingw64/include/c++/12.2.0/cassert \
+  C:/mingw64/x86_64-w64-mingw32/include/assert.h \
+  C:/mingw64/include/c++/12.2.0/limits \
+  C:/mingw64/include/c++/12.2.0/cstdio \
+  C:/mingw64/x86_64-w64-mingw32/include/stdio.h \
+  C:/mingw64/include/c++/12.2.0/istream \
+  C:/mingw64/include/c++/12.2.0/clocale \
+  C:/mingw64/x86_64-w64-mingw32/include/locale.h \
+  C:/mingw64/include/c++/12.2.0/cctype \
+  C:/mingw64/x86_64-w64-mingw32/include/ctype.h \
+  C:/mingw64/include/c++/12.2.0/cerrno \
+  C:/mingw64/x86_64-w64-mingw32/include/errno.h \
+  C:/mingw64/include/c++/12.2.0/ios \
+  C:/mingw64/include/c++/12.2.0/ostream \
+  C:/mingw64/include/c++/12.2.0/iomanip \
+  C:/mingw64/include/c++/12.2.0/any \
+  C:/mingw64/include/c++/12.2.0/string_view \
+  D:/Gelis/Programs/Sapphire-Engine/src/UI/Windows.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_markdown.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imconfig.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/float.h \
+  C:/mingw64/x86_64-w64-mingw32/include/float.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/_mingw_stdarg.h \
+  C:/mingw64/x86_64-w64-mingw32/include/vadefs.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stddef.h \
+  C:/mingw64/x86_64-w64-mingw32/include/stddef.h \
+  C:/mingw64/x86_64-w64-mingw32/include/crtdefs.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/stdint.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_internal.h \
+  C:/mingw64/include/c++/12.2.0/stdlib.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include-fixed/limits.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/immintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/x86gprintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/ia32intrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/adxintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/bmiintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/bmi2intrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/cetintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/cldemoteintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/clflushoptintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/clwbintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/clzerointrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/enqcmdintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/fxsrintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/lzcntintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/lwpintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/movdirintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/mwaitintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/mwaitxintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/pconfigintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/popcntintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/pkuintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/rdseedintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/rtmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/serializeintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/sgxintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/tbmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/tsxldtrkintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/uintrintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/waitpkgintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/wbnoinvdintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xsaveintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xsavecintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xsaveoptintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xsavesintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xtestintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/hresetintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/mmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/xmmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/mm_malloc.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/emmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/pmmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/tmmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/smmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/wmmintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avxintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avxvnniintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx2intrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512fintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512erintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512pfintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512cdintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512bwintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512dqintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vlbwintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vldqintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512ifmaintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512ifmavlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vbmiintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vbmivlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx5124fmapsintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx5124vnniwintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vpopcntdqintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vbmi2intrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vbmi2vlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vnniintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vnnivlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vpopcntdqvlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512bitalgintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vp2intersectintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512vp2intersectvlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512fp16intrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512fp16vlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/shaintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/fmaintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/f16cintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/gfniintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/vaesintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/vpclmulqdqintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512bf16vlintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/avx512bf16intrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/amxtileintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/amxint8intrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/amxbf16intrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
+  C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/GL/glew.h \
+  C:/mingw64/x86_64-w64-mingw32/include/inttypes.h \
+  C:/mingw64/x86_64-w64-mingw32/include/GL/glu.h \
+  C:/mingw64/x86_64-w64-mingw32/include/GL/gl.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/stb_image.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h
 
@@ -3727,6 +3979,7 @@ CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: CMakeFiles/Sapp
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GL/glew.h \
@@ -3740,12 +3993,7 @@ CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: CMakeFiles/Sapp
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -3819,6 +4067,12 @@ CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj: CMakeFiles/Sapp
   C:/mingw64/include/c++/12.2.0/iomanip \
   C:/mingw64/include/c++/12.2.0/any \
   C:/mingw64/include/c++/12.2.0/string_view \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GLFW/glfw3.h \
   C:/mingw64/x86_64-w64-mingw32/include/windows.h \
   C:/mingw64/x86_64-w64-mingw32/include/_mingw.h \
@@ -4093,6 +4347,7 @@ CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: CMakeFi
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GL/glew.h \
@@ -4106,12 +4361,7 @@ CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: CMakeFi
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -4185,6 +4435,12 @@ CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj: CMakeFi
   C:/mingw64/include/c++/12.2.0/iomanip \
   C:/mingw64/include/c++/12.2.0/any \
   C:/mingw64/include/c++/12.2.0/string_view \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GLFW/glfw3.h \
   C:/mingw64/x86_64-w64-mingw32/include/windows.h \
   C:/mingw64/x86_64-w64-mingw32/include/_mingw.h \
@@ -4442,12 +4698,13 @@ CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj: CMakeFiles/Sapphir
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  C:/mingw64/include/c++/12.2.0/string \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Utilities.hpp \
   D:/Gelis/Programs/Sapphire-Engine/src/pch.h \
   C:/mingw64/include/c++/12.2.0/iostream \
   C:/mingw64/include/c++/12.2.0/filesystem \
-  C:/mingw64/include/c++/12.2.0/string \
   C:/mingw64/include/c++/12.2.0/cstring \
   C:/mingw64/include/c++/12.2.0/x86_64-w64-mingw32/bits/c++config.h \
   C:/mingw64/include/c++/12.2.0/memory \
@@ -4653,12 +4910,13 @@ CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj: CMakeFiles/Sapphire-Engin
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  C:/mingw64/include/c++/12.2.0/string \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Utilities.hpp \
   D:/Gelis/Programs/Sapphire-Engine/src/pch.h \
   C:/mingw64/include/c++/12.2.0/iostream \
   C:/mingw64/include/c++/12.2.0/filesystem \
-  C:/mingw64/include/c++/12.2.0/string \
   C:/mingw64/include/c++/12.2.0/cstring \
   C:/mingw64/include/c++/12.2.0/x86_64-w64-mingw32/bits/c++config.h \
   C:/mingw64/include/c++/12.2.0/memory \
@@ -4793,11 +5051,12 @@ CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: CMakeFiles/Sapphire-Engine.dir/
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/prfchwintrin.h \
   C:/mingw64/lib/gcc/x86_64-w64-mingw32/12.2.0/include/keylockerintrin.h \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imstb_textedit.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h \
+  C:/mingw64/include/c++/12.2.0/string \
   D:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Utilities.hpp \
   D:/Gelis/Programs/Sapphire-Engine/src/pch.h \
   C:/mingw64/include/c++/12.2.0/filesystem \
-  C:/mingw64/include/c++/12.2.0/string \
   C:/mingw64/include/c++/12.2.0/cstring \
   C:/mingw64/include/c++/12.2.0/x86_64-w64-mingw32/bits/c++config.h \
   C:/mingw64/include/c++/12.2.0/memory \
@@ -4820,12 +5079,7 @@ CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: CMakeFiles/Sapphire-Engine.dir/
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.h \
-  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
-  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h \
   D:/Gelis/Programs/Sapphire-Engine/include/json.hpp \
   C:/mingw64/include/c++/12.2.0/algorithm \
   C:/mingw64/include/c++/12.2.0/bits/stl_algobase.h \
@@ -4899,6 +5153,12 @@ CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj: CMakeFiles/Sapphire-Engine.dir/
   C:/mingw64/include/c++/12.2.0/iomanip \
   C:/mingw64/include/c++/12.2.0/any \
   C:/mingw64/include/c++/12.2.0/string_view \
+  D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lauxlib.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h \
+  D:/Gelis/Programs/Sapphire-Engine/include/Lua/lualib.h \
   D:/Gelis/Programs/Sapphire-Engine/include/GLFW/glfw3.h \
   D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.h \
   C:/mingw64/include/c++/12.2.0/chrono \
@@ -4967,6 +5227,12 @@ D:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/File.h:
 
 D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.h:
 
+D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h:
+
+D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h:
+
+D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h:
+
 C:/mingw64/include/c++/12.2.0/bits/gslice.h:
 
 C:/mingw64/include/c++/12.2.0/bits/valarray_after.h:
@@ -4983,17 +5249,15 @@ C:/mingw64/include/c++/12.2.0/utility:
 
 C:/mingw64/include/c++/12.2.0/pstl/glue_numeric_defs.h:
 
+D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.cpp:
+
 C:/mingw64/include/c++/12.2.0/bits/stl_numeric.h:
 
 C:/mingw64/include/c++/12.2.0/iterator:
 
 D:/Gelis/Programs/Sapphire-Engine/include/json.hpp:
 
-D:/Gelis/Programs/Sapphire-Engine/include/Lua/luaconf.h:
-
-D:/Gelis/Programs/Sapphire-Engine/include/Lua/lua.h:
-
-D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.h:
+D:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.h:
 
 D:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.h:
 
@@ -5012,6 +5276,10 @@ D:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.h:
 D:/Gelis/Programs/Sapphire-Engine/src/Engine/Engine.cpp:
 
 D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_widgets.cpp:
+
+D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.h:
+
+D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.cpp:
 
 D:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.h:
 

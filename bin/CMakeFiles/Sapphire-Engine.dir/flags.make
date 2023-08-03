@@ -26,6 +26,8 @@ CXX_FLAGS =  -Wno-dev -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwi
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj_OPTIONS = -Winvalid-pch;-include;D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
+# PCH options: CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.obj_OPTIONS = -Winvalid-pch;-include;D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj_OPTIONS = -Winvalid-pch;-include;D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj_OPTIONS = -Winvalid-pch;-include;D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
@@ -49,6 +51,8 @@ CXX_FLAGS =  -Wno-dev -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwi
 # PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj_OPTIONS = -Winvalid-pch;-include;D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj_OPTIONS = -Winvalid-pch;-include;D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+
+# PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_stdlib.cpp.obj_OPTIONS = -Winvalid-pch;-include;D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj_OPTIONS = -Winvalid-pch;-include;D:/Gelis/Programs/Sapphire-Engine/bin/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
