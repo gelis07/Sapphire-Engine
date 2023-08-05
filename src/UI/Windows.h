@@ -25,5 +25,3 @@ class Windows{
         void FileMenu() const;
         //* Set up the Themes
 };
-
-const std::string& GetMainPath();

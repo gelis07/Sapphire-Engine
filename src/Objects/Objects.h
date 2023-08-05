@@ -12,8 +12,8 @@ class Object
         void Inspect();
         static void SetUpObject(Object* obj,lua_State* L,const std::string& Name);
 
-        void SavePrefab(std::string path);
-        void LoadPrefab(std::string path,std::string FilePath, unsigned int ObjectsSize);
+        void SavePrefab();
+        static std::shared_ptr<Object> LoadPrefab(std::string FilePath);
 
         template<typename T>
         std::shared_ptr<T> GetComponent();
@@ -21,7 +21,7 @@ class Object
         std::enable_if_t<std::is_base_of_v<Component, Derived>, void> AddComponent(Derived* Comp);
         std::vector<std::shared_ptr<Component>>& GetComponents() {return Components;}
         
-        static std::shared_ptr<Object> CreateObject(std::vector<std::shared_ptr<Object>> &Objects, std::string &&ObjName);
+        static std::shared_ptr<Object> CreateObject(std::string &&ObjName);
 
         void OnCollision(Object* other);
         void OnUpdate();

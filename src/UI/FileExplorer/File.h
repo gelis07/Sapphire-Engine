@@ -1,11 +1,8 @@
 #pragma once
-#include "Utilities.hpp"
-#include "UI/Windows.h"
 #include <typeinfo>
 #include <functional>
 #include <typeindex>
-#include "Engine/Views/SceneEditor.h"
-#include "windows.h" //This is NOT the Windows.h from this file its the windows for the WinExec() function
+#include "Engine/Engine.h"
 
 class File{
     public:
@@ -22,9 +19,24 @@ class File{
         std::string Path;
         std::string Name;
     protected:
-        glm::vec2 m_IconPos;
+        glm::vec2 m_IconPos = glm::vec2(0);
 };
 
+//For the "unsupported" files.
+class Default : public File
+{
+    public:
+        void SetIconPos() override{ m_IconPos = glm::vec2(0,0);}
+        void OnClick(std::filesystem::directory_entry entry) 
+        {
+
+        }
+        void OnDoubleClick(std::filesystem::directory_entry entry) override
+        {
+            // WinExec((std::string("code ") + Engine::Get().GetMainPath()).c_str(), SW_HIDE);
+            // SapphireEngine::Log("Open script!", SapphireEngine::Info);
+        }
+};
 
 class LuaFile : public File
 {
@@ -36,7 +48,7 @@ class LuaFile : public File
         }
         void OnDoubleClick(std::filesystem::directory_entry entry) override
         {
-            WinExec((std::string("code ") + GetMainPath()).c_str(), SW_HIDE);
+            // WinExec((std::string("code ") + Engine::Get().GetMainPath()).c_str(), SW_HIDE);
             SapphireEngine::Log("Open script!", SapphireEngine::Info);
         }
 };
@@ -51,6 +63,6 @@ class SceneFile : public File
         }
         void OnDoubleClick(std::filesystem::directory_entry entry) override
         {
-            GetActiveScene()->Load(entry.path().filename().string(), GetMainPath(),glfwGetCurrentContext());
+            Engine::Get().GetActiveScene()->Load(entry.path().filename().string());
         }
 };

@@ -19,7 +19,7 @@ void PlayMode::Render(std::string& MainPath) //Here we need the main path becaus
     if(Paused && !m_Start){
         //This indicates that the game has been paused and we should reset the start boolean so next time the user hits play
         //The start functions get called
-        m_ActiveScene->Load(m_ActiveScene->SceneFile, MainPath,m_Window);
+        m_ActiveScene->Load(m_ActiveScene->SceneFile);
         m_Start = true;
     } 
     try {
@@ -63,7 +63,7 @@ bool PlayMode::ImGuiRender(unsigned int texture, std::string& MainPath)
         if(m_ActiveScene->SceneFile == ""){
             ImGui::OpenPopup("Save Menu");
         }else{
-            if(Paused) m_ActiveScene->Save(m_ActiveScene->SceneFile, MainPath);
+            if(Paused) m_ActiveScene->Save(m_ActiveScene->SceneFile);
             Paused = !Paused;
         }
     }
@@ -72,7 +72,7 @@ bool PlayMode::ImGuiRender(unsigned int texture, std::string& MainPath)
         ImGui::InputText("Scene Name", Name, sizeof(Name), ImGuiInputTextFlags_CharsNoBlank);
         if (ImGui::MenuItem("Save") || glfwGetKey(m_Window, GLFW_KEY_ENTER) == GLFW_PRESS)
         {
-            m_ActiveScene->Save(std::string(Name) + ".scene", MainPath);
+            m_ActiveScene->Save(std::string(Name) + ".scene");
             Paused = !Paused;
             ImGui::CloseCurrentPopup();
         }

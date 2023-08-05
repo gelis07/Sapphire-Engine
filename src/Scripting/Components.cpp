@@ -58,6 +58,8 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
 
 Component::~Component()
 {
+    if(L == nullptr) return; // This means the component is a native c++ component so the variables are stored on the stack.
+
     for (auto &&Variable : Variables)
     {
         delete Variable.second;
@@ -225,7 +227,6 @@ void Component::Load(nlohmann::json JSON)
         SapphireEngine::Variable* CurrentlyEditedVariable = Variables[JSONVariable.key()];
 
         //At least at my knowledge of programming/c++, I couldn't find a way to remove this repetetive code.
-        //TODO NVM I'm dumb create a simple template :)
         if(JsonArray[0] == typeid(SapphireEngine::Float).hash_code()){ 
             if(CurrentlyEditedVariable == nullptr)
                 CurrentlyEditedVariable = new SapphireEngine::Float(JSONVariable.key(), Variables);

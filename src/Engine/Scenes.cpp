@@ -2,69 +2,12 @@
 #include "UI/Windows.h"
 #include "json.hpp"
 #include <vector>
+#include "Engine.h"
 
-//* Not the best name but it just gets the stored value of the variant and stores it in a json accordingly
-// void SetJSONVariable(Variable &var, const std::string name, nlohmann::json &Variables){
-//     if(std::holds_alternative<float>(var.Contents)){
-//         Variables[name] = {var.Type, std::get<float>(var.Contents)};
-//     }
-//     else if(std::holds_alternative<std::string>(var.Contents)){
-//         Variables[name] = {var.Type, std::get<std::string>(var.Contents)};
-//     }
-//     else if(std::holds_alternative<bool>(var.Contents)){
-//         Variables[name] = {var.Type, std::get<bool>(var.Contents)};
-//     }
-//     else if(std::holds_alternative<std::vector<LuaTableIt>>(var.Contents)){
-//         nlohmann::json Table;
-//         for(auto const& TableVariable : std::get<std::vector<LuaTableIt>>(var.Contents)){
-//             std::string VarName;
-//             if(std::holds_alternative<int>(TableVariable.Key)){
-//                 VarName = std::to_string(std::get<int>(TableVariable.Key));
-//             }else if(std::holds_alternative<std::string>(TableVariable.Key)){
-//                 VarName = std::get<std::string>(TableVariable.Key);
-//             }
-//             if(TableVariable.Type == LUA_TNUMBER){
-//                 Table[VarName] = {TableVariable.Type, std::get<float>(TableVariable.Contents)};
-//             }
-//             else if(TableVariable.Type == LUA_TSTRING){
-//                 Table[VarName] = {TableVariable.Type, std::get<std::string>(TableVariable.Contents)};
-//             }
-//             else if(TableVariable.Type == LUA_TBOOLEAN){
-//                 Table[VarName] = {TableVariable.Type, std::get<bool>(TableVariable.Contents)};
-//             }
-//         }
-//         Variables[name] = {LUA_TTABLE, std::get<std::string>(var.Contents)};
-//     }else if(std::holds_alternative<glm::vec2>(var.Contents)){
-//         nlohmann::json vector;
-//         glm::vec2 VariableVector = std::get<glm::vec2>(var.Contents);
-//         vector["x"] = VariableVector.x;
-//         vector["y"] = VariableVector.y;
-//         Variables[name] = {LUA_TTABLE, vector};
-//     }else if(std::holds_alternative<glm::vec3>(var.Contents)){
-//         nlohmann::json vector;
-//         glm::vec3 VariableVector = std::get<glm::vec3>(var.Contents);
-//         vector["x"] = VariableVector.x;
-//         vector["y"] = VariableVector.y;
-//         vector["z"] = VariableVector.z;
-//         Variables[name] = {LUA_TTABLE, vector};
-//     }else if(std::holds_alternative<glm::vec4>(var.Contents)){
-//         nlohmann::json vector;
-//         glm::vec4 VariableVector = std::get<glm::vec4>(var.Contents);
-//         vector["x"] = VariableVector.x;
-//         vector["y"] = VariableVector.y;
-//         vector["z"] = VariableVector.z;
-//         vector["w"] = VariableVector.w;
-//         Variables[name] = {LUA_TTABLE, vector};
-//     }
-// }
-    
-
-
-
-void Scene::Save(const std::string FilePath,const std::string& MainPath)
+void Scene::Save(const std::string FilePath)
 {
     this->SceneFile = FilePath;
-    std::ofstream stream(MainPath + FilePath, std::ofstream::trunc);
+    std::ofstream stream(Engine::Get().GetMainPath() + FilePath, std::ofstream::trunc);
     nlohmann::json Data;
     unsigned int i = 0;
     nlohmann::json JsonObj;
@@ -89,13 +32,17 @@ void Scene::Save(const std::string FilePath,const std::string& MainPath)
     stream.close();
 }
 
-void Scene::Load(const std::string FilePath, const std::string& MainPath,GLFWwindow* window)
+void Scene::Load(const std::string FilePath)
 {
     this->SceneFile = FilePath;
-    std::ifstream stream(MainPath + FilePath);
+    std::ifstream stream(Engine::Get().GetMainPath() + FilePath);
     nlohmann::json Data;
     stream >> Data;
     stream.close();
+    for (auto &&object : Objects)
+    {
+        object->GetComponents().clear();
+    }
     Objects.clear();
     for (size_t i = 0; i < Data.size(); i++)
     {
@@ -141,6 +88,7 @@ void Scene::Load(const std::string FilePath, const std::string& MainPath,GLFWwin
         obj->GetComponent<Renderer>()->shape = shape;
         Objects.push_back(obj);
     }
+    Engine::Get().GetViewport().SelectedObj = nullptr;
 }
 
 void Scene::Hierechy(std::shared_ptr<Object> &SelectedObj)
@@ -174,20 +122,20 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            Object::CreateObject(Objects, ss.str());
+            Object::CreateObject(ss.str());
         }
         if (ImGui::MenuItem("Create Circle"))
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            std::shared_ptr<Object> Obj = Object::CreateObject(Objects, ss.str());
+            std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader, Obj);
         }
         if (ImGui::MenuItem("Create Rectangle"))
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            std::shared_ptr<Object> Obj = Object::CreateObject(Objects, ss.str());
+            std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, Obj);
         }
         ImGui::Separator();

@@ -7,6 +7,7 @@ namespace fs = std::filesystem;
 
 
 void FileExplorer::Init(){
+    File::RegisterFile("default", SET_FILE(Default));
     File::RegisterFile(".lua", SET_FILE(LuaFile));
     File::RegisterFile(".scene", SET_FILE(SceneFile));
     m_IconAtlas.AtlasID = LoadTexture("Assets/IconsAtlas.png");

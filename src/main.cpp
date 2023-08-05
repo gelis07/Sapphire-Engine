@@ -1,7 +1,5 @@
 #define GLEW_STATIC
 #include "Engine/Engine.h"
-#include <chrono>
-#include <thread>
 #include "Engine/StartUp.hpp"
 #include "UI/ProjectManager.h"
 // Download geogebra at https://www.geogebra.org/download?lang=en
@@ -16,8 +14,8 @@ int main(void)
     ProjectManager* Pm = new ProjectManager();
 
     //The engine
-    Engine engine(Pm->Run()); //Pm->Run() will return the Main Path for the Engine.
+    Engine::Get().Init(Pm->Run()); //Pm->Run() will return the Main Path for the Engine.
     delete(Pm);
-    engine.Run();
+    Engine::Get().Run();
     return 0;
 }

@@ -1,5 +1,5 @@
 #include "Windows.h"
-
+#include "Engine/Engine.h"
 void Windows::Init(std::string&& Path){
 
     IMGUI_CHECKVERSION();
@@ -84,81 +84,48 @@ void Windows::Toolbar()
 {
     if (ImGui::BeginMainMenuBar())
     {
-//        FileMenu();
-//        if(Get->SceneFile == ""){
-//            ImGui::Text("No scene loaded");
-//        }else{
-//            ImGui::Text(std::string("Viewing scene: " + CurrentScene->SceneFile).c_str());
-//        }
+        FileMenu();
+        if(Engine::Get().GetActiveScene()->SceneFile == ""){
+            ImGui::Text("No scene loaded");
+        }else{
+            ImGui::Text(std::string("Viewing scene: " + Engine::Get().GetActiveScene()->SceneFile).c_str());
+        }
         ImGui::EndMainMenuBar();
     }
 }
-//void Windows::FileMenu() const {
-//    if (ImGui::BeginMenu("File"))
-//    {
-//        if(ImGui::Selectable("Save"))
-//        {
-//            ImGui::OpenPopup("Save Menu");
-//        }
-//        if (ImGui::BeginPopup("Save Menu"))
-//        {
-//            ImGui::InputText("Scene Name", Name);
-//            if (ImGui::MenuItem("Save"))
-//            {
-//                CurrentScene->Save(std::string(Name) + ".scene");
-//            }
-//
-//            ImGui::EndPopup();
-//        }
-//        if(ImGui::Selectable("Load"))
-//        {
-//            ImGui::OpenPopup("Load Menu");
-//        }
-//        if (ImGui::BeginPopup("Load Menu"))
-//        {
-//            ImGui::InputText("Scene Name", Name, sizeof(Name));
-//            if (ImGui::MenuItem("Load"))
-//            {
-//                CurrentScene->Load(std::string(Name), window);
-//            }
-//
-//            ImGui::EndPopup();
-//        }
-//
-//        ImGui::EndMenu();
-//    }
-//}
-//
-//void Windows::File() const{if (ImGui::BeginMenu("File"))
-//        {
-//            if(ImGui::Selectable("Save"))
-//            {
-//                ImGui::OpenPopup("Save Menu");
-//            }
-//            if (ImGui::BeginPopup("Save Menu"))
-//            {
-//                ImGui::InputText("Scene Name", Name, sizeof(Name), ImGuiInputTextFlags_CharsNoBlank);
-//                if (ImGui::MenuItem("Save"))
-//                {
-//                    CurrentScene->Save(std::string(Name) + ".scene");
-//                }
-//
-//                ImGui::EndPopup();
-//            }
-//            if(ImGui::Selectable("Load"))
-//            {
-//                ImGui::OpenPopup("Load Menu");
-//            }
-//            if (ImGui::BeginPopup("Load Menu"))
-//            {
-//                ImGui::InputText("Scene Name", Name, sizeof(Name));
-//                if (ImGui::MenuItem("Load"))
-//                {
-//                    CurrentScene->Load(std::string(Name), window);
-//                }
-//
-//                ImGui::EndPopup();
-//            }
-//
-//            ImGui::EndMenu();
-//        }}
+std::string Name;
+void Windows::FileMenu() const {
+   if (ImGui::BeginMenu("File"))
+   {
+       if(ImGui::Selectable("Save"))
+       {
+           ImGui::OpenPopup("Save Menu");
+       }
+       if (ImGui::BeginPopup("Save Menu"))
+       {
+           ImGui::InputText("Scene Name", &Name);
+           if (ImGui::MenuItem("Save"))
+           {
+               Engine::Get().GetActiveScene()->Save(std::string(Name) + ".scene");
+           }
+
+           ImGui::EndPopup();
+       }
+       if(ImGui::Selectable("Load"))
+       {
+           ImGui::OpenPopup("Load Menu");
+       }
+       if (ImGui::BeginPopup("Load Menu"))
+       {
+           ImGui::InputText("Scene Name", &Name);
+           if (ImGui::MenuItem("Load"))
+           {
+               Engine::Get().GetActiveScene()->Load(std::string(Name));
+           }
+
+           ImGui::EndPopup();
+       }
+
+       ImGui::EndMenu();
+   }
+}

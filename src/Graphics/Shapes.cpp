@@ -4,7 +4,7 @@
 static glm::vec4 LineColor(1.0f, 0.0f, 0.0f, 1.0f);
 float lineWidth = 5.0f;
 //This is a complicated name but its just the shape constructor
-Shapes::Shape::Shape(unsigned int sh, std::shared_ptr<Object>& NewObj) : m_Shader(sh), m_ObjectRefrence(NewObj) 
+Shapes::Shape::Shape(unsigned int sh, std::shared_ptr<Object> NewObj) : m_Shader(sh), m_ObjectRefrence(NewObj) 
 {
     m_Shader = sh;
     GLCall(glGenVertexArrays(1, &m_VertexArray));

@@ -33,7 +33,11 @@ T *DragAndDrop<T>::ReceiveDrop(ImGuiWindow *window)
     {
         m_Dragging = false;
         return &m_Data; 
-    }else{
+    }else if(!ImGui::IsMouseDown(ImGuiMouseButton_Left) && m_Dragging && !(D.x < CursorPos.x && D.y < CursorPos.y && A.x > CursorPos.x && A.y > CursorPos.y)){
+        m_Dragging = false;
+        return nullptr;
+    }
+    else{
         return nullptr;
     }
 }

@@ -71,7 +71,7 @@ namespace Shapes
         public:
             Shapes::Type ShapeType = Shapes::Null;
 
-            Shape(unsigned int Shader, std::shared_ptr<Object>& NewObj);
+            Shape(unsigned int Shader, std::shared_ptr<Object> NewObj);
 
             // Thats the function that actually render's a shape
             void RenderShape(std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom,bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport = true);
@@ -91,13 +91,13 @@ namespace Shapes
     class Rectangle : public Shape
     {
         public:
-            Rectangle(unsigned int sh, std::shared_ptr<Object>& NewObj) : Shape(sh, NewObj) {ShapeType = RectangleT;}
+            Rectangle(unsigned int sh, std::shared_ptr<Object> NewObj) : Shape(sh, NewObj) {ShapeType = RectangleT;}
             void Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
     };
     class Circle : public Shape
     {
         public:
-            Circle(unsigned int sh, std::shared_ptr<Object>& NewObj) : Shape(sh, NewObj) {ShapeType = CircleT;}
+            Circle(unsigned int sh, std::shared_ptr<Object> NewObj) : Shape(sh, NewObj) {ShapeType = CircleT;}
             void Render(const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
     };
 

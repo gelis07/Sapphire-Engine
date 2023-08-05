@@ -1,4 +1,5 @@
 #include "LuaUtilities.h"
+#include "Engine/Engine.h"
 //* I tried my best at trying to find a more clean way of making these functions but this is the solution I ended up with.
 
 static std::unordered_map<std::string, int> Keys;
@@ -67,7 +68,7 @@ int LuaUtilities::LoadScene(lua_State* L) {
 
     const char* Scene = luaL_checkstring(L, 1);
 
-    GetActiveScene()->Load(std::string(Scene) + ".scene", GetMainPath() ,glfwGetCurrentContext());    
+    Engine::Get().GetActiveScene()->Load(std::string(Scene) + ".scene");    
     return 0;
 }
 int LuaUtilities::GetObject(lua_State * L)
@@ -80,10 +81,10 @@ int LuaUtilities::GetObject(lua_State * L)
     const char* ObjNameCstr = luaL_checkstring(L, 1);
     std::string ObjName = std::string(ObjNameCstr);
     bool foundObj = false;
-    for (size_t i = 0; i < GetActiveScene()->Objects.size(); i++)
+    for (size_t i = 0; i < Engine::Get().GetActiveScene()->Objects.size(); i++)
     {
-        if(ObjName == GetActiveScene()->Objects[i]->Name){
-            std::shared_ptr<Object> obj = GetActiveScene()->Objects[i];
+        if(ObjName == Engine::Get().GetActiveScene()->Objects[i]->Name){
+            std::shared_ptr<Object> obj = Engine::Get().GetActiveScene()->Objects[i];
             lua_pushlightuserdata(L, obj.get());
             luaL_getmetatable(L, "ObjectMetaTable");
             lua_istable(L, -1);
@@ -102,7 +103,7 @@ int LuaUtilities::GetCurrentScene(lua_State *L)
         SapphireEngine::Log(std::string("Expected 0 argument, got %d", n), SapphireEngine::Error);
         return luaL_error(L, "Expected 0 argument, got %d", n);
     }
-    lua_pushstring(L, GetActiveScene()->SceneFile.c_str());
+    lua_pushstring(L, Engine::Get().GetActiveScene()->SceneFile.c_str());
     return 1;
 }
 int LuaUtilities::GetCameraPos(lua_State *L)
@@ -141,7 +142,7 @@ int LuaUtilities::CreateObject(lua_State *L)
     }
     const char* ObjName = lua_tostring(L, -2);
     const char* ObjShape = lua_tostring(L, -1);
-    std::shared_ptr<Object> obj = Object::CreateObject(GetActiveScene()->Objects, std::string(ObjName));
+    std::shared_ptr<Object> obj = Object::CreateObject(std::string(ObjName));
     std::shared_ptr<Shapes::Shape> shape;
     if(std::string(ObjShape) == "Rectangle"){
         shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, obj);
@@ -163,13 +164,12 @@ int LuaUtilities::LoadObjectPrefab(lua_State *L)
     }
     const char* ObjName = lua_tostring(L, -1);
 
-    // std::shared_ptr<Object> obj = std::make_shared<Object>();
-
-    // obj->LoadPrefab(std::string(ObjName) + ".obj", GetActiveScene()->Objects.size(), Viewport::window);
-    // GetActiveScene()->Objects.push_back(obj);
-    // lua_pushlightuserdata(L, obj.get());
-    // luaL_getmetatable(L, "ObjectMetaTable");
-    // lua_setmetatable(L, -2);
+    // std::shared_ptr<Object> obj = Object::CreateObject(std::string(ObjName));
+    std::shared_ptr<Object> obj = Object::LoadPrefab(std::string(ObjName) + ".obj");
+    Engine::Get().GetActiveScene()->Objects.push_back(obj);
+    lua_pushlightuserdata(L, obj.get());
+    luaL_getmetatable(L, "ObjectMetaTable");
+    lua_setmetatable(L, -2);
     return 1;
 }
 

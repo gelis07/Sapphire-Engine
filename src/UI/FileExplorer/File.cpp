@@ -15,6 +15,12 @@ std::shared_ptr<File> File::CreateFile(const std::string &extension, std::string
         NewFile->Path = NewPath;
         NewFile->SetIconPos();
         return NewFile;
+    }else{
+        std::shared_ptr NewFile = File::FileCreationMap["default"]();
+        NewFile->Name = NewName;
+        NewFile->Path = NewPath;
+        NewFile->SetIconPos();
+        return NewFile;
     }
     return nullptr; // Unsupported file type
 }

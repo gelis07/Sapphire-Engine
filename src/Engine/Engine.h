@@ -6,11 +6,15 @@
 
 class Engine{
     public:
-        Engine(std::string Path);
+        Engine(const Engine&) = delete;
+        static Engine& Get() {return Instance;}
+        void Init(std::string Path);
         void Run();
-        static Scene* GetActiveScene();
-        static const std::string& GetMainPath();
+        Scene* GetActiveScene();
+        const std::string& GetMainPath();
+        SceneEditor& GetViewport() {return m_Viewport;}
     private:
+        Engine(){}
         float DeltaTime;
         float LastTime;
         glm::vec4 BackgroundColor;
@@ -19,4 +23,5 @@ class Engine{
         Windows m_Windows;
         SceneEditor m_Viewport;
         PlayMode m_PlayMode;
+        static Engine Instance;
 };

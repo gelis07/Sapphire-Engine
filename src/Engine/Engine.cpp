@@ -2,11 +2,9 @@
 #include "UI/FileExplorer/FileExplorer.h"
 #include "Graphics/ShaderFunc.h"
 
-Scene* ActiveScenePtr = nullptr;
-std::string MainPath = "";
+Engine Engine::Instance;
 
-//This could be called as the "Start" function for the engine.
-Engine::Engine(std::string Path)
+void Engine::Init(std::string Path)
 {
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -25,8 +23,6 @@ Engine::Engine(std::string Path)
     m_Windows.Init(std::move(Path));
     m_Viewport.Init(&m_ActiveScene);
     m_PlayMode.Init(&m_ActiveScene);
-    MainPath = m_Windows.MainPath;
-    ActiveScenePtr = &m_ActiveScene;
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init((char *)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
 
@@ -53,8 +49,9 @@ void Engine::Run()
         m_Windows.GetWindowIO()->DisplaySize = ImVec2(NewWidth, NewHeight); // Setting ImGUI to acccess the whole window's place
         
         m_Windows.DockSpace();
+        m_Windows.Toolbar();
         FileExplorer::Open(m_Windows.MainPath);
-        if(m_Viewport.SelectedObj != nullptr)m_Viewport.SelectedObj->Inspect();
+        if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
         m_Windows.LogWindow();
         m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
 
@@ -75,11 +72,12 @@ void Engine::Run()
     glfwTerminate();
 }
 
-const std::string &GetMainPath()
+Scene *Engine::GetActiveScene()
 {
-    return MainPath;
+    return &m_ActiveScene;
 }
 
-Scene* GetActiveScene() {
-    return ActiveScenePtr;
+const std::string &Engine::GetMainPath()
+{
+    return m_Windows.MainPath;
 }
