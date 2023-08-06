@@ -77,6 +77,13 @@ void Scene::Load(const std::string FilePath)
                 Transform* comp = new Transform(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
+            }else if(element.key() == "Camera") {
+                Camera* comp = new Camera(element.value()["path"], element.key(), obj->GetComponents().size(),element.value()["path"] != "");
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Camera>(dynamic_cast<Camera* >(comp))));
+                obj->GetComponents().back()->Load(element.value()["Variables"]);
+                shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader, obj);
+                shape->Wireframe() = true;
+                Engine::Get().GetPlay().CameraObject = obj;
             }else
             {
                 Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
@@ -84,6 +91,8 @@ void Scene::Load(const std::string FilePath)
                 obj->AddComponent<Component>(comp);
             }
         }
+        if(obj == Engine::Get().GetPlay().CameraObject)
+            obj->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0);
 
         obj->GetComponent<Renderer>()->shape = shape;
         Objects.push_back(obj);

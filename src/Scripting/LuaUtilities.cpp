@@ -166,7 +166,6 @@ int LuaUtilities::LoadObjectPrefab(lua_State *L)
 
     // std::shared_ptr<Object> obj = Object::CreateObject(std::string(ObjName));
     std::shared_ptr<Object> obj = Object::LoadPrefab(std::string(ObjName) + ".obj");
-    Engine::Get().GetActiveScene()->Objects.push_back(obj);
     lua_pushlightuserdata(L, obj.get());
     luaL_getmetatable(L, "ObjectMetaTable");
     lua_setmetatable(L, -2);

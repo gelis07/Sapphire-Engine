@@ -265,7 +265,7 @@ void Renderer::Render(bool&& IsSelected ,glm::vec3 CameraPos,float CameraZoom, b
     if(shape == nullptr) return;
     // Here it renders the object's outline to indicate that the current object is selected
     if(IsSelected){
-        shape->Render(CameraPos ,CameraZoom,true, false, IsViewport);
+        shape->Render(CameraPos ,CameraZoom,true, shape->Wireframe(), IsViewport);
     }
-    shape->Render(CameraPos ,CameraZoom,false, false, IsViewport);
+    shape->Render(CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
 }

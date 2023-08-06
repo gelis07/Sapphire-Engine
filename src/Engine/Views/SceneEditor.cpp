@@ -62,10 +62,10 @@ void SceneEditor::MoveCamera(){
     {
         if(glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
             if(FirstTimeClicking){
-                LastPos = CursorPosToWind - glm::vec2(ViewportCamera.position);
+                LastPos = CursorPosToWind - glm::vec2(ViewCamera.position);
                 FirstTimeClicking = false;
             }
-            ViewportCamera.position = glm::vec3(CursorPosToWind.x - LastPos.x, CursorPosToWind.y - LastPos.y, 0);
+            ViewCamera.position = glm::vec3(CursorPosToWind.x - LastPos.x, CursorPosToWind.y - LastPos.y, 0);
         }
     }
     if(glfwGetMouseButton(m_Window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && !FirstTimeClicking) FirstTimeClicking = true;
@@ -100,7 +100,7 @@ bool SceneEditor::ImGuiRender(unsigned int texture)
 }
 
 void SceneEditor::Zooming(GLFWwindow* window, double xoffset, double yoffset){
-    Camera* camera = static_cast<Camera*>(glfwGetWindowUserPointer(window));
+    ViewportCamera* camera = static_cast<ViewportCamera*>(glfwGetWindowUserPointer(window));
     if(yoffset < 0.0f && camera->Zoom <= 0.1f){
         camera->Zoom = 0.1f;
         return;
@@ -131,15 +131,18 @@ void SceneEditor::Render()
 
     if(!ClickedOnObj && !m_FirstTime) m_FirstTime = true;
     MoveCamera();
-    glfwSetWindowUserPointer(m_Window, &ViewportCamera);
+    glfwSetWindowUserPointer(m_Window, &ViewCamera);
     glfwSetScrollCallback(m_Window, IsViewportHovered ? Zooming : Default);
     // HandleObject(SelectedObj, m_ActiveScene->Objects);
     GLCall(glClearColor(0, 0, 0, 1));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
-    m_Grid.Render(ViewportCamera.position, ViewportCamera.Zoom);
+    m_Grid.Render(ViewCamera.position, ViewCamera.Zoom);
     for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
     {
-        m_ActiveScene->Objects[i]->GetComponent<Renderer>()->Render(m_ActiveScene->Objects[i] == SelectedObj, ViewportCamera.position, ViewportCamera.Zoom, true);
+        if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetComponent<Renderer>())
+            m_ActiveScene->Objects[i]->GetComponent<Renderer>()->Render(m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom, true);
+        else
+            SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
         //^ Should store the renderer on a variable and not search for it every frame
         m_ActiveScene->Objects[i]->id = i;
     }

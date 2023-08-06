@@ -18,12 +18,13 @@ uniform vec4 u_Color;
 uniform float RectWidth;
 uniform float RectHeight;
 uniform vec2 StartPoint;
+uniform float CameraZoom;
 void main()
 {
   vec2 Point;
   vec2 Center = vec2(0.5, 0.5);
-  Point.x = (gl_FragCoord.x - StartPoint.x) / RectWidth;
-  Point.y = (gl_FragCoord.y - StartPoint.y) / RectHeight;
+  Point.x = (gl_FragCoord.x / CameraZoom - StartPoint.x) / RectWidth;
+  Point.y = (gl_FragCoord.y / CameraZoom - StartPoint.y) / RectHeight;
   float Length = sqrt(((Point.x - Center.x) * (Point.x - Center.x)) + ((Point.y - Center.y) * (Point.y - Center.y)));
   if(Length <= 0.5){
     color = u_Color;

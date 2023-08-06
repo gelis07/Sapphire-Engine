@@ -37,7 +37,7 @@ add_executable(Sapphire-Engine
 
 # Add include directories
 target_include_directories(Sapphire-Engine PRIVATE
-    ${CMAKE_CURRENT_SOURCE_DIR}/include
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/src/
 )
 

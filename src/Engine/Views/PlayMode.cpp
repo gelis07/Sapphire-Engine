@@ -6,18 +6,27 @@ void PlayMode::Init(Scene* activeScene)
     m_ActiveScene = activeScene;
     m_Texture = CreateViewportTexture();
     m_FBO = CreateFBO(m_Texture);
+
+    CameraObject = std::make_shared<Object>("MainCamera");
+    CameraObject->AddComponent<Transform>(new Transform("", "Transform", 1, false));
+    CameraObject->AddComponent<Camera>(new Camera("", "Camera", 2, false));
+    CameraObject->AddComponent<Renderer>(new Renderer("", "Renderer", 3, false));
+    CameraObject->GetComponent<Renderer>()->shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader, CameraObject);
+    CameraObject->GetComponent<Renderer>()->shape->Wireframe() = true;
+    CameraObject->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+    activeScene->Objects.push_back(CameraObject);
 }
 
 void PlayMode::Render(std::string& MainPath) //Here we need the main path because we load the scene after the user hops out of play mode
 {
     if(!ImGuiRender(m_Texture, MainPath)) return;
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
-
-    GLCall(glClearColor(0, 0, 0, 1));
+    glm::vec4& Color = CameraObject->GetComponent<Camera>()->BgColor.value<glm::vec4>();
+    GLCall(glClearColor(Color.r, Color.g, Color.b, Color.a));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
     if(Paused && !m_Start){
-        //This indicates that the game has been paused and we should reset the start boolean so next time the user hits play
+        //This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
         //The start functions get called
         m_ActiveScene->Load(m_ActiveScene->SceneFile);
         m_Start = true;
@@ -25,18 +34,23 @@ void PlayMode::Render(std::string& MainPath) //Here we need the main path becaus
     try {
         for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
         {
-            m_ActiveScene->Objects[i]->GetComponent<Renderer>()->Render(false, glm::vec3(0), 1.0f,false);
+            if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetComponent<Renderer>()) {
+                if(m_ActiveScene->Objects[i] != CameraObject)
+                    renderer->Render(false, CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
+            }
+            else
+                SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
             if(!Paused){
                 m_ActiveScene->Objects[i]->OnStart();
                 m_ActiveScene->Objects[i]->OnUpdate();
             }
         }
-        //Changing the start bool to false here so all of the start functions get executed
+        //Changing the start bool to false here so all the start functions get executed
         if(!Paused) m_Start = false;
     }
     catch (const char* msg) {
         Paused = true;
-        Log(std::string(msg), SapphireEngine::Error);
+        SapphireEngine::Log(std::string(msg), SapphireEngine::Error);
     } 
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

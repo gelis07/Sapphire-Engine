@@ -7,7 +7,7 @@
 
 constexpr glm::vec4 BackgroundColor = glm::vec4(0,0,0,1);
 
-struct Camera{
+struct ViewportCamera{
     float Zoom = 1;
     glm::vec3 position = glm::vec3(0);
 };
@@ -16,7 +16,7 @@ class SceneEditor{
     public:
         void Render();
         void Init(Scene* activeScene);
-        Camera ViewportCamera; //This Camera is only for the m_Viewport NOT the game's camera
+        ViewportCamera ViewCamera; //This Camera is only for the m_Viewport NOT the game's camera
         std::shared_ptr<Object> SelectedObj;
     private:
         Grid m_Grid;

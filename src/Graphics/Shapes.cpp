@@ -39,7 +39,7 @@ void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &C
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer));
     
     // Here im rendering an outline for the object
-    if(WireFrame){
+    if(OutLine){
         //Here everyting is happening so the outline is uniformly spaced from the object
         for (size_t i = 0; i < vertices.size(); i++)
         {
@@ -76,7 +76,7 @@ void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &C
     SetUpUniforms(m_Shader);
 
     glm::vec4& Color = m_ObjectRefrence->GetComponent<Renderer>()->Color.value<glm::vec4>();
-    if(WireFrame){
+    if(OutLine){
         GLCall(glUniform4f(glGetUniformLocation(m_Shader, "u_Color"), LineColor.r, LineColor.g, LineColor.b, LineColor.a));
     }else{
         GLCall(glUniform4f(glGetUniformLocation(m_Shader, "u_Color"), Color.r, Color.g, Color.b, Color.a));
@@ -93,6 +93,9 @@ void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &C
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
 }
+
+//& Should (almost a must) create a function to abstarct this repetetive code.
+//? Maybe make it the default functon for the shape class?
 
 void Shapes::Rectangle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
     std::array<glm::vec2, 4> RectPoints;
@@ -161,4 +164,32 @@ void Shapes::Circle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLi
     /*  Now you might be thinking why I'm using a square to draw a circle but what I'm doing is 
         on the shader, I'm testing for each pixel if the vector from the square's origin to the pixel
         coordinates has a length less than the square's width/2. To study the code just head to Shaders/Circle.glsl .*/
+}
+
+void Shapes::CameraGizmo::Render(const glm::vec3 &CamPos, float CameraZoom, bool OutLine, bool WireFrame, bool Viewport)
+{
+    std::array<glm::vec2, 4> RectPoints;
+    glm::vec3& ObjectSize = m_ObjectRefrence->GetComponent<Transform>()->Size.value<glm::vec3>();
+    //Getting each point of the rectangle
+    RectPoints[0] = glm::vec2((ObjectSize.x/2)*2, (ObjectSize.y/2)*2);
+    RectPoints[1] = glm::vec2(0, (ObjectSize.y/2)*2);
+    RectPoints[2] = glm::vec2((ObjectSize.x/2)*2, 0);
+    RectPoints[3] = glm::vec2(0, 0);
+
+    float& ObjectRotation = m_ObjectRefrence->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
+    //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
+    std::array<glm::vec2, 4> NewRectPoints;
+    NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[0].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
+    NewRectPoints[1] = glm::vec2((RectPoints[1].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[1].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[1].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[1].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
+    NewRectPoints[2] = glm::vec2((RectPoints[2].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[2].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[2].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[2].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
+    NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[3].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[3].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[3].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
+
+
+    RenderShape({
+                {NewRectPoints[3].x , NewRectPoints[3].y},
+                {NewRectPoints[2].x, NewRectPoints[2].y},
+                {NewRectPoints[0].x, NewRectPoints[0].y},
+               {NewRectPoints[1].x, NewRectPoints[1].y}
+            }, CamPos,CameraZoom,OutLine, WireFrame, [](unsigned int shader) {  } ,Viewport);
+            //                                       ^The rectangle doesn't have any extra uniforms
 }
