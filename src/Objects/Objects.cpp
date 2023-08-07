@@ -72,7 +72,8 @@ std::shared_ptr<Object> Object::CreateObject(std::string &&ObjName)
 {
     std::shared_ptr<Object> NewObj = std::make_shared<Object>(std::move(ObjName));
     NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0, false)));
-    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer", 0, false)));
+    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
+    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<RigidBody>("", "Rigidbody", 0, false)));
 
     NewObj->GetComponent<Renderer>()->Color.AnyValue() = glm::vec4(1);
     NewObj->GetComponent<Transform>()->Position.AnyValue() = glm::vec3(0);

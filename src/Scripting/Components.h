@@ -2,7 +2,7 @@
 #include <map>
 #include <variant>
 #include "Variables.h"
-
+#include "PhysicsEngine/PhysicsEngine.h"
 class Component
 {
     public:
@@ -26,19 +26,19 @@ class Component
     protected:
         virtual void test() {} //! This... is just so dumb.
         lua_State* L = nullptr;
-        std::string m_LuaFile = "";
-        unsigned int m_ID;
+        int m_ID;
+        std::string m_LuaFile;
 };
 
 /*
     A component class should contain a SapphireEngine type if it should be rendered on the UI, Saved on the scene file and send/received from lua.
-    Also it should be Initialized on the Component constructor with the variable name and the Variables map (should stay the same for most variables). 
+    Also, it should be Initialized on the Component constructor with the variable name and the Variables map (should stay the same for most variables).
 */
 class Transform : public Component
 {
     public:
         Transform(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false)
-        : Component(File, ArgName, ArgId, LuaComp), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables)
+        : Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables)
         {
             Variables["Position"]->AnyValue() = glm::vec3(0);
             Variables["Rotation"]->AnyValue() = glm::vec3(0);
@@ -53,7 +53,7 @@ class Renderer : public Component
 {
     public:
         Renderer(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false)
-        : Component(File, ArgName, ArgId, LuaComp), Color("Color", Variables) {
+        : Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Color("Color", Variables) {
             Variables["Color"]->AnyValue() = glm::vec4(1);
         };
         std::shared_ptr<Shapes::Shape> shape;
@@ -66,11 +66,24 @@ class Camera : public Component
 {
     public:
         Camera(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false)
-        : Component(File, ArgName, ArgId, LuaComp), BgColor("BgColor", Variables), Zoom("Zoom", Variables){
-            Variables["BgColor"]->AnyValue() = glm::vec4(1);
+        : Component(std::move(File), std::move(ArgName), ArgId, LuaComp), BgColor("BgColor", Variables), Zoom("Zoom", Variables){
+            Variables["BgColor"]->AnyValue() = glm::vec4(0);
             Variables["Zoom"]->AnyValue() = 1.0f;
         };
         SapphireEngine::Color BgColor;
         SapphireEngine::Float Zoom;
-        void Render(bool&& IsSelected,glm::vec3 CameraPos,float CameraZoom, bool Viewport);
+};
+
+
+class RigidBody : public Component
+{
+    public:
+        RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false)
+        : Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Trigger("Trigger", Variables), Mass("Mass", Variables){
+            Variables["Trigger"]->AnyValue() = false;
+            Variables["Mass"]->AnyValue() = 1.0f;
+        };
+        SapphireEngine::Bool Trigger;
+        SapphireEngine::Float Mass;
+        void CheckForCollisions(Object* current);
 };

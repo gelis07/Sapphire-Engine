@@ -36,13 +36,15 @@ void PlayMode::Render(std::string& MainPath) //Here we need the main path becaus
         {
             if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetComponent<Renderer>()) {
                 if(m_ActiveScene->Objects[i] != CameraObject)
-                    renderer->Render(false, CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
+                    renderer->Render(false, -CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
             }
             else
                 SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
             if(!Paused){
                 m_ActiveScene->Objects[i]->OnStart();
                 m_ActiveScene->Objects[i]->OnUpdate();
+                if(std::shared_ptr<RigidBody> rb = m_ActiveScene->Objects[i]->GetComponent<RigidBody>())
+                    rb->CheckForCollisions(m_ActiveScene->Objects[i].get());
             }
         }
         //Changing the start bool to false here so all the start functions get executed

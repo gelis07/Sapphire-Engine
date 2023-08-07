@@ -1,7 +1,7 @@
 #include "Variables.h"
 
 void SapphireEngine::Float::RenderGUI(){
-    ImGui::InputFloat(Name.c_str(), std::any_cast<float>(&data));
+    ImGui::DragFloat(Name.c_str(), std::any_cast<float>(&data));
 }
 
 void SapphireEngine::Float::Save(nlohmann::json &JSON)
@@ -76,7 +76,7 @@ void SapphireEngine::String::Load(const nlohmann::json &jsonArray)
 
 void SapphireEngine::Vec2::RenderGUI()
 {
-    ImGui::InputFloat2(Name.c_str(), &(*std::any_cast<glm::vec2>(&data))[0]);
+    ImGui::DragFloat2(Name.c_str(), &(*std::any_cast<glm::vec2>(&data))[0]);
 }
 
 void SapphireEngine::Vec2::Save(nlohmann::json &JSON)
@@ -120,7 +120,7 @@ void SapphireEngine::Vec2::Load(const nlohmann::json &jsonArray)
 
 void SapphireEngine::Vec3::RenderGUI()
 {
-    ImGui::InputFloat3(Name.c_str(), &(*std::any_cast<glm::vec3>(&data))[0]);
+    ImGui::DragFloat3(Name.c_str(), &(*std::any_cast<glm::vec3>(&data))[0]);
 }
 
 void SapphireEngine::Vec3::Save(nlohmann::json &JSON)
@@ -171,7 +171,7 @@ void SapphireEngine::Vec3::Load(const nlohmann::json &jsonArray)
 
 void SapphireEngine::Vec4::RenderGUI()
 {
-    ImGui::InputFloat4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0]);
+    ImGui::DragFloat4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0]);
 }
 
 void SapphireEngine::Vec4::Save(nlohmann::json &JSON)

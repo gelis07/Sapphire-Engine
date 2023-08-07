@@ -33,6 +33,8 @@ add_executable(Sapphire-Engine
     include/imgui/imgui_tables.cpp
     include/imgui/imgui_widgets.cpp
     include/imgui/ImGuizmo.cpp
+    src/PhysicsEngine/PhysicsEngine.cpp
+    src/PhysicsEngine/PhysicsEngine.h
 )
 
 # Add include directories

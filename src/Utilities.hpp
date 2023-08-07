@@ -33,6 +33,9 @@ namespace SapphireEngine
     static float LengthVec(glm::vec2 vec){
         return sqrt(pow((vec.x), 2) + pow((vec.y), 2));
     }
+    static float LengthVec(glm::vec2 vec1, glm::vec2 vec2){
+        return sqrt(pow((vec1.x - vec2.x), 2) + pow((vec1.y - vec2.y), 2));
+    }
     static std::string Replace(std::string s,char c1, char c2)
     {
         int l = s.length();

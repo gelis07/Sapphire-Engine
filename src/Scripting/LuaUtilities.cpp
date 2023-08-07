@@ -112,13 +112,14 @@ int LuaUtilities::GetCameraPos(lua_State *L)
     if (n != 0) {
         return luaL_error(L, "Expected 0 argument, got %d", n);
     }
-    // lua_newtable(L);
+    lua_newtable(L);
 
-    // lua_pushnumber(L, MainCamera.x);
-    // lua_setfield(L, -2, "x");
+    glm::vec3& CameraPos = Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>();
+    lua_pushnumber(L, CameraPos.x);
+    lua_setfield(L, -2, "x");
 
-    // lua_pushnumber(L, MainCamera.y);
-    // lua_setfield(L, -2, "y");
+    lua_pushnumber(L, CameraPos.y);
+    lua_setfield(L, -2, "y");
 
     return 1;
 }
@@ -131,7 +132,7 @@ int LuaUtilities::SetCameraPos(lua_State *L)
     lua_Number x = lua_tonumber(L, -2);
     lua_Number y = lua_tonumber(L, -1);
 
-    // MainCamera = glm::vec3(x, y, 0);
+    Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>() = glm::vec3(x, y, 0);
     return 1;
 }
 int LuaUtilities::CreateObject(lua_State *L)

@@ -84,6 +84,10 @@ void Scene::Load(const std::string FilePath)
                 shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader, obj);
                 shape->Wireframe() = true;
                 Engine::Get().GetPlay().CameraObject = obj;
+            }else if(element.key() == "Rigidbody") {
+                RigidBody* comp = new RigidBody(element.value()["path"], element.key(), obj->GetComponents().size(),element.value()["path"] != "");
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<RigidBody>(dynamic_cast<RigidBody* >(comp))));
+                obj->GetComponents().back()->Load(element.value()["Variables"]);
             }else
             {
                 Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");

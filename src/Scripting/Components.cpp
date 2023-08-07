@@ -3,7 +3,7 @@
 #include "Components.h"
 #include "LuaUtilities.h"
 #include <typeinfo>
-
+#include "Engine/Engine.h"
 
 Component::Component(std::string File,std::string ArgName, unsigned int ArgId, bool luaComp) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
 {
@@ -268,4 +268,26 @@ void Renderer::Render(bool&& IsSelected ,glm::vec3 CameraPos,float CameraZoom, b
         shape->Render(CameraPos ,CameraZoom,true, shape->Wireframe(), IsViewport);
     }
     shape->Render(CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
+}
+
+void RigidBody::CheckForCollisions(Object *current) {
+    if(current->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
+            if(object->Name == "MainCamera" || object.get() == current) continue;
+            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+                PhysicsEngine::RectanglexRectangle(object, current);
+            }else{
+                PhysicsEngine::CirclexRectangle(object, current);
+            }
+        }
+    }else{
+        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
+            if(object->Name == "MainCamera" || object.get() == current) continue;
+            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+                PhysicsEngine::CirclexRectangle(object, current);
+            }else{
+                PhysicsEngine::CirclexCircle(object, current);
+            }
+        }
+    }
 }
