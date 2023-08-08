@@ -79,11 +79,17 @@ class RigidBody : public Component
 {
     public:
         RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false)
-        : Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Trigger("Trigger", Variables), Mass("Mass", Variables){
+        : Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Trigger("Trigger", Variables), Mass("Mass", Variables), Velocity("Velocity", Variables){
             Variables["Trigger"]->AnyValue() = false;
             Variables["Mass"]->AnyValue() = 1.0f;
+            Variables["Velocity"]->AnyValue() = glm::vec3(0);
+            Variables["Velocity"]->ShowOnInspector(false);
+            Variables["Velocity"]->SaveVariable(false);
         };
         SapphireEngine::Bool Trigger;
         SapphireEngine::Float Mass;
+        SapphireEngine::Vec3 Velocity;
+        glm::vec3 VelocityLastFrame; // This basically means that the variable will be private and will not communicate at all with the user.
         void CheckForCollisions(Object* current);
+        void Simulate();
 };

@@ -291,3 +291,7 @@ void RigidBody::CheckForCollisions(Object *current) {
         }
     }
 }
+
+void RigidBody::Simulate() {
+
+}

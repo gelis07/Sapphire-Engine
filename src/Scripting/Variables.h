@@ -15,11 +15,17 @@ namespace SapphireEngine{
             virtual void Load(const nlohmann::json& jsonArray) = 0;
             virtual void SendToLua(lua_State* L) = 0;
             virtual void GetFromLua(lua_State* L) = 0;
+            void ShowOnInspector(bool state) {m_ShowOnInspector = state;}
+            void SaveVariable(bool state) {m_SaveVariable = state;}
+            void CommunicateWithLua(bool state) {m_CommunicateWithLua = state;}
             std::any& AnyValue() {return data;} // this one just returns the std::any
             //This template returns the value with the variable defined
             template <typename T>
             T& value();
-        protected: 
+        protected:
+            bool m_ShowOnInspector = true;
+            bool m_SaveVariable = true;
+            bool m_CommunicateWithLua = true;
             std::string Name;
             std::any data;
     };

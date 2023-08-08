@@ -1,86 +1,103 @@
 #include "Variables.h"
 
 void SapphireEngine::Float::RenderGUI(){
+    if(!m_ShowOnInspector) return;
     ImGui::DragFloat(Name.c_str(), std::any_cast<float>(&data));
 }
 
 void SapphireEngine::Float::Save(nlohmann::json &JSON)
 {
+    if(!m_SaveVariable) return;
     JSON[Name] = {typeid(SapphireEngine::Float).hash_code(), std::any_cast<float>(data)};
 }
 
 void SapphireEngine::Float::SendToLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     lua_pushnumber(L, std::any_cast<float>(data));
 }
 
 void SapphireEngine::Float::GetFromLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     data = lua_tonumber(L, -1);
 }
 
 void SapphireEngine::Float::Load(const nlohmann::json &jsonArray)
 {
+    if(!m_SaveVariable) return;
     data = jsonArray[1].get<float>();
 }
 
 void SapphireEngine::Bool::RenderGUI()
 {
+    if(!m_ShowOnInspector) return;
     ImGui::Checkbox(Name.c_str(), std::any_cast<bool>(&data));
 }
 
 void SapphireEngine::Bool::Save(nlohmann::json &JSON)
 {
+    if(!m_SaveVariable) return;
     JSON[Name] = {typeid(SapphireEngine::Bool).hash_code(), std::any_cast<bool>(data)};
 }
 
 void SapphireEngine::Bool::SendToLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     lua_pushboolean(L, std::any_cast<bool>(data));
 }
 
 void SapphireEngine::Bool::GetFromLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     data = lua_toboolean(L, -1);
 }
 
 void SapphireEngine::Bool::Load(const nlohmann::json &jsonArray)
 {
+    if(!m_SaveVariable) return;
     data = jsonArray[1].get<bool>();
 }
 
 void SapphireEngine::String::RenderGUI()
 {
+    if(!m_ShowOnInspector) return;
     ImGui::InputText(Name.c_str(), std::any_cast<std::string>(&data));
 }
 
 void SapphireEngine::String::Save(nlohmann::json &JSON)
 {
+    if(!m_SaveVariable) return;
     JSON[Name] = {typeid(SapphireEngine::String).hash_code(), std::any_cast<std::string>(data)};
 }
 
 void SapphireEngine::String::SendToLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     lua_pushstring(L, std::any_cast<std::string>(data).c_str());
 }
 
 void SapphireEngine::String::GetFromLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     data = std::string(lua_tostring(L, -1));
 }
 
 void SapphireEngine::String::Load(const nlohmann::json &jsonArray)
 {
+    if(!m_SaveVariable) return;
     data = jsonArray[1].get<std::string>();
 }
 
 void SapphireEngine::Vec2::RenderGUI()
 {
+    if(!m_ShowOnInspector) return;
     ImGui::DragFloat2(Name.c_str(), &(*std::any_cast<glm::vec2>(&data))[0]);
 }
 
 void SapphireEngine::Vec2::Save(nlohmann::json &JSON)
 {
+    if(!m_SaveVariable) return;
     nlohmann::json Vector;
     glm::vec2& DataVector = std::any_cast<glm::vec2&>(data);
     Vector["x"] = DataVector.x;
@@ -90,6 +107,7 @@ void SapphireEngine::Vec2::Save(nlohmann::json &JSON)
 
 void SapphireEngine::Vec2::SendToLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     glm::vec2& vecValue = std::any_cast<glm::vec2&>(data);
     lua_newtable(L);
     lua_pushnumber(L, vecValue.x);
@@ -100,6 +118,7 @@ void SapphireEngine::Vec2::SendToLua(lua_State *L)
 
 void SapphireEngine::Vec2::GetFromLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     glm::vec2& vecValue = std::any_cast<glm::vec2&>(data);
     lua_getfield (L, -1, "x");
     vecValue.x = lua_tonumber(L, -1);
@@ -112,6 +131,7 @@ void SapphireEngine::Vec2::GetFromLua(lua_State *L)
 
 void SapphireEngine::Vec2::Load(const nlohmann::json &jsonArray)
 {
+    if(!m_SaveVariable) return;
     glm::vec2 vector;
     vector.x = jsonArray[1]["x"].get<float>();
     vector.y = jsonArray[1]["y"].get<float>();
@@ -120,11 +140,13 @@ void SapphireEngine::Vec2::Load(const nlohmann::json &jsonArray)
 
 void SapphireEngine::Vec3::RenderGUI()
 {
+    if(!m_ShowOnInspector) return;
     ImGui::DragFloat3(Name.c_str(), &(*std::any_cast<glm::vec3>(&data))[0]);
 }
 
 void SapphireEngine::Vec3::Save(nlohmann::json &JSON)
 {
+    if(!m_SaveVariable) return;
     nlohmann::json Vector;
     glm::vec3& DataVector = std::any_cast<glm::vec3&>(data);
     Vector["x"] = DataVector.x;
@@ -135,6 +157,7 @@ void SapphireEngine::Vec3::Save(nlohmann::json &JSON)
 
 void SapphireEngine::Vec3::SendToLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     glm::vec3& vecValue = std::any_cast<glm::vec3&>(data);
     lua_newtable(L);
     lua_pushnumber(L, vecValue.x);
@@ -147,6 +170,7 @@ void SapphireEngine::Vec3::SendToLua(lua_State *L)
 
 void SapphireEngine::Vec3::GetFromLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     glm::vec3& vecValue = std::any_cast<glm::vec3&>(data);
     lua_getfield (L, -1, "x");
     vecValue.x = lua_tonumber(L, -1);
@@ -162,6 +186,7 @@ void SapphireEngine::Vec3::GetFromLua(lua_State *L)
 
 void SapphireEngine::Vec3::Load(const nlohmann::json &jsonArray)
 {
+    if(!m_SaveVariable) return;
     glm::vec3 Vector;
     Vector.x = jsonArray[1]["x"].get<float>();
     Vector.y = jsonArray[1]["y"].get<float>();
@@ -171,11 +196,13 @@ void SapphireEngine::Vec3::Load(const nlohmann::json &jsonArray)
 
 void SapphireEngine::Vec4::RenderGUI()
 {
+    if(!m_ShowOnInspector) return;
     ImGui::DragFloat4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0]);
 }
 
 void SapphireEngine::Vec4::Save(nlohmann::json &JSON)
 {
+    if(!m_SaveVariable) return;
     nlohmann::json Vector;
     glm::vec4& DataVector = std::any_cast<glm::vec4&>(data);
     Vector["x"] = DataVector.x;
@@ -187,6 +214,7 @@ void SapphireEngine::Vec4::Save(nlohmann::json &JSON)
 
 void SapphireEngine::Vec4::SendToLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     glm::vec4& vecValue = std::any_cast<glm::vec4&>(data);
     lua_newtable(L);
     lua_pushnumber(L, vecValue.x);
@@ -201,6 +229,7 @@ void SapphireEngine::Vec4::SendToLua(lua_State *L)
 
 void SapphireEngine::Vec4::GetFromLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     glm::vec4& vecValue = std::any_cast<glm::vec4&>(data);
     lua_getfield (L, -1, "x");
     vecValue.x = lua_tonumber(L, -1);
@@ -219,6 +248,7 @@ void SapphireEngine::Vec4::GetFromLua(lua_State *L)
 
 void SapphireEngine::Vec4::Load(const nlohmann::json &jsonArray)
 {
+    if(!m_SaveVariable) return;
     glm::vec4 vector;
     vector.x = jsonArray[1]["x"].get<float>();
     vector.y = jsonArray[1]["y"].get<float>();
@@ -230,11 +260,13 @@ void SapphireEngine::Vec4::Load(const nlohmann::json &jsonArray)
 
 void SapphireEngine::Color::RenderGUI()
 {
+    if(!m_ShowOnInspector) return;
     ImGui::ColorEdit4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0]);
 }
 
 void SapphireEngine::Color::Save(nlohmann::json &JSON)
 {
+    if(!m_SaveVariable) return;
     nlohmann::json Color;
     glm::vec4& DataVector = std::any_cast<glm::vec4&>(data);
     Color["r"] = DataVector.r;
@@ -246,6 +278,7 @@ void SapphireEngine::Color::Save(nlohmann::json &JSON)
 
 void SapphireEngine::Color::SendToLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     glm::vec4& vecValue = std::any_cast<glm::vec4&>(data);
     lua_newtable(L);
     lua_pushnumber(L, vecValue.x);
@@ -260,6 +293,7 @@ void SapphireEngine::Color::SendToLua(lua_State *L)
 
 void SapphireEngine::Color::GetFromLua(lua_State *L)
 {
+    if(!m_CommunicateWithLua) return;
     glm::vec4& vecValue = std::any_cast<glm::vec4&>(data);
     lua_getfield(L, -1, "r");
     vecValue.x = lua_tonumber(L, -1);
@@ -278,6 +312,7 @@ void SapphireEngine::Color::GetFromLua(lua_State *L)
 
 void SapphireEngine::Color::Load(const nlohmann::json &jsonArray)
 {
+    if(!m_SaveVariable) return;
     glm::vec4 vector;
     vector.x = jsonArray[1]["r"].get<float>();
     vector.y = jsonArray[1]["g"].get<float>();
