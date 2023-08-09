@@ -1,0 +1,158 @@
+[
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -x c++-header -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\cmake_pch.hxx.gch -c C:\\Gelis\\Programs\\Sapphire-Engine\\build\\CMakeFiles\\Sapphire-Engine.dir\\cmake_pch.hxx.cxx",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.cxx",
+  "output": "CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\main.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\main.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/main.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Graphics\\Shapes.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Graphics\\Shapes.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Engine\\Scenes.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Engine\\Scenes.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Engine/Scenes.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Engine\\Engine.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Engine\\Engine.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Engine/Engine.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Engine\\Views\\PlayMode.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Engine\\Views\\PlayMode.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/PlayMode.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Engine\\Views\\SceneEditor.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Engine\\Views\\SceneEditor.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Graphics\\Grid.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Graphics\\Grid.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Graphics/Grid.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Scripting\\Scripting.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Scripting\\Scripting.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Scripting/Scripting.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Scripting\\Variables.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Scripting\\Variables.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Scripting/Variables.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Objects\\Objects.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Objects\\Objects.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Objects/Objects.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Scripting\\LuaUtilities.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Scripting\\LuaUtilities.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Scripting/LuaUtilities.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\Scripting\\Components.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\Scripting\\Components.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/Scripting/Components.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\UI\\FileExplorer\\File.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\UI\\FileExplorer\\File.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/File.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\UI\\Windows.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\UI\\Windows.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/UI/Windows.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\UI\\FileExplorer\\FileExplorer.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\UI\\FileExplorer\\FileExplorer.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/UI/FileExplorer/FileExplorer.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\UI\\ProjectManager.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\UI\\ProjectManager.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/UI/ProjectManager.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\stb_image.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\stb_image.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/stb_image.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/stb_image.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui_draw.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui_draw.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_draw.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_draw.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui_impl_glfw.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui_impl_glfw.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_glfw.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_glfw.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui_impl_opengl3.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui_impl_opengl3.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_impl_opengl3.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_impl_opengl3.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui_stdlib.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui_stdlib.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_stdlib.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_stdlib.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui_tables.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui_tables.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_tables.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui_widgets.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui_widgets.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_widgets.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\ImGuizmo.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\ImGuizmo.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj"
+}
+]

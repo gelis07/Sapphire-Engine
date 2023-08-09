@@ -2,6 +2,8 @@
 #include "Engine/Engine.h"
 #include "Engine/StartUp.hpp"
 #include "UI/ProjectManager.h"
+
+
 // Download geogebra at https://www.geogebra.org/download?lang=en
 int main(void)
 {

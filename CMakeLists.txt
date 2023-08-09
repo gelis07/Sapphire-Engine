@@ -34,7 +34,6 @@ add_executable(Sapphire-Engine
     include/imgui/imgui_widgets.cpp
     include/imgui/ImGuizmo.cpp
     src/PhysicsEngine/PhysicsEngine.cpp
-    src/PhysicsEngine/PhysicsEngine.h
 )
 
 # Add include directories
@@ -63,6 +62,7 @@ target_compile_options(Sapphire-Engine PRIVATE
     -g
     -DEXPORT=0
     -mwindows
+    -std=c++17
 )
 
 target_precompile_headers(Sapphire-Engine

@@ -1,0 +1,3 @@
+C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir
+C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/edit_cache.dir
+C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/rebuild_cache.dir
