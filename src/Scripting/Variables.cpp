@@ -20,7 +20,7 @@ void SapphireEngine::Float::SendToLua(lua_State *L)
 void SapphireEngine::Float::GetFromLua(lua_State *L)
 {
     if(!m_CommunicateWithLua) return;
-    data = lua_tonumber(L, -1);
+    data = (float)lua_tonumber(L, -1);
 }
 
 void SapphireEngine::Float::Load(const nlohmann::json &jsonArray)

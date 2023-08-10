@@ -503,6 +503,30 @@ src/Objects/Objects.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.s
 .PHONY : src/Objects/Objects.cpp.s
 
+src/PhysicsEngine/PhysicsEngine.obj: src/PhysicsEngine/PhysicsEngine.cpp.obj
+.PHONY : src/PhysicsEngine/PhysicsEngine.obj
+
+# target to build an object file
+src/PhysicsEngine/PhysicsEngine.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj
+.PHONY : src/PhysicsEngine/PhysicsEngine.cpp.obj
+
+src/PhysicsEngine/PhysicsEngine.i: src/PhysicsEngine/PhysicsEngine.cpp.i
+.PHONY : src/PhysicsEngine/PhysicsEngine.i
+
+# target to preprocess a source file
+src/PhysicsEngine/PhysicsEngine.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.i
+.PHONY : src/PhysicsEngine/PhysicsEngine.cpp.i
+
+src/PhysicsEngine/PhysicsEngine.s: src/PhysicsEngine/PhysicsEngine.cpp.s
+.PHONY : src/PhysicsEngine/PhysicsEngine.s
+
+# target to generate assembly for a file
+src/PhysicsEngine/PhysicsEngine.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.s
+.PHONY : src/PhysicsEngine/PhysicsEngine.cpp.s
+
 src/Scripting/Components.obj: src/Scripting/Components.cpp.obj
 .PHONY : src/Scripting/Components.obj
 
@@ -800,6 +824,9 @@ help:
 	@echo ... src/Objects/Objects.obj
 	@echo ... src/Objects/Objects.i
 	@echo ... src/Objects/Objects.s
+	@echo ... src/PhysicsEngine/PhysicsEngine.obj
+	@echo ... src/PhysicsEngine/PhysicsEngine.i
+	@echo ... src/PhysicsEngine/PhysicsEngine.s
 	@echo ... src/Scripting/Components.obj
 	@echo ... src/Scripting/Components.i
 	@echo ... src/Scripting/Components.s

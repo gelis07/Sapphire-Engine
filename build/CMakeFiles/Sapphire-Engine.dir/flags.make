@@ -60,3 +60,5 @@ CXX_FLAGS =  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
+# PCH options: CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+

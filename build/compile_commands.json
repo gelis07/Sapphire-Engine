@@ -154,5 +154,11 @@
   "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\ImGuizmo.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\ImGuizmo.cpp",
   "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.cpp",
   "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\PhysicsEngine\\PhysicsEngine.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\PhysicsEngine\\PhysicsEngine.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/PhysicsEngine/PhysicsEngine.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj"
 }
 ]

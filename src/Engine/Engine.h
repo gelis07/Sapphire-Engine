@@ -14,6 +14,7 @@ class Engine{
         const std::string& GetMainPath();
         SceneEditor& GetViewport() {return m_Viewport;}
         PlayMode& GetPlay() {return m_PlayMode;}
+        const float& GetDeltaTime() {return DeltaTime;}
     private:
         Engine(){}
         float DeltaTime;

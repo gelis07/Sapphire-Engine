@@ -226,7 +226,7 @@ void Component::Load(nlohmann::json JSON)
 
         SapphireEngine::Variable* CurrentlyEditedVariable = Variables[JSONVariable.key()];
 
-        //At least at my knowledge of programming/c++, I couldn't find a way to remove this repetetive code.
+        //At least at my knowledge of programming/c++, I couldn't find a way to remove this repetitive code.
         if(JsonArray[0] == typeid(SapphireEngine::Float).hash_code()){ 
             if(CurrentlyEditedVariable == nullptr)
                 CurrentlyEditedVariable = new SapphireEngine::Float(JSONVariable.key(), Variables);
@@ -270,28 +270,31 @@ void Renderer::Render(bool&& IsSelected ,glm::vec3 CameraPos,float CameraZoom, b
     shape->Render(CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
 }
 
- void RigidBody::CheckForCollisions(Object *current) {
-     if(current->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-         for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-             if(object->Name == "MainCamera" || object.get() == current) continue;
-             if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-                 PhysicsEngine::RectanglexRectangle(object, current);
-             }else{
-                 PhysicsEngine::CirclexRectangle(object, current);
-             }
+void RigidBody::CheckForCollisions(Object *current) {
+ if(current->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+     for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
+         if(object->Name == "MainCamera" || object.get() == current) continue;
+         if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+             PhysicsEngine::RectanglexRectangle(object, current);
+         }else{
+             PhysicsEngine::CirclexRectangle(object, current);
          }
-     }else{
-         for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-             if(object->Name == "MainCamera" || object.get() == current) continue;
-             if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-                 PhysicsEngine::CirclexRectangle(object, current);
-             }else{
-                 PhysicsEngine::CirclexCircle(object, current);
-             }
+     }
+ }else{
+     for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
+         if(object->Name == "MainCamera" || object.get() == current) continue;
+         if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+             PhysicsEngine::CirclexRectangle(object, current);
+         }else{
+             PhysicsEngine::CirclexCircle(object, current);
          }
      }
  }
+}
 
- void RigidBody::Simulate() {
-
- }
+void RigidBody::Simulate(Object *current) {
+    Velocity.value<glm::vec3>() = VelocityLastFrame - glm::vec3(0,-PhysicsEngine::g,0) * Engine::Get().GetDeltaTime();
+    glm::vec3 accelaration = (Velocity.value<glm::vec3>() - VelocityLastFrame) / Engine::Get().GetDeltaTime();
+    current->GetComponent<Transform>()->Position.value<glm::vec3>() += VelocityLastFrame * Engine::Get().GetDeltaTime() + (accelaration / 2.0f ) * Engine::Get().GetDeltaTime() * Engine::Get().GetDeltaTime();
+    VelocityLastFrame = Velocity.value<glm::vec3>();
+}

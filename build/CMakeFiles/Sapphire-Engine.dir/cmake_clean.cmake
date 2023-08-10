@@ -34,6 +34,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj.d"
   "CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj"
   "CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj.d"
+  "CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj"
+  "CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj.d"
   "CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj"
   "CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj.d"
   "CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj"

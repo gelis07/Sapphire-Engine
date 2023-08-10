@@ -89,7 +89,7 @@ class Camera : public Component
          SapphireEngine::Bool Trigger;
          SapphireEngine::Float Mass;
          SapphireEngine::Vec3 Velocity;
-         glm::vec3 VelocityLastFrame; // This basically means that the variable will be private and will not communicate at all with the user.
+         glm::vec3 VelocityLastFrame = glm::vec3(0); // This basically means that the variable will be private and will not communicate at all with the user.
          void CheckForCollisions(Object* current);
-         void Simulate();
+         void Simulate(Object *current);
  };

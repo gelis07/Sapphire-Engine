@@ -1,5 +1,5 @@
 #include "PlayMode.h"
-
+#include "Engine/Engine.h"
 void PlayMode::Init(Scene* activeScene)
 {
     m_Window = glfwGetCurrentContext();
@@ -25,6 +25,9 @@ void PlayMode::Render(std::string& MainPath) //Here we need the main path becaus
     GLCall(glClearColor(Color.r, Color.g, Color.b, Color.a));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
+    std::stringstream ss;
+    ss << "FPS: " << 1 / ImGui::GetIO().DeltaTime;
+    SapphireEngine::Log(ss.str(), SapphireEngine::Info);
     if(Paused && !m_Start){
         //This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
         //The start functions get called
@@ -41,10 +44,16 @@ void PlayMode::Render(std::string& MainPath) //Here we need the main path becaus
             else
                 SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
             if(!Paused){
+                if(m_Start){
+                    if(std::shared_ptr<RigidBody> rb = m_ActiveScene->Objects[i]->GetComponent<RigidBody>())
+                        rb->VelocityLastFrame = PhysicsEngine::Impulse(m_ActiveScene->Objects[i].get(), glm::vec3(0,1020,0));
+                }
                 m_ActiveScene->Objects[i]->OnStart();
                 m_ActiveScene->Objects[i]->OnUpdate();
-                if(std::shared_ptr<RigidBody> rb = m_ActiveScene->Objects[i]->GetComponent<RigidBody>())
+                if(std::shared_ptr<RigidBody> rb = m_ActiveScene->Objects[i]->GetComponent<RigidBody>()) {
                     rb->CheckForCollisions(m_ActiveScene->Objects[i].get());
+                    rb->Simulate(m_ActiveScene->Objects[i].get());
+                }
             }
         }
         //Changing the start bool to false here so all the start functions get executed
