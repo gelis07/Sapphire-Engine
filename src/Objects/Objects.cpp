@@ -56,7 +56,6 @@ void Object::OnStart()
         Components[i]->ExecuteFunction("OnStart");
         CalledStart = true;
     }
-
 }
 
 void Object::OnUpdate()

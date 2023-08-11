@@ -5,7 +5,7 @@
 #include <typeinfo>
 #include "Engine/Engine.h"
 
-Component::Component(std::string File,std::string ArgName, unsigned int ArgId, bool luaComp) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
+Component::Component(std::string File,std::string ArgName, unsigned int ArgId,bool luaComp) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
 {
     if(!luaComp) return;
     L = luaL_newstate();
@@ -23,6 +23,7 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
         Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
         lua_pop(L, 1);
         const char* index = luaL_checkstring(L, 2);
+
         if(comp->Variables.find(index) != comp->Variables.end()){
             comp->Variables.at(index)->SendToLua(L);
             return 1;
@@ -40,6 +41,12 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
         lua_pop(L, 1);
         const char* index = luaL_checkstring(L, 2);
 
+        lua_newtable(L);
+        for(auto&& function : comp->Functions){
+            lua_pushstring(L, function.first.c_str());
+            lua_pushcfunction(L, function.second);
+        }
+
         if(comp->Variables.find(index) != comp->Variables.end()){
             comp->Variables.at(index)->GetFromLua(L);
         }
@@ -53,7 +60,6 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
     lua_pushstring(L, "__newindex");
     lua_pushcfunction(L, ComponentNewIndex);
     lua_settable(L, -3);
-
 }
 
 Component::~Component()
@@ -165,6 +171,11 @@ void Component::SetLuaComponent(lua_State* ComponentsState)
 
     lua_pushlightuserdata(ComponentsState, this);
     lua_setfield(ComponentsState, componentTableIdx, "__userdata");
+
+    for(auto&& function : this->Functions){
+        lua_pushcfunction(ComponentsState, function.second);
+        lua_setfield(ComponentsState, componentTableIdx, function.first.c_str());
+    }
 
     luaL_getmetatable(ComponentsState, "Component");
     lua_setmetatable(ComponentsState, componentTableIdx);
@@ -297,4 +308,21 @@ void RigidBody::Simulate(Object *current) {
     glm::vec3 accelaration = (Velocity.value<glm::vec3>() - VelocityLastFrame) / Engine::Get().GetDeltaTime();
     current->GetComponent<Transform>()->Position.value<glm::vec3>() += VelocityLastFrame * Engine::Get().GetDeltaTime() + (accelaration / 2.0f ) * Engine::Get().GetDeltaTime() * Engine::Get().GetDeltaTime();
     VelocityLastFrame = Velocity.value<glm::vec3>();
+}
+
+int RigidBody::Impulse(lua_State *L) {
+    // Get the component table from the Lua stack
+    luaL_checktype(L, 1, LUA_TTABLE);
+
+    // Check if the component table has the '__userdata' field (the component pointer)
+    lua_getfield(L, 1, "__userdata");
+    RigidBody* rb = static_cast<RigidBody*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    float z = (float)luaL_checknumber(L, 4);
+
+    rb->Forces.emplace_back(glm::vec3(x,y,z));
+    rb->VelocityLastFrame = PhysicsEngine::Impulse(rb);
+    return 0;
 }

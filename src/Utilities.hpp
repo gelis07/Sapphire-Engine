@@ -58,9 +58,9 @@ namespace SapphireEngine
         constexpr float pi = 3.14159265359f;
         return deg * (pi/180);
     }
-    static glm::vec2 VectorSum(std::vector<glm::vec2> vectors){
-        glm::vec2 sum;
-        for(glm::vec2 vec : vectors){
+    static glm::vec3 VectorSum(std::vector<glm::vec3> vectors){
+        glm::vec3 sum;
+        for(glm::vec3 vec : vectors){
             sum += vec;
         }
         return sum;
