@@ -41,6 +41,7 @@ static unsigned int CreateViewportTexture()
 static unsigned int LoadTexture(std::string FilePath)
 {
     int width, height, channels;
+    stbi_set_flip_vertically_on_load(0);
     unsigned char* image = stbi_load(FilePath.c_str(), &width, &height, &channels, STBI_rgb_alpha);
 
     unsigned int textureID;

@@ -59,7 +59,7 @@ namespace SapphireEngine
         return deg * (pi/180);
     }
     static glm::vec3 VectorSum(std::vector<glm::vec3> vectors){
-        glm::vec3 sum;
+        glm::vec3 sum(0);
         for(glm::vec3 vec : vectors){
             sum += vec;
         }

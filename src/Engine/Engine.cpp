@@ -24,7 +24,7 @@ void Engine::Init(std::string Path)
     m_Viewport.Init(&m_ActiveScene);
     m_PlayMode.Init(&m_ActiveScene);
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
-    ImGui_ImplOpenGL3_Init((char *)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
+    ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
 
 
     glfwMaximizeWindow(m_Window);

@@ -1,5 +1,6 @@
 #pragma once
 #include "Utilities.hpp"
+#include "Variables.h"
 
 struct LuaTableIt{
     std::variant<int, std::string> Key;
@@ -19,8 +20,6 @@ class ScriptingEngine
 {
     public:
         static bool CheckLua(lua_State *L, int r);
-        static std::vector<LuaTableIt> GetTable(lua_State *L, std::string Name, std::vector<std::string> SubTables);
+        static std::unordered_map<std::string, SapphireEngine::Variable*> GetTable(lua_State *L, std::string Name, std::vector<std::string> SubTables);
         static void LuaFunction(lua_State *L,std::string Name);
-
-
 };

@@ -85,11 +85,11 @@ bool SceneEditor::ImGuiRender(unsigned int texture)
     // ImGuizmo::SetOrthographic(true);
     // ImGuizmo::SetDrawlist();
 
-    // ImGuizmo::SetRect(ViewportCamera.position.x, ViewportCamera.position.y, TextureSize.x, TextureSize.y);
+    // ImGuizmo::SetRect(ViewCamera.position.x, ViewCamera.position.y, ViewCamera.position.x, m_ViewportSize.y);
     
     // glm::mat4 proj = glm::ortho(0.0f, SCREEN_WIDTH, 0.0f, SCREEN_HEIGHT, -1.0f, 1.0f);
     // glm::mat4 model = glm::mat4(1.0f);
-    // glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewportCamera.position);
+    // glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position);
     // model = glm::translate(model, glm::vec3(100, 100, 0));
     // ImGuizmo::Manipulate(&view[0][0], &proj[0][0], ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::WORLD, &model[0][0]);
 

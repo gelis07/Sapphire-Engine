@@ -8,9 +8,6 @@ Object::Object(std::string &&Name)
 {
     this->Name = Name;
 }
-
-
-
 void Object::RemoveComponent(unsigned int id)
 {
     Components.erase(Components.begin() + id);

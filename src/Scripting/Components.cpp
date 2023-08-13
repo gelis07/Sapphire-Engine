@@ -41,12 +41,6 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId,bo
         lua_pop(L, 1);
         const char* index = luaL_checkstring(L, 2);
 
-        lua_newtable(L);
-        for(auto&& function : comp->Functions){
-            lua_pushstring(L, function.first.c_str());
-            lua_pushcfunction(L, function.second);
-        }
-
         if(comp->Variables.find(index) != comp->Variables.end()){
             comp->Variables.at(index)->GetFromLua(L);
         }
@@ -79,7 +73,6 @@ void Component::ExecuteFunction(std::string Name)
     UpdateLuaVariables();
     ScriptingEngine::LuaFunction(L, Name);
 }
-//! This could be organized a bit more
 void Component::UpdateLuaVariables()
 {
     if(Variables.size() == 0) return;
@@ -120,19 +113,18 @@ bool Component::GetLuaVariables()
         lua_pop(L, 1);
         if (var.Name.c_str() && !lua_isfunction(L, -1)) {
             //! Got to implement tables!
-            // if(type == LUA_TTABLE && isKnownModule(L, var.first.c_str())){
-            //     std::vector<LuaTableIt> test = ScriptingEngine::GetTable(L, std::string(var.first), {});
-            //     var.second.Contents = test;
-            //     Variables[var.first] = var.second;
-            //     lua_pop(L, 1);
-            //     continue;
-            // }
+            if(type == LUA_TTABLE && isKnownModule(L, var.Name.c_str())){
+                var.Value = new SapphireEngine::LuaTable(var.Name, Variables);
+                std::unordered_map<std::string, SapphireEngine::Variable*> test = ScriptingEngine::GetTable(L, std::string(var.Name), {});
+                var.Value->AnyValue() = test;
+                lua_pop(L, 1);
+                continue;
+            }
             const char* VarValue = lua_tostring(L, -1); // Here this variable helps me to decide whether the variable is from the user and not from lua's packages
             //Checking up here because lua_tostring(L, -1) returns 0x0 for false and the if statement returns false and doesn't register the variable
             if(type == LUA_TBOOLEAN){
                 var.Value = new SapphireEngine::Bool(var.Name, Variables);
                 var.Value->AnyValue() = !(VarValue == nullptr);
-                Variables[var.Name] = var.Value;
                 lua_pop(L, 1);
                 continue;
             }
@@ -266,6 +258,10 @@ void Component::Load(nlohmann::json JSON)
             if(CurrentlyEditedVariable == nullptr)
                 CurrentlyEditedVariable = new SapphireEngine::Color(JSONVariable.key(), Variables);
             CurrentlyEditedVariable->Load(JsonArray);
+        }else if(JsonArray[0] == typeid(SapphireEngine::LuaTable).hash_code()){
+            if(CurrentlyEditedVariable == nullptr)
+                CurrentlyEditedVariable = new SapphireEngine::LuaTable(JSONVariable.key(), Variables);
+            CurrentlyEditedVariable->Load(JsonArray);
         }
     }
 }
@@ -311,10 +307,7 @@ void RigidBody::Simulate(Object *current) {
 }
 
 int RigidBody::Impulse(lua_State *L) {
-    // Get the component table from the Lua stack
     luaL_checktype(L, 1, LUA_TTABLE);
-
-    // Check if the component table has the '__userdata' field (the component pointer)
     lua_getfield(L, 1, "__userdata");
     RigidBody* rb = static_cast<RigidBody*>(lua_touserdata(L, -1));
     lua_pop(L, 1);
@@ -322,7 +315,6 @@ int RigidBody::Impulse(lua_State *L) {
     float y = (float)luaL_checknumber(L, 3);
     float z = (float)luaL_checknumber(L, 4);
 
-    rb->Forces.emplace_back(glm::vec3(x,y,z));
-    rb->VelocityLastFrame = PhysicsEngine::Impulse(rb);
+    rb->VelocityLastFrame = PhysicsEngine::Impulse(rb, glm::vec3(x,y,z));
     return 0;
 }

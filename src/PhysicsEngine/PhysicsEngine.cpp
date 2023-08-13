@@ -91,11 +91,11 @@ void PhysicsEngine::CirclexCircle(std::shared_ptr<Object> obj, Object* current)
     }
 }
 
-glm::vec3 PhysicsEngine::Impulse(RigidBody* rb)
+glm::vec3 PhysicsEngine::Impulse(RigidBody* rb, glm::vec3&& Force)
 {
     float& mass = rb->Mass.value<float>();
     glm::vec3 weight = glm::vec3(0,g * mass,0);
-    glm::vec3 Fnet = SapphireEngine::VectorSum(rb->Forces) - weight;
+    glm::vec3 Fnet = Force + SapphireEngine::VectorSum(rb->Forces) - weight;
     float DeltaTime = 0.2f;
     return glm::vec3(Fnet * DeltaTime) / mass;
 }

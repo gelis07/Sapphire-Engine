@@ -2,7 +2,12 @@
 #include "Utilities.hpp"
 #include "json.hpp"
 #include "UI/Windows.h"
-#include "Scripting/Scripting.h"
+extern "C"
+{
+    #include "Lua/lua.h"
+    #include "Lua/lauxlib.h"
+    #include "Lua/lualib.h"
+}
 namespace SapphireEngine{
     class Variable{
         public:
@@ -96,6 +101,16 @@ namespace SapphireEngine{
     class Color : public Variable{
         public:
             Color(std::string name, std::unordered_map<std::string, Variable*>& map)
+            : Variable(name, map) {}
+            void RenderGUI() override;
+            void Save(nlohmann::json& JSON) override;
+            void SendToLua(lua_State* L) override;
+            void GetFromLua(lua_State* L) override;
+            void Load(const nlohmann::json& jsonArray) override;
+    };
+    class LuaTable : public Variable{
+        public:
+            LuaTable(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
             void RenderGUI() override;
             void Save(nlohmann::json& JSON) override;

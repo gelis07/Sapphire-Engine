@@ -11,7 +11,7 @@ class File{
         static void RegisterFile(const std::string& extension, std::function<std::shared_ptr<File>()> creationFunction); 
         //Here we have a helper function that we can call from the file explorer to create a file based on the extension
         static std::shared_ptr<File> CreateFile(const std::string &extension, std::string NewPath, std::string NewName);
-        void RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, TextureAtlas& IconAtlas);
+        void RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, TextureAtlas& IconAtlas, const std::string& SelecteFile);
         virtual void OnClick(std::filesystem::directory_entry entry) {}
         virtual void OnRightClick(std::filesystem::directory_entry entry) {}
         virtual void OnDoubleClick(std::filesystem::directory_entry entry) {}
@@ -20,13 +20,17 @@ class File{
         std::string Name;
     protected:
         glm::vec2 m_IconPos = glm::vec2(0);
+        glm::vec2 m_IconSize = glm::vec2(0);
 };
 
 //For the "unsupported" files.
 class Default : public File
 {
     public:
-        void SetIconPos() override{ m_IconPos = glm::vec2(0,0);}
+        void SetIconPos() override{ 
+            m_IconPos = glm::vec2(897,0); 
+            m_IconSize = glm::vec2(384,512); 
+        }
         void OnClick(std::filesystem::directory_entry entry) 
         {
 
@@ -41,7 +45,10 @@ class Default : public File
 class LuaFile : public File
 {
     public:
-        void SetIconPos() override{ m_IconPos = glm::vec2(1,0);}
+        void SetIconPos() override{ 
+            m_IconPos = glm::vec2(512,0); 
+            m_IconSize = glm::vec2(384,512); 
+        }
         void OnClick(std::filesystem::directory_entry entry) 
         {
 
@@ -56,7 +63,10 @@ class LuaFile : public File
 class SceneFile : public File
 {
     public:
-        void SetIconPos() override{ m_IconPos = glm::vec2(0,0);}
+        void SetIconPos() override{
+            m_IconPos = glm::vec2(0,0);
+            m_IconSize = glm::vec2(512,512); 
+        }
         void OnClick(std::filesystem::directory_entry entry) override
         {
 

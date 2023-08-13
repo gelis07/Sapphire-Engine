@@ -320,3 +320,60 @@ void SapphireEngine::Color::Load(const nlohmann::json &jsonArray)
     vector.w = jsonArray[1]["a"].get<float>();
     data = vector;
 }
+void SapphireEngine::LuaTable::RenderGUI()
+{
+    if(ImGui::TreeNode(Name.c_str()))
+    {
+        for(auto& TableVariable : value<std::unordered_map<std::string, SapphireEngine::Variable*>>())
+        {
+            TableVariable.second->RenderGUI();
+        }
+        ImGui::TreePop();
+    }
+}
+
+void SapphireEngine::LuaTable::Save(nlohmann::json &JSON)
+{
+    nlohmann::json TableJSON;
+    for(auto& TableVariable : value<std::unordered_map<std::string, SapphireEngine::Variable*>>())
+    {
+        TableVariable.second->Save(TableJSON);
+    }
+    JSON[Name] = {typeid(SapphireEngine::LuaTable).hash_code(),TableJSON};
+}
+
+void SapphireEngine::LuaTable::SendToLua(lua_State *L)
+{
+    lua_newtable(L);
+    for(auto& TableVariable : value<std::unordered_map<std::string, SapphireEngine::Variable*>>())
+    {
+        TableVariable.second->SendToLua(L);
+        lua_setfield(L, -2, TableVariable.first.c_str());
+    }
+}
+
+void SapphireEngine::LuaTable::GetFromLua(lua_State *L)
+{
+}
+
+void SapphireEngine::LuaTable::Load(const nlohmann::json &jsonArray)
+{
+    std::unordered_map<std::string, SapphireEngine::Variable*> Table;
+    for(auto& JSONVariable : jsonArray[1].items()){
+
+        nlohmann::json VariableArray = JSONVariable.value();
+
+        //At least at my knowledge of programming/c++, I couldn't find a way to remove this repetitive code.
+        if(VariableArray[0] == typeid(SapphireEngine::Float).hash_code()){ 
+            SapphireEngine::Float* CurrentlyEditedVariable = new SapphireEngine::Float(JSONVariable.key(), Table);
+            CurrentlyEditedVariable->Load(VariableArray);
+        }else if(VariableArray[0] == typeid(SapphireEngine::Bool).hash_code()){
+            SapphireEngine::Bool* CurrentlyEditedVariable = new SapphireEngine::Bool(JSONVariable.key(), Table);
+            CurrentlyEditedVariable->Load(VariableArray);
+        }else if(VariableArray[0] == typeid(SapphireEngine::String).hash_code()){
+            SapphireEngine::String* CurrentlyEditedVariable = new SapphireEngine::String(JSONVariable.key(), Table);
+            CurrentlyEditedVariable->Load(VariableArray);
+        }
+    }
+    data = Table;
+}

@@ -21,7 +21,7 @@ void ScriptingEngine::LuaFunction(lua_State *L,std::string Name){
 }
 
 
-std::vector<LuaTableIt> ScriptingEngine::GetTable(lua_State* L, std::string Name, std::vector<std::string> SubTables) {
+std::unordered_map<std::string, SapphireEngine::Variable*> ScriptingEngine::GetTable(lua_State* L, std::string Name, std::vector<std::string> SubTables) {
     lua_getglobal(L, Name.c_str());
 
     for (size_t i = 0; i < SubTables.size(); i++)
@@ -29,47 +29,45 @@ std::vector<LuaTableIt> ScriptingEngine::GetTable(lua_State* L, std::string Name
         lua_getfield(L, -1, SubTables[i].c_str()); 
     }
     
-    std::vector<LuaTableIt> TableValues;
+    std::unordered_map<std::string, SapphireEngine::Variable*> TableValues;
 
     lua_pushnil(L);
 
     while (lua_next(L, -2))
     {
         lua_pushvalue(L, -2);
-        LuaTableIt value;
+        SapphireEngine::Variable* Value;
         int i = 0;
+        std::string Key;
         if(lua_isstring(L, -1)){
-            value.Key = std::string(lua_tostring(L, -1));
+            Key = std::string(lua_tostring(L, -1));
             i++;
         }else if(lua_isinteger(L, -1)){
-            value.Key = (int)lua_tointeger(L, -1);
+            Key = std::to_string(lua_tointeger(L, -1));
             i++;
         }
 
         if(lua_isnumber(L, -2)){
-            value.Contents = (float)lua_tonumber(L, -2);
-            value.Type = LUA_TNUMBER;
+            Value = new SapphireEngine::Float(Key, TableValues);
+            Value->AnyValue() = (float)lua_tonumber(L, -2);
             i++;
         }else if(lua_isboolean(L, -2)){
-            value.Contents = lua_isboolean(L, -2);
-            value.Type = LUA_TBOOLEAN;
+            Value = new SapphireEngine::Bool(Key, TableValues);
+            Value->AnyValue() = lua_isboolean(L, -2);
             i++;
         }else if(lua_istable(L, -2)){
-            std::string KeyName = std::holds_alternative<std::string>(value.Key) ? std::get<std::string>(value.Key) : std::to_string(std::get<int>(value.Key));
-            SubTables.push_back(KeyName);
-            value.Contents = ScriptingEngine::GetTable(L, Name, SubTables);
+            SubTables.push_back(Key);
+            Value = new SapphireEngine::LuaTable(Key, TableValues);
+            Value->AnyValue() = ScriptingEngine::GetTable(L, Name, SubTables);
             SubTables.pop_back();
-            value.Type = LUA_TTABLE;
             i++;
         }else if(lua_isstring(L, -2)){
-            value.Contents = std::string(lua_tostring(L, -2));
-            value.Type = LUA_TSTRING;
+            Value = new SapphireEngine::String(Key, TableValues);
+            Value->AnyValue() = std::string(lua_tostring(L, -1));
             i++;
         }
         lua_pop(L, i);
-        TableValues.push_back(value);
     }
-    int test = SubTables.size();
     lua_pop(L, 1 + SubTables.size());
     return TableValues;
 }

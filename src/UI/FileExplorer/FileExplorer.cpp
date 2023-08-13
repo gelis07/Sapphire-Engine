@@ -11,8 +11,7 @@ void FileExplorer::Init(){
     File::RegisterFile(".lua", SET_FILE(LuaFile));
     File::RegisterFile(".scene", SET_FILE(SceneFile));
     m_IconAtlas.AtlasID = LoadTexture("Assets/IconsAtlas.png");
-    m_IconAtlas.AtlasSize = glm::vec2(1095.0f,539.0f);
-    m_IconAtlas.IconSize = glm::vec2(579.0f,537.0f);
+    m_IconAtlas.AtlasSize = glm::vec2(2304,512);
 }
 
 void FileExplorer::Open(std::string path)
@@ -27,10 +26,9 @@ void FileExplorer::Open(std::string path)
         {
             m_Files[FileName] = File::CreateFile(entry.path().extension().string(), entry.path().string(), FileName);
         }
-        m_Files[FileName]->RenderGUI(entry, Position, m_IconAtlas);
+        m_Files[FileName]->RenderGUI(entry, Position, m_IconAtlas, m_SelectedFile);
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
         {
-            ImGui::OpenPopup(entry.path().filename().string().c_str());
             m_Files[FileName]->OnRightClick(entry);
             m_RightClicked = true;
         }
@@ -52,21 +50,60 @@ void FileExplorer::Open(std::string path)
             rows++;
         }
     }
+    MouseInput(m_SelectedFile);
     ImGui::End();
 }
 
-void FileExplorer::RightClickPopUp(std::filesystem::__cxx11::directory_entry entry)
+void FileExplorer::RightClickPopUp(std::filesystem::path& path)
 {
-    if (ImGui::BeginPopupContextWindow(entry.path().filename().string().c_str()))
+    if (ImGui::BeginPopup("Context Menu"))
     {
-        
-        ImGui::InputText("New name", &m_NewFileName);
-        if (ImGui::MenuItem("Rename!"))
+
+        if (ImGui::MenuItem("Create lua script"))
         {
-            std::string NewName = "Assets/" + std::string(m_NewFileName) + entry.path().extension().string();
-            rename(entry.path().string().c_str(), NewName.c_str());
-            ImGui::CloseCurrentPopup();
+            std::ofstream stream(Engine::Get().GetMainPath() + "NewLuaScript.lua", std::ofstream::trunc);
+            stream << R"(local SapphireEngine = require("SapphireEngine")
+
+function OnStart()
+    SapphireEngine.Log("Hello World!")
+end
+
+function OnUpdate()
+
+end
+
+function OnCollision()
+
+end)";
+            stream.close();
         }
-        m_RightClicked = false;
+        // if (ImGui::MenuItem("Copy"))
+        // {
+        //     m_CopiedFilePath = &path;
+        //     m_SelectedCut = false;
+        // }
+        // if (ImGui::MenuItem("Cut"))
+        // {
+        //     m_CopiedFilePath = &path;
+        //     m_SelectedCut = true;
+        // }
+        // if (ImGui::MenuItem("Paste"))
+        // {
+        //     fs::copy_file(*m_CopiedFilePath, "C:/Gelis/test.scene", fs::copy_options::overwrite_existing);
+        //     if(m_SelectedCut){
+        //         fs::remove(*m_CopiedFilePath);
+        //     }
+        // }
+        ImGui::EndPopup();
     }
+}
+
+
+void FileExplorer::MouseInput(std::filesystem::path path)
+{
+    if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+    {
+        ImGui::OpenPopup("Context Menu");
+    }
+    RightClickPopUp(path);
 }
