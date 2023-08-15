@@ -8,12 +8,17 @@ void PlayMode::Init(Scene* activeScene)
     m_FBO = CreateFBO(m_Texture);
 
     CameraObject = std::make_shared<Object>("MainCamera");
+
     CameraObject->AddComponent<Transform>(new Transform("", "Transform", 1, false));
     CameraObject->AddComponent<Camera>(new Camera("", "Camera", 2, false));
     CameraObject->AddComponent<Renderer>(new Renderer("", "Renderer", 3, false));
-    CameraObject->GetComponent<Renderer>()->shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader, CameraObject);
-    CameraObject->GetComponent<Renderer>()->shape->Wireframe() = true;
-    CameraObject->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+
+    CameraObject->GetTransform() = CameraObject->GetComponent<Transform>();
+    CameraObject->GetRenderer() = CameraObject->GetComponent<Renderer>();
+    
+    CameraObject->GetRenderer()->shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader, CameraObject);
+    CameraObject->GetRenderer()->shape->Wireframe() = true;
+    CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0);
     activeScene->Objects.push_back(CameraObject);
 }
 
@@ -34,19 +39,16 @@ void PlayMode::Render(std::string& MainPath) //Here we need the main path becaus
     try {
         for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
         {
-            if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetComponent<Renderer>()) {
+            if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetRenderer()) {
                 if(m_ActiveScene->Objects[i] != CameraObject)
-                    renderer->Render(false, -CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
+                    renderer->Render(false, -CameraObject->GetTransform()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
             }
             else
-                SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
+                if(m_ActiveScene->Objects[i]->GetRenderer() = m_ActiveScene->Objects[i]->GetComponent<Renderer>()) 
+                    m_ActiveScene->Objects[i]->GetRenderer()->Render(false, -CameraObject->GetTransform()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
+                else
+                    SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
             if(!Paused){
-                if(m_Start){
-                    if(std::shared_ptr<RigidBody> rb = m_ActiveScene->Objects[i]->GetComponent<RigidBody>()){
-//                        rb->Forces.emplace_back(glm::vec3(0,1020,0));
-//                        rb->VelocityLastFrame = PhysicsEngine::Impulse(m_ActiveScene->Objects[i].get());
-                    }
-                }
                 m_ActiveScene->Objects[i]->OnStart();
                 m_ActiveScene->Objects[i]->OnUpdate();
                 if(std::shared_ptr<RigidBody> rb = m_ActiveScene->Objects[i]->GetComponent<RigidBody>()) {

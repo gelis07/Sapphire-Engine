@@ -29,7 +29,13 @@ class Object
 
         unsigned int id;
         std::string Name;
+
+        //Please use these functions because it doesn't have to search for these objects!
+        std::shared_ptr<Transform>& GetTransform() {return transform;}
+        std::shared_ptr<Renderer>& GetRenderer() {return renderer;} 
     private:
+        std::shared_ptr<Transform> transform;
+        std::shared_ptr<Renderer> renderer;
         bool CalledStart = false;
         std::vector<std::shared_ptr<Component>> Components;
 };

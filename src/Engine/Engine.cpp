@@ -4,6 +4,24 @@
 
 Engine Engine::Instance;
 
+void ResizeIO(GLFWwindow* window, int width, int height)
+{
+    Engine::Get().GetWindows().GetWindowIO()->DisplaySize = ImVec2(width,height); // Setting ImGUI to acccess the whole window's place
+}
+void window_focus_callback(GLFWwindow* window, int focused)
+{
+    if (focused)
+    {
+        for (auto&& object : Engine::Get().GetActiveScene()->Objects)
+        {
+            for(auto&& component : object->GetComponents())
+            {
+                component->GetLuaVariables();
+            }
+        }
+    }
+}
+
 void Engine::Init(std::string Path)
 {
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
@@ -26,7 +44,8 @@ void Engine::Init(std::string Path)
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
 
-
+    glfwSetWindowSizeCallback(m_Window, ResizeIO);
+    glfwSetWindowFocusCallback(m_Window, window_focus_callback);
     glfwMaximizeWindow(m_Window);
     FileExplorer::Init();
 }
@@ -44,10 +63,6 @@ void Engine::Run()
         DeltaTime = currentTime - LastTime;
         LastTime = currentTime;
 
-        int NewWidth, NewHeight; 
-        glfwGetWindowSize(m_Window, &NewWidth, &NewHeight); // Getting the size of the window
-        m_Windows.GetWindowIO()->DisplaySize = ImVec2(NewWidth, NewHeight); // Setting ImGUI to acccess the whole window's place
-        
         m_Windows.DockSpace();
         m_Windows.Toolbar();
         FileExplorer::Open(m_Windows.MainPath);

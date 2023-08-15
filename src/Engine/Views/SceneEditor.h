@@ -25,13 +25,15 @@ class SceneEditor{
         glm::vec2 m_ViewportSize;
         glm::vec2 m_ViewportPosition;
         ImGuiContext* m_ViewportContext;
-        bool ClickedOnObj;
-        bool m_FirstTime = true; // Indicates the first time the user clicks on the SelectedObj
-        glm::vec2 m_Offset; // Offset of the Cursor and the SelectedObj when the user first clicks on the SelectedObj
         Scene* m_ActiveScene;
         GLFWwindow* m_Window;
         ImVec2 ScaleWindow();
+        std::shared_ptr<Object> OnClick(GLFWwindow* window, std::vector<std::shared_ptr<Object>> Objects); 
         bool ImGuiRender(unsigned int texture);
         void MoveCamera();
         static void Zooming(GLFWwindow* window, double xoffset, double yoffset);
+
+        bool m_ClickedOnObj;
+        bool m_FirstTime = true; // Indicates the first time the user clicks on the SelectedObj
+        glm::vec2 m_Offset; // Offset of the Cursor and the SelectedObj when the user first clicks on the SelectedObj
 };

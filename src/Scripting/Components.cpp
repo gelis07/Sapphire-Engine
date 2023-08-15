@@ -94,6 +94,7 @@ struct LuaVariable{
 
 bool Component::GetLuaVariables()
 {
+    if(L == nullptr) return true;
     if (luaL_loadfile(L, m_LuaFile.c_str()) || lua_pcall(L, 0, 0, 0)) {
         std::stringstream ss;
         ss<< "Error loading script: " << lua_tostring(L, -1) << std::endl;
@@ -138,7 +139,6 @@ bool Component::GetLuaVariables()
                     var.Value = new SapphireEngine::Float(var.Name, Variables);
                     var.Value->AnyValue() = (float)lua_tonumber(L, -1);
                 }
-                Variables[var.Name] = var.Value;
                 lua_pop(L, 1);
             }else{
                 lua_pop(L, 1);

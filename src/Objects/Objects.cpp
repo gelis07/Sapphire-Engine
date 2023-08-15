@@ -72,10 +72,15 @@ std::shared_ptr<Object> Object::CreateObject(std::string &&ObjName)
     NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
     NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<RigidBody>("", "Rigidbody", 0, false)));
 
-    NewObj->GetComponent<Renderer>()->Color.AnyValue() = glm::vec4(1);
-    NewObj->GetComponent<Transform>()->Position.AnyValue() = glm::vec3(0);
-    NewObj->GetComponent<Transform>()->Size.AnyValue() = glm::vec3(20.0f, 20.0f, 0.0f);
+    NewObj->renderer = NewObj->GetComponent<Renderer>(); 
+    NewObj->transform = NewObj->GetComponent<Transform>(); 
+
+    NewObj->renderer->Color.AnyValue() = glm::vec4(1);
+    NewObj->transform->Position.AnyValue() = glm::vec3(0);
+    NewObj->transform->Size.AnyValue() = glm::vec3(20.0f, 20.0f, 0.0f);
     Engine::Get().GetActiveScene()->Objects.push_back(NewObj);
+
+
     return NewObj;
 }
 

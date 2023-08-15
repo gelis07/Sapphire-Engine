@@ -15,6 +15,7 @@ class Component
         bool GetLuaVariables();
         void SetLuaComponent(lua_State* ComponentsState);
         void Render();
+        void Reload();
         SapphireEngine::Variable* Get(std::string Name);
         nlohmann::json Save();
         void Load(nlohmann::json JSON);
