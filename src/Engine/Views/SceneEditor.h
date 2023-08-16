@@ -18,21 +18,21 @@ class SceneEditor{
         void Init(Scene* activeScene);
         ViewportCamera ViewCamera; //This Camera is only for the m_Viewport NOT the game's camera
         std::shared_ptr<Object> SelectedObj;
+        glm::vec2 GetWindowSize() {return glm::vec2(m_WindowWidth, m_WindowHeight);}
     private:
         Grid m_Grid;
         unsigned int m_FBO;
         unsigned int m_Texture;
-        glm::vec2 m_ViewportSize;
-        glm::vec2 m_ViewportPosition;
+        GLuint m_RBO;
         ImGuiContext* m_ViewportContext;
         Scene* m_ActiveScene;
+        float m_WindowWidth; 
+        float m_WindowHeight;
         GLFWwindow* m_Window;
-        ImVec2 ScaleWindow();
         std::shared_ptr<Object> OnClick(GLFWwindow* window, std::vector<std::shared_ptr<Object>> Objects); 
-        bool ImGuiRender(unsigned int texture);
-        void MoveCamera();
+        void MoveCamera(glm::vec2&& Size, glm::vec2&& Position);
         static void Zooming(GLFWwindow* window, double xoffset, double yoffset);
-
+        void RescaleFrameBuffer(float width, float height);
         bool m_ClickedOnObj;
         bool m_FirstTime = true; // Indicates the first time the user clicks on the SelectedObj
         glm::vec2 m_Offset; // Offset of the Cursor and the SelectedObj when the user first clicks on the SelectedObj

@@ -27,11 +27,20 @@ void Engine::Init(std::string Path)
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
+    glfwWindowHint(GLFW_MAXIMIZED , GL_TRUE);
+
     m_Window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Sapphire Engine", NULL, NULL);
     glfwMakeContextCurrent(m_Window);
     glfwSwapInterval(1);
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    
+    int bufferWidth, bufferHeight;
+	glfwGetFramebufferSize(m_Window, &bufferWidth, &bufferHeight);
+	glfwMakeContextCurrent(m_Window);
+	glewExperimental = GL_TRUE;
+
+	glViewport(0, 0, bufferWidth, bufferHeight);
 
 
     LoadShader(Shapes::CircleShader, "Shaders/Circle.glsl");
@@ -46,7 +55,6 @@ void Engine::Init(std::string Path)
 
     glfwSetWindowSizeCallback(m_Window, ResizeIO);
     glfwSetWindowFocusCallback(m_Window, window_focus_callback);
-    glfwMaximizeWindow(m_Window);
     FileExplorer::Init();
 }
 
@@ -58,6 +66,7 @@ void Engine::Run()
         ImGui::SetCurrentContext(m_Windows.GetContext());
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
+
 
         float currentTime = glfwGetTime();
         DeltaTime = currentTime - LastTime;
@@ -71,8 +80,9 @@ void Engine::Run()
         m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
 
         //* The m_Viewport is the actual game scene
-        m_Viewport.Render();
         m_PlayMode.Render(m_Windows.MainPath);
+        m_Viewport.Render();
+        
         ImGui::SetCurrentContext(m_Windows.GetContext());
         GLCall(glClearColor(0.3f, 0.5f, 0.4f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));

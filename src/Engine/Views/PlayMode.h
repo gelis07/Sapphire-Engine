@@ -7,14 +7,16 @@ class PlayMode{
     public:
         void Init(Scene* activeScene);
         void Render(std::string& MainPath);
-        bool ImGuiRender(unsigned int texture, std::string& MainPath);
         bool Paused = true;
         std::shared_ptr<Object> CameraObject;
     private:
         unsigned int m_Texture;
         unsigned int m_FBO;
-        ImVec2 ScaleWindow();
+        GLuint m_RBO;
+        std::string m_SceneFileName;
+        float m_WindowWidth, m_WindowHeight;
         Scene* m_ActiveScene;
+        void RescaleFrameBuffer(float width, float height);
         GLFWwindow* m_Window;
         bool m_Start = true;
 };

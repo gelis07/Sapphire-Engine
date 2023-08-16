@@ -8,7 +8,11 @@ void Windows::Init(std::string&& Path){
     IO = &io;
     IMGUI_CHECKVERSION();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    io.DisplaySize = ImVec2(600, 400);
+    {
+        int width, height;
+        glfwGetWindowSize(glfwGetCurrentContext(),&width, &height);
+        io.DisplaySize = ImVec2(width, height);
+    }
     ImFontConfig config;
     config.OversampleH = 1;
     config.OversampleV = 1;

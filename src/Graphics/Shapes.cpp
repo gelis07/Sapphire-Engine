@@ -1,5 +1,7 @@
 #include "Shapes.h"
 #include "Objects/Objects.h"
+#include "Engine/Engine.h"
+
 
 static glm::vec4 LineColor(1.0f, 0.0f, 0.0f, 1.0f);
 float lineWidth = 5.0f;
@@ -32,7 +34,8 @@ Shapes::Shape::Shape(unsigned int sh, std::shared_ptr<Object> NewObj) : m_Shader
 
 void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport)
 {
-    m_Projection = glm::ortho(0.0f, Viewport ? SCREEN_WIDTH / CameraZoom : SCREEN_WIDTH, 0.0f, Viewport ? SCREEN_HEIGHT / CameraZoom : SCREEN_HEIGHT, -1.0f, 1.0f);
+    const glm::vec2& WindowSize = Engine::Get().GetViewport().GetWindowSize();
+    m_Projection = glm::ortho(0.0f, Viewport ? WindowSize.x / CameraZoom : WindowSize.x, 0.0f, Viewport ? WindowSize.y / CameraZoom : WindowSize.y, -1.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, m_ObjectRefrence->GetComponent<Transform>()->Position.value<glm::vec3>());
     glm::mat4 view = glm::translate(glm::mat4(1.0f), CamPos);
