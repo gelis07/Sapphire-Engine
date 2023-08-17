@@ -1,53 +1,50 @@
 #include "SceneEditor.h"
 
+std::shared_ptr<Object> SceneEditor::OnClick(GLFWwindow* window, std::vector<std::shared_ptr<Object>> Objects, glm::vec2&& WindowPosition)
+{  
+    double xpos, ypos;
+    glfwGetCursorPos(window, &xpos, &ypos);
+    glm::vec2 CursorPos(xpos, ypos);
+    if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        for (size_t i = 0; i < Objects.size(); i++)
+        {
+            Shapes::Circle* circlePtr = dynamic_cast<Shapes::Circle*>(Objects[i]->GetRenderer()->shape.get());
+            // float scalor = (WindowSize.x / ViewCamera.Zoom)/WindowSize.x;
+            glm::vec2 CursorPosToWind((CursorPos.x - WindowPosition.x) - ViewCamera.position.x, -((CursorPos.y - WindowPosition.y) + ViewCamera.position.y));
+            //Checking if the object is a circle or a rectangle
+            if(circlePtr)
+            {
+                if(sqrt(pow((CursorPosToWind.x- Objects[i]->GetTransform()->Position.value<glm::vec3>().x), 2) + pow((CursorPosToWind.y - Objects[i]->GetTransform()->Position.value<glm::vec3>().y), 2)) < Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2)
+                {
+                    //The camera can be a little tricky for the time being because its testing for its whole width and height but it should check for a small portion 
+                    //At the position so we are skipping it for now
+                    if(Objects[i]->Name == "MainCamera")
+                        continue;
+                    //Object is being clicked!
+                    return Objects[i];
+                }
+            }else if(!circlePtr)
+            {
 
+                float Dx = Objects[i]->GetTransform()->Position.value<glm::vec3>().x + Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2; // The x of the bottom left point of the rectangle
+                float Cx = Objects[i]->GetTransform()->Position.value<glm::vec3>().x - Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2; // The x of the bottom right point of the rectangle
+                float Cy = Objects[i]->GetTransform()->Position.value<glm::vec3>().y - Objects[i]->GetTransform()->Size.value<glm::vec3>().y/2; // The y of the bottom right point of the rectangle
+                float By = Objects[i]->GetTransform()->Position.value<glm::vec3>().y + Objects[i]->GetTransform()->Size.value<glm::vec3>().y/2; // The y of the top right point of the rectangle
 
-
-// std::shared_ptr<Object> SceneEditor::OnClick(GLFWwindow* window, std::vector<std::shared_ptr<Object>> Objects)
-// {  
-//     double xpos, ypos;
-//     glfwGetCursorPos(window, &xpos, &ypos);
-//     glm::vec2 CursorPos(xpos, ypos);
-//     if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
-//     {
-//         for (size_t i = 0; i < Objects.size(); i++)
-//         {
-//             Shapes::Circle* circlePtr = dynamic_cast<Shapes::Circle*>(Objects[i]->GetRenderer()->shape.get());
-//             float scalor = (SCREEN_WIDTH / ViewCamera.Zoom)/m_ViewportSize.x;
-//             glm::vec2 CursorPosToWind((CursorPos.x - m_ViewportPosition.x)* scalor  - ViewCamera.position.x, (m_ViewportPosition.y - CursorPos.y) * scalor - ViewCamera.position.y);
-//             //Checking if the object is a circle or a rectangle
-//             if(circlePtr)
-//             {
-//                 if(sqrt(pow((CursorPosToWind.x- Objects[i]->GetTransform()->Position.value<glm::vec3>().x), 2) + pow((CursorPosToWind.y - Objects[i]->GetTransform()->Position.value<glm::vec3>().y), 2)) < Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2)
-//                 {
-//                     //The camera can be a little tricky for the time being because its testing for its whole width and height but it should check for a small portion 
-//                     //At the position so we are skipping it for now
-//                     if(Objects[i]->Name == "MainCamera")
-//                         continue;
-//                     //Object is being clicked!
-//                     return Objects[i];
-//                 }
-//             }else if(!circlePtr)
-//             {
-
-//                 float Dx = Objects[i]->GetTransform()->Position.value<glm::vec3>().x + Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2; // The x of the bottom left point of the rectangle
-//                 float Cx = Objects[i]->GetTransform()->Position.value<glm::vec3>().x - Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2; // The x of the bottom right point of the rectangle
-//                 float Cy = Objects[i]->GetTransform()->Position.value<glm::vec3>().y - Objects[i]->GetTransform()->Size.value<glm::vec3>().y/2; // The y of the bottom right point of the rectangle
-//                 float By = Objects[i]->GetTransform()->Position.value<glm::vec3>().y + Objects[i]->GetTransform()->Size.value<glm::vec3>().y/2; // The y of the top right point of the rectangle
-
-//                 if(CursorPosToWind.x < Dx && CursorPosToWind.x > Cx && CursorPosToWind.y < By && CursorPosToWind.y > Cy)
-//                 {
-//                     if(Objects[i]->Name == "MainCamera")
-//                         continue;
-//                     // Object is being clicked!
-//                     return Objects[i];
-//                 }
-//             }
-//         }
-//     }
+                if(CursorPosToWind.x < Dx && CursorPosToWind.x > Cx && CursorPosToWind.y < By && CursorPosToWind.y > Cy)
+                {
+                    if(Objects[i]->Name == "MainCamera")
+                        continue;
+                    // Object is being clicked!
+                    return Objects[i];
+                }
+            }
+        }
+    }
     
-//     return nullptr;
-// }
+    return nullptr;
+}
 
 
 
@@ -118,15 +115,82 @@ void SceneEditor::RescaleFrameBuffer(float width, float height)
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
 }
 
+//Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
+bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale)
+{
+    // From glm::decompose in matrix_decompose.inl
+
+    using namespace glm;
+    using T = float;
+
+    mat4 LocalMatrix(transform);
+
+    // Normalize the matrix.
+    if (epsilonEqual(LocalMatrix[3][3], static_cast<float>(0), epsilon<T>()))
+        return false;
+
+    // First, isolate perspective.  This is the messiest.
+    if (
+        epsilonNotEqual(LocalMatrix[0][3], static_cast<T>(0), epsilon<T>()) ||
+        epsilonNotEqual(LocalMatrix[1][3], static_cast<T>(0), epsilon<T>()) ||
+        epsilonNotEqual(LocalMatrix[2][3], static_cast<T>(0), epsilon<T>()))
+    {
+        // Clear the perspective partition
+        LocalMatrix[0][3] = LocalMatrix[1][3] = LocalMatrix[2][3] = static_cast<T>(0);
+        LocalMatrix[3][3] = static_cast<T>(1);
+    }
+
+    // Next take care of translation (easy).
+    translation = vec3(LocalMatrix[3]);
+    LocalMatrix[3] = vec4(0, 0, 0, LocalMatrix[3].w);
+
+    vec3 Row[3], Pdum3;
+
+    // Now get scale and shear.
+    for (length_t i = 0; i < 3; ++i)
+        for (length_t j = 0; j < 3; ++j)
+            Row[i][j] = LocalMatrix[i][j];
+
+    // Compute X scale factor and normalize first row.
+    scale.x = length(Row[0]);
+    Row[0] = detail::scale(Row[0], static_cast<T>(1));
+    scale.y = length(Row[1]);
+    Row[1] = detail::scale(Row[1], static_cast<T>(1));
+    scale.z = length(Row[2]);
+    Row[2] = detail::scale(Row[2], static_cast<T>(1));
+
+    rotation.y = asin(-Row[0][2]);
+    if (cos(rotation.y) != 0) {
+        rotation.x = atan2(Row[1][2], Row[2][2]);
+        rotation.z = atan2(Row[0][1], Row[0][0]);
+    }
+    else {
+        rotation.x = atan2(-Row[2][0], Row[1][1]);
+        rotation.z = 0;
+    }
+
+
+    return true;
+}
+
+
+// The Gizmos had an annoying offset probably because of the little padding around the image and the window's position. For now I just added a fixed offset.
+glm::vec2 offset = glm::vec2(7.3f, -6.9f);
 
 // Thank you for the tutorial! https://www.codingwiththomas.com/blog/rendering-an-opengl-framebuffer-into-a-dear-imgui-window
 void SceneEditor::Render()
 {
-
     ImGui::Begin("Viewport");
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
+
+    std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y));
+
+
+
+    if(ClickedObj != nullptr && ClickedObj->Name != "MainCamera" && !m_ClickedOnObj)
+        SelectedObj = ClickedObj;
 
     RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
     glViewport(0, 0, m_WindowWidth, m_WindowHeight);
@@ -141,17 +205,46 @@ void SceneEditor::Render()
         ImVec2(1, 0)
     );
 
-
+    //Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
     ImGuizmo::SetOrthographic(true);
     ImGuizmo::SetDrawlist();
 
-    ImGuizmo::SetRect(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+    ImGuizmo::SetRect(ImGui::GetWindowPos().x + offset.x, ImGui::GetWindowPos().y + offset.y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
     
-    glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x, 0.0f, ImGui::GetWindowSize().y, -1.0f, 1.0f);
-    glm::mat4 model = glm::mat4(1.0f);
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position);
-    model = glm::translate(model, glm::vec3(0, 0, 0));
-    ImGuizmo::Manipulate(&view[0][0], &proj[0][0], ImGuizmo::OPERATION::TRANSLATE, ImGuizmo::WORLD, &model[0][0]);
+    if(SelectedObj != nullptr){
+        glm::vec3& Position = SelectedObj->GetTransform()->Position.value<glm::vec3>();
+        glm::vec3& Rotation = SelectedObj->GetTransform()->Rotation.value<glm::vec3>();
+        glm::vec3& Scale = SelectedObj->GetTransform()->Size.value<glm::vec3>();
+        glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x, 0.0f, ImGui::GetWindowSize().y, -1.0f, 1.0f);
+        glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position);
+
+        glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+        glm::mat4 Transform = glm::translate(glm::mat4(1.0f), Position) * rotation * glm::scale(glm::mat4(1.0f), Scale);
+
+
+        if(glfwGetKey(m_Window, GLFW_KEY_Q) == GLFW_PRESS)
+            m_Operation = ImGuizmo::OPERATION::TRANSLATE;
+        else if(glfwGetKey(m_Window, GLFW_KEY_W) == GLFW_PRESS)
+            m_Operation = ImGuizmo::OPERATION::ROTATE;
+        else if(glfwGetKey(m_Window, GLFW_KEY_E) == GLFW_PRESS)
+            m_Operation = ImGuizmo::OPERATION::SCALE;
+
+        ImGuizmo::Manipulate(&view[0][0], &proj[0][0], m_Operation, ImGuizmo::WORLD, &Transform[0][0]);
+        if(ImGuizmo::IsUsing())
+        {
+            glm::vec3 translation, rotation, scale;
+            DecomposeTransform(Transform, translation, rotation, scale);
+
+            if(m_Operation == ImGuizmo::OPERATION::TRANSLATE)
+                Position = translation;
+            else if(m_Operation == ImGuizmo::OPERATION::SCALE)
+                Scale = scale;
+            else if(m_Operation == ImGuizmo::OPERATION::ROTATE){
+                glm::vec3 deltaRotation = rotation - Rotation;
+                Rotation.z += deltaRotation.z;
+            }
+        }
+    }
 
 
     MoveCamera(glm::vec2(m_WindowWidth, m_WindowHeight), glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y));

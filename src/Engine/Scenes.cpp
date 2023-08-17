@@ -98,7 +98,7 @@ void Scene::Load(const std::string FilePath)
             }
         }
         if(obj == Engine::Get().GetPlay().CameraObject)
-            obj->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(SCREEN_WIDTH, SCREEN_HEIGHT, 0);
+            obj->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(Engine::Get().GetViewport().GetWindowSize().x, Engine::Get().GetViewport().GetWindowSize().y, 0);
 
         obj->GetTransform() = obj->GetComponent<Transform>();
         obj->GetRenderer() = obj->GetComponent<Renderer>();

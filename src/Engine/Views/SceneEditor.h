@@ -29,11 +29,13 @@ class SceneEditor{
         float m_WindowWidth; 
         float m_WindowHeight;
         GLFWwindow* m_Window;
-        std::shared_ptr<Object> OnClick(GLFWwindow* window, std::vector<std::shared_ptr<Object>> Objects); 
+        std::shared_ptr<Object> OnClick(GLFWwindow* window, std::vector<std::shared_ptr<Object>> Objects, glm::vec2&& WindowPosition); 
         void MoveCamera(glm::vec2&& Size, glm::vec2&& Position);
         static void Zooming(GLFWwindow* window, double xoffset, double yoffset);
         void RescaleFrameBuffer(float width, float height);
         bool m_ClickedOnObj;
         bool m_FirstTime = true; // Indicates the first time the user clicks on the SelectedObj
         glm::vec2 m_Offset; // Offset of the Cursor and the SelectedObj when the user first clicks on the SelectedObj
+
+        ImGuizmo::OPERATION m_Operation = ImGuizmo::OPERATION::TRANSLATE;
 };

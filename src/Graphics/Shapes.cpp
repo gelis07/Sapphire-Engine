@@ -112,10 +112,10 @@ void Shapes::Rectangle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool Ou
     float& ObjectRotation = m_ObjectRefrence->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
     std::array<glm::vec2, 4> NewRectPoints;
-    NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[0].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[1] = glm::vec2((RectPoints[1].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[1].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[1].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[1].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[2] = glm::vec2((RectPoints[2].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[2].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[2].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[2].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[3].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[3].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[3].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
+    NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
+    NewRectPoints[1] = glm::vec2((RectPoints[1].x) * cos((ObjectRotation)) + (RectPoints[1].y) * (-sin((ObjectRotation))), (RectPoints[1].x) * sin((ObjectRotation)) + (RectPoints[1].y) * cos((ObjectRotation)));
+    NewRectPoints[2] = glm::vec2((RectPoints[2].x) * cos((ObjectRotation)) + (RectPoints[2].y) * (-sin((ObjectRotation))), (RectPoints[2].x) * sin((ObjectRotation)) + (RectPoints[2].y) * cos((ObjectRotation)));
+    NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
 
 
     RenderShape({
@@ -140,10 +140,10 @@ void Shapes::Circle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLi
     float& ObjectRotation = m_ObjectRefrence->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
     std::array<glm::vec2, 4> NewRectPoints;
-    NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[0].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[1] = glm::vec2((RectPoints[1].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[1].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[1].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[1].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[2] = glm::vec2((RectPoints[2].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[2].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[2].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[2].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[3].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[3].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[3].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
+    NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
+    NewRectPoints[1] = glm::vec2((RectPoints[1].x) * cos((ObjectRotation)) + (RectPoints[1].y) * (-sin((ObjectRotation))), (RectPoints[1].x) * sin((ObjectRotation)) + (RectPoints[1].y) * cos((ObjectRotation)));
+    NewRectPoints[2] = glm::vec2((RectPoints[2].x) * cos((ObjectRotation)) + (RectPoints[2].y) * (-sin((ObjectRotation))), (RectPoints[2].x) * sin((ObjectRotation)) + (RectPoints[2].y) * cos((ObjectRotation)));
+    NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
 
     glm::vec2 StartPos(ObjectPos.x - ObjectSize.x/2 + CamPos.x, ObjectPos.y - ObjectSize.y/2 + CamPos.y);
     std::function<void(unsigned int shader)> Uniforms = [Viewport, StartPos,CameraZoom, ObjectSize](unsigned int shader) { 
@@ -182,10 +182,10 @@ void Shapes::CameraGizmo::Render(const glm::vec3 &CamPos, float CameraZoom, bool
     float& ObjectRotation = m_ObjectRefrence->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
     std::array<glm::vec2, 4> NewRectPoints;
-    NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[0].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[0].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[1] = glm::vec2((RectPoints[1].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[1].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[1].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[1].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[2] = glm::vec2((RectPoints[2].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[2].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[2].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[2].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
-    NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[3].y) * (-sin(SapphireEngine::DegToRad(ObjectRotation))), (RectPoints[3].x) * sin(SapphireEngine::DegToRad(ObjectRotation)) + (RectPoints[3].y) * cos(SapphireEngine::DegToRad(ObjectRotation)));
+    NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
+    NewRectPoints[1] = glm::vec2((RectPoints[1].x) * cos((ObjectRotation)) + (RectPoints[1].y) * (-sin((ObjectRotation))), (RectPoints[1].x) * sin((ObjectRotation)) + (RectPoints[1].y) * cos((ObjectRotation)));
+    NewRectPoints[2] = glm::vec2((RectPoints[2].x) * cos((ObjectRotation)) + (RectPoints[2].y) * (-sin((ObjectRotation))), (RectPoints[2].x) * sin((ObjectRotation)) + (RectPoints[2].y) * cos((ObjectRotation)));
+    NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
 
 
     RenderShape({
