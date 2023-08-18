@@ -14,6 +14,7 @@ void window_focus_callback(GLFWwindow* window, int focused)
     {
         for (auto&& object : Engine::Get().GetActiveScene()->Objects)
         {
+            //Should limit this only to the 
             for(auto&& component : object->GetComponents())
             {
                 component->GetLuaVariables();
@@ -27,7 +28,7 @@ void Engine::Init(std::string Path)
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
-    glfwWindowHint(GLFW_MAXIMIZED , GL_TRUE);
+    glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
 
 
     //The window is gonna be maximized from the glfw hint above so the width and height are useless

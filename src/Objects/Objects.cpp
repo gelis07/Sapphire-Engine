@@ -1,8 +1,8 @@
 #include "Engine/Scenes.h"
 #include "json.hpp"
 #include "UI/FileExplorer/FileExplorer.h"
-#include "Objects.h"
 #include "Engine/Engine.h"
+#include "Objects.h"
 
 Object::Object(std::string &&Name)
 {
@@ -68,9 +68,9 @@ void Object::OnUpdate()
 std::shared_ptr<Object> Object::CreateObject(std::string &&ObjName)
 {
     std::shared_ptr<Object> NewObj = std::make_shared<Object>(std::move(ObjName));
-    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0, false)));
-    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
-    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<RigidBody>("", "Rigidbody", 0, false)));
+    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0,NewObj.get(), false)));
+    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, NewObj.get(),false)));
+    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<RigidBody>("", "Rigidbody", 0,NewObj.get(), false)));
 
     NewObj->renderer = NewObj->GetComponent<Renderer>(); 
     NewObj->transform = NewObj->GetComponent<Transform>(); 
@@ -105,7 +105,7 @@ void Object::Inspect()
     std::shared_ptr<File> *File = FileExplorerDrop.ReceiveDrop(ImGui::GetCurrentWindow());
     if (File != NULL)
     {
-        Component *NewComponent = new Component((*File)->Path, (*File)->Name, Components.size(), true);
+        Component *NewComponent = new Component((*File)->Path, (*File)->Name, Components.size(),this,true);
         if (NewComponent->GetLuaVariables())
             AddComponent<Component>(NewComponent);
     }
@@ -161,18 +161,18 @@ std::shared_ptr<Object> Object::LoadPrefab(std::string FilePath)
         //! Got to find a better way to handle object!
         if(element.key() == "Renderer")
         {
-            Renderer* comp = new Renderer(element.value()["path"], element.key(), object->GetComponents().size(), element.value()["path"] != "");
+            Renderer* comp = new Renderer(element.value()["path"], element.key(), object->GetComponents().size(), object.get(),element.value()["path"] != "");
             object->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Renderer>(dynamic_cast<Renderer*>(comp))));
             object->GetComponents().back()->Load(element.value()["Variables"]);
         }
         else if(element.key() == "Transform")
         {
-            Transform* comp = new Transform(element.value()["path"], element.key(), object->GetComponents().size(), element.value()["path"] != "");
+            Transform* comp = new Transform(element.value()["path"], element.key(), object->GetComponents().size(), object.get(),element.value()["path"] != "");
             object->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
             object->GetComponents().back()->Load(element.value()["Variables"]);
         }else
         {
-            Component* comp = new Component(element.value()["path"], element.key(), object->GetComponents().size(), element.value()["path"] != "");
+            Component* comp = new Component(element.value()["path"], element.key(), object->GetComponents().size(), object.get(),element.value()["path"] != "");
             comp->Load(element.value()["Variables"]);
             object->AddComponent<Component>(comp);
         }

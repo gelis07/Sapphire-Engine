@@ -89,11 +89,13 @@ void SceneEditor::Zooming(GLFWwindow* window, double xoffset, double yoffset){
         camera->Zoom = 0.1f;
         return;
     }
-    camera->Zoom += yoffset/10;
+    if(yoffset > 0 || camera->Zoom > 0.5f)
+        camera->Zoom += yoffset/10;
 
     ImGuiIO& io = ImGui::GetIO();
     io.MouseWheelH += static_cast<float>(xoffset);
     io.MouseWheel += static_cast<float>(yoffset);
+    SapphireEngine::Log(std::to_string(camera->Zoom), SapphireEngine::Info);
 }
 
 static void Default(GLFWwindow* window, double xoffset, double yoffset){
@@ -174,8 +176,8 @@ bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm:
 }
 
 
-// The Gizmos had an annoying offset probably because of the little padding around the image and the window's position. For now I just added a fixed offset.
-glm::vec2 offset = glm::vec2(7.3f, -6.9f);
+// Its the little offset between the texture's position and the ImGui window's position. I played around with the values and these seem good. Perfect solution I know xD.
+constexpr glm::vec2 offset = glm::vec2(7.3f, -6.9f);
 
 // Thank you for the tutorial! https://www.codingwiththomas.com/blog/rendering-an-opengl-framebuffer-into-a-dear-imgui-window
 void SceneEditor::Render()
@@ -185,7 +187,7 @@ void SceneEditor::Render()
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
 
-    std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y));
+    std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y) + offset);
 
 
 
@@ -215,7 +217,9 @@ void SceneEditor::Render()
         glm::vec3& Position = SelectedObj->GetTransform()->Position.value<glm::vec3>();
         glm::vec3& Rotation = SelectedObj->GetTransform()->Rotation.value<glm::vec3>();
         glm::vec3& Scale = SelectedObj->GetTransform()->Size.value<glm::vec3>();
-        glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x, 0.0f, ImGui::GetWindowSize().y, -1.0f, 1.0f);
+
+        glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom, 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom, -1.0f, 1.0f);
+
         glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position);
 
         glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));

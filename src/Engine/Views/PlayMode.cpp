@@ -9,9 +9,9 @@ void PlayMode::Init(Scene* activeScene)
 
     CameraObject = std::make_shared<Object>("MainCamera");
 
-    CameraObject->AddComponent<Transform>(new Transform("", "Transform", 1, false));
-    CameraObject->AddComponent<Camera>(new Camera("", "Camera", 2, false));
-    CameraObject->AddComponent<Renderer>(new Renderer("", "Renderer", 3, false));
+    CameraObject->AddComponent<Transform>(new Transform("", "Transform", 1, CameraObject.get(),false));
+    CameraObject->AddComponent<Camera>(new Camera("", "Camera", 2,  CameraObject.get(),false));
+    CameraObject->AddComponent<Renderer>(new Renderer("", "Renderer", 3, CameraObject.get(), false));
 
     CameraObject->GetTransform() = CameraObject->GetComponent<Transform>();
     CameraObject->GetRenderer() = CameraObject->GetComponent<Renderer>();

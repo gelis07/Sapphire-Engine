@@ -68,31 +68,31 @@ void Scene::Load(const std::string FilePath)
             //! Got to find a better way to handle this!
             if(element.key() == "Renderer")
             {
-                Renderer* comp = new Renderer(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
+                Renderer* comp = new Renderer(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(), element.value()["path"] != "");
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Renderer>(dynamic_cast<Renderer*>(comp))));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }
             else if(element.key() == "Transform")
             {
-                Transform* comp = new Transform(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
+                Transform* comp = new Transform(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }else if(element.key() == "Camera") {
-                Camera* comp = new Camera(element.value()["path"], element.key(), obj->GetComponents().size(),element.value()["path"] != "");
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Camera>(dynamic_cast<Camera* >(comp))));
+                Camera* comp = new Camera(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Camera>(dynamic_cast<Camera*>(comp))));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
                 shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader, obj);
                 shape->Wireframe() = true;
                 Engine::Get().GetPlay().CameraObject = obj;
             }
             else if(element.key() == "Rigidbody") {
-                RigidBody* comp = new RigidBody(element.value()["path"], element.key(), obj->GetComponents().size(),element.value()["path"] != "");
+                RigidBody* comp = new RigidBody(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<RigidBody>(dynamic_cast<RigidBody* >(comp))));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }
             else
             {
-                Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), element.value()["path"] != "");
+                Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(), element.value()["path"] != "");
                 comp->Load(element.value()["Variables"]);
                 obj->AddComponent<Component>(comp);
             }

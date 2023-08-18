@@ -71,16 +71,4 @@ template<typename Derived>
 std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddComponent(Derived* Comp) 
 {
     Components.push_back(std::shared_ptr<Derived>(Comp));
-
-    if(Components.back()->GetState() == nullptr) return;
-    lua_State* L = Components.back()->GetState();
-    lua_pushlightuserdata(L, this);
-    luaL_newmetatable(L, "ObjectMetaTable");
-
-    lua_pushstring(L, "__index");
-    lua_pushcfunction(L, GetComponentFromObject);
-    lua_settable(L, -3);
-
-    lua_setmetatable(L, -2);
-    lua_setglobal(L, "this");
 }
