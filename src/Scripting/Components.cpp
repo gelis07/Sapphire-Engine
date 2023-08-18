@@ -51,7 +51,7 @@ bool Component::GetLuaVariables()
 {
     if(L == nullptr) return true;
     Reload(); // It was the best way I found to reload a lua script. 
-    if (luaL_loadfile(L, m_LuaFile.c_str()) || lua_pcall(L, 0, 0, 0)) {
+    if (luaL_loadfile(L,(Engine::Get().GetMainPath() +  m_LuaFile).c_str()) || lua_pcall(L, 0, 0, 0)) {
         std::stringstream ss;
         ss<< "Error loading script: " << lua_tostring(L, -1) << std::endl;
         SapphireEngine::Log(ss.str(), SapphireEngine::Error);

@@ -24,7 +24,7 @@ void FileExplorer::Open(std::string path)
         std::string FileName = entry.path().filename().string();
         if(m_Files.find(FileName) == m_Files.end())
         {
-            m_Files[FileName] = File::CreateFile(entry.path().extension().string(), entry.path().string(), FileName);
+            m_Files[FileName] = File::CreateFile(entry.path().extension().string(), entry.path().string().erase(0,Engine::Get().GetMainPath().size() - 1), FileName);
         }
         m_Files[FileName]->RenderGUI(entry, Position, m_IconAtlas, m_SelectedFile);
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right))

@@ -43,7 +43,7 @@ void Object::OnStart()
         if (!Components[i]->Active || Components[i]->GetFile().empty())
             continue;
         lua_State *L = Components[i]->GetState();
-        if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, GetComponents()[i]->GetFile().c_str())))
+        if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, (Engine::Get().GetMainPath() + GetComponents()[i]->GetFile()).c_str())))
         {
             std::stringstream ss;
             ss << "Error loading script: " << lua_tostring(L, -1) << std::endl;
