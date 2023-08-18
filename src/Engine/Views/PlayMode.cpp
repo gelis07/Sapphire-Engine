@@ -28,10 +28,8 @@ void PlayMode::RescaleFrameBuffer(float width, float height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Texture, 0);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
 }
 
 void PlayMode::Render(std::string& MainPath)
@@ -41,8 +39,6 @@ void PlayMode::Render(std::string& MainPath)
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
     CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(m_WindowWidth, m_WindowHeight, 0);
-    RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
-    glViewport(0, 0, m_WindowWidth, m_WindowHeight);
 
     ImVec2 pos = ImGui::GetCursorScreenPos();
     
@@ -83,6 +79,9 @@ void PlayMode::Render(std::string& MainPath)
     ImGui::End();
 
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
+    
+    RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
+    glViewport(0, 0, m_WindowWidth, m_WindowHeight);
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);

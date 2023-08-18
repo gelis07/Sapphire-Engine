@@ -56,6 +56,7 @@ void SceneEditor::Init(Scene* activeScene)
     m_Texture = CreateViewportTexture();
     m_FBO = CreateFBO(m_Texture);
 
+
     m_Grid.Init();
 }
 
@@ -106,15 +107,12 @@ static void Default(GLFWwindow* window, double xoffset, double yoffset){
 
 void SceneEditor::RescaleFrameBuffer(float width, float height)
 {
-	glBindTexture(GL_TEXTURE_2D, m_Texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Texture, 0);
-
-	glBindRenderbuffer(GL_RENDERBUFFER, m_RBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
+	GLCall(glBindTexture(GL_TEXTURE_2D, m_Texture));
+	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+	GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Texture, 0));
+	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 //Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
@@ -194,8 +192,6 @@ void SceneEditor::Render()
     if(ClickedObj != nullptr && ClickedObj->Name != "MainCamera" && !m_ClickedOnObj)
         SelectedObj = ClickedObj;
 
-    RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
-    glViewport(0, 0, m_WindowWidth, m_WindowHeight);
 
     ImVec2 pos = ImGui::GetCursorScreenPos();
     
@@ -259,6 +255,9 @@ void SceneEditor::Render()
 
 
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
+    
+    RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
+    glViewport(0, 0, m_WindowWidth, m_WindowHeight);
     
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
