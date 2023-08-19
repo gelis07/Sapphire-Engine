@@ -89,11 +89,14 @@ void Object::RenderGUI()
     for (std::shared_ptr<Component> Component : Components)
     {
         Component->Render();
+        ImGui::Separator();
     }
 }
 void Object::Inspect()
 {
-    ImGui::Begin("Inspect");
+    if(!(*Engine::Get().GetWindows().GetWindowState("Inspector"))) return;
+
+    ImGui::Begin("Inspect", Engine::Get().GetWindows().GetWindowState("Inspector"));
 
     ImGui::InputText("Object Name", &Name);
     if(ImGui::Button("Create Prefab")){

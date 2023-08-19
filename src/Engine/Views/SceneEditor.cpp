@@ -1,4 +1,6 @@
 #include "SceneEditor.h"
+#include "Engine/Engine.h"
+
 
 std::shared_ptr<Object> SceneEditor::OnClick(GLFWwindow* window, std::vector<std::shared_ptr<Object>> Objects, glm::vec2&& WindowPosition)
 {  
@@ -12,6 +14,7 @@ std::shared_ptr<Object> SceneEditor::OnClick(GLFWwindow* window, std::vector<std
             Shapes::Circle* circlePtr = dynamic_cast<Shapes::Circle*>(Objects[i]->GetRenderer()->shape.get());
             // float scalor = (WindowSize.x / ViewCamera.Zoom)/WindowSize.x;
             glm::vec2 CursorPosToWind((CursorPos.x - WindowPosition.x) - ViewCamera.position.x, -((CursorPos.y - WindowPosition.y) + ViewCamera.position.y));
+            CursorPosToWind /= ViewCamera.Zoom;
             //Checking if the object is a circle or a rectangle
             if(circlePtr)
             {
@@ -56,7 +59,7 @@ void SceneEditor::Init(Scene* activeScene)
     m_Texture = CreateViewportTexture();
     m_FBO = CreateFBO(m_Texture);
 
-
+    Engine::Get().GetWindows().InitWindow("Viewport");
     m_Grid.Init();
 }
 
@@ -96,7 +99,6 @@ void SceneEditor::Zooming(GLFWwindow* window, double xoffset, double yoffset){
     ImGuiIO& io = ImGui::GetIO();
     io.MouseWheelH += static_cast<float>(xoffset);
     io.MouseWheel += static_cast<float>(yoffset);
-    SapphireEngine::Log(std::to_string(camera->Zoom), SapphireEngine::Info);
 }
 
 static void Default(GLFWwindow* window, double xoffset, double yoffset){
@@ -180,7 +182,8 @@ constexpr glm::vec2 offset = glm::vec2(7.3f, -6.9f);
 // Thank you for the tutorial! https://www.codingwiththomas.com/blog/rendering-an-opengl-framebuffer-into-a-dear-imgui-window
 void SceneEditor::Render()
 {
-    ImGui::Begin("Viewport");
+    if(!(*Engine::Get().GetWindows().GetWindowState("Viewport") == false)) return;
+    ImGui::Begin("Viewport", Engine::Get().GetWindows().GetWindowState("Viewport"));
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
@@ -255,12 +258,12 @@ void SceneEditor::Render()
 
 
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
-    
+
     RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
-    glViewport(0, 0, m_WindowWidth, m_WindowHeight);
+    GLCall(glViewport(0, 0, m_WindowWidth, m_WindowHeight));
     
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+    GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
     m_Grid.Render(ViewCamera.position, ViewCamera.Zoom);
     for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)

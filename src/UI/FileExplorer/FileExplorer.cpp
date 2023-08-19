@@ -12,11 +12,13 @@ void FileExplorer::Init(){
     File::RegisterFile(".scene", SET_FILE(SceneFile));
     m_IconAtlas.AtlasID = LoadTexture("Assets/IconsAtlas.png");
     m_IconAtlas.AtlasSize = glm::vec2(2304,512);
+    Engine::Get().GetWindows().InitWindow("FileExplorer");
 }
 
 void FileExplorer::Open(std::string path)
 {
-    ImGui::Begin("File Explorer");
+    if(*Engine::Get().GetWindows().GetWindowState("FileExplorer") == false) return;
+    ImGui::Begin("File Explorer", Engine::Get().GetWindows().GetWindowState("FileExplorer"));
     ImVec2 Position = ImVec2(0, 30);
     int rows = 1;
     for (const auto &entry : fs::directory_iterator(path))

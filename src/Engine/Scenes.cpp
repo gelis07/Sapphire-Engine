@@ -110,7 +110,8 @@ void Scene::Load(const std::string FilePath)
 
 void Scene::Hierechy(std::shared_ptr<Object> &SelectedObj)
 {
-    ImGui::Begin("Hierachy");
+    if(!(*Engine::Get().GetWindows().GetWindowState("Hierachy"))) return;
+    ImGui::Begin("Hierachy", Engine::Get().GetWindows().GetWindowState("Hierachy"));
     for (size_t i = 0; i < Objects.size(); i++)
     {
         std::string Name = "";

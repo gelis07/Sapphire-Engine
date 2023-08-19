@@ -16,12 +16,29 @@ class Windows{
         void Toolbar();
         void DockSpace();
         void LogWindow();
+        void InitWindow(std::string&& WindowName, bool state = true);
+        void SetWindowState(std::string&& WindowName, bool state);
+        bool* GetWindowState(std::string&& WindowName);
         std::string MainPath;
         ImGuiContext* GetContext() {return DefaultContext;}
         ImGuiIO* GetWindowIO() {return IO;}
+
     private:
         ImGuiContext* DefaultContext;
         ImGuiIO* IO;
-        void FileMenu() const;
+
+        void FileMenu();
+        void EditMenu();
+        void HelpMenu();
+        void ViewMenu();
+
+        std::unordered_map<std::string, bool> WindowStates = 
+            {{"Preferences", false},
+            {"Settings", false},
+            {"Project Settings", false}};
+            
+        void PreferencesWindow();
+        void ProjectSettings();
+        void Settings();
         //* Set up the Themes
 };

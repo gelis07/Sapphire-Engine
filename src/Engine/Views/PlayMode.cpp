@@ -6,6 +6,7 @@ void PlayMode::Init(Scene* activeScene)
     m_ActiveScene = activeScene;
     m_Texture = CreateViewportTexture();
     m_FBO = CreateFBO(m_Texture);
+    Engine::Get().GetWindows().InitWindow("Play");
 
     CameraObject = std::make_shared<Object>("MainCamera");
 
@@ -34,57 +35,58 @@ void PlayMode::RescaleFrameBuffer(float width, float height)
 
 void PlayMode::Render(std::string& MainPath)
 {
-    ImGui::Begin("Play");
+    if((*Engine::Get().GetWindows().GetWindowState("Play"))){
+        ImGui::Begin("Play", Engine::Get().GetWindows().GetWindowState("Play"));
 
-    m_WindowWidth = ImGui::GetContentRegionAvail().x;
-    m_WindowHeight = ImGui::GetContentRegionAvail().y;
-    CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(m_WindowWidth, m_WindowHeight, 0);
+        m_WindowWidth = ImGui::GetContentRegionAvail().x;
+        m_WindowHeight = ImGui::GetContentRegionAvail().y;
+        CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(m_WindowWidth, m_WindowHeight, 0);
 
-    ImVec2 pos = ImGui::GetCursorScreenPos();
-    
-    ImGui::GetWindowDrawList()->AddImage(
-        reinterpret_cast<ImTextureID*>(m_Texture), 
-        ImVec2(pos.x, pos.y), 
-        ImVec2(pos.x + m_WindowWidth, pos.y + m_WindowHeight), 
-        ImVec2(0, 1), 
-        ImVec2(1, 0)
-    );
+        ImVec2 pos = ImGui::GetCursorScreenPos();
+        
+        ImGui::GetWindowDrawList()->AddImage(
+            reinterpret_cast<ImTextureID*>(m_Texture), 
+            ImVec2(pos.x, pos.y), 
+            ImVec2(pos.x + m_WindowWidth, pos.y + m_WindowHeight), 
+            ImVec2(0, 1), 
+            ImVec2(1, 0)
+        );
 
-    std::string Label;
-    if (Paused){ Label = "Play"; }
-    else{ Label = "Pause"; }
-    ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2, 20));
-    //Set the ImGui Button to play the game
-    if (ImGui::Button(Label.c_str()))
-    {
-        if(m_ActiveScene->SceneFile == ""){
-            ImGui::OpenPopup("Save Menu");
-        }else{
-            if(Paused) m_ActiveScene->Save(m_ActiveScene->SceneFile);
-            Paused = !Paused;
-        }
-    }
-    if (ImGui::BeginPopup("Save Menu"))
-    {
-        ImGui::InputText("Scene Name", &m_SceneFileName, ImGuiInputTextFlags_CharsNoBlank);
-        if (ImGui::MenuItem("Save") || glfwGetKey(m_Window, GLFW_KEY_ENTER) == GLFW_PRESS)
+        std::string Label;
+        if (Paused){ Label = "Play"; }
+        else{ Label = "Pause"; }
+        ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2, 20));
+        //Set the ImGui Button to play the game
+        if (ImGui::Button(Label.c_str()))
         {
-            m_ActiveScene->Save(std::string(m_SceneFileName) + ".scene");
-            Paused = !Paused;
-            ImGui::CloseCurrentPopup();
+            if(m_ActiveScene->SceneFile == ""){
+                ImGui::OpenPopup("Save Menu");
+            }else{
+                if(Paused) m_ActiveScene->Save(m_ActiveScene->SceneFile);
+                Paused = !Paused;
+            }
         }
-        ImGui::EndPopup();
+        if (ImGui::BeginPopup("Save Menu"))
+        {
+            ImGui::InputText("Scene Name", &m_SceneFileName, ImGuiInputTextFlags_CharsNoBlank);
+            if (ImGui::MenuItem("Save") || glfwGetKey(m_Window, GLFW_KEY_ENTER) == GLFW_PRESS)
+            {
+                m_ActiveScene->Save(std::string(m_SceneFileName) + ".scene");
+                Paused = !Paused;
+                ImGui::CloseCurrentPopup();
+            }
+            ImGui::EndPopup();
+        }
+
+        ImGui::End();
     }
-
-    ImGui::End();
-
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
     
     RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
-    glViewport(0, 0, m_WindowWidth, m_WindowHeight);
+    GLCall(glViewport(0, 0, m_WindowWidth, m_WindowHeight));
     
-    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT);
+    GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+    GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
 
     if(Paused && !m_Start){
