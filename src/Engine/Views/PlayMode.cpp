@@ -33,6 +33,24 @@ void PlayMode::RescaleFrameBuffer(float width, float height)
 
 }
 
+bool CheckForErrors()
+{
+    for (auto&& object : Engine::Get().GetActiveScene()->Objects)
+    {
+        //Should limit this only to the 
+        for(auto&& component : object->GetComponents())
+        {
+            if(component->GetState() == nullptr) 
+                continue;
+            if(!ScriptingEngine::CheckLua(component->GetState(), luaL_dofile(component->GetState(), (Engine::Get().GetMainPath() + component->GetFile()).c_str())))
+            {
+                return false;
+            }
+        }
+    }
+    return true;
+}
+
 void PlayMode::Render(std::string& MainPath)
 {
     if((*Engine::Get().GetWindows().GetWindowState("Play"))){
@@ -63,7 +81,11 @@ void PlayMode::Render(std::string& MainPath)
                 ImGui::OpenPopup("Save Menu");
             }else{
                 if(Paused) m_ActiveScene->Save(m_ActiveScene->SceneFile);
-                Paused = !Paused;
+
+                if(CheckForErrors())
+                    Paused = !Paused;
+                else
+                    SapphireEngine::Log("Can't run program with an active lua script with an error!", SapphireEngine::Error);
             }
         }
         if (ImGui::BeginPopup("Save Menu"))
@@ -71,8 +93,13 @@ void PlayMode::Render(std::string& MainPath)
             ImGui::InputText("Scene Name", &m_SceneFileName, ImGuiInputTextFlags_CharsNoBlank);
             if (ImGui::MenuItem("Save") || glfwGetKey(m_Window, GLFW_KEY_ENTER) == GLFW_PRESS)
             {
-                m_ActiveScene->Save(std::string(m_SceneFileName) + ".scene");
-                Paused = !Paused;
+                if(CheckForErrors()){
+                    m_ActiveScene->Save(std::string(m_SceneFileName) + ".scene");
+                    Paused = !Paused;
+                }
+                else
+                    SapphireEngine::Log("Can't run program with an active lua script with an error!", SapphireEngine::Error);
+                    
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();
@@ -115,6 +142,7 @@ void PlayMode::Render(std::string& MainPath)
             }
         }
     }
+    
     //Changing the start bool to false here so all the start functions get executed
     if(!Paused) m_Start = false;
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));

@@ -182,7 +182,7 @@ constexpr glm::vec2 offset = glm::vec2(7.3f, -6.9f);
 // Thank you for the tutorial! https://www.codingwiththomas.com/blog/rendering-an-opengl-framebuffer-into-a-dear-imgui-window
 void SceneEditor::Render()
 {
-    if(!(*Engine::Get().GetWindows().GetWindowState("Viewport") == false)) return;
+    if(!(*Engine::Get().GetWindows().GetWindowState("Viewport"))) return;
     ImGui::Begin("Viewport", Engine::Get().GetWindows().GetWindowState("Viewport"));
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;

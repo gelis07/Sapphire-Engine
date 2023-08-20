@@ -1,5 +1,5 @@
 #include "Scripting.h"
-
+#include "Engine/Engine.h"
 
 bool ScriptingEngine::CheckLua(lua_State *L, int r){
     if(r != LUA_OK)
