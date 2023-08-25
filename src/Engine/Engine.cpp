@@ -76,7 +76,7 @@ void Engine::Run()
 
         m_Windows.DockSpace();
         m_Windows.Toolbar();
-        FileExplorer::Open(m_Windows.MainPath);
+        FileExplorer::Open(m_Windows.CurrentPath);
         if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
         m_Windows.LogWindow();
         m_ActiveScene.Hierechy(m_Viewport.SelectedObj);

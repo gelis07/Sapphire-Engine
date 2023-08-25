@@ -20,9 +20,10 @@ class Windows{
         void SetWindowState(std::string&& WindowName, bool state);
         bool* GetWindowState(std::string&& WindowName);
         std::string MainPath;
+        std::string CurrentPath; // The difference is that is the path for the file explorer.
         ImGuiContext* GetContext() {return DefaultContext;}
         ImGuiIO* GetWindowIO() {return IO;}
-
+        
     private:
         ImGuiContext* DefaultContext;
         ImGuiIO* IO;

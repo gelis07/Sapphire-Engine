@@ -6,10 +6,16 @@ void File::RegisterFile(const std::string &extension, std::function<std::shared_
 
 std::shared_ptr<File> File::CreateFile(const std::string &extension, std::string NewPath, std::string NewName)
 {
-
     auto creationFunction = File::FileCreationMap.find(extension);
     if (creationFunction != File::FileCreationMap.end()) {
         std::shared_ptr NewFile = creationFunction->second();
+        NewFile->Name = NewName;
+        NewFile->Path = NewPath;
+        NewFile->SetIconPos();
+        return NewFile;
+    }else if(std::filesystem::is_directory(Engine::Get().GetWindows().CurrentPath + NewPath))
+    {
+        std::shared_ptr NewFile = File::FileCreationMap["folder"]();
         NewFile->Name = NewName;
         NewFile->Path = NewPath;
         NewFile->SetIconPos();

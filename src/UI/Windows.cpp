@@ -24,6 +24,7 @@ void Windows::Init(std::string&& Path){
     io.ConfigWindowsMoveFromTitleBarOnly = true;
     bool dockspaceOpen = true;
     this->MainPath = Path;
+    this->CurrentPath = Path;
     ImGuiWindowFlags dockspaceFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
     ImGuiStyle& style = ImGui::GetStyle();

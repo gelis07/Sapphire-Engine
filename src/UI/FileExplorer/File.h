@@ -37,8 +37,22 @@ class Default : public File
         }
         void OnDoubleClick(std::filesystem::directory_entry entry) override
         {
-            // WinExec((std::string("code ") + Engine::Get().GetMainPath()).c_str(), SW_HIDE);
-            // SapphireEngine::Log("Open script!", SapphireEngine::Info);
+        }
+};
+class Folder : public File
+{
+    public:
+        void SetIconPos() override{ 
+            m_IconPos = glm::vec2(1281,0); 
+            m_IconSize = glm::vec2(512,512); 
+        }
+        void OnClick(std::filesystem::directory_entry entry) 
+        {
+
+        }
+        void OnDoubleClick(std::filesystem::directory_entry entry) override
+        {
+            Engine::Get().GetWindows().CurrentPath = entry.path().string();
         }
 };
 
@@ -55,7 +69,7 @@ class LuaFile : public File
         }
         void OnDoubleClick(std::filesystem::directory_entry entry) override
         {
-            // WinExec((std::string("code ") + Engine::Get().GetMainPath()).c_str(), SW_HIDE);
+            system(("code " + entry.path().string()).c_str()); // Open the script in visual studio code
             SapphireEngine::Log("Open script!", SapphireEngine::Info);
         }
 };

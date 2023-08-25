@@ -17,6 +17,6 @@ class FileExplorer
         inline static std::string m_SelectedFile;
         inline static std::string m_NewFileName;
         inline static bool m_SelectedCut;
-        inline static std::filesystem::path* m_CopiedFilePath;
+        inline static std::filesystem::path m_CopiedFilePath;
         static void MouseInput(std::filesystem::path path);
 };

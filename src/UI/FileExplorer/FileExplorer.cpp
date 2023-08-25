@@ -8,10 +8,11 @@ namespace fs = std::filesystem;
 
 void FileExplorer::Init(){
     File::RegisterFile("default", SET_FILE(Default));
+    File::RegisterFile("folder", SET_FILE(Folder));
     File::RegisterFile(".lua", SET_FILE(LuaFile));
     File::RegisterFile(".scene", SET_FILE(SceneFile));
     m_IconAtlas.AtlasID = LoadTexture("Assets/IconsAtlas.png");
-    m_IconAtlas.AtlasSize = glm::vec2(2304,512);
+    m_IconAtlas.AtlasSize = glm::vec2(1792,512);
     Engine::Get().GetWindows().InitWindow("FileExplorer");
 }
 
@@ -23,6 +24,7 @@ void FileExplorer::Open(std::string path)
     int rows = 1;
     for (const auto &entry : fs::directory_iterator(path))
     {
+        
         std::string FileName = entry.path().filename().string();
         if(m_Files.find(FileName) == m_Files.end())
         {
@@ -31,6 +33,7 @@ void FileExplorer::Open(std::string path)
         m_Files[FileName]->RenderGUI(entry, Position, m_IconAtlas, m_SelectedFile);
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
         {
+            // MouseInput(entry.path());
             m_Files[FileName]->OnRightClick(entry);
             m_RightClicked = true;
         }
@@ -53,6 +56,7 @@ void FileExplorer::Open(std::string path)
         }
     }
     MouseInput(m_SelectedFile);
+    if(m_CopiedFilePath.string() != "") SapphireEngine::Log(m_CopiedFilePath.string(), SapphireEngine::Info);
     ImGui::End();
 }
 
@@ -77,25 +81,30 @@ end
 function OnCollision()
 
 end)";
-            stream.close();
+        stream.close();
         }
-        // if (ImGui::MenuItem("Copy"))
-        // {
-        //     m_CopiedFilePath = &path;
-        //     m_SelectedCut = false;
-        // }
-        // if (ImGui::MenuItem("Cut"))
-        // {
-        //     m_CopiedFilePath = &path;
-        //     m_SelectedCut = true;
-        // }
-        // if (ImGui::MenuItem("Paste"))
-        // {
-        //     fs::copy_file(*m_CopiedFilePath, "C:/Gelis/test.scene", fs::copy_options::overwrite_existing);
-        //     if(m_SelectedCut){
-        //         fs::remove(*m_CopiedFilePath);
-        //     }
-        // }
+        if (ImGui::MenuItem("Copy"))
+        {
+            m_CopiedFilePath = path;
+            m_SelectedCut = false;
+        }
+        if (ImGui::MenuItem("Cut"))
+        {
+            m_CopiedFilePath = path;
+            m_SelectedCut = true;
+        }
+        if (ImGui::MenuItem("Paste"))
+        {
+            std::string test = Engine::Get().GetWindows().CurrentPath + "/" + (m_CopiedFilePath).filename().string();
+            fs::copy_file(m_CopiedFilePath, Engine::Get().GetWindows().CurrentPath + "/" + (m_CopiedFilePath).filename().string(), fs::copy_options::overwrite_existing);
+            if(m_SelectedCut){
+                fs::remove(m_CopiedFilePath);
+            }
+        }
+        if (ImGui::MenuItem("Delete"))
+        {
+            fs::remove(path);
+        }
         ImGui::EndPopup();
     }
 }
