@@ -5,10 +5,10 @@
 #include <typeinfo>
 #include "Engine/Engine.h"
 
-Component::Component(std::string File,std::string ArgName, unsigned int ArgId, Object* Obj,bool luaComp) :m_LuaFile(File), Name(ArgName), m_ID(ArgId), m_ParentObject(Obj)
+Component::Component(std::string File,std::string ArgName, unsigned int ArgId, Object* Obj,bool luaComp) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
 {
     if(!luaComp) return;
-    Reload();
+    Reload(Obj);
 }
 
 Component::~Component()
@@ -24,18 +24,25 @@ Component::~Component()
 
 void Component::ExecuteFunction(std::string Name)
 {
-    std::string FullPath = m_LuaFile;
     UpdateLuaVariables();
     ScriptingEngine::LuaFunction(L, Name);
 }
 void Component::UpdateLuaVariables()
 {
-    if(Variables.size() == 0) return;
-    for(auto const& Var : Variables)
+    for(auto const& Var : VariablesToUpdate)
     {
         Var.second->SendToLua(L);
-        lua_setglobal(L, Var.first.c_str());
+        if(typeid(Var.second).hash_code() != typeid(SapphireEngine::LuaTable).hash_code())
+            lua_setglobal(L, Var.first.c_str());
+        else{
+            lua_getglobal(L, Var.second->GetName().c_str());
+            for(auto&& x : Var.second->value<TableVariable>()){
+                lua_setfield(L, -1, x.first.c_str());
+                
+            }
+        }
     }
+    VariablesToUpdate.clear();
 }
 bool isKnownModule(lua_State* L, std::string name) {
     // These are all the tables included by the lua_openlibs() function and yes that was the best way i found
@@ -47,10 +54,10 @@ struct LuaVariable{
     SapphireEngine::Variable* Value;
 };
 
-bool Component::GetLuaVariables()
+bool Component::GetLuaVariables(Object* obj)
 {
     if(L == nullptr) return true;
-    Reload(); // It was the best way I found to reload a lua script. 
+    Reload(obj); // It was the best way I found to reload a lua script. 
     if (!ScriptingEngine::CheckLua(L, luaL_loadfile(L,(Engine::Get().GetMainPath() +  m_LuaFile).c_str())) || lua_pcall(L, 0, 0, 0)) {
         std::stringstream ss;
         ss<< "Error loading script: " << lua_tostring(L, -1) << std::endl;
@@ -176,11 +183,11 @@ void Component::Render()
     ImGui::Text(Name.c_str());
     for (auto& Var : Variables)
     {
-        Var.second->RenderGUI();
+        Var.second->RenderGUI(VariablesToUpdate);
     }
 }
 
-void Component::Reload()
+void Component::Reload(Object* obj)
 {
     if(L != nullptr) 
         lua_close(L);
@@ -231,7 +238,7 @@ void Component::Reload()
     lua_pushcfunction(L, ComponentNewIndex);
     lua_settable(L, -3);
 
-    lua_pushlightuserdata(L, m_ParentObject);
+    lua_pushlightuserdata(L, obj);
     luaL_newmetatable(L, "ObjectMetaTable");
 
     lua_pushstring(L, "__index");
@@ -294,41 +301,47 @@ void Component::Load(nlohmann::json JSON)
     }
 }
 
-void Renderer::Render(bool&& IsSelected ,glm::vec3 CameraPos,float CameraZoom, bool IsViewport)
+void Renderer::Render(std::shared_ptr<Object> obj, bool&& IsSelected ,glm::vec3 CameraPos,float CameraZoom, bool IsViewport)
 {
     //That means that the object is an empty
     if(shape == nullptr) return;
     // Here it renders the object's outline to indicate that the current object is selected
     if(IsSelected){
-        shape->Render(CameraPos ,CameraZoom,true, shape->Wireframe(), IsViewport);
+        shape->Render(obj, CameraPos ,CameraZoom,true, shape->Wireframe(), IsViewport);
     }
-    shape->Render(CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
+    shape->Render(obj, CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
 }
 
 void RigidBody::CheckForCollisions(Object *current) {
- if(current->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-     for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-         if(object->Name == "MainCamera" || object.get() == current) continue;
-         if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-             PhysicsEngine::RectanglexRectangle(object, current);
-         }else{
-             PhysicsEngine::CirclexRectangle(object, current);
-         }
-     }
- }else{
-     for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-         if(object->Name == "MainCamera" || object.get() == current) continue;
-         if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-             PhysicsEngine::CirclexRectangle(object, current);
-         }else{
-             PhysicsEngine::CirclexCircle(object, current);
-         }
-     }
- }
+    if(current->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
+            if(object->Name == "MainCamera" || object.get() == current) continue;
+            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+                if(PhysicsEngine::RectanglexRectangle(object, current))
+                    break;
+            }else{
+                if(PhysicsEngine::CirclexRectangle(object, current))
+                    break;
+            }
+        }
+    }else{
+        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
+            if(object->Name == "MainCamera" || object.get() == current) continue;
+            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+                if(PhysicsEngine::CirclexRectangle(object, current))
+                    break;
+            }else{
+                if(PhysicsEngine::CirclexCircle(object, current))
+                    break;
+            }
+        }
+    }
 }
 
 void RigidBody::Simulate(Object *current) {
-    Velocity.value<glm::vec3>() = VelocityLastFrame - glm::vec3(0,-PhysicsEngine::g,0) * Engine::Get().GetDeltaTime();
+    bool test = Gravity.value<bool>();
+    glm::vec3 gravity = test ? glm::vec3(0,-PhysicsEngine::g,0) : glm::vec3(0);
+    Velocity.value<glm::vec3>() = VelocityLastFrame -  gravity * Engine::Get().GetDeltaTime();
     glm::vec3 accelaration = (Velocity.value<glm::vec3>() - VelocityLastFrame) / Engine::Get().GetDeltaTime();
     current->GetComponent<Transform>()->Position.value<glm::vec3>() += VelocityLastFrame * Engine::Get().GetDeltaTime() + (accelaration / 2.0f ) * Engine::Get().GetDeltaTime() * Engine::Get().GetDeltaTime();
     VelocityLastFrame = Velocity.value<glm::vec3>();

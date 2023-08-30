@@ -14,7 +14,7 @@ class PlayMode{
         unsigned int m_FBO;
         GLuint m_RBO;
         std::string m_SceneFileName;
-        float m_WindowWidth, m_WindowHeight;
+        int m_WindowWidth, m_WindowHeight;
         Scene* m_ActiveScene;
         void RescaleFrameBuffer(float width, float height);
         GLFWwindow* m_Window;

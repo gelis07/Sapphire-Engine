@@ -13,6 +13,7 @@ add_executable(Sapphire-Engine
     src/Engine/Scenes.cpp
     src/Engine/Engine.cpp
     src/Engine/Views/PlayMode.cpp
+    src/RunTime/RunTime.cpp
     src/Engine/Views/SceneEditor.cpp
     src/Graphics/Grid.cpp
     src/Scripting/Scripting.cpp
@@ -60,8 +61,6 @@ target_link_libraries(Sapphire-Engine PRIVATE
 target_compile_options(Sapphire-Engine PRIVATE
     -fdiagnostics-color=always
     -g
-    -DEXPORT=0
-    -mwindows
     -std=c++17
 )
 

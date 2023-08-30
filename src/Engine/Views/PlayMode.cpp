@@ -1,5 +1,6 @@
 #include "PlayMode.h"
 #include "Engine/Engine.h"
+#include "RunTime/RunTime.h"
 void PlayMode::Init(Scene* activeScene)
 {
     m_Window = glfwGetCurrentContext();
@@ -17,7 +18,7 @@ void PlayMode::Init(Scene* activeScene)
     CameraObject->GetTransform() = CameraObject->GetComponent<Transform>();
     CameraObject->GetRenderer() = CameraObject->GetComponent<Renderer>();
     
-    CameraObject->GetRenderer()->shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader, CameraObject);
+    CameraObject->GetRenderer()->shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader);
     CameraObject->GetRenderer()->shape->Wireframe() = true;
     activeScene->Objects.push_back(CameraObject);
 }
@@ -56,6 +57,8 @@ void PlayMode::Render(std::string& MainPath)
     if((*Engine::Get().GetWindows().GetWindowState("Play"))){
         ImGui::Begin("Play", Engine::Get().GetWindows().GetWindowState("Play"));
 
+
+        // glfwGetWindowSize(glfwGetCurrentContext(), &m_WindowWidth, &m_WindowHeight);
         m_WindowWidth = ImGui::GetContentRegionAvail().x;
         m_WindowHeight = ImGui::GetContentRegionAvail().y;
         CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(m_WindowWidth, m_WindowHeight, 0);
@@ -107,14 +110,16 @@ void PlayMode::Render(std::string& MainPath)
 
         ImGui::End();
     }
-    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
     
+
+    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
+
+
     RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
     GLCall(glViewport(0, 0, m_WindowWidth, m_WindowHeight));
-    
+
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
 
     if(Paused && !m_Start){
         //This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
@@ -122,29 +127,17 @@ void PlayMode::Render(std::string& MainPath)
         m_ActiveScene->Load(m_ActiveScene->SceneFile);
         m_Start = true;
     } 
-    for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
-    {
-        if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetRenderer()) {
-            if(m_ActiveScene->Objects[i] != CameraObject)
-                renderer->Render(false, -CameraObject->GetTransform()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
-        }
-        else
-            if(m_ActiveScene->Objects[i]->GetRenderer() = m_ActiveScene->Objects[i]->GetComponent<Renderer>()) 
-                m_ActiveScene->Objects[i]->GetRenderer()->Render(false, -CameraObject->GetTransform()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
-            else
-                SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
-        if(!Paused){
-            m_ActiveScene->Objects[i]->OnStart();
-            m_ActiveScene->Objects[i]->OnUpdate();
-            if(std::shared_ptr<RigidBody> rb = m_ActiveScene->Objects[i]->GetComponent<RigidBody>()) {
-                rb->CheckForCollisions(m_ActiveScene->Objects[i].get());
-                rb->Simulate(m_ActiveScene->Objects[i].get());
-            }
+    if(Paused){
+        for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
+        {
+            RunTime::Render(m_ActiveScene->Objects[i], CameraObject);
         }
     }
-    
+    if(!Paused){
+        RunTime::Run(m_ActiveScene, CameraObject);
+    }
+
     //Changing the start bool to false here so all the start functions get executed
     if(!Paused) m_Start = false;
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
-
 }

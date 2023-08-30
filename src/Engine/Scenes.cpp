@@ -32,6 +32,82 @@ void Scene::Save(const std::string FilePath)
     stream.close();
 }
 
+
+void Scene::Load(const std::string FilePath, std::shared_ptr<Object>& CamereObject)
+{
+    // this->SceneFile = FilePath;
+    std::ifstream stream(FilePath);
+    nlohmann::json Data;
+    stream >> Data;
+    stream.close();
+    for (auto &&object : Objects)
+    {
+        object->GetComponents().clear();
+    }
+    Objects.clear();
+    for (size_t i = 0; i < Data.size(); i++)
+    {
+        std::stringstream ss;
+        ss << "Object: " << i;
+        nlohmann::json JsonObj = Data[ss.str().c_str()];
+
+        std::shared_ptr<Shapes::Shape> shape;
+        std::shared_ptr<Object> obj = std::make_shared<Object>(JsonObj["Name"]);
+        switch (JsonObj["shape"].get<int>())
+        {
+            case Shapes::CircleT:
+                shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
+                break;
+            case Shapes::RectangleT:
+                shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
+                break;
+            default:
+                shape = nullptr;
+        }
+        nlohmann::json& JsonComp = JsonObj["Components"];
+        for (auto& element : JsonObj["Components"].items()) {
+            //! Got to find a better way to handle this!
+            if(element.key() == "Renderer")
+            {
+                Renderer* comp = new Renderer(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(), element.value()["path"] != "");
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Renderer>(dynamic_cast<Renderer*>(comp))));
+                obj->GetComponents().back()->Load(element.value()["Variables"]);
+            }
+            else if(element.key() == "Transform")
+            {
+                Transform* comp = new Transform(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
+                obj->GetComponents().back()->Load(element.value()["Variables"]);
+            }else if(element.key() == "Camera") {
+                Camera* comp = new Camera(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Camera>(dynamic_cast<Camera*>(comp))));
+                obj->GetComponents().back()->Load(element.value()["Variables"]);
+                shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader);
+                shape->Wireframe() = true;
+                CamereObject = obj;
+            }
+            else if(element.key() == "Rigidbody") {
+                RigidBody* comp = new RigidBody(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<RigidBody>(dynamic_cast<RigidBody* >(comp))));
+                obj->GetComponents().back()->Load(element.value()["Variables"]);
+            }
+            else
+            {
+                Component* comp = new Component(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(), element.value()["path"] != "");
+                comp->Load(element.value()["Variables"]);
+                obj->AddComponent<Component>(comp);
+            }
+        }
+        if(obj == Engine::Get().GetPlay().CameraObject)
+            obj->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(Engine::Get().GetViewport().GetWindowSize().x, Engine::Get().GetViewport().GetWindowSize().y, 0);
+
+        obj->GetTransform() = obj->GetComponent<Transform>();
+        obj->GetRenderer() = obj->GetComponent<Renderer>();
+        obj->GetComponent<Renderer>()->shape = shape;
+        Objects.push_back(obj);
+    }
+}
+
 void Scene::Load(const std::string FilePath)
 {
     this->SceneFile = FilePath;
@@ -55,10 +131,10 @@ void Scene::Load(const std::string FilePath)
         switch (JsonObj["shape"].get<int>())
         {
             case Shapes::CircleT:
-                shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader, obj);
+                shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
                 break;
             case Shapes::RectangleT:
-                shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, obj);
+                shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
                 break;
             default:
                 shape = nullptr;
@@ -81,7 +157,7 @@ void Scene::Load(const std::string FilePath)
                 Camera* comp = new Camera(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Camera>(dynamic_cast<Camera*>(comp))));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
-                shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader, obj);
+                shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader);
                 shape->Wireframe() = true;
                 Engine::Get().GetPlay().CameraObject = obj;
             }
@@ -147,14 +223,14 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             std::stringstream ss;
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
-            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader, Obj);
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
         }
         if (ImGui::MenuItem("Create Rectangle"))
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
-            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, Obj);
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
         }
         ImGui::Separator();
         // if(ImGui::MenuItem("Duplicate")){

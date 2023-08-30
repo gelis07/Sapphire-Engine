@@ -1,7 +1,7 @@
 #include "PhysicsEngine.h"
 #include "Objects/Objects.h"
 
-void PhysicsEngine::CirclexRectangle(std::shared_ptr<Object> obj, Object* current)
+bool PhysicsEngine::CirclexRectangle(std::shared_ptr<Object> obj, Object* current)
 {
     // These points are linked to the geogebra files!
     float Cy = obj->GetTransform()->Position.value<glm::vec3>().y - obj->GetTransform()->Size.value<glm::vec3>().y / 2; // The y of the bottom Left point of the rectangle
@@ -18,6 +18,7 @@ void PhysicsEngine::CirclexRectangle(std::shared_ptr<Object> obj, Object* curren
         //A collision is occuring
         obj->OnCollision(current);
         current->OnCollision(obj.get());
+        return true;
     //    if(obj->GetTrigger()) return;
     //    float diff = current->GetTransform()->Si.value<glm::vec3>().x / 2 - SapphireEngine::LengthVec(CollisionPoint, current->GetTransform()->Position.value<glm::vec3>());
     //    glm::vec2 NormalizedT((CollisionPoint.x - current->GetTransform()->Position.x) / SapphireEngine::LengthVec(CollisionPoint, current->GetTransform()->Position.value<glm::vec3>()), (CollisionPoint.y - current->GetTransform()->Position.y) / SapphireEngine::LengthVec(CollisionPoint, current->GetTransform()->Position));
@@ -29,8 +30,10 @@ void PhysicsEngine::CirclexRectangle(std::shared_ptr<Object> obj, Object* curren
     //    }
     //    current->SetPos(current->GetTransform()->Position - VectorDiff);
     }
+    return false;
+
 }
-void PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* current)
+bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* current)
 {
     // These points are linked to the geogebra files!
     float Hy = obj->GetTransform()->Position.value<glm::vec3>().y - obj->GetTransform()->Size.value<glm::vec3>().y / 2; // The y of the bottom Left point of the "Other" Rectangle
@@ -54,6 +57,7 @@ void PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
     {
         obj->OnCollision(current);
         current->OnCollision(obj.get());
+        return true;
 
 //        if(obj->GetTrigger()) return;
 //        if(obj->IsStatic){
@@ -70,8 +74,10 @@ void PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
         // }
         // current->SetPos(current->GetTransform()->Position + VectorDiff);
     }
+    return false;
+
 }
-void PhysicsEngine::CirclexCircle(std::shared_ptr<Object> obj, Object* current)
+bool PhysicsEngine::CirclexCircle(std::shared_ptr<Object> obj, Object* current)
 {
     //! Comments here
     // Checking if the length of the vector with points the circles points is less than the sum of the radiuses
@@ -80,7 +86,7 @@ void PhysicsEngine::CirclexCircle(std::shared_ptr<Object> obj, Object* current)
     {
         obj->OnCollision(current);
         current->OnCollision(obj.get());
-
+        return true;
 //        if(obj->GetTrigger()) return;
 //        glm::vec2 P(Distance.x / SapphireEngine::LengthVec(Distance), Distance.y / SapphireEngine::LengthVec(Distance));
 //        glm::vec2 L(glm::vec2(obj->GetTransform()->Position.value<glm::vec3>()) + P * (obj->GetTransform()->Size.value<glm::vec3>().x/2));
@@ -89,6 +95,7 @@ void PhysicsEngine::CirclexCircle(std::shared_ptr<Object> obj, Object* current)
 //        glm::vec2 test = P * diff;
 //        current->SetPos(current->GetTransform()->Position + glm::vec3(test, 0));
     }
+    return false;
 }
 
 glm::vec3 PhysicsEngine::Impulse(RigidBody* rb, glm::vec3&& Force)

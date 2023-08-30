@@ -17,7 +17,7 @@ void window_focus_callback(GLFWwindow* window, int focused)
             //Should limit this only to the 
             for(auto&& component : object->GetComponents())
             {
-                component->GetLuaVariables();
+                component->GetLuaVariables(object.get());
             }
         }
     }
@@ -35,6 +35,8 @@ void Engine::Init(std::string Path)
     m_Window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
     glfwMakeContextCurrent(m_Window);
     glfwSwapInterval(1);
+    if(glewInit() != GLEW_OK)
+        std::cout << "Error!" << std::endl;
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     
@@ -58,6 +60,9 @@ void Engine::Init(std::string Path)
     glfwSetWindowSizeCallback(m_Window, ResizeIO);
     glfwSetWindowFocusCallback(m_Window, window_focus_callback);
     FileExplorer::Init();
+    GetActiveScene()->Load("/Test.scene");
+    // m_PlayMode.Paused = false;
+
 }
 
 void Engine::Run()
@@ -69,10 +74,14 @@ void Engine::Run()
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
 
+        GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
         float currentTime = glfwGetTime();
         DeltaTime = currentTime - LastTime;
         LastTime = currentTime;
+
+        SapphireEngine::Log(std::to_string(60 / DeltaTime), SapphireEngine::Info);
 
         m_Windows.DockSpace();
         m_Windows.Toolbar();
@@ -80,14 +89,11 @@ void Engine::Run()
         if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
         m_Windows.LogWindow();
         m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
-
         //* The m_Viewport is the actual game scene
         m_PlayMode.Render(m_Windows.MainPath);
         m_Viewport.Render();
         
         ImGui::SetCurrentContext(m_Windows.GetContext());
-        GLCall(glClearColor(0.3f, 0.5f, 0.4f, 1.0f));
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         GLCall(glfwSwapBuffers(m_Window));

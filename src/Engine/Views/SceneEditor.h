@@ -26,8 +26,8 @@ class SceneEditor{
         GLuint m_RBO;
         ImGuiContext* m_ViewportContext;
         Scene* m_ActiveScene;
-        float m_WindowWidth; 
-        float m_WindowHeight;
+        int m_WindowWidth; 
+        int m_WindowHeight;
         GLFWwindow* m_Window;
         std::shared_ptr<Object> OnClick(GLFWwindow* window, std::vector<std::shared_ptr<Object>> Objects, glm::vec2&& WindowPosition); 
         void MoveCamera(glm::vec2&& Size, glm::vec2&& Position);

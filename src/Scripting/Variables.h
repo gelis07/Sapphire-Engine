@@ -15,7 +15,7 @@ namespace SapphireEngine{
             {
                 map[name] = this;
             }
-            virtual void RenderGUI() = 0;
+            virtual void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) = 0;
             virtual void Save(nlohmann::json& JSON) = 0;
             virtual void Load(const nlohmann::json& jsonArray) = 0;
             virtual void SendToLua(lua_State* L) = 0;
@@ -23,6 +23,7 @@ namespace SapphireEngine{
             void ShowOnInspector(bool state) {m_ShowOnInspector = state;}
             void SaveVariable(bool state) {m_SaveVariable = state;}
             void CommunicateWithLua(bool state) {m_CommunicateWithLua = state;}
+            const std::string GetName() {return Name;}
             std::any& AnyValue() {return data;} // this one just returns the std::any
             //This template returns the value with the variable defined
             template <typename T>
@@ -40,7 +41,7 @@ namespace SapphireEngine{
         public:
             Float(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
-            void RenderGUI() override;
+            void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) override;
             void Save(nlohmann::json& JSON) override;
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
@@ -51,7 +52,7 @@ namespace SapphireEngine{
         public:
             Bool(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
-            void RenderGUI() override;
+            void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) override;
             void Save(nlohmann::json& JSON) override;
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
@@ -62,7 +63,7 @@ namespace SapphireEngine{
         public:
             String(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
-            void RenderGUI() override;
+            void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) override;
             void Save(nlohmann::json& JSON) override;
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
@@ -72,7 +73,7 @@ namespace SapphireEngine{
         public:
             Vec2(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
-            void RenderGUI() override;
+            void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) override;
             void Save(nlohmann::json& JSON) override;
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
@@ -82,7 +83,7 @@ namespace SapphireEngine{
         public:
             Vec3(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
-            void RenderGUI() override;
+            void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) override;
             void Save(nlohmann::json& JSON) override;
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
@@ -92,7 +93,7 @@ namespace SapphireEngine{
         public:
             Vec4(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
-            void RenderGUI() override;
+            void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) override;
             void Save(nlohmann::json& JSON) override;
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
@@ -102,7 +103,7 @@ namespace SapphireEngine{
         public:
             Color(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
-            void RenderGUI() override;
+            void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) override;
             void Save(nlohmann::json& JSON) override;
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
@@ -112,7 +113,7 @@ namespace SapphireEngine{
         public:
             LuaTable(std::string name, std::unordered_map<std::string, Variable*>& map)
             : Variable(name, map) {}
-            void RenderGUI() override;
+            void RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables) override;
             void Save(nlohmann::json& JSON) override;
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;

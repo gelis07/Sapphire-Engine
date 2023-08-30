@@ -42,6 +42,16 @@ int LuaUtilities::Clamp(lua_State* L) {
 
     return 1;
 }
+int LuaUtilities::GetDeltaTime(lua_State* L) {
+    int n = lua_gettop(L);
+    if (n != 2) {
+        return luaL_error(L, "Expected 2 argument, got %d", n);
+    }
+
+    lua_pushnumber(L, Engine::Get().GetDeltaTime());
+
+    return 1;
+}
 int LuaUtilities::KeyPress(lua_State* L) {
     int n = lua_gettop(L);
     if (n != 1) {
@@ -133,7 +143,36 @@ int LuaUtilities::SetCameraPos(lua_State *L)
     lua_Number y = lua_tonumber(L, -1);
 
     Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>() = glm::vec3(x, y, 0);
+    return 0;
+}
+int LuaUtilities::GetCameraSize(lua_State *L)
+{
+    int n = lua_gettop(L);
+    if (n != 0) {
+        return luaL_error(L, "Expected 0 argument, got %d", n);
+    }
+    lua_newtable(L);
+
+    glm::vec3& CameraSize = Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Size.value<glm::vec3>();
+    lua_pushnumber(L, CameraSize.x);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, CameraSize.y);
+    lua_setfield(L, -2, "y");
+
     return 1;
+}
+int LuaUtilities::SetCameraSize(lua_State *L)
+{
+    int n = lua_gettop(L);
+    if (n != 2) {
+        return luaL_error(L, "Expected 2 argument, got %d", n);
+    }
+    lua_Number x = lua_tonumber(L, -2);
+    lua_Number y = lua_tonumber(L, -1);
+
+    Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(x, y, 0);
+    return 0;
 }
 int LuaUtilities::CreateObject(lua_State *L)
 {
@@ -146,9 +185,9 @@ int LuaUtilities::CreateObject(lua_State *L)
     std::shared_ptr<Object> obj = Object::CreateObject(std::string(ObjName));
     std::shared_ptr<Shapes::Shape> shape;
     if(std::string(ObjShape) == "Rectangle"){
-        shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, obj);
+        shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
     }else{
-        shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader, obj);
+        shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
     }
     obj->GetComponent<Renderer>()->shape = shape;
     lua_pushlightuserdata(L, obj.get());
@@ -312,6 +351,15 @@ int LuaUtilities::luaopen_SapphireEngine(lua_State *L)
     lua_setfield(L, -2, "GetCameraPos");
     lua_pushcfunction(L, SetCameraPos);
     lua_setfield(L, -2, "SetCameraPos");
+
+    lua_pushcfunction(L, GetCameraSize);
+    lua_setfield(L, -2, "GetCameraSize");
+    lua_pushcfunction(L, SetCameraSize);
+    lua_setfield(L, -2, "SetCameraSize");
+
+    lua_pushcfunction(L, GetDeltaTime);
+    lua_setfield(L, -2, "GetDeltaTime");
+
     lua_pushcfunction(L, LoadScene);
     lua_setfield(L, -2, "LoadScene");
     lua_pushcfunction(L, CreateObject);

@@ -43,7 +43,7 @@ void Object::OnStart()
         if (!Components[i]->Active || Components[i]->GetFile().empty())
             continue;
         lua_State *L = Components[i]->GetState();
-        if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, (Engine::Get().GetMainPath() + GetComponents()[i]->GetFile()).c_str())))
+        if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, ("C:/Gelis/Programs/Flappy_Bird/Assets/" + GetComponents()[i]->GetFile()).c_str())))
         {
             std::stringstream ss;
             ss << "Error loading script: " << lua_tostring(L, -1) << std::endl;
@@ -108,8 +108,10 @@ void Object::Inspect()
     std::shared_ptr<File> *File = FileExplorerDrop.ReceiveDrop(ImGui::GetCurrentWindow());
     if (File != NULL)
     {
+        
+        (*File)->Name = (*File)->Name.erase((*File)->Name.size() - 4, (*File)->Name.size());
         Component *NewComponent = new Component((*File)->Path, (*File)->Name, Components.size(),this,true);
-        if (NewComponent->GetLuaVariables())
+        if (NewComponent->GetLuaVariables(this))
             AddComponent<Component>(NewComponent);
     }
 
@@ -151,10 +153,10 @@ std::shared_ptr<Object> Object::LoadPrefab(std::string FilePath)
     switch (JsonObj["shape"].get<int>())
     {
         case Shapes::CircleT:
-            shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader, std::shared_ptr<Object>(object));
+            shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
             break;
         case Shapes::RectangleT:
-            shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader, std::shared_ptr<Object>(object));
+            shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
             break;
         default:
             shape = nullptr;

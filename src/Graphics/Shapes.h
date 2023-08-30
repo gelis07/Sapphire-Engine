@@ -71,15 +71,13 @@ namespace Shapes
         public:
             Shapes::Type ShapeType = Shapes::Null;
             bool& Wireframe() {return m_Wireframe;}
-            Shape(unsigned int Shader, std::shared_ptr<Object> NewObj);
+            Shape(unsigned int Shader);
 
             // That's the function that actually render's a shape
-            void RenderShape(std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom,bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport = true);
+            void RenderShape(std::shared_ptr<Object>& Object, std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom,bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport = true);
 
             // Here is a virtual Render() function for every sub class to do it's own calculations before passing in the data on RenderShape()
-            virtual void Render(const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) {} 
-        protected:
-            std::shared_ptr<Object> m_ObjectRefrence;
+            virtual void Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) {} 
         private:
             unsigned int m_Shader  = 1;
             unsigned int m_VertexBuffer = 1;
@@ -92,21 +90,21 @@ namespace Shapes
     class Rectangle : public Shape
     {
         public:
-            Rectangle(unsigned int sh, std::shared_ptr<Object> NewObj) : Shape(sh, NewObj) {ShapeType = RectangleT;}
-            void Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
+            Rectangle(unsigned int sh) : Shape(sh) {ShapeType = RectangleT;}
+            void Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
     };
     class Circle : public Shape
     {
         public:
-            Circle(unsigned int sh, std::shared_ptr<Object> NewObj) : Shape(sh, NewObj) {ShapeType = CircleT;}
-            void Render(const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
+            Circle(unsigned int sh) : Shape(sh) {ShapeType = CircleT;}
+            void Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
     };
     //To display the camera gizmo like portion of the screen.
     class CameraGizmo : public Shape
     {
         public:
-            CameraGizmo(unsigned int sh, std::shared_ptr<Object> NewObj) : Shape(sh, NewObj) {ShapeType = RectangleT;}
-            void Render(const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
+            CameraGizmo(unsigned int sh) : Shape(sh) {ShapeType = RectangleT;}
+            void Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
     };
     
 

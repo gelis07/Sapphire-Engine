@@ -527,6 +527,30 @@ src/PhysicsEngine/PhysicsEngine.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.s
 .PHONY : src/PhysicsEngine/PhysicsEngine.cpp.s
 
+src/RunTime/RunTime.obj: src/RunTime/RunTime.cpp.obj
+.PHONY : src/RunTime/RunTime.obj
+
+# target to build an object file
+src/RunTime/RunTime.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/RunTime/RunTime.cpp.obj
+.PHONY : src/RunTime/RunTime.cpp.obj
+
+src/RunTime/RunTime.i: src/RunTime/RunTime.cpp.i
+.PHONY : src/RunTime/RunTime.i
+
+# target to preprocess a source file
+src/RunTime/RunTime.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/RunTime/RunTime.cpp.i
+.PHONY : src/RunTime/RunTime.cpp.i
+
+src/RunTime/RunTime.s: src/RunTime/RunTime.cpp.s
+.PHONY : src/RunTime/RunTime.s
+
+# target to generate assembly for a file
+src/RunTime/RunTime.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/src/RunTime/RunTime.cpp.s
+.PHONY : src/RunTime/RunTime.cpp.s
+
 src/Scripting/Components.obj: src/Scripting/Components.cpp.obj
 .PHONY : src/Scripting/Components.obj
 
@@ -827,6 +851,9 @@ help:
 	@echo ... src/PhysicsEngine/PhysicsEngine.obj
 	@echo ... src/PhysicsEngine/PhysicsEngine.i
 	@echo ... src/PhysicsEngine/PhysicsEngine.s
+	@echo ... src/RunTime/RunTime.obj
+	@echo ... src/RunTime/RunTime.i
+	@echo ... src/RunTime/RunTime.s
 	@echo ... src/Scripting/Components.obj
 	@echo ... src/Scripting/Components.i
 	@echo ... src/Scripting/Components.s

@@ -187,6 +187,8 @@ void SceneEditor::Render()
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
+    // glfwGetWindowSize(glfwGetCurrentContext(), &m_WindowWidth, &m_WindowHeight);
+
 
     std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y) + offset);
 
@@ -206,7 +208,7 @@ void SceneEditor::Render()
         ImVec2(1, 0)
     );
 
-    //Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
+    // Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
     ImGuizmo::SetOrthographic(true);
     ImGuizmo::SetDrawlist();
 
@@ -269,11 +271,11 @@ void SceneEditor::Render()
     for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
     {
         if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetRenderer())
-            renderer->Render(m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom, true);
+            renderer->Render(m_ActiveScene->Objects[i], m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom, true);
         else{
             //Check if it does indeed exist and is not set to the renderer variable on the object set it,
             if(m_ActiveScene->Objects[i]->GetRenderer() = m_ActiveScene->Objects[i]->GetComponent<Renderer>()) 
-                m_ActiveScene->Objects[i]->GetRenderer()->Render(m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom, true);
+                m_ActiveScene->Objects[i]->GetRenderer()->Render(m_ActiveScene->Objects[i], m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom, true);
             else
                 SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
         }

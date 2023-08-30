@@ -1,8 +1,11 @@
 #include "Variables.h"
 
-void SapphireEngine::Float::RenderGUI(){
+void SapphireEngine::Float::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables){
     if(!m_ShowOnInspector) return;
     ImGui::DragFloat(Name.c_str(), std::any_cast<float>(&data));
+    if(ImGui::IsItemEdited()){
+        Variables[Name] = this;
+    }
 }
 
 void SapphireEngine::Float::Save(nlohmann::json &JSON)
@@ -29,10 +32,13 @@ void SapphireEngine::Float::Load(const nlohmann::json &jsonArray)
     data = jsonArray[1].get<float>();
 }
 
-void SapphireEngine::Bool::RenderGUI()
+void SapphireEngine::Bool::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
     ImGui::Checkbox(Name.c_str(), std::any_cast<bool>(&data));
+    if(ImGui::IsItemEdited()){
+        Variables[Name] = this;
+    }
 }
 
 void SapphireEngine::Bool::Save(nlohmann::json &JSON)
@@ -50,7 +56,7 @@ void SapphireEngine::Bool::SendToLua(lua_State *L)
 void SapphireEngine::Bool::GetFromLua(lua_State *L)
 {
     if(!m_CommunicateWithLua) return;
-    data = lua_toboolean(L, -1);
+    data = lua_toboolean(L, -1) == true;
 }
 
 void SapphireEngine::Bool::Load(const nlohmann::json &jsonArray)
@@ -59,10 +65,13 @@ void SapphireEngine::Bool::Load(const nlohmann::json &jsonArray)
     data = jsonArray[1].get<bool>();
 }
 
-void SapphireEngine::String::RenderGUI()
+void SapphireEngine::String::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
     ImGui::InputText(Name.c_str(), std::any_cast<std::string>(&data));
+    if(ImGui::IsItemEdited()){
+        Variables[Name] = this;
+    }
 }
 
 void SapphireEngine::String::Save(nlohmann::json &JSON)
@@ -89,10 +98,13 @@ void SapphireEngine::String::Load(const nlohmann::json &jsonArray)
     data = jsonArray[1].get<std::string>();
 }
 
-void SapphireEngine::Vec2::RenderGUI()
+void SapphireEngine::Vec2::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
     ImGui::DragFloat2(Name.c_str(), &(*std::any_cast<glm::vec2>(&data))[0]);
+    if(ImGui::IsItemEdited()){
+        Variables[Name] = this;
+    }
 }
 
 void SapphireEngine::Vec2::Save(nlohmann::json &JSON)
@@ -138,10 +150,13 @@ void SapphireEngine::Vec2::Load(const nlohmann::json &jsonArray)
     data = vector;
 }
 
-void SapphireEngine::Vec3::RenderGUI()
+void SapphireEngine::Vec3::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
     ImGui::DragFloat3(Name.c_str(), &(*std::any_cast<glm::vec3>(&data))[0]);
+    if(ImGui::IsItemEdited()){
+        Variables[Name] = this;
+    }
 }
 
 void SapphireEngine::Vec3::Save(nlohmann::json &JSON)
@@ -194,10 +209,13 @@ void SapphireEngine::Vec3::Load(const nlohmann::json &jsonArray)
     data = Vector;
 }
 
-void SapphireEngine::Vec4::RenderGUI()
+void SapphireEngine::Vec4::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
     ImGui::DragFloat4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0]);
+    if(ImGui::IsItemEdited()){
+        Variables[Name] = this;
+    }
 }
 
 void SapphireEngine::Vec4::Save(nlohmann::json &JSON)
@@ -258,10 +276,13 @@ void SapphireEngine::Vec4::Load(const nlohmann::json &jsonArray)
     data = vector;
 }
 
-void SapphireEngine::Color::RenderGUI()
+void SapphireEngine::Color::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
     ImGui::ColorEdit4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0]);
+    if(ImGui::IsItemEdited()){
+        Variables[Name] = this;
+    }
 }
 
 void SapphireEngine::Color::Save(nlohmann::json &JSON)
@@ -320,13 +341,16 @@ void SapphireEngine::Color::Load(const nlohmann::json &jsonArray)
     vector.w = jsonArray[1]["a"].get<float>();
     data = vector;
 }
-void SapphireEngine::LuaTable::RenderGUI()
+void SapphireEngine::LuaTable::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(ImGui::TreeNode(Name.c_str()))
     {
         for(auto& TableVariable : value<std::unordered_map<std::string, SapphireEngine::Variable*>>())
         {
-            TableVariable.second->RenderGUI();
+            TableVariable.second->RenderGUI(value<std::unordered_map<std::string, SapphireEngine::Variable*>>());
+            if(ImGui::IsItemEdited()){
+                Variables[Name] = this;
+            }
         }
         ImGui::TreePop();
     }

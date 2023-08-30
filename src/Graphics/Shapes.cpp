@@ -6,7 +6,7 @@
 static glm::vec4 LineColor(1.0f, 0.0f, 0.0f, 1.0f);
 float lineWidth = 5.0f;
 //This is a complicated name but its just the shape constructor
-Shapes::Shape::Shape(unsigned int sh, std::shared_ptr<Object> NewObj) : m_Shader(sh), m_ObjectRefrence(NewObj) 
+Shapes::Shape::Shape(unsigned int sh) : m_Shader(sh)
 {
     m_Shader = sh;
     GLCall(glGenVertexArrays(1, &m_VertexArray));
@@ -32,12 +32,15 @@ Shapes::Shape::Shape(unsigned int sh, std::shared_ptr<Object> NewObj) : m_Shader
     GLCall(glBindVertexArray(0));
 }
 
-void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport)
+void Shapes::Shape::RenderShape(std::shared_ptr<Object>& Object,std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport)
 {
-    const glm::vec2& WindowSize = Engine::Get().GetViewport().GetWindowSize();
+    int width, height;
+    glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
+    // const glm::vec2& WindowSize = Engine::Get().GetViewport().GetWindowSize();
+    const glm::vec2& WindowSize = glm::vec2(width, height);
     m_Projection = glm::ortho(0.0f, Viewport ? WindowSize.x / CameraZoom : WindowSize.x, 0.0f, Viewport ? WindowSize.y / CameraZoom : WindowSize.y, -1.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, m_ObjectRefrence->GetComponent<Transform>()->Position.value<glm::vec3>());
+    model = glm::translate(model, Object->GetComponent<Transform>()->Position.value<glm::vec3>());
     glm::mat4 view = glm::translate(glm::mat4(1.0f), CamPos);
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer));
     
@@ -72,13 +75,13 @@ void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &C
     GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer));
 
     //Here is the standard model view projection matrix
-    glm::vec3& Pos = m_ObjectRefrence->GetComponent<Transform>()->Position.value<glm::vec3>();
+    glm::vec3& Pos = Object->GetComponent<Transform>()->Position.value<glm::vec3>();
     glm::mat4 mvp = m_Projection * view * model;
 
     GLCall(glUniformMatrix4fv(glGetUniformLocation(m_Shader, "u_MVP"), 1,GL_FALSE, &mvp[0][0]));
     SetUpUniforms(m_Shader);
 
-    glm::vec4& Color = m_ObjectRefrence->GetComponent<Renderer>()->Color.value<glm::vec4>();
+    glm::vec4& Color = Object->GetComponent<Renderer>()->Color.value<glm::vec4>();
     if(OutLine){
         GLCall(glUniform4f(glGetUniformLocation(m_Shader, "u_Color"), LineColor.r, LineColor.g, LineColor.b, LineColor.a));
     }else{
@@ -100,16 +103,16 @@ void Shapes::Shape::RenderShape(std::vector<Vertex> vertices, const glm::vec3 &C
 //& Should (almost a must) create a function to abstarct this repetetive code.
 //? Maybe make it the default functon for the shape class?
 
-void Shapes::Rectangle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
+void Shapes::Rectangle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
     std::array<glm::vec2, 4> RectPoints;
-    glm::vec3& ObjectSize = m_ObjectRefrence->GetComponent<Transform>()->Size.value<glm::vec3>();
+    glm::vec3& ObjectSize = Object->GetComponent<Transform>()->Size.value<glm::vec3>();
     //Getting each point of the rectangle
     RectPoints[0] = glm::vec2(ObjectSize.x/2, ObjectSize.y/2);
     RectPoints[1] = glm::vec2(-ObjectSize.x/2, ObjectSize.y/2);
     RectPoints[2] = glm::vec2(ObjectSize.x/2, -ObjectSize.y/2);
     RectPoints[3] = glm::vec2(-ObjectSize.x/2, -ObjectSize.y/2);
 
-    float& ObjectRotation = m_ObjectRefrence->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
+    float& ObjectRotation = Object->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
     std::array<glm::vec2, 4> NewRectPoints;
     NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
@@ -118,7 +121,7 @@ void Shapes::Rectangle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool Ou
     NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
 
 
-    RenderShape({
+    RenderShape(Object,{
                 {NewRectPoints[3].x , NewRectPoints[3].y},
                 {NewRectPoints[2].x, NewRectPoints[2].y},
                 {NewRectPoints[0].x, NewRectPoints[0].y},
@@ -127,17 +130,17 @@ void Shapes::Rectangle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool Ou
             //                                       ^The rectangle doesn't have any extra uniforms
 }
 
-void Shapes::Circle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
+void Shapes::Circle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
     std::array<glm::vec2, 4> RectPoints;
-    glm::vec3& ObjectSize = m_ObjectRefrence->GetComponent<Transform>()->Size.value<glm::vec3>();
-    glm::vec3& ObjectPos = m_ObjectRefrence->GetComponent<Transform>()->Position.value<glm::vec3>();
+    glm::vec3& ObjectSize = Object->GetComponent<Transform>()->Size.value<glm::vec3>();
+    glm::vec3& ObjectPos = Object->GetComponent<Transform>()->Position.value<glm::vec3>();
     //Getting each point of the rectangle
     RectPoints[0] = glm::vec2(ObjectSize.x/2, ObjectSize.y/2);
     RectPoints[1] = glm::vec2(-ObjectSize.x/2, ObjectSize.y/2);
     RectPoints[2] = glm::vec2(ObjectSize.x/2, -ObjectSize.y/2);
     RectPoints[3] = glm::vec2(-ObjectSize.x/2, -ObjectSize.y/2);
 
-    float& ObjectRotation = m_ObjectRefrence->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
+    float& ObjectRotation = Object->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
     std::array<glm::vec2, 4> NewRectPoints;
     NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
@@ -157,7 +160,7 @@ void Shapes::Circle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLi
         }
     };
 
-    RenderShape({
+    RenderShape(Object, {
                 {NewRectPoints[3].x , NewRectPoints[3].y},
                 {NewRectPoints[2].x, NewRectPoints[2].y},
                 {NewRectPoints[0].x, NewRectPoints[0].y},
@@ -169,17 +172,17 @@ void Shapes::Circle::Render(const glm::vec3 &CamPos ,float CameraZoom,bool OutLi
         coordinates has a length less than the square's width/2. To study the code just head to Shaders/Circle.glsl .*/
 }
 
-void Shapes::CameraGizmo::Render(const glm::vec3 &CamPos, float CameraZoom, bool OutLine, bool WireFrame, bool Viewport)
+void Shapes::CameraGizmo::Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos, float CameraZoom, bool OutLine, bool WireFrame, bool Viewport)
 {
     std::array<glm::vec2, 4> RectPoints;
-    glm::vec3& ObjectSize = m_ObjectRefrence->GetComponent<Transform>()->Size.value<glm::vec3>();
+    glm::vec3& ObjectSize = Object->GetComponent<Transform>()->Size.value<glm::vec3>();
     //Getting each point of the rectangle
     RectPoints[0] = glm::vec2((ObjectSize.x/2)*2, (ObjectSize.y/2)*2);
     RectPoints[1] = glm::vec2(0, (ObjectSize.y/2)*2);
     RectPoints[2] = glm::vec2((ObjectSize.x/2)*2, 0);
     RectPoints[3] = glm::vec2(0, 0);
 
-    float& ObjectRotation = m_ObjectRefrence->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
+    float& ObjectRotation = Object->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
     std::array<glm::vec2, 4> NewRectPoints;
     NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
@@ -188,7 +191,7 @@ void Shapes::CameraGizmo::Render(const glm::vec3 &CamPos, float CameraZoom, bool
     NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
 
 
-    RenderShape({
+    RenderShape(Object,{
                 {NewRectPoints[3].x , NewRectPoints[3].y},
                 {NewRectPoints[2].x, NewRectPoints[2].y},
                 {NewRectPoints[0].x, NewRectPoints[0].y},

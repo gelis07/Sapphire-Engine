@@ -6,7 +6,7 @@ CXX_DEFINES =
 
 CXX_INCLUDES = @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
 
-CXX_FLAGS =  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -mwindows -std=c++17
+CXX_FLAGS =  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch_OPTIONS = -Winvalid-pch;-x;c++-header;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
@@ -19,6 +19,8 @@ CXX_FLAGS =  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -DEXPORT=0 -
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+
+# PCH options: CMakeFiles/Sapphire-Engine.dir/src/RunTime/RunTime.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 

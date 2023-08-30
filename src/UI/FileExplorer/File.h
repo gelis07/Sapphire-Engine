@@ -65,12 +65,11 @@ class LuaFile : public File
         }
         void OnClick(std::filesystem::directory_entry entry) 
         {
-
+            
         }
         void OnDoubleClick(std::filesystem::directory_entry entry) override
         {
             system(("code " + entry.path().string()).c_str()); // Open the script in visual studio code
-            SapphireEngine::Log("Open script!", SapphireEngine::Info);
         }
 };
 

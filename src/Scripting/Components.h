@@ -9,12 +9,13 @@ class Object;
 
 class Component
 {
+    using TableVariable = std::unordered_map<std::string, SapphireEngine::Variable*>;
     public:
         Component(std::string File, std::string ArgName , unsigned int ArgId, Object* Obj,bool LuaComp=false);
         ~Component();
         void ExecuteFunction(std::string Name);
         void UpdateLuaVariables();
-        bool GetLuaVariables();
+        bool GetLuaVariables(Object* obj);
         void SetLuaComponent(lua_State* ComponentsState);
         void Render();
         SapphireEngine::Variable* Get(std::string Name);
@@ -24,14 +25,14 @@ class Component
         lua_State* GetState() {return L;}
         std::string GetFile() {return m_LuaFile;}
         std::string Name;
-        std::unordered_map<std::string, SapphireEngine::Variable*> Variables;
+        TableVariable Variables;
         std::unordered_map<std::string, lua_CFunction> Functions;
     protected:
+        TableVariable VariablesToUpdate;
         virtual void test() {} //! This... is just so dumb.
-        void Reload();
+        void Reload(Object* obj);
         lua_State* L = nullptr;
         int m_ID;
-        Object* m_ParentObject;
         std::string m_LuaFile;
 };
 
@@ -64,7 +65,7 @@ class Renderer : public Component
         std::shared_ptr<Shapes::Shape> shape;
         Shapes::Type Type;
         SapphireEngine::Color Color;
-        void Render(bool&& IsSelected,glm::vec3 CameraPos,float CameraZoom, bool Viewport);
+        void Render(std::shared_ptr<Object> obj,bool&& IsSelected,glm::vec3 CameraPos,float CameraZoom, bool Viewport);
 };
 
 class Camera : public Component
@@ -84,8 +85,9 @@ class RigidBody : public Component
 {
     public:
         RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp = false)
-        : Component(std::move(File), std::move(ArgName), ArgId,obj,LuaComp), Trigger("Trigger", Variables), Mass("Mass", Variables), Velocity("Velocity", Variables){
+        : Component(std::move(File), std::move(ArgName), ArgId,obj,LuaComp), Trigger("Trigger", Variables), Gravity("Gravity", Variables), Mass("Mass", Variables), Velocity("Velocity", Variables){
             Variables["Trigger"]->AnyValue() = false;
+            Variables["Gravity"]->AnyValue() = true;
             Variables["Mass"]->AnyValue() = 1.0f;
             Variables["Velocity"]->AnyValue() = glm::vec3(0);
             Variables["Velocity"]->ShowOnInspector(false);
@@ -93,6 +95,7 @@ class RigidBody : public Component
             Functions["Impulse"] = Impulse;
         };
         SapphireEngine::Bool Trigger;
+        SapphireEngine::Bool Gravity;
         SapphireEngine::Float Mass;
         SapphireEngine::Vec3 Velocity;
         glm::vec3 VelocityLastFrame = glm::vec3(0); // This basically means that the variable will be private and will not communicate at all with the user.

@@ -1,6 +1,5 @@
 #pragma once
 #include "pch.h"
-#define EXPORT 0
 #define GLCall(x) \
     x; \
     { \
@@ -23,6 +22,7 @@ namespace SapphireEngine
         return std::min(std::max(min,value) , max);
     }
     static void Log(std::string&& log, SapphireEngine::LogType&& type){
+        std::cout << log << '\n';
         std::pair<std::string, SapphireEngine::LogType> NewLog;
         NewLog.first = log;
         NewLog.second = type;
