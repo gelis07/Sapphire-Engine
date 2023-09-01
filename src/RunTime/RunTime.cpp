@@ -39,7 +39,7 @@ void RunTime::Render(std::shared_ptr<Object> object, std::shared_ptr<Object> Cam
             SapphireEngine::Log(object->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
 }
 
-void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject)
+void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject, const float& DeltaTime)
 {
     for (size_t i = 0; i < Scene->Objects.size(); i++)
     {
@@ -47,7 +47,7 @@ void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject)
         Scene->Objects[i]->OnStart();
         Scene->Objects[i]->OnUpdate();
         if(std::shared_ptr<RigidBody> rb = Scene->Objects[i]->GetComponent<RigidBody>()) {
-            rb->Simulate(Scene->Objects[i].get());
+            rb->Simulate(Scene->Objects[i].get(), DeltaTime);
             rb->CheckForCollisions(Scene->Objects[i].get());
         }
     }
@@ -55,14 +55,22 @@ void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject)
 
 void RunTime::RunGame(GLFWwindow* window,Scene *Scene, std::shared_ptr<Object>& CameraObject)
 {
-    CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(960, 540, 0);
+
     //The main loop.
     while (!glfwWindowShouldClose(window))
     {
+        int width, height;
+        glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
+        Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(width, height, 0);
         GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-        RunTime::Run(Scene, CameraObject);
+        float currentTime = glfwGetTime();
+        RunTime::DeltaTime = currentTime - RunTime::LastTime;
+        RunTime::LastTime = currentTime;
+
+
+        RunTime::Run(Scene, CameraObject, RunTime::DeltaTime);
 
         GLCall(glfwSwapBuffers(window));
         GLCall(glfwPollEvents());

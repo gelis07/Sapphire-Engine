@@ -1,6 +1,7 @@
 #include "Engine.h"
 #include "UI/FileExplorer/FileExplorer.h"
 #include "Graphics/ShaderFunc.h"
+#include "RunTime/RunTime.h"
 
 Engine Engine::Instance;
 
@@ -73,6 +74,7 @@ void Engine::Run()
         ImGui::SetCurrentContext(m_Windows.GetContext());
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
+        m_PlayMode.CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(960, 540, 0);
 
         GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
@@ -80,8 +82,6 @@ void Engine::Run()
         float currentTime = glfwGetTime();
         DeltaTime = currentTime - LastTime;
         LastTime = currentTime;
-
-        SapphireEngine::Log(std::to_string(60 / DeltaTime), SapphireEngine::Info);
 
         m_Windows.DockSpace();
         m_Windows.Toolbar();

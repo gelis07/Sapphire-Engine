@@ -34,16 +34,15 @@ Shapes::Shape::Shape(unsigned int sh) : m_Shader(sh)
 
 void Shapes::Shape::RenderShape(std::shared_ptr<Object>& Object,std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport)
 {
-    int width, height;
-    glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
-    // const glm::vec2& WindowSize = Engine::Get().GetViewport().GetWindowSize();
-    const glm::vec2& WindowSize = glm::vec2(width, height);
+    // int width, height;
+    // glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
+    // const glm::vec2& WindowSize = glm::vec2(width, height);
+    const glm::vec2& WindowSize = glm::vec2(Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>());
     m_Projection = glm::ortho(0.0f, Viewport ? WindowSize.x / CameraZoom : WindowSize.x, 0.0f, Viewport ? WindowSize.y / CameraZoom : WindowSize.y, -1.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, Object->GetComponent<Transform>()->Position.value<glm::vec3>());
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), CamPos);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), CamPos);   
     GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer));
-    
     // Here im rendering an outline for the object
     if(OutLine){
         //Here everyting is happening so the outline is uniformly spaced from the object
@@ -102,7 +101,6 @@ void Shapes::Shape::RenderShape(std::shared_ptr<Object>& Object,std::vector<Vert
 
 //& Should (almost a must) create a function to abstarct this repetetive code.
 //? Maybe make it the default functon for the shape class?
-
 void Shapes::Rectangle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
     std::array<glm::vec2, 4> RectPoints;
     glm::vec3& ObjectSize = Object->GetComponent<Transform>()->Size.value<glm::vec3>();

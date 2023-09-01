@@ -22,6 +22,7 @@ static unsigned int CreateFBO(unsigned int texture){
     GLCall(glGenFramebuffers(1, &fbo));
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, fbo)); 
     GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0)); 
+    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
     return fbo;
 }
 

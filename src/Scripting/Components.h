@@ -101,6 +101,6 @@ class RigidBody : public Component
         glm::vec3 VelocityLastFrame = glm::vec3(0); // This basically means that the variable will be private and will not communicate at all with the user.
         std::vector<glm::vec3> Forces;
         void CheckForCollisions(Object* current);
-        void Simulate(Object *current);
+        void Simulate(Object *current, const float& DeltaTime);
         static int Impulse(lua_State* L);
 };

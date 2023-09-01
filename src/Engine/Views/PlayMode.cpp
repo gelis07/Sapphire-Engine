@@ -57,7 +57,6 @@ void PlayMode::Render(std::string& MainPath)
     if((*Engine::Get().GetWindows().GetWindowState("Play"))){
         ImGui::Begin("Play", Engine::Get().GetWindows().GetWindowState("Play"));
 
-
         // glfwGetWindowSize(glfwGetCurrentContext(), &m_WindowWidth, &m_WindowHeight);
         m_WindowWidth = ImGui::GetContentRegionAvail().x;
         m_WindowHeight = ImGui::GetContentRegionAvail().y;
@@ -77,7 +76,7 @@ void PlayMode::Render(std::string& MainPath)
         if (Paused){ Label = "Play"; }
         else{ Label = "Pause"; }
         ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2, 20));
-        //Set the ImGui Button to play the game
+        // Set the ImGui Button to play the game
         if (ImGui::Button(Label.c_str()))
         {
             if(m_ActiveScene->SceneFile == ""){
@@ -113,8 +112,6 @@ void PlayMode::Render(std::string& MainPath)
     
 
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
-
-
     RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
     GLCall(glViewport(0, 0, m_WindowWidth, m_WindowHeight));
 
@@ -134,7 +131,7 @@ void PlayMode::Render(std::string& MainPath)
         }
     }
     if(!Paused){
-        RunTime::Run(m_ActiveScene, CameraObject);
+        RunTime::Run(m_ActiveScene, CameraObject, Engine::Get().GetDeltaTime());
     }
 
     //Changing the start bool to false here so all the start functions get executed

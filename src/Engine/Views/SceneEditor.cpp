@@ -187,7 +187,6 @@ void SceneEditor::Render()
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
-    // glfwGetWindowSize(glfwGetCurrentContext(), &m_WindowWidth, &m_WindowHeight);
 
 
     std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y) + offset);

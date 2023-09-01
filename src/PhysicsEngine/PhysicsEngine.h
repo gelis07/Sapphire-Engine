@@ -11,7 +11,7 @@ class PhysicsEngine {
         static bool RectanglexRectangle(std::shared_ptr<Object> obj, Object *current);
         static bool CirclexRectangle(std::shared_ptr<Object> obj, Object *current);
         static glm::vec3 Impulse(RigidBody* rb, glm::vec3&& Force);
-        static inline float g = -9.81;
+        static inline float g = -17.0;
 };
 
 

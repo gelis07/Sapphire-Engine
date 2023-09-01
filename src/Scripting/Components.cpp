@@ -103,7 +103,8 @@ bool Component::GetLuaVariables(Object* obj)
                     var.Value->AnyValue() = (float)lua_tonumber(L, -1);
                 }
                 lua_pop(L, 1);
-            }else{
+            }
+            else{
                 lua_pop(L, 1);
                 continue;
             }
@@ -338,12 +339,13 @@ void RigidBody::CheckForCollisions(Object *current) {
     }
 }
 
-void RigidBody::Simulate(Object *current) {
+void RigidBody::Simulate(Object *current, const float& DeltaTime) {
+    if(DeltaTime == 0) return;
     bool test = Gravity.value<bool>();
     glm::vec3 gravity = test ? glm::vec3(0,-PhysicsEngine::g,0) : glm::vec3(0);
-    Velocity.value<glm::vec3>() = VelocityLastFrame -  gravity * Engine::Get().GetDeltaTime();
-    glm::vec3 accelaration = (Velocity.value<glm::vec3>() - VelocityLastFrame) / Engine::Get().GetDeltaTime();
-    current->GetComponent<Transform>()->Position.value<glm::vec3>() += VelocityLastFrame * Engine::Get().GetDeltaTime() + (accelaration / 2.0f ) * Engine::Get().GetDeltaTime() * Engine::Get().GetDeltaTime();
+    Velocity.value<glm::vec3>() = VelocityLastFrame -  gravity * DeltaTime;
+    glm::vec3 accelaration = (Velocity.value<glm::vec3>() - VelocityLastFrame) / DeltaTime;
+    current->GetComponent<Transform>()->Position.value<glm::vec3>() += VelocityLastFrame * DeltaTime + (accelaration / 2.0f ) * DeltaTime;
     VelocityLastFrame = Velocity.value<glm::vec3>();
 }
 
