@@ -14,12 +14,13 @@ int main(void)
     // A little cool start up animation :)
     StartUp();
 
-    //A project manager to select the project you want to work on
-    ProjectManager* Pm = new ProjectManager();
+    {
+    // A project manager to select the project you want to work on
+    ProjectManager Pm;
 
     //The engine
-    Engine::Get().Init(Pm->Run()); //Pm->Run() will return the Main Path for the Engine.
-    delete(Pm);
+    Engine::Get().Init(Pm.Run()); //Pm->Run() will return the Main Path for the Engine.
+    }
     Engine::Get().Run();
 
 

@@ -9,6 +9,8 @@ class FileExplorer
     public:
         static void Open(std::string path);
         static void Init();
+        static const std::unordered_map<std::string, std::shared_ptr<File>>& GetFiles() {return m_Files;}
+        static void CopyAndOverwrite(std::string&& CopyFrom, std::string&& PasteTo);
     private:
         inline static TextureAtlas m_IconAtlas;
         inline static std::unordered_map<std::string, std::shared_ptr<File>> m_Files;

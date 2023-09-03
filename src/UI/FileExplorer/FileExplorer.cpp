@@ -15,6 +15,14 @@ void FileExplorer::Init(){
     m_IconAtlas.AtlasSize = glm::vec2(1792,512);
     Engine::Get().GetWindows().InitWindow("FileExplorer");
 }
+//I need this function because std::fileysten::copy_options::overwrite_existing still causes a crash if the file exists. After some research I think its a bug from gcc.
+void FileExplorer::CopyAndOverwrite(std::string &&CopyFrom, std::string &&PasteTo)
+{
+    if(std::filesystem::exists(PasteTo)){
+        std::filesystem::remove(PasteTo);
+    }
+    std::filesystem::copy_file(CopyFrom, PasteTo,std::filesystem::copy_options::overwrite_existing);
+}
 
 void FileExplorer::Open(std::string path)
 {
@@ -95,7 +103,6 @@ end)";
         }
         if (ImGui::MenuItem("Paste"))
         {
-            std::string test = Engine::Get().GetWindows().CurrentPath + "/" + (m_CopiedFilePath).filename().string();
             fs::copy_file(m_CopiedFilePath, Engine::Get().GetWindows().CurrentPath + "/" + (m_CopiedFilePath).filename().string(), fs::copy_options::overwrite_existing);
             if(m_SelectedCut){
                 fs::remove(m_CopiedFilePath);

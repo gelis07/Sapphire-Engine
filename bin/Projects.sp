@@ -1,6 +1,6 @@
 {
   "Project 1": {
-    "MainPath": "C:\\Gelis\\Programs\\Demo",
-    "Name": "Demo"
+    "MainPath": "C:\\Gelis\\Programs/Flappy_Bird",
+    "Name": "Flappy_Bird"
   }
 }

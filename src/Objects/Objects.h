@@ -37,6 +37,7 @@ class Object
         std::shared_ptr<Transform> transform;
         std::shared_ptr<Renderer> renderer;
         bool CalledStart = false;
+        bool Collided = false;
         std::vector<std::shared_ptr<Component>> Components;
 };
 

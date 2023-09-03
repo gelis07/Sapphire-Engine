@@ -15,7 +15,6 @@ void window_focus_callback(GLFWwindow* window, int focused)
     {
         for (auto&& object : Engine::Get().GetActiveScene()->Objects)
         {
-            //Should limit this only to the 
             for(auto&& component : object->GetComponents())
             {
                 component->GetLuaVariables(object.get());
@@ -61,9 +60,7 @@ void Engine::Init(std::string Path)
     glfwSetWindowSizeCallback(m_Window, ResizeIO);
     glfwSetWindowFocusCallback(m_Window, window_focus_callback);
     FileExplorer::Init();
-    GetActiveScene()->Load("/Test.scene");
-    // m_PlayMode.Paused = false;
-
+    GetActiveScene()->Load("Test.scene");
 }
 
 void Engine::Run()
@@ -105,7 +102,35 @@ void Engine::Run()
     glfwTerminate();
 }
 
-Scene *Engine::GetActiveScene()
+void Engine::Export()
+{
+    if(!std::filesystem::exists(m_Windows.MainPath + "/../" + "Build")){
+        std::filesystem::create_directories(m_Windows.MainPath + "/../" + "Build/Data");
+    }
+    FileExplorer::CopyAndOverwrite("glew32.dll", m_Windows.MainPath + "/../" + "Build/glew32.dll");
+    FileExplorer::CopyAndOverwrite("glfw3.dll", m_Windows.MainPath + "/../" + "Build/glfw3.dll");
+    FileExplorer::CopyAndOverwrite("lua54.dll", m_Windows.MainPath + "/../" + "Build/lua54.dll");
+    if(!std::filesystem::exists(m_Windows.MainPath + "/../" + "Build/Shaders")){
+        std::filesystem::copy("Shaders", m_Windows.MainPath + "/../" + "Build/Shaders");
+    }
+    FileExplorer::CopyAndOverwrite("Sapphire-Engine-Runtime.exe", m_Windows.MainPath + "/../" + "Build/Game.exe");
+    for (auto &&object : m_ActiveScene.Objects)
+    {
+        for (auto &&component : object->GetComponents())
+        {
+            if(component->GetState() != nullptr){
+                system(("C:/Users/bagge/Downloads/lua-5.4.2_Win64_bin/luac54.exe -o " + m_Windows.MainPath + "/../" + "/Build/Data/"+ component->GetFile() + " " + m_Windows.MainPath + component->GetFile()).c_str());
+            }
+        }
+    }
+    for(const auto &file : FileExplorer::GetFiles()){
+        if(file.second->Name.erase(0, file.second->Name.size() - 5) != "scene") continue;
+        FileExplorer::CopyAndOverwrite(m_Windows.MainPath + file.second->Path,m_Windows.MainPath + "/../" + "Build/Data/" + file.second->Path);
+    }
+    
+}
+
+Scene* Engine::GetActiveScene()
 {
     return &m_ActiveScene;
 }

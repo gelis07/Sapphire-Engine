@@ -153,6 +153,9 @@ void Windows::FileMenu(){
         {
             ImGui::OpenPopup("FileSaveMenu");
         }
+        if(ImGui::Button("Export")){
+            Engine::Get().Export();
+        }
         if (ImGui::BeginPopup("FileSaveMenu"))
         {
             ImGui::InputText("Scene Name", &Name);

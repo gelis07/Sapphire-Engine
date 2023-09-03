@@ -10,6 +10,7 @@ class Engine{
         static Engine& Get() {return Instance;}
         void Init(std::string Path);
         void Run();
+        void Export();
         Scene* GetActiveScene();
         const std::string& GetMainPath();
         SceneEditor& GetViewport() {return m_Viewport;}
