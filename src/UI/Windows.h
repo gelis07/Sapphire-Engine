@@ -16,6 +16,7 @@ class Windows{
         void Toolbar();
         void DockSpace();
         void LogWindow();
+        void ThemeMaker();
         void InitWindow(std::string&& WindowName, bool state = true);
         void SetWindowState(std::string&& WindowName, bool state);
         bool* GetWindowState(std::string&& WindowName);
@@ -27,12 +28,16 @@ class Windows{
     private:
         ImGuiContext* DefaultContext;
         ImGuiIO* IO;
-
+        std::map<ImGuiCol_, ImVec4> LoadedTheme;
         void FileMenu();
+        void Save(std::string name);
+        void Load(std::string name);
         void EditMenu();
         void HelpMenu();
         void ViewMenu();
-
+        void ThemeMenu();
+        void OnThemeChange();
+        float SatAmount;
         std::unordered_map<std::string, bool> WindowStates = 
             {{"Preferences", false},
             {"Settings", false},

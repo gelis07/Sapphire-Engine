@@ -180,7 +180,6 @@ nlohmann::json Component::Save(){
 }
 void Component::Render()
 {
-    // ImGui::Separator();
     ImGui::Text(Name.c_str());
     for (auto& Var : Variables)
     {

@@ -23,7 +23,7 @@ void RunTime::Init(GLFWwindow* window,Scene* Scene, std::shared_ptr<Object>& Cam
     LoadShader(Shapes::BasicShader, "Shaders/Basic.glsl");
     LoadShader(Shapes::GridShader, "Shaders/Grid.glsl");
 
-    Scene->Load("/Test.scene");
+    // Scene->Load("/Test.scene");
 }
 
 void RunTime::Render(std::shared_ptr<Object> object, std::shared_ptr<Object> CameraObject)

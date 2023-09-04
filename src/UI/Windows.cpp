@@ -36,6 +36,8 @@ void Windows::Init(std::string&& Path){
     InitWindow("Inspector");
     InitWindow("Hierachy");
     InitWindow("Logs");
+    InitWindow("ThemeMaker", false);
+    Load("purple");
 }
 void Windows::DockSpace()
 {
@@ -129,6 +131,7 @@ void Windows::Toolbar()
         EditMenu(); //& Got to save these features on a JSON file!
         ViewMenu();
         HelpMenu();
+        ThemeMenu();
         if(Engine::Get().GetActiveScene()->SceneFile == ""){
             ImGui::Text("No scene loaded");
         }else{
@@ -209,6 +212,39 @@ void Windows::HelpMenu()
         ImGui::EndMenu();
     }
 }
+ImVec4 Saturate(ImVec4 StartingCol,float amount){
+    return ImVec4(StartingCol.x + amount / 255.0f, StartingCol.y + amount / 255.0f, StartingCol.z + amount / 255.0f, 1);
+}
+void Windows::OnThemeChange()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+
+
+    LoadedTheme[ImGuiCol_TabUnfocused] = LoadedTheme[ImGuiCol_Tab];
+    LoadedTheme[ImGuiCol_TabUnfocusedActive] = LoadedTheme[ImGuiCol_Tab];
+    LoadedTheme[ImGuiCol_TabActive] = Saturate(LoadedTheme[ImGuiCol_Tab], SatAmount);
+    LoadedTheme[ImGuiCol_TabHovered] = Saturate(LoadedTheme[ImGuiCol_Tab], 20);
+
+    LoadedTheme[ImGuiCol_TitleBgActive] = LoadedTheme[ImGuiCol_TitleBg], SatAmount;
+
+    LoadedTheme[ImGuiCol_Button] = LoadedTheme[ImGuiCol_FrameBg];
+    LoadedTheme[ImGuiCol_ButtonActive] = Saturate(LoadedTheme[ImGuiCol_FrameBg], SatAmount);
+    LoadedTheme[ImGuiCol_ButtonHovered] = Saturate(LoadedTheme[ImGuiCol_FrameBg], 20);
+    LoadedTheme[ImGuiCol_FrameBgActive] = Saturate(LoadedTheme[ImGuiCol_FrameBg], SatAmount);
+    LoadedTheme[ImGuiCol_FrameBgHovered] = Saturate(LoadedTheme[ImGuiCol_FrameBg], 20);
+    LoadedTheme[ImGuiCol_ChildBg] = Saturate(LoadedTheme[ImGuiCol_WindowBg], SatAmount);
+
+    for(auto const& x : LoadedTheme)
+    {
+        style.Colors[x.first] = x.second;
+    }
+
+    style.FrameRounding = 4;
+    style.PopupRounding = 2;
+    style.GrabRounding = 1;
+    style.TabRounding = 6;
+    style.TabRounding = 1;
+}
 
 void Windows::ViewMenu()
 {
@@ -224,6 +260,21 @@ void Windows::ViewMenu()
     }
 
     
+}
+
+void Windows::ThemeMenu()
+{
+    if(ImGui::BeginMenu("Themes")){
+        for(const auto &entry : std::filesystem::directory_iterator("Themes/")){
+            std::string name = entry.path().filename().string();
+            name = name.erase(name.size() - 5, name.size());
+            if(ImGui::Button(name.c_str()))
+            {
+                Load(name);
+            }
+        }
+        ImGui::EndMenu();
+    }
 }
 
 void Windows::PreferencesWindow()
@@ -257,5 +308,59 @@ void Windows::Settings()
     ImGui::Text("Options coming soon.");
 
 
+    ImGui::End();
+}
+
+
+void Windows::Save(std::string name){
+    std::ofstream stream("Themes/" + name +".json", std::ofstream::trunc);
+    nlohmann::json Theme;
+    Theme["ImGuiCol_WindowBg"] = {LoadedTheme[ImGuiCol_WindowBg].x, LoadedTheme[ImGuiCol_WindowBg].y, LoadedTheme[ImGuiCol_WindowBg].z,LoadedTheme[ImGuiCol_WindowBg].w};
+    Theme["ImGuiCol_Tab"] = {LoadedTheme[ImGuiCol_Tab].x, LoadedTheme[ImGuiCol_Tab].y, LoadedTheme[ImGuiCol_Tab].z,LoadedTheme[ImGuiCol_Tab].w};
+    Theme["ImGuiCol_TitleBg"] = {LoadedTheme[ImGuiCol_TitleBg].x, LoadedTheme[ImGuiCol_TitleBg].y, LoadedTheme[ImGuiCol_TitleBg].z,LoadedTheme[ImGuiCol_TitleBg].w};
+    Theme["ImGuiCol_FrameBg"] = {LoadedTheme[ImGuiCol_FrameBg].x, LoadedTheme[ImGuiCol_FrameBg].y, LoadedTheme[ImGuiCol_FrameBg].z,LoadedTheme[ImGuiCol_FrameBg].w};
+    Theme["SatAmount"] = SatAmount;
+    stream << Theme.dump(2);
+    stream.close();
+}
+
+void Windows::Load(std::string name){
+    std::ifstream stream("Themes/" + name + ".json");
+    nlohmann::json Theme;
+    stream >> Theme;
+    stream.close();
+    
+    LoadedTheme[ImGuiCol_WindowBg] = ImVec4(Theme["ImGuiCol_WindowBg"][0], Theme["ImGuiCol_WindowBg"][1], Theme["ImGuiCol_WindowBg"][2], Theme["ImGuiCol_WindowBg"][3]);
+    LoadedTheme[ImGuiCol_Tab] = ImVec4(Theme["ImGuiCol_Tab"][0], Theme["ImGuiCol_Tab"][1], Theme["ImGuiCol_Tab"][2], Theme["ImGuiCol_Tab"][3]);
+    LoadedTheme[ImGuiCol_TitleBg] = ImVec4(Theme["ImGuiCol_TitleBg"][0], Theme["ImGuiCol_TitleBg"][1], Theme["ImGuiCol_TitleBg"][2], Theme["ImGuiCol_TitleBg"][3]);
+    LoadedTheme[ImGuiCol_FrameBg] = ImVec4(Theme["ImGuiCol_FrameBg"][0], Theme["ImGuiCol_FrameBg"][1], Theme["ImGuiCol_FrameBg"][2], Theme["ImGuiCol_FrameBg"][3]);
+    SatAmount = Theme["SatAmount"];
+    OnThemeChange();
+}
+std::string ThemeName;
+void Windows::ThemeMaker()
+{
+    if(!(*GetWindowState("ThemeMaker"))) return;
+    ImGui::Begin("ThemeMaker", GetWindowState("ThemeMaker"));
+
+    ImGui::ColorEdit4("ImGuiCol_WindowBg", (float*)&(LoadedTheme[ImGuiCol_WindowBg]));
+    ImGui::ColorEdit4("ImGuiCol_Tab", (float*)&(LoadedTheme[ImGuiCol_Tab]));
+    ImGui::ColorEdit4("ImGuiCol_TitleBg", (float*)&(LoadedTheme[ImGuiCol_TitleBg]));
+    ImGui::ColorEdit4("ImGuiCol_FrameBg", (float*)&(LoadedTheme[ImGuiCol_FrameBg]));
+    ImGui::SliderFloat("Saturate", &SatAmount, -255.0f, 255.0f);
+    if(ImGui::Button("Save")){
+        ImGui::OpenPopup("Save");
+    }
+    if(ImGui::Button("Load")){
+        ImGui::OpenPopup("Load");
+    }
+
+    if(ImGui::BeginPopup("Save")){
+        ImGui::InputText("Theme Name", &ThemeName);
+        if(ImGui::Button("Save")){
+            Save(ThemeName);
+        }
+        ImGui::EndPopup();
+    }
     ImGui::End();
 }

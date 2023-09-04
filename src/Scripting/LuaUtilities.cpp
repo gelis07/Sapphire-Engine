@@ -44,7 +44,7 @@ int LuaUtilities::Clamp(lua_State* L) {
 }
 int LuaUtilities::GetDeltaTime(lua_State* L) {
     int n = lua_gettop(L);
-    if (n != 2) {
+    if (n != 0) {
         return luaL_error(L, "Expected 2 argument, got %d", n);
     }
 

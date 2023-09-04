@@ -2,7 +2,6 @@
 #include "UI/FileExplorer/FileExplorer.h"
 #include "Graphics/ShaderFunc.h"
 #include "RunTime/RunTime.h"
-
 Engine Engine::Instance;
 
 void ResizeIO(GLFWwindow* window, int width, int height)
@@ -51,12 +50,18 @@ void Engine::Init(std::string Path)
     LoadShader(Shapes::BasicShader, "Shaders/Basic.glsl");
     LoadShader(Shapes::GridShader, "Shaders/Grid.glsl");
 
+    #ifndef EXPORT
     m_Windows.Init(std::move(Path));
     m_Viewport.Init(&m_ActiveScene);
     m_PlayMode.Init(&m_ActiveScene);
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
+    #endif
 
+    #ifdef EXPORT
+    m_Windows.MainPath = std::move(Path);
+    m_PlayMode.Init(&m_ActiveScene);
+    #endif
     glfwSetWindowSizeCallback(m_Window, ResizeIO);
     glfwSetWindowFocusCallback(m_Window, window_focus_callback);
     FileExplorer::Init();
@@ -82,6 +87,7 @@ void Engine::Run()
 
         m_Windows.DockSpace();
         m_Windows.Toolbar();
+        m_Windows.ThemeMaker();
         FileExplorer::Open(m_Windows.CurrentPath);
         if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
         m_Windows.LogWindow();
@@ -107,12 +113,18 @@ void Engine::Export()
     if(!std::filesystem::exists(m_Windows.MainPath + "/../" + "Build")){
         std::filesystem::create_directories(m_Windows.MainPath + "/../" + "Build/Data");
     }
+    //Copy pasting all the necessary dll files.
     FileExplorer::CopyAndOverwrite("glew32.dll", m_Windows.MainPath + "/../" + "Build/glew32.dll");
     FileExplorer::CopyAndOverwrite("glfw3.dll", m_Windows.MainPath + "/../" + "Build/glfw3.dll");
     FileExplorer::CopyAndOverwrite("lua54.dll", m_Windows.MainPath + "/../" + "Build/lua54.dll");
     if(!std::filesystem::exists(m_Windows.MainPath + "/../" + "Build/Shaders")){
         std::filesystem::copy("Shaders", m_Windows.MainPath + "/../" + "Build/Shaders");
     }
+    /*
+    I know that this solution feels kinda cheap but I'm not really interested in making the most optimized builds
+    And all of that stuff, so I found a quick solution that works for the current state of the engine and allows me to
+    focus on the other stuff of the engine.
+    */
     FileExplorer::CopyAndOverwrite("Sapphire-Engine-Runtime.exe", m_Windows.MainPath + "/../" + "Build/Game.exe");
     for (auto &&object : m_ActiveScene.Objects)
     {

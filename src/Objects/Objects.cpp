@@ -24,7 +24,6 @@ void Object::SetUpObject(Object *obj, lua_State *L, const std::string& Name)
 //! CREATE A MACRO TO REDUCE THIS REPETITIVE CODE
 void Object::OnCollision(Object *other)
 {
-    if(Collided) return;
     for (size_t i = 0; i < Components.size(); i++)
     {
         if (!Components[i]->Active || Components[i]->GetFile().empty())
@@ -33,12 +32,11 @@ void Object::OnCollision(Object *other)
         SetUpObject(other, L, "obj");
         Components[i]->ExecuteFunction("OnCollision");
     }
-    Collided = true;
 }
 
 void Object::OnStart()
 {
-    if (CalledStart)
+    if (m_CalledStart)
         return;
     for (size_t i = 0; i < Components.size(); i++)
     {
@@ -53,7 +51,7 @@ void Object::OnStart()
             lua_pop(L, 1);
         }
         Components[i]->ExecuteFunction("OnStart");
-        CalledStart = true;
+        m_CalledStart = true;
     }
 }
 
