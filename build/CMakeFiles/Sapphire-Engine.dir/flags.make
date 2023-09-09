@@ -58,6 +58,8 @@ CXX_FLAGS =  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_tables.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
+# PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+
 # PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx

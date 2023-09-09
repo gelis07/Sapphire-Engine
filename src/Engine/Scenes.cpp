@@ -125,6 +125,18 @@ void Scene::Hierechy(std::shared_ptr<Object> &SelectedObj)
             SelectedObj = Objects[i];
         }
     }
+    glfwSetInputMode(glfwGetCurrentContext(), GLFW_STICKY_KEYS, GLFW_TRUE);
+    if(glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_DELETE) == GLFW_PRESS && ImGui::IsWindowFocused())
+    {
+        for (size_t i = 0; i < Objects.size(); i++)
+        {
+            if(Objects[i]->Name == SelectedObj->Name)
+            {
+                Object::Delete(i);
+            }
+        }
+        
+    }
     if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
     {
         ImGui::OpenPopup("Context Menu");

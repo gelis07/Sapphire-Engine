@@ -10,6 +10,8 @@ set(CMAKE_DEPENDS_LANGUAGES
 set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.cxx" "CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch" "gcc" "CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch.d"
   "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx" "CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch" "gcc" "CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch.d"
+  "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuiFileDialog.cpp" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj.d"
+  "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj.d"
   "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuizmo.cpp" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj.d"
   "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj.d"
   "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui.cpp" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj.d"

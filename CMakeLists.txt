@@ -32,6 +32,7 @@ add_executable(Sapphire-Engine
     include/imgui/imgui.cpp
     include/imgui/imgui_stdlib.cpp
     include/imgui/imgui_tables.cpp
+    include/imgui/ImGuiFileDialog.cpp
     include/imgui/imgui_widgets.cpp
     include/imgui/ImGuizmo.cpp
     src/PhysicsEngine/PhysicsEngine.cpp

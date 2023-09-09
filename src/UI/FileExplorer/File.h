@@ -28,8 +28,8 @@ class Default : public File
 {
     public:
         void SetIconPos() override{ 
-            m_IconPos = glm::vec2(897,0); 
-            m_IconSize = glm::vec2(384,512); 
+            m_IconPos = glm::vec2(512*2,0); 
+            m_IconSize = glm::vec2(512,512); 
         }
         void OnClick(std::filesystem::directory_entry entry) 
         {
@@ -43,7 +43,7 @@ class Folder : public File
 {
     public:
         void SetIconPos() override{ 
-            m_IconPos = glm::vec2(1281,0); 
+            m_IconPos = glm::vec2(512*5,0); 
             m_IconSize = glm::vec2(512,512); 
         }
         void OnClick(std::filesystem::directory_entry entry) 
@@ -60,8 +60,8 @@ class LuaFile : public File
 {
     public:
         void SetIconPos() override{ 
-            m_IconPos = glm::vec2(512,0); 
-            m_IconSize = glm::vec2(384,512); 
+            m_IconPos = glm::vec2(512*3,0); 
+            m_IconSize = glm::vec2(512,512); 
         }
         void OnClick(std::filesystem::directory_entry entry) 
         {

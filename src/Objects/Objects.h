@@ -22,6 +22,7 @@ class Object
         std::vector<std::shared_ptr<Component>>& GetComponents() {return Components;}
         
         static std::shared_ptr<Object> CreateObject(std::string &&ObjName);
+        static void Delete(int id);
 
         void OnCollision(Object* other);
         void OnUpdate();

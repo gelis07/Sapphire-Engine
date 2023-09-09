@@ -17,6 +17,7 @@ class Windows{
         void DockSpace();
         void LogWindow();
         void ThemeMaker();
+        void TestWindow();
         void InitWindow(std::string&& WindowName, bool state = true);
         void SetWindowState(std::string&& WindowName, bool state);
         bool* GetWindowState(std::string&& WindowName);
@@ -46,5 +47,4 @@ class Windows{
         void PreferencesWindow();
         void ProjectSettings();
         void Settings();
-        //* Set up the Themes
 };

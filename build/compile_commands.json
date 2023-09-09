@@ -151,6 +151,12 @@
 },
 {
   "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\ImGuiFileDialog.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\ImGuiFileDialog.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/ImGuiFileDialog.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
   "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\include\\Imgui\\imgui_widgets.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\include\\Imgui\\imgui_widgets.cpp",
   "file": "C:/Gelis/Programs/Sapphire-Engine/include/Imgui/imgui_widgets.cpp",
   "output": "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj"

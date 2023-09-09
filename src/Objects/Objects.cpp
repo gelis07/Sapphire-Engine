@@ -84,11 +84,20 @@ std::shared_ptr<Object> Object::CreateObject(std::string &&ObjName)
     return NewObj;
 }
 
+void Object::Delete(int id)
+{
+    Engine::Get().GetActiveScene()->Objects.erase(Engine::Get().GetActiveScene()->Objects.begin() + id);
+}
+
 void Object::RenderGUI()
 {
-    for (std::shared_ptr<Component> Component : Components)
+    for (size_t i = 0; i < Components.size(); i++)
     {
-        Component->Render();
+        Components[i]->Render();
+        if(Components[i]->GetState() != nullptr && ImGui::Button("Remove Component"))
+        {
+            Components.erase(Components.begin() + i);
+        }
         ImGui::Separator();
     }
 }

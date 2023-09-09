@@ -40,7 +40,7 @@ void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, Te
         ImGui::PushStyleColor(ImGuiCol_Border, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
         ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 3.0f);
     }
-    ImGui::BeginChild(entry.path().string().c_str(), ImVec2(m_IconSize.x / 5 + 50, m_IconSize.y / 5 + 50), true);
+    ImGui::BeginChild(entry.path().string().c_str(), ImVec2(m_IconSize.x / 5 + 25, m_IconSize.y / 5 + 50), true);
 
 
 

@@ -12,9 +12,9 @@ std::shared_ptr<Object> SceneEditor::OnClick(GLFWwindow* window, std::vector<std
         for (size_t i = 0; i < Objects.size(); i++)
         {
             Shapes::Circle* circlePtr = dynamic_cast<Shapes::Circle*>(Objects[i]->GetRenderer()->shape.get());
-            // float scalor = (WindowSize.x / ViewCamera.Zoom)/WindowSize.x;
-            glm::vec2 CursorPosToWind((CursorPos.x - WindowPosition.x) - ViewCamera.position.x, -((CursorPos.y - WindowPosition.y) + ViewCamera.position.y));
-            CursorPosToWind /= ViewCamera.Zoom;
+            //value so I can get the correct mouse position even if the camera is zoomed in/out.
+            float scalor = (Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>().x / ViewCamera.Zoom)/Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>().x;
+            glm::vec2 CursorPosToWind((CursorPos.x - WindowPosition.x) * scalor - ViewCamera.position.x, -((CursorPos.y - WindowPosition.y) * scalor + ViewCamera.position.y));
             //Checking if the object is a circle or a rectangle
             if(circlePtr)
             {

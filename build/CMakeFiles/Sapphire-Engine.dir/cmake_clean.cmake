@@ -4,6 +4,8 @@ file(REMOVE_RECURSE
   "C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.pdb"
   "CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch"
   "CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch.d"
+  "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj"
+  "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj.d"
   "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj"
   "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj.d"
   "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui.cpp.obj"

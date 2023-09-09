@@ -14,4 +14,7 @@ class ProjectManager{
         GLFWwindow* window;
         ImGuiIO* IO;
         std::string Path;
+        TextureAtlas m_IconAtlas;
+        std::string m_SelectedProject;
+
 };

@@ -143,6 +143,30 @@ cmake_pch.hxx.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.s
 .PHONY : cmake_pch.hxx.s
 
+include/Imgui/ImGuiFileDialog.obj: include/Imgui/ImGuiFileDialog.cpp.obj
+.PHONY : include/Imgui/ImGuiFileDialog.obj
+
+# target to build an object file
+include/Imgui/ImGuiFileDialog.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj
+.PHONY : include/Imgui/ImGuiFileDialog.cpp.obj
+
+include/Imgui/ImGuiFileDialog.i: include/Imgui/ImGuiFileDialog.cpp.i
+.PHONY : include/Imgui/ImGuiFileDialog.i
+
+# target to preprocess a source file
+include/Imgui/ImGuiFileDialog.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.i
+.PHONY : include/Imgui/ImGuiFileDialog.cpp.i
+
+include/Imgui/ImGuiFileDialog.s: include/Imgui/ImGuiFileDialog.cpp.s
+.PHONY : include/Imgui/ImGuiFileDialog.s
+
+# target to generate assembly for a file
+include/Imgui/ImGuiFileDialog.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles\Sapphire-Engine.dir\build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.s
+.PHONY : include/Imgui/ImGuiFileDialog.cpp.s
+
 include/Imgui/ImGuizmo.obj: include/Imgui/ImGuizmo.cpp.obj
 .PHONY : include/Imgui/ImGuizmo.obj
 
@@ -803,6 +827,9 @@ help:
 	@echo ... cmake_pch.hxx.gch
 	@echo ... cmake_pch.hxx.i
 	@echo ... cmake_pch.hxx.s
+	@echo ... include/Imgui/ImGuiFileDialog.obj
+	@echo ... include/Imgui/ImGuiFileDialog.i
+	@echo ... include/Imgui/ImGuiFileDialog.s
 	@echo ... include/Imgui/ImGuizmo.obj
 	@echo ... include/Imgui/ImGuizmo.i
 	@echo ... include/Imgui/ImGuizmo.s

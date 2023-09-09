@@ -65,7 +65,6 @@ void Engine::Init(std::string Path)
     glfwSetWindowSizeCallback(m_Window, ResizeIO);
     glfwSetWindowFocusCallback(m_Window, window_focus_callback);
     FileExplorer::Init();
-    GetActiveScene()->Load("Test.scene");
 }
 
 void Engine::Run()
@@ -88,6 +87,8 @@ void Engine::Run()
         m_Windows.DockSpace();
         m_Windows.Toolbar();
         m_Windows.ThemeMaker();
+        m_Windows.TestWindow();
+
         FileExplorer::Open(m_Windows.CurrentPath);
         if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
         m_Windows.LogWindow();
