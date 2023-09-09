@@ -25,7 +25,7 @@ ProjectManager::ProjectManager()
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init((char *)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     m_IconAtlas.AtlasID = LoadTexture("Assets/IconsAtlas.png");
-    m_IconAtlas.AtlasSize = glm::vec2(4096,512);
+    m_IconAtlas.AtlasSize = glm::vec2(4608,512);
 }
 
 int ProjectsSize = 0;
@@ -53,6 +53,7 @@ std::string ProjectManager::Run()
 {
     std::ifstream stream("Projects.sp");
     stream >> Projects;
+    stream.close();
     while (!glfwWindowShouldClose(window))
     {
         ImGui_ImplOpenGL3_NewFrame();
@@ -99,8 +100,14 @@ std::string ProjectManager::Run()
             ImGuiFileDialog::Instance()->Close();
         }
         bool AreProjectsHovered = false;
+        std::string ShouldDeleteProject = "";
         for (auto& Project : Projects.items())
         {
+            ImVec4 TextColor = ImVec4(1,1,1,1);
+            bool ProjectExists;
+            if(!(ProjectExists = std::filesystem::exists(Project.value()["MainPath"]))){
+                TextColor = ImVec4(0.6f, 0.6f, 0.6f, 1);
+            }
             std::string ProjectName = Project.value()["Name"].get<std::string>();
             ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10);
             if(m_SelectedProject != ProjectName) ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0.5f));
@@ -115,23 +122,55 @@ std::string ProjectManager::Run()
             glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*7, 0), glm::vec2(512, 512), m_IconAtlas.AtlasSize); 
             ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
             ImGui::Image(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+            
             if(ImGui::IsWindowHovered()){
-                if(ImGui::IsMouseDown(ImGuiMouseButton_Left)){
-                    if(!std::filesystem::exists(Project.value()["MainPath"].get<std::string>() + "/Assets/")){
-                        std::filesystem::create_directory(Project.value()["MainPath"].get<std::string>() + "/Assets/");
-                    }
-                    Path = Project.value()["MainPath"].get<std::string>() + "/Assets/";
-                    CloseApp = false;
-                    glfwSetWindowShouldClose(window, GLFW_TRUE);
+                glm::vec4 BinIconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*8, 0), glm::vec2(512, 512), m_IconAtlas.AtlasSize); 
+                ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - 512/14 - 40, IconPosY)); // Set the cursor position to center the text
+                ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1,1,1,0));
+                ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1,1,1,0.3));
+                ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1,1,1,0.6));
+                if(ImGui::ImageButton(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID), ImVec2(512/14, 512/14), ImVec2(BinIconUVs.x, BinIconUVs.y), ImVec2(BinIconUVs.z, BinIconUVs.w)));
+                if(ImGui::IsItemClicked()){
+                    ShouldDeleteProject = Project.key();
                 }
-                m_SelectedProject = ProjectName;
-                glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HAND_CURSOR));
-                AreProjectsHovered = true;
+                ImGui::PopStyleColor(3);
+                if(!ImGui::IsItemHovered()){
+                    if(ImGui::IsMouseDown(ImGuiMouseButton_Left)){
+                        if(!ProjectExists){
+                            ImGui::OpenPopup("Warning");
+                        }else{
+                            //Project exists!
+                            if(!std::filesystem::exists(Project.value()["MainPath"].get<std::string>() + "/Assets/")){
+                                std::filesystem::create_directory(Project.value()["MainPath"].get<std::string>() + "/Assets/");
+                            }
+                            Path = Project.value()["MainPath"].get<std::string>() + "/Assets/";
+                            CloseApp = false;
+                            glfwSetWindowShouldClose(window, GLFW_TRUE);
+                        }
+                    }
+                    m_SelectedProject = ProjectName;
+                    glfwSetCursor(window, glfwCreateStandardCursor(GLFW_HAND_CURSOR));
+                    AreProjectsHovered = true;
+                }
             }
+
+            if(ImGui::BeginPopupModal("Warning", nullptr, ImGuiWindowFlags_NoResize))
+            {
+                ImGui::Text(("Couldn't find path: " + Project.value()["MainPath"].get<std::string>()).c_str());
+                ImGui::SetCursorPosX(ImGui::GetWindowSize().x - ImGui::CalcTextSize("Got it!").x - 30);
+                if(ImGui::Button("Got it!")){
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+
+
+
             ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
             ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
+            ImGui::PushStyleColor(ImGuiCol_Text, TextColor);
             ImGui::TextUnformatted(ProjectName.c_str());
-            ImGui::PopStyleColor();
+            ImGui::PopStyleColor(2);
 
             ImGui::EndChild();
             ImGui::PopStyleVar();
@@ -142,6 +181,19 @@ std::string ProjectManager::Run()
             m_SelectedProject = "";
             glfwSetCursor(window, glfwCreateStandardCursor(GLFW_ARROW_CURSOR));
         }
+        if(ShouldDeleteProject != "")
+        {
+            Projects.erase(ShouldDeleteProject);
+            {
+                std::ofstream stream("Projects.sp");
+                stream << Projects.dump(2);
+                stream.close();
+            }
+            std::ifstream stream("Projects.sp");
+            stream >> Projects;
+            stream.close();
+            ShouldDeleteProject = "";
+        }
         
         ImGui::End();
         GLCall(glClearColor(0.3f, 0.5f, 0.4f, 1.0f));
@@ -151,7 +203,6 @@ std::string ProjectManager::Run()
         GLCall(glfwSwapBuffers(window));
         GLCall(glfwPollEvents());
     }
-    stream.close();
     glfwDestroyWindow(window);
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
