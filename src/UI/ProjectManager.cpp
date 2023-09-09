@@ -129,11 +129,13 @@ std::string ProjectManager::Run()
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1,1,1,0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1,1,1,0.3));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1,1,1,0.6));
+                ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10);
                 if(ImGui::ImageButton(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID), ImVec2(512/14, 512/14), ImVec2(BinIconUVs.x, BinIconUVs.y), ImVec2(BinIconUVs.z, BinIconUVs.w)));
                 if(ImGui::IsItemClicked()){
                     ShouldDeleteProject = Project.key();
                 }
                 ImGui::PopStyleColor(3);
+                ImGui::PopStyleVar();
                 if(!ImGui::IsItemHovered()){
                     if(ImGui::IsMouseDown(ImGuiMouseButton_Left)){
                         if(!ProjectExists){
@@ -154,6 +156,8 @@ std::string ProjectManager::Run()
                 }
             }
 
+
+
             if(ImGui::BeginPopupModal("Warning", nullptr, ImGuiWindowFlags_NoResize))
             {
                 ImGui::Text(("Couldn't find path: " + Project.value()["MainPath"].get<std::string>()).c_str());
@@ -165,13 +169,15 @@ std::string ProjectManager::Run()
             }
 
 
-
-            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-            ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
+            ImGui::SetCursorPos(ImVec2(65, PosY - ImGui::CalcTextSize(ProjectName.c_str()).y + 5)); // Set the cursor position to center the text
             ImGui::PushStyleColor(ImGuiCol_Text, TextColor);
             ImGui::TextUnformatted(ProjectName.c_str());
-            ImGui::PopStyleColor(2);
+            ImGui::PopStyleColor();
 
+            ImGui::SetCursorPos(ImVec2(65, PosY + ImGui::CalcTextSize(ProjectName.c_str()).y - 5)); // Set the cursor position to center the text
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(TextColor.x - 0.3f,TextColor.y - 0.3f,TextColor.z - 0.3f,1));
+            ImGui::TextUnformatted((Project.value()["MainPath"].get<std::string>()).c_str());
+            ImGui::PopStyleColor();
             ImGui::EndChild();
             ImGui::PopStyleVar();
             ImGui::PopStyleColor();
