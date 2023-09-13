@@ -6,9 +6,10 @@
 #include "Imgui/imgui_stdlib.h"
 #include "Imgui/imconfig.h"
 #include "Imgui/ImGuizmo.h"
-
 #include "Utilities.hpp"
 #include "Graphics/Shapes.h"
+#include "Scripting/Variables.h"
+#include "json.hpp"
 
 class Windows{
     public:
@@ -25,7 +26,7 @@ class Windows{
         std::string CurrentPath; // The difference is that is the path for the file explorer.
         ImGuiContext* GetContext() {return DefaultContext;}
         ImGuiIO* GetWindowIO() {return IO;}
-        
+        inline static std::unordered_map<std::string, SapphireEngine::Variable*> SettingsVariables;
     private:
         ImGuiContext* DefaultContext;
         ImGuiIO* IO;
@@ -38,6 +39,8 @@ class Windows{
         void ViewMenu();
         void ThemeMenu();
         void OnThemeChange();
+        template <typename T>
+        void SaveProjectVariable(std::string&& path, std::string&& VariableName, T data);
         float SatAmount;
         std::unordered_map<std::string, bool> WindowStates = 
             {{"Preferences", false},

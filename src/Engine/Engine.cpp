@@ -54,6 +54,14 @@ void Engine::Init(std::string Path)
     m_Windows.Init(std::move(Path));
     m_Viewport.Init(&m_ActiveScene);
     m_PlayMode.Init(&m_ActiveScene);
+    std::ifstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
+    nlohmann::json Data;
+    stream >> Data;
+    for (auto &&setting : Data.items())
+    {
+        m_Windows.SettingsVariables[setting.key()]->Load(setting.value());
+    }
+    stream.close();
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     #endif
@@ -96,13 +104,23 @@ void Engine::Run()
         //* The m_Viewport is the actual game scene
         m_PlayMode.Render(m_Windows.MainPath);
         m_Viewport.Render();
-        
+
         ImGui::SetCurrentContext(m_Windows.GetContext());
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
         GLCall(glfwSwapBuffers(m_Window));
         GLCall(glfwPollEvents());
     }
+
+    nlohmann::json ProjectSettingsJSON;
+    std::ofstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
+    for (auto &&setting : m_Windows.SettingsVariables)
+    {
+        setting.second->Save(ProjectSettingsJSON);
+    }
+    stream << ProjectSettingsJSON.dump(2);
+    stream.close();
+
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

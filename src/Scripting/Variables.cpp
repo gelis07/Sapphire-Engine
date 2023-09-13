@@ -1,4 +1,5 @@
 #include "Variables.h"
+#include "UI/Windows.h"
 
 void SapphireEngine::Float::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables){
     if(!m_ShowOnInspector) return;

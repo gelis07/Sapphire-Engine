@@ -4,6 +4,7 @@
 #include "Variables.h"
 #include "PhysicsEngine/PhysicsEngine.h"
 #include "Scripting.h"
+#include "Graphics/Shapes.h"
 
 class Object;
 

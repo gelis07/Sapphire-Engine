@@ -291,6 +291,7 @@ void Windows::OnThemeChange()
     style.TabRounding = 1;
 }
 
+
 void Windows::ViewMenu()
 {
     if(ImGui::BeginMenu("View")){
@@ -303,8 +304,6 @@ void Windows::ViewMenu()
         }
         ImGui::EndMenu();
     }
-
-    
 }
 
 void Windows::ThemeMenu()
@@ -337,8 +336,11 @@ void Windows::ProjectSettings()
 {
     if(!(*GetWindowState("Project Settings"))) return;
     ImGui::Begin("Project Settings", &WindowStates["Project Settings"]);
-
-    ImGui::DragFloat("gravitational acceleration", &PhysicsEngine::g);
+    for (auto &&setting : SettingsVariables)
+    {
+        setting.second->RenderGUI(Windows::SettingsVariables);
+    }
+    
     ImGui::Text("More options coming soon.");
 
     ImGui::End();
