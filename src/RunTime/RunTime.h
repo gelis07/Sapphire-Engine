@@ -14,4 +14,5 @@ class RunTime
         static void RunGame(GLFWwindow* window, Scene* Scene, std::shared_ptr<Object>& CameraObject);
         static inline float DeltaTime;
         static inline float LastTime;
+        static inline bool SkipFrame;
 };

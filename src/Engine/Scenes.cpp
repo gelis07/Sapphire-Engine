@@ -3,7 +3,7 @@
 #include "json.hpp"
 #include <vector>
 #include "Engine.h"
-
+#include "RunTime/RunTime.h"
 void Scene::Save(const std::string FilePath)
 {
     this->SceneFile = FilePath;
@@ -107,6 +107,7 @@ void Scene::Load(const std::string FilePath)
         Objects.push_back(obj);
     }
     Engine::Get().GetViewport().SelectedObj = nullptr;
+    RunTime::SkipFrame = true;
 }
 
 void Scene::Hierechy(std::shared_ptr<Object> &SelectedObj)

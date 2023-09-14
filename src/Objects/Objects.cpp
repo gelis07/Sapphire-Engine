@@ -3,6 +3,9 @@
 #include "UI/FileExplorer/FileExplorer.h"
 #include "Engine/Engine.h"
 #include "Objects.h"
+#include "RunTime/RunTime.h"
+
+
 
 Object::Object(std::string &&Name)
 {
@@ -21,11 +24,12 @@ void Object::SetUpObject(Object *obj, lua_State *L, const std::string& Name)
     lua_setmetatable(L, -2);
     lua_setglobal(L, Name.c_str());
 }
-//! CREATE A MACRO TO REDUCE THIS REPETITIVE CODE
 void Object::OnCollision(Object *other)
 {
     for (size_t i = 0; i < Components.size(); i++)
     {
+        if(RunTime::SkipFrame)
+            break;
         if (!Components[i]->Active || Components[i]->GetFile().empty())
             continue;
         lua_State *L = Components[i]->GetState();

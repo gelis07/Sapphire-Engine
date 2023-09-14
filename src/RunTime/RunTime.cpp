@@ -38,19 +38,25 @@ void RunTime::Render(std::shared_ptr<Object> object, std::shared_ptr<Object> Cam
         else
             SapphireEngine::Log(object->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
 }
+#define CheckForSkip(x) \
+    x; \
+    if(RunTime::SkipFrame){ \
+        break; \
+    } \
 
 void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject, const float& DeltaTime)
 {
     for (size_t i = 0; i < Scene->Objects.size(); i++)
     {
         Render(Scene->Objects[i], CameraObject);
-        Scene->Objects[i]->OnStart();
-        Scene->Objects[i]->OnUpdate();
+        CheckForSkip(Scene->Objects[i]->OnStart());
+        CheckForSkip(Scene->Objects[i]->OnUpdate());
         if(std::shared_ptr<RigidBody> rb = Scene->Objects[i]->GetComponent<RigidBody>()) {
             rb->Simulate(Scene->Objects[i].get(), DeltaTime);
-            rb->CheckForCollisions(Scene->Objects[i].get());
+            CheckForSkip(rb->CheckForCollisions(Scene->Objects[i].get()));
         }
     }
+    RunTime::SkipFrame = false;
 }
 
 void RunTime::RunGame(GLFWwindow* window,Scene *Scene, std::shared_ptr<Object>& CameraObject)
