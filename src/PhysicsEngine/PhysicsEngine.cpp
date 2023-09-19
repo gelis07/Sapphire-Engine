@@ -40,21 +40,41 @@ bool PhysicsEngine::CirclexRectangle(std::shared_ptr<Object> obj, Object* curren
 }
 bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* current)
 {
+    float& ObjRot = obj->GetTransform()->Rotation.value<glm::vec3>().z;
+    glm::vec3& ObjPos = obj->GetTransform()->Position.value<glm::vec3>();
+    glm::vec3& ObjSize = obj->GetTransform()->Size.value<glm::vec3>();
     // These points are linked to the geogebra files!
-    float Hy = obj->GetTransform()->Position.value<glm::vec3>().y - obj->GetTransform()->Size.value<glm::vec3>().y / 2; // The y of the bottom Left point of the "Other" Rectangle
-    float Fy = obj->GetTransform()->Position.value<glm::vec3>().y + obj->GetTransform()->Size.value<glm::vec3>().y / 2; // The y of the top Left point of the "Other" Rectangle
-    float Fx = obj->GetTransform()->Position.value<glm::vec3>().x - obj->GetTransform()->Size.value<glm::vec3>().x / 2; // The x of the top Left point of the "Other" Rectangle
-    float Ex = obj->GetTransform()->Position.value<glm::vec3>().x + obj->GetTransform()->Size.value<glm::vec3>().x / 2; // The x of the top right point of the "Other" Rectangle
+    //! Should be stored in the renderer in memory
+    glm::vec2 F = glm::vec2(ObjPos.x - ObjSize.x / 2, ObjPos.y + ObjSize.y / 2);
+    glm::vec2 E = glm::vec2(ObjPos.x + ObjSize.x / 2, ObjPos.y + ObjSize.y / 2);
+    glm::vec2 H = glm::vec2(ObjPos.x - ObjSize.x / 2, ObjPos.y - ObjSize.y / 2);
+    glm::vec2 G = glm::vec2(ObjPos.x + ObjSize.x / 2, ObjPos.y - ObjSize.y / 2);
 
-    float By = current->GetTransform()->Position.value<glm::vec3>().y - current->GetTransform()->Size.value<glm::vec3>().y / 2; // The y of the bottom Left point of the Selected Rectangle
-    float Cy = current->GetTransform()->Position.value<glm::vec3>().y + current->GetTransform()->Size.value<glm::vec3>().y / 2; // The y of the top Left point of the Selected Rectangle
-    float Cx = current->GetTransform()->Position.value<glm::vec3>().x - current->GetTransform()->Size.value<glm::vec3>().x / 2; // The x of the top Left point of the Selected Rectangle
-    float Ax = current->GetTransform()->Position.value<glm::vec3>().x + current->GetTransform()->Size.value<glm::vec3>().x / 2; // The x of the top right point of the Selected Rectangle
+    F = glm::vec2((F.x) * cos((ObjRot)) + (F.y) * (-sin((ObjRot))), (F.x) * sin((ObjRot)) + (F.y) * cos((ObjRot))); // The y of the bottom Left point of the "Other" Rectangle
+    E = glm::vec2((E.x) * cos((ObjRot)) + (E.y) * (-sin((ObjRot))), (E.x) * sin((ObjRot)) + (E.y) * cos((ObjRot))); // The y of the top Left point of the "Other" Rectangle
+    H = glm::vec2((H.x) * cos((ObjRot)) + (H.y) * (-sin((ObjRot))), (H.x) * sin((ObjRot)) + (H.y) * cos((ObjRot))); // The x of the top Left point of the "Other" Rectangle
+    G = glm::vec2((G.x) * cos((ObjRot)) + (G.y) * (-sin((ObjRot))), (G.x) * sin((ObjRot)) + (G.y) * cos((ObjRot))); // The x of the top right point of the "Other" Rectangle
+
+
+    float& CurrentRot = obj->GetTransform()->Rotation.value<glm::vec3>().z;
+    glm::vec3& CurrentPos = current->GetTransform()->Position.value<glm::vec3>();
+    glm::vec3& CurrentSize = current->GetTransform()->Size.value<glm::vec3>();
+
+    glm::vec2 A = glm::vec2(CurrentPos.x + CurrentSize.x / 2, CurrentPos.y + CurrentSize.y / 2); 
+    glm::vec2 B = glm::vec2(CurrentPos.x + CurrentSize.x / 2, CurrentPos.y - CurrentSize.y / 2); 
+    glm::vec2 C = glm::vec2(CurrentPos.x - CurrentSize.x / 2, CurrentPos.y + CurrentSize.y / 2); 
+    glm::vec2 D = glm::vec2(CurrentPos.x - CurrentSize.x / 2, CurrentPos.y - CurrentSize.y / 2); 
+
+    A = glm::vec2((A.x) * cos((CurrentRot)) + (A.y) * (-sin((CurrentRot))), (A.x) * sin((CurrentRot)) + (A.y) * cos((CurrentRot))); // The y of the bottom Left point of the "Other" Rectangle
+    B = glm::vec2((B.x) * cos((CurrentRot)) + (B.y) * (-sin((CurrentRot))), (B.x) * sin((CurrentRot)) + (B.y) * cos((CurrentRot))); // The y of the top Left point of the "Other" Rectangle
+    C = glm::vec2((C.x) * cos((CurrentRot)) + (C.y) * (-sin((CurrentRot))), (C.x) * sin((CurrentRot)) + (C.y) * cos((CurrentRot))); // The x of the top Left point of the "Other" Rectangle
+    D = glm::vec2((D.x) * cos((CurrentRot)) + (D.y) * (-sin((CurrentRot))), (D.x) * sin((CurrentRot)) + (D.y) * cos((CurrentRot))); // The x of the top right point of the "Other" Rectangle
+
 
     // The point which the circle is going to hit (lets call it point T)
-    glm::vec2 T(SapphireEngine::ClampFunc(Fx, Ex, current->GetTransform()->Position.value<glm::vec3>()[0]), SapphireEngine::ClampFunc(Hy, Fy, current->GetTransform()->Position.value<glm::vec3>()[0]));
-    glm::vec2 DiffVector(SapphireEngine::ClampFunc(Cx, Ax, obj->GetTransform()->Position.value<glm::vec3>()[0]), SapphireEngine::ClampFunc(By, Cy, obj->GetTransform()->Position.value<glm::vec3>()[1]));
-    glm::vec2 V(SapphireEngine::ClampFunc(Cx, Ax, T.x), SapphireEngine::ClampFunc(By, Cy, T.y));
+    glm::vec2 T(SapphireEngine::ClampFunc(F.x, E.x, current->GetTransform()->Position.value<glm::vec3>()[0]), SapphireEngine::ClampFunc(H.y, F.y, current->GetTransform()->Position.value<glm::vec3>()[0]));
+    glm::vec2 DiffVector(SapphireEngine::ClampFunc(C.x, A.x, obj->GetTransform()->Position.value<glm::vec3>()[0]), SapphireEngine::ClampFunc(B.y, C.y, obj->GetTransform()->Position.value<glm::vec3>()[1]));
+    glm::vec2 V(SapphireEngine::ClampFunc(C.x, A.x, T.x), SapphireEngine::ClampFunc(B.y, C.y, T.y));
 
     // Checking if the length of the vector with points T and the circle's position is less than the radius
     //On the Geogebra file this is the u vector                   //On the Geogebra file this is the v vector
@@ -62,22 +82,17 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
     {
         obj->OnCollision(current);
         current->OnCollision(obj.get());
+        if(obj->GetComponent<RigidBody>()->Static.value<bool>()){
+            float& mass = current->GetComponent<RigidBody>()->Mass.value<float>();
+            // glm::vec3& StartingVelocity = current->GetComponent<RigidBody>()->VelocityLastFrame;
+            // glm::vec3 Force = glm::vec3(0,-PhysicsEngine::g.value<float>(),0) -(mass * StartingVelocity / Engine::Get().GetDeltaTime());
+            // current->GetComponent<RigidBody>()->Forces.push_back(-Force);
+            // float torque = mass * -PhysicsEngine::g.value<float>() * abs(obj->GetTransform()->Position.value<glm::vec3>().x - T.x);
+            // float Inertia = mass * (obj->GetTransform()->Position.value<glm::vec3>().x - T.x) * (obj->GetTransform()->Position.value<glm::vec3>().x - T.x);
+            // float RotationalAccelaration = torque/Inertia;
+            // current->GetTransform()->Rotation.value<glm::vec3>().z = RotationalAccelaration;
+        }
         return true;
-
-//        if(obj->GetTrigger()) return;
-//        if(obj->IsStatic){
-            // current->Force()
-//        }
-        //Calculating the difference so we can position the other rectangle accordingly
-        // float diff = SapphireEngine::LengthVec(obj->GetTransform()->Position, DiffVector) - SapphireEngine::LengthVec(obj->GetTransform()->Position, T);
-        // glm::vec2 NormalizedT((DiffVector.x - current->GetTransform()->Position.x) / SapphireEngine::LengthVec(DiffVector, current->GetTransform()->Position), (DiffVector.y - current->GetTransform()->Position.y) / SapphireEngine::LengthVec(DiffVector, current->GetTransform()->Position));
-
-        // glm::vec3 VectorDiff(NormalizedT * diff, 0.0f);
-        // if (isnan(NormalizedT.x))
-        // {
-        //     VectorDiff = glm::vec3(0, 0, 0);
-        // }
-        // current->SetPos(current->GetTransform()->Position + VectorDiff);
     }
     return false;
 

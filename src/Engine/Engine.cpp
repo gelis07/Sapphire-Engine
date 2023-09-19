@@ -31,7 +31,7 @@ void Engine::Init(std::string Path)
 
 
     //The window is gonna be maximized from the glfw hint above so the width and height are useless
-    m_Window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
+     m_Window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
     glfwMakeContextCurrent(m_Window);
     glfwSwapInterval(1);
     if(glewInit() != GLEW_OK)

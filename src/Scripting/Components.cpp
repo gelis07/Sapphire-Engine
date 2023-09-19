@@ -340,12 +340,14 @@ void RigidBody::CheckForCollisions(Object *current) {
 
 void RigidBody::Simulate(Object *current, const float& DeltaTime) {
     if(DeltaTime == 0) return;
-    bool test = Gravity.value<bool>();
-    glm::vec3 gravity = test ? glm::vec3(0,-PhysicsEngine::g.value<float>(),0) : glm::vec3(0);
-    Velocity.value<glm::vec3>() = VelocityLastFrame -  gravity * DeltaTime;
+    glm::vec3 gravity = (Gravity.value<bool>() || !(Static.value<bool>())) ? glm::vec3(0,-PhysicsEngine::g.value<float>(),0) : glm::vec3(0);
+    Forces.push_back(gravity);
+    glm::vec3 NetForce = SapphireEngine::VectorSum(Forces);
+    Velocity.value<glm::vec3>() = VelocityLastFrame -  NetForce * DeltaTime;
     glm::vec3 accelaration = (Velocity.value<glm::vec3>() - VelocityLastFrame) / DeltaTime;
-    current->GetComponent<Transform>()->Position.value<glm::vec3>() += VelocityLastFrame * DeltaTime + (accelaration / 2.0f ) * DeltaTime;
+    current->GetComponent<Transform>()->Position.value<glm::vec3>() += VelocityLastFrame * DeltaTime + (accelaration / 2.0f ) * DeltaTime* DeltaTime;
     VelocityLastFrame = Velocity.value<glm::vec3>();
+    Forces.clear();
 }
 
 int RigidBody::Impulse(lua_State *L) {
