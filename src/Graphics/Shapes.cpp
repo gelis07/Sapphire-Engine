@@ -112,20 +112,21 @@ void Shapes::Rectangle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &
 
     float& ObjectRotation = Object->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
-    std::array<glm::vec2, 4> NewRectPoints;
-    NewRectPoints[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
-    NewRectPoints[1] = glm::vec2((RectPoints[1].x) * cos((ObjectRotation)) + (RectPoints[1].y) * (-sin((ObjectRotation))), (RectPoints[1].x) * sin((ObjectRotation)) + (RectPoints[1].y) * cos((ObjectRotation)));
-    NewRectPoints[2] = glm::vec2((RectPoints[2].x) * cos((ObjectRotation)) + (RectPoints[2].y) * (-sin((ObjectRotation))), (RectPoints[2].x) * sin((ObjectRotation)) + (RectPoints[2].y) * cos((ObjectRotation)));
-    NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
+    Points[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
+    Points[1] = glm::vec2((RectPoints[1].x) * cos((ObjectRotation)) + (RectPoints[1].y) * (-sin((ObjectRotation))), (RectPoints[1].x) * sin((ObjectRotation)) + (RectPoints[1].y) * cos((ObjectRotation)));
+    Points[2] = glm::vec2((RectPoints[2].x) * cos((ObjectRotation)) + (RectPoints[2].y) * (-sin((ObjectRotation))), (RectPoints[2].x) * sin((ObjectRotation)) + (RectPoints[2].y) * cos((ObjectRotation)));
+    Points[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
 
 
     RenderShape(Object,{
-                {NewRectPoints[3].x , NewRectPoints[3].y},
-                {NewRectPoints[2].x, NewRectPoints[2].y},
-                {NewRectPoints[0].x, NewRectPoints[0].y},
-               {NewRectPoints[1].x, NewRectPoints[1].y}
+                {Points[3].x , Points[3].y},
+                {Points[2].x, Points[2].y},
+                {Points[0].x, Points[0].y},
+               {Points[1].x, Points[1].y}
             }, CamPos,CameraZoom,OutLine, WireFrame, [](unsigned int shader) {  } ,Viewport);
             //                                       ^The rectangle doesn't have any extra uniforms
+
+            
 }
 
 void Shapes::Circle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){

@@ -91,6 +91,7 @@ namespace Shapes
     class Rectangle : public Shape
     {
         public:
+            std::array<glm::vec2, 4> Points;
             Rectangle(unsigned int sh) : Shape(sh) {ShapeType = RectangleT;}
             void Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
     };
