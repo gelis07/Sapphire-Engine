@@ -11,7 +11,7 @@ class File{
         static void RegisterFile(const std::string& extension, std::function<std::shared_ptr<File>()> creationFunction); 
         //Here we have a helper function that we can call from the file explorer to create a file based on the extension
         static std::shared_ptr<File> CreateFile(const std::string &extension, std::string NewPath, std::string NewName);
-        void RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, TextureAtlas& IconAtlas, const std::string& SelecteFile);
+        void RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, TextureAtlas& IconAtlas, const std::string& SelecteFile, bool& Renaming, bool& ShouldStopRenaming);
         virtual void OnClick(std::filesystem::directory_entry entry) {}
         virtual void OnRightClick(std::filesystem::directory_entry entry) {}
         virtual void OnDoubleClick(std::filesystem::directory_entry entry) {}

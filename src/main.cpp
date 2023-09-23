@@ -9,11 +9,8 @@ int main(void)
 {
     if (!glfwInit())
         return -1; 
-
-    #ifndef EXPORT
     // A little cool start up animation :)
     StartUp();
-
     {
         // A project manager to select the project you want to work on
         ProjectManager Pm;
@@ -22,13 +19,5 @@ int main(void)
         Engine::Get().Init(Pm.Run()); //Pm->Run() will return the Main Path for the Engine.
     }
     Engine::Get().Run();
-    #endif
-
-    #ifdef EXPORT
-    Engine::Get().Init("Data/");
-    
-    RunTime::RunGame(glfwGetCurrentContext(), Engine::Get().GetActiveScene(), Engine::Get().GetPlay().CameraObject);
-    #endif
-
     return 0;
 }

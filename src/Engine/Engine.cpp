@@ -83,7 +83,6 @@ void Engine::Run()
         ImGui::SetCurrentContext(m_Windows.GetContext());
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
-        m_PlayMode.CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(960, 540, 0);
 
         GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));

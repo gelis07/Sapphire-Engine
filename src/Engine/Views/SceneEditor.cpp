@@ -182,10 +182,11 @@ constexpr glm::vec2 offset = glm::vec2(7.3f, -6.9f);
 void SceneEditor::Render()
 {
     if(!(*Engine::Get().GetWindows().GetWindowState("Viewport"))) return;
-    ImGui::Begin("Viewport", Engine::Get().GetWindows().GetWindowState("Viewport"));
+    if(!ImGui::Begin("Viewport", Engine::Get().GetWindows().GetWindowState("Viewport")));
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
+    Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(m_WindowWidth, m_WindowHeight, 0);
 
 
     std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y) + offset);

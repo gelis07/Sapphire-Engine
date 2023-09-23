@@ -7,7 +7,7 @@ inline DragAndDrop<std::shared_ptr<File>> FileExplorerDrop;
 class FileExplorer
 {
     public:
-        static void Open(std::string path);
+        static void Open(std::string& path);
         static void Init();
         static const std::unordered_map<std::string, std::shared_ptr<File>>& GetFiles() {return m_Files;}
         static void CopyAndOverwrite(std::string&& CopyFrom, std::string&& PasteTo);
@@ -22,4 +22,6 @@ class FileExplorer
         inline static bool m_SelectedCut;
         inline static std::filesystem::path m_CopiedFilePath;
         static void MouseInput(std::filesystem::path path);
+        inline static bool Renaming = false;
+        inline static bool ShouldStopRenaming = true;
 };

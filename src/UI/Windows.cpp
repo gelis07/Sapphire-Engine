@@ -321,6 +321,7 @@ void Windows::ThemeMenu()
     }
 }
 
+
 void Windows::PreferencesWindow()
 {
     if(!(*GetWindowState("Preferences"))) return;

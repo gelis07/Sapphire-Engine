@@ -105,24 +105,24 @@ void Shapes::Rectangle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &
     std::array<glm::vec2, 4> RectPoints;
     glm::vec3& ObjectSize = Object->GetComponent<Transform>()->Size.value<glm::vec3>();
     //Getting each point of the rectangle
-    RectPoints[0] = glm::vec2(ObjectSize.x/2, ObjectSize.y/2);
-    RectPoints[1] = glm::vec2(-ObjectSize.x/2, ObjectSize.y/2);
-    RectPoints[2] = glm::vec2(ObjectSize.x/2, -ObjectSize.y/2);
     RectPoints[3] = glm::vec2(-ObjectSize.x/2, -ObjectSize.y/2);
+    RectPoints[2] = glm::vec2(ObjectSize.x/2, -ObjectSize.y/2);
+    RectPoints[1] = glm::vec2(ObjectSize.x/2, ObjectSize.y/2);
+    RectPoints[0] = glm::vec2(-ObjectSize.x/2, ObjectSize.y/2);
 
     float& ObjectRotation = Object->GetComponent<Transform>()->Rotation.value<glm::vec3>().z;
     //Here I'm using the standard rotation matrix https://en.wikipedia.org/wiki/Rotation_matrix
-    Points[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
-    Points[1] = glm::vec2((RectPoints[1].x) * cos((ObjectRotation)) + (RectPoints[1].y) * (-sin((ObjectRotation))), (RectPoints[1].x) * sin((ObjectRotation)) + (RectPoints[1].y) * cos((ObjectRotation)));
-    Points[2] = glm::vec2((RectPoints[2].x) * cos((ObjectRotation)) + (RectPoints[2].y) * (-sin((ObjectRotation))), (RectPoints[2].x) * sin((ObjectRotation)) + (RectPoints[2].y) * cos((ObjectRotation)));
     Points[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
+    Points[2] = glm::vec2((RectPoints[2].x) * cos((ObjectRotation)) + (RectPoints[2].y) * (-sin((ObjectRotation))), (RectPoints[2].x) * sin((ObjectRotation)) + (RectPoints[2].y) * cos((ObjectRotation)));
+    Points[1] = glm::vec2((RectPoints[1].x) * cos((ObjectRotation)) + (RectPoints[1].y) * (-sin((ObjectRotation))), (RectPoints[1].x) * sin((ObjectRotation)) + (RectPoints[1].y) * cos((ObjectRotation)));
+    Points[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
 
 
     RenderShape(Object,{
-                {Points[3].x , Points[3].y},
+                {Points[0].x , Points[0].y},
+                {Points[1].x, Points[1].y},
                 {Points[2].x, Points[2].y},
-                {Points[0].x, Points[0].y},
-               {Points[1].x, Points[1].y}
+               {Points[3].x, Points[3].y}
             }, CamPos,CameraZoom,OutLine, WireFrame, [](unsigned int shader) {  } ,Viewport);
             //                                       ^The rectangle doesn't have any extra uniforms
 

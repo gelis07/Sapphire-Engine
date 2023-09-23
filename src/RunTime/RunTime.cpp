@@ -53,6 +53,8 @@ void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject, const flo
         CheckForSkip(Scene->Objects[i]->OnUpdate());
         if(std::shared_ptr<RigidBody> rb = Scene->Objects[i]->GetComponent<RigidBody>()) {
             rb->Simulate(Scene->Objects[i].get(), DeltaTime);
+            //Currently collision checks for object's twice but I'm planning on adding multithreading where all of these things will happen at the same time.
+            //So I'm leaving this for now, and I'm gonna fix this when I get more into optimizing this engine.
             CheckForSkip(rb->CheckForCollisions(Scene->Objects[i].get()));
         }
     }

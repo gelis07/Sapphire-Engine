@@ -55,13 +55,13 @@ bool CheckForErrors()
 void PlayMode::Render(std::string& MainPath)
 {
     if((*Engine::Get().GetWindows().GetWindowState("Play"))){
-        ImGui::Begin("Play", Engine::Get().GetWindows().GetWindowState("Play"));
+        if(!ImGui::Begin("Play", Engine::Get().GetWindows().GetWindowState("Play")));
 
         // glfwGetWindowSize(glfwGetCurrentContext(), &m_WindowWidth, &m_WindowHeight);
         m_WindowWidth = ImGui::GetContentRegionAvail().x;
         m_WindowHeight = ImGui::GetContentRegionAvail().y;
         CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(m_WindowWidth, m_WindowHeight, 0);
-
+        
         ImVec2 pos = ImGui::GetCursorScreenPos();
         
         ImGui::GetWindowDrawList()->AddImage(

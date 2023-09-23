@@ -30,7 +30,7 @@ std::shared_ptr<File> File::CreateFile(const std::string &extension, std::string
     return nullptr; // Unsupported file type
 }
 
-void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, TextureAtlas& IconAtlas, const std::string& SelecteFile)
+void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, TextureAtlas& IconAtlas, const std::string& SelecteFile, bool& Renaming, bool& ShouldStopRenaming)
 {
     ImGui::SetCursorPos(Position);
     ImGui::PushStyleVar(ImGuiStyleVar_FrameBorderSize, 0.0f);
@@ -42,11 +42,19 @@ void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, Te
     }
     ImGui::BeginChild(entry.path().string().c_str(), ImVec2(m_IconSize.x / 5 + 25, m_IconSize.y / 5 + 50), true);
 
-
-
     glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(m_IconPos.x, m_IconPos.y), glm::vec2(m_IconSize.x, m_IconSize.y), IconAtlas.AtlasSize); 
     ImGui::Image(reinterpret_cast<ImTextureID>(IconAtlas.AtlasID), ImVec2(m_IconSize.x/5, m_IconSize.y/5), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
-    ImGui::TextUnformatted(entry.path().filename().string().c_str());
+    if(Renaming){
+        ImGui::InputText("##RenamedFile",&Name);
+        if(glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_ENTER)){
+            SapphireEngine::Log(Engine::Get().GetWindows().CurrentPath + entry.path().filename().string(), SapphireEngine::Info);
+            SapphireEngine::Log(Engine::Get().GetWindows().CurrentPath + Name, SapphireEngine::Info);
+            std::filesystem::rename(Engine::Get().GetWindows().CurrentPath + entry.path().filename().string(), Engine::Get().GetWindows().CurrentPath + Name);
+            ShouldStopRenaming = true;
+        }
+    }else{
+        ImGui::TextUnformatted(Name.c_str());
+    }
     if(entry.path().string() == SelecteFile){
         ImGui::PopStyleVar();
         ImGui::PopStyleColor();

@@ -24,21 +24,24 @@ void FileExplorer::CopyAndOverwrite(std::string &&CopyFrom, std::string &&PasteT
     std::filesystem::copy_file(CopyFrom, PasteTo,std::filesystem::copy_options::overwrite_existing);
 }
 
-void FileExplorer::Open(std::string path)
+void FileExplorer::Open(std::string& path)
 {
     if(*Engine::Get().GetWindows().GetWindowState("FileExplorer") == false) return;
     ImGui::Begin("File Explorer", Engine::Get().GetWindows().GetWindowState("FileExplorer"));
+    ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - 100.0f, ImGui::GetScrollY() + 20.0f));
+    if(std::filesystem::path(path) != std::filesystem::path(Engine::Get().GetMainPath()) && ImGui::Button("Back")){
+        path = std::filesystem::canonical(path + "/..").string() + "/";
+    }
     ImVec2 Position = ImVec2(0, 30);
     int rows = 1;
     for (const auto &entry : fs::directory_iterator(path))
     {
-        
         std::string FileName = entry.path().filename().string();
         if(m_Files.find(FileName) == m_Files.end())
         {
             m_Files[FileName] = File::CreateFile(entry.path().extension().string(), entry.path().string().erase(0,Engine::Get().GetMainPath().size() - 1), FileName);
         }
-        m_Files[FileName]->RenderGUI(entry, Position, m_IconAtlas, m_SelectedFile);
+        m_Files[FileName]->RenderGUI(entry, Position, m_IconAtlas, m_SelectedFile, Renaming, ShouldStopRenaming);
         if (ImGui::IsItemClicked(ImGuiMouseButton_Right))
         {
             // MouseInput(entry.path());
@@ -59,10 +62,11 @@ void FileExplorer::Open(std::string path)
         Position.x += ImGui::GetItemRectSize().x + 20.0f;
         if (ImGui::GetWindowSize().x < Position.x)
         {
-            Position = ImVec2(0, 30 + ImGui::GetItemRectSize().y + 20.0f * rows);
+            Position = ImVec2(0, (30 + ImGui::GetItemRectSize().y + 20.0f) * rows);
             rows++;
         }
     }
+    Renaming = !ShouldStopRenaming;
     MouseInput(m_SelectedFile);
     if(m_CopiedFilePath.string() != "") SapphireEngine::Log(m_CopiedFilePath.string(), SapphireEngine::Info);
     ImGui::End();
@@ -107,6 +111,11 @@ end)";
             if(m_SelectedCut){
                 fs::remove(m_CopiedFilePath);
             }
+        }
+        if (ImGui::MenuItem("Rename"))
+        {
+            Renaming = true;
+            ShouldStopRenaming = false;
         }
         if (ImGui::MenuItem("Delete"))
         {
