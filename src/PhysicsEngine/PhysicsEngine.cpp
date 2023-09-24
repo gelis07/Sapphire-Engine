@@ -48,6 +48,7 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
     }
     for (size_t shape = 0; shape < 2; shape++)
     {
+        //Testing both shapes
         if(shape == 1){
             Obj1 = current;
             Obj2 = obj.get();
@@ -69,6 +70,7 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
         {
             //Ni = Next Index. Making sure to be in range
             int Ni = (i + 1) % Obj1Points.size();
+            //Perpendicular vector to the currently selected axis.
             glm::vec2 AxisProj = glm::vec2(-(Obj1Points[Ni].y - Obj1Points[i].y), Obj1Points[Ni].x - Obj1Points[i].x);
             
             float MinObj1 = INFINITY, MaxObj1 = -INFINITY;
@@ -95,14 +97,7 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
     obj->OnCollision(current);
     current->OnCollision(obj.get());
     if(obj->GetComponent<RigidBody>()->Static.value<bool>()){
-        // float& mass = current->GetComponent<RigidBody>()->Mass.value<float>();
-        // glm::vec3& StartingVelocity = current->GetComponent<RigidBody>()->VelocityLastFrame;
-        // glm::vec3 Force = glm::vec3(0,-PhysicsEngine::g.value<float>(),0) -(mass * StartingVelocity / Engine::Get().GetDeltaTime());
-        // current->GetComponent<RigidBody>()->Forces.push_back(-Force);
-        // float torque = mass * -PhysicsEngine::g.value<float>() * abs(obj->GetTransform()->Position.value<glm::vec3>().x - T.x);
-        // float Inertia = mass * (obj->GetTransform()->Position.value<glm::vec3>().x - T.x) * (obj->GetTransform()->Position.value<glm::vec3>().x - T.x);
-        // float RotationalAccelaration = torque/Inertia;
-        // current->GetTransform()->Rotation.value<glm::vec3>().z = RotationalAccelaration;
+        current->GetComponent<RigidBody>()->StartingVelocity = -current->GetComponent<RigidBody>()->e.value<float>() * current->GetComponent<RigidBody>()->Velocity.value<glm::vec3>().y > 1.5f ? -current->GetComponent<RigidBody>()->e.value<float>() * current->GetComponent<RigidBody>()->Velocity.value<glm::vec3>() : glm::vec3(0);
     }
     return true;
 }

@@ -343,10 +343,10 @@ void RigidBody::Simulate(Object *current, const float& DeltaTime) {
     glm::vec3 gravity = (Gravity.value<bool>() || !(Static.value<bool>())) ? glm::vec3(0,-PhysicsEngine::g.value<float>(),0) : glm::vec3(0);
     Forces.push_back(gravity);
     glm::vec3 NetForce = SapphireEngine::VectorSum(Forces);
-    Velocity.value<glm::vec3>() = VelocityLastFrame -  NetForce * DeltaTime;
-    glm::vec3 accelaration = (Velocity.value<glm::vec3>() - VelocityLastFrame) / DeltaTime;
-    current->GetComponent<Transform>()->Position.value<glm::vec3>() += VelocityLastFrame * DeltaTime + (accelaration / 2.0f ) * DeltaTime* DeltaTime;
-    VelocityLastFrame = Velocity.value<glm::vec3>();
+    Velocity.value<glm::vec3>() = StartingVelocity -  NetForce * DeltaTime;
+    glm::vec3 accelaration = (Velocity.value<glm::vec3>() - StartingVelocity) / DeltaTime;
+    current->GetComponent<Transform>()->Position.value<glm::vec3>() += StartingVelocity * DeltaTime + (accelaration / 2.0f ) * DeltaTime* DeltaTime;
+    StartingVelocity = Velocity.value<glm::vec3>();
     Forces.clear();
 }
 
@@ -359,6 +359,6 @@ int RigidBody::Impulse(lua_State *L) {
     float y = (float)luaL_checknumber(L, 3);
     float z = (float)luaL_checknumber(L, 4);
 
-    rb->VelocityLastFrame = PhysicsEngine::Impulse(rb, glm::vec3(x,y,z));
+    rb->StartingVelocity = PhysicsEngine::Impulse(rb, glm::vec3(x,y,z));
     return 0;
 }

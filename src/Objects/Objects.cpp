@@ -98,7 +98,7 @@ void Object::RenderGUI()
     for (size_t i = 0; i < Components.size(); i++)
     {
         Components[i]->Render();
-        if(Components[i]->GetState() != nullptr && ImGui::Button("Remove Component"))
+        if(Components[i]->GetState() != nullptr && ImGui::Button(("Remove Component##" + std::to_string(i)).c_str()))
         {
             Components.erase(Components.begin() + i);
         }
@@ -121,9 +121,7 @@ void Object::Inspect()
     std::shared_ptr<File> *File = FileExplorerDrop.ReceiveDrop(ImGui::GetCurrentWindow());
     if (File != NULL)
     {
-        
-        (*File)->Name = (*File)->Name.erase((*File)->Name.size() - 4, (*File)->Name.size());
-        Component *NewComponent = new Component((*File)->Path, (*File)->Name, Components.size(),this,true);
+        Component *NewComponent = new Component((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size(),this,true);
         if (NewComponent->GetLuaVariables(this))
             AddComponent<Component>(NewComponent);
     }

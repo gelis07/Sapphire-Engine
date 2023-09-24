@@ -47,8 +47,6 @@ void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, Te
     if(Renaming){
         ImGui::InputText("##RenamedFile",&Name);
         if(glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_ENTER)){
-            SapphireEngine::Log(Engine::Get().GetWindows().CurrentPath + entry.path().filename().string(), SapphireEngine::Info);
-            SapphireEngine::Log(Engine::Get().GetWindows().CurrentPath + Name, SapphireEngine::Info);
             std::filesystem::rename(Engine::Get().GetWindows().CurrentPath + entry.path().filename().string(), Engine::Get().GetWindows().CurrentPath + Name);
             ShouldStopRenaming = true;
         }
