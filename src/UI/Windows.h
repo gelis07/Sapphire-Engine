@@ -27,6 +27,7 @@ class Windows{
         ImGuiContext* GetContext() {return DefaultContext;}
         ImGuiIO* GetWindowIO() {return IO;}
         inline static std::unordered_map<std::string, SapphireEngine::Variable*> SettingsVariables;
+        inline static std::unordered_map<std::string, SapphireEngine::Variable*> UserPreferences;
     private:
         ImGuiContext* DefaultContext;
         ImGuiIO* IO;
@@ -37,8 +38,8 @@ class Windows{
         void EditMenu();
         void HelpMenu();
         void ViewMenu();
-        void ThemeMenu();
         void OnThemeChange();
+        static SapphireEngine::String ThemeName;
         template <typename T>
         void SaveProjectVariable(std::string&& path, std::string&& VariableName, T data);
         float SatAmount;

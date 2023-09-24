@@ -80,6 +80,7 @@ void Engine::Run()
     //The main loop.
     while (!glfwWindowShouldClose(m_Window))
     {
+        
         ImGui::SetCurrentContext(m_Windows.GetContext());
         ImGui_ImplOpenGL3_NewFrame();
         ImGui::NewFrame();
@@ -110,16 +111,26 @@ void Engine::Run()
         GLCall(glfwSwapBuffers(m_Window));
         GLCall(glfwPollEvents());
     }
-
-    nlohmann::json ProjectSettingsJSON;
-    std::ofstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
-    for (auto &&setting : m_Windows.SettingsVariables)
     {
-        setting.second->Save(ProjectSettingsJSON);
+        nlohmann::json ProjectSettingsJSON;
+        std::ofstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
+        for (auto &&setting : m_Windows.SettingsVariables)
+        {
+            setting.second->Save(ProjectSettingsJSON);
+        }
+        stream << ProjectSettingsJSON.dump(2);
+        stream.close();
     }
-    stream << ProjectSettingsJSON.dump(2);
-    stream.close();
-
+    {
+        nlohmann::json UserPrefrencesJSON;
+        std::ofstream stream("Assets/Preferences.json");
+        for (auto &&setting : Windows::UserPreferences)
+        {
+            setting.second->Save(UserPrefrencesJSON);
+        }
+        stream << UserPrefrencesJSON.dump(2);
+        stream.close();
+    }
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();

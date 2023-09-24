@@ -2,6 +2,9 @@
 #include "Engine/Engine.h"
 #include "FileExplorer/FileExplorer.h"
 
+
+SapphireEngine::String Windows::ThemeName("ThemeName", UserPreferences);
+
 void Windows::Init(std::string&& Path){
 
     IMGUI_CHECKVERSION();
@@ -37,7 +40,21 @@ void Windows::Init(std::string&& Path){
     InitWindow("Hierachy");
     InitWindow("Logs");
     InitWindow("ThemeMaker", false);
-    Load("purple");
+
+    std::ifstream stream("Assets/Preferences.json");
+    nlohmann::json Data;
+    try{
+        stream >> Data;
+    }
+    catch (...){
+        std::ofstream stream("Assets/Preferences.json");
+        ThemeName.AnyValue() = std::string("purple"); 
+    }
+    for (auto &&setting : Data.items())
+    {
+        UserPreferences[setting.key()]->Load(setting.value());
+    }
+    Load(ThemeName.value<std::string>());
 }
 void Windows::DockSpace()
 {
@@ -176,7 +193,6 @@ void Windows::Toolbar()
         EditMenu(); //& Got to save these features on a JSON file!
         ViewMenu();
         HelpMenu();
-        ThemeMenu();
         if(Engine::Get().GetActiveScene()->SceneFile == ""){
             ImGui::Text("No scene loaded");
         }else{
@@ -306,28 +322,23 @@ void Windows::ViewMenu()
     }
 }
 
-void Windows::ThemeMenu()
-{
-    if(ImGui::BeginMenu("Themes")){
-        for(const auto &entry : std::filesystem::directory_iterator("Themes/")){
-            std::string name = entry.path().filename().string();
-            name = name.erase(name.size() - 5, name.size());
-            if(ImGui::Button(name.c_str()))
-            {
-                Load(name);
-            }
-        }
-        ImGui::EndMenu();
-    }
-}
-
-
 void Windows::PreferencesWindow()
 {
     if(!(*GetWindowState("Preferences"))) return;
     ImGui::Begin("Preferences", &WindowStates["Preferences"]);
 
-    
+    if(ImGui::BeginCombo("Theme", ThemeName.value<std::string>().c_str())){
+        for(const auto &entry : std::filesystem::directory_iterator("Themes/")){
+            std::string name = entry.path().filename().string();
+            name = name.erase(name.size() - 5, name.size());
+            if(ImGui::Selectable(name.c_str()))
+            {
+                Load(name);
+                ThemeName.value<std::string>() = name;
+            }
+        }
+        ImGui::EndCombo();
+    }
     ImGui::Text("Options coming soon.");
 
     ImGui::End();
@@ -385,7 +396,7 @@ void Windows::Load(std::string name){
     SatAmount = Theme["SatAmount"];
     OnThemeChange();
 }
-std::string ThemeName;
+std::string NewThemeName;
 void Windows::ThemeMaker()
 {
     if(!(*GetWindowState("ThemeMaker"))) return;
@@ -404,9 +415,9 @@ void Windows::ThemeMaker()
     }
 
     if(ImGui::BeginPopup("Save")){
-        ImGui::InputText("Theme Name", &ThemeName);
+        ImGui::InputText("Theme Name", &NewThemeName);
         if(ImGui::Button("Save")){
-            Save(ThemeName);
+            Save(NewThemeName);
         }
         ImGui::EndPopup();
     }

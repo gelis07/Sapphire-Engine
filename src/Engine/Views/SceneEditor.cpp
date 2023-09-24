@@ -192,8 +192,8 @@ void SceneEditor::Render()
     std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y) + offset);
 
 
-
-    if(ClickedObj != nullptr && ClickedObj->Name != "MainCamera" && !m_ClickedOnObj)
+    
+    if(ClickedObj != nullptr && ClickedObj->Name != "MainCamera" && !m_ClickedOnObj && !ImGuizmo::IsUsing())
         SelectedObj = ClickedObj;
 
 

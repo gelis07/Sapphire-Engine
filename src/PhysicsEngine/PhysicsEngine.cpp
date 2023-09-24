@@ -91,18 +91,18 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
             }
         }
     }
-
+    glm::vec2 T(SapphireEngine::ClampFunc(Obj1Points[1].x, Obj1Points[0].x, current->GetTransform()->Position.value<glm::vec3>()[0]), SapphireEngine::ClampFunc(Obj1Points[3].y, Obj1Points[2].y, current->GetTransform()->Position.value<glm::vec3>()[0]));
     obj->OnCollision(current);
     current->OnCollision(obj.get());
     if(obj->GetComponent<RigidBody>()->Static.value<bool>()){
-        float& mass = current->GetComponent<RigidBody>()->Mass.value<float>();
-        glm::vec3& StartingVelocity = current->GetComponent<RigidBody>()->VelocityLastFrame;
-        glm::vec3 Force = glm::vec3(0,-PhysicsEngine::g.value<float>(),0) -(mass * StartingVelocity / Engine::Get().GetDeltaTime());
-        current->GetComponent<RigidBody>()->Forces.push_back(-Force);
-        float torque = mass * -PhysicsEngine::g.value<float>() * abs(obj->GetTransform()->Position.value<glm::vec3>().x - T.x);
-        float Inertia = mass * (obj->GetTransform()->Position.value<glm::vec3>().x - T.x) * (obj->GetTransform()->Position.value<glm::vec3>().x - T.x);
-        float RotationalAccelaration = torque/Inertia;
-        current->GetTransform()->Rotation.value<glm::vec3>().z = RotationalAccelaration;
+        // float& mass = current->GetComponent<RigidBody>()->Mass.value<float>();
+        // glm::vec3& StartingVelocity = current->GetComponent<RigidBody>()->VelocityLastFrame;
+        // glm::vec3 Force = glm::vec3(0,-PhysicsEngine::g.value<float>(),0) -(mass * StartingVelocity / Engine::Get().GetDeltaTime());
+        // current->GetComponent<RigidBody>()->Forces.push_back(-Force);
+        // float torque = mass * -PhysicsEngine::g.value<float>() * abs(obj->GetTransform()->Position.value<glm::vec3>().x - T.x);
+        // float Inertia = mass * (obj->GetTransform()->Position.value<glm::vec3>().x - T.x) * (obj->GetTransform()->Position.value<glm::vec3>().x - T.x);
+        // float RotationalAccelaration = torque/Inertia;
+        // current->GetTransform()->Rotation.value<glm::vec3>().z = RotationalAccelaration;
     }
     return true;
 }
