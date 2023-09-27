@@ -16,7 +16,7 @@ int main(void)
         ProjectManager Pm;
 
         //The engine
-        Engine::Get().Init(Pm.Run()); //Pm->Run() will return the Main Path for the Engine.
+        Engine::Get().Init(Pm.Run()); //Pm.Run() will return the Main Path for the Engine.
     }
     Engine::Get().Run();
     return 0;

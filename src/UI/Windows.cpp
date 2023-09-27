@@ -294,6 +294,7 @@ void Windows::OnThemeChange()
     LoadedTheme[ImGuiCol_FrameBgActive] = Saturate(LoadedTheme[ImGuiCol_FrameBg], SatAmount);
     LoadedTheme[ImGuiCol_FrameBgHovered] = Saturate(LoadedTheme[ImGuiCol_FrameBg], 20);
     LoadedTheme[ImGuiCol_ChildBg] = Saturate(LoadedTheme[ImGuiCol_WindowBg], SatAmount);
+    LoadedTheme[ImGuiCol_TextSelectedBg] = Saturate(LoadedTheme[ImGuiCol_FrameBg], 20);
 
     for(auto const& x : LoadedTheme)
     {
@@ -422,6 +423,7 @@ void Windows::ThemeMaker()
         ImGui::EndPopup();
     }
     ImGui::End();
+    OnThemeChange();
 }
 
 void Windows::TestWindow()

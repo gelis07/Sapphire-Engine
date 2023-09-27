@@ -50,6 +50,7 @@ class Transform : public Component
             Variables["Position"]->AnyValue() = glm::vec3(0);
             Variables["Rotation"]->AnyValue() = glm::vec3(0);
             Variables["Size"]->AnyValue() = glm::vec3(0);
+            Rotation.SliderSpeed = 0.05f;
         };
         SapphireEngine::Vec3 Position;
         SapphireEngine::Vec3 Rotation;
@@ -91,6 +92,9 @@ class RigidBody : public Component
             Variables["Gravity"]->AnyValue() = true;
             Variables["Static"]->AnyValue() = false;
             Variables["e"]->AnyValue() = 0.6f;
+            e.Min = 0.0f;
+            e.Max = 1.0f;
+            e.SliderSpeed = 0.01f;
             Variables["Mass"]->AnyValue() = 1.0f;
             Variables["Velocity"]->AnyValue() = glm::vec3(0);
             Variables["Velocity"]->ShowOnInspector(false);

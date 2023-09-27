@@ -1,6 +1,12 @@
 #pragma once
 #include "Utilities.hpp"
 #include "json.hpp"
+#include "Imgui/imgui_markdown.h"
+#include "Imgui/imgui_impl_glfw.h"
+#include "Imgui/imgui_impl_opengl3.h"
+#include "Imgui/imgui_internal.h"
+#include "Imgui/imgui_stdlib.h"
+
 extern "C"
 {
     #include "Lua/lua.h"
@@ -45,6 +51,11 @@ namespace SapphireEngine{
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
             void Load(const nlohmann::json& jsonArray) override;
+            float SliderSpeed = 1.0f;
+            float Min = -INFINITY; // For no min or max just leave them on infinity.
+            float Max = INFINITY;
+            const char* Format = "%.3f"; // Thats the default ImGui value.
+            ImGuiSliderFlags Flags = 0;
     };
 
     class Bool : public Variable{
@@ -67,6 +78,7 @@ namespace SapphireEngine{
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
             void Load(const nlohmann::json& jsonArray) override;
+            ImGuiInputTextFlags Flags = 0;
     };
     class Vec2 : public Variable{
         public:
@@ -77,6 +89,11 @@ namespace SapphireEngine{
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
             void Load(const nlohmann::json& jsonArray) override;
+            float SliderSpeed = 1.0f;
+            float Min = -INFINITY; // For no min or max just leave them on infinity.
+            float Max = INFINITY;
+            const char* Format = "%.3f"; // Thats the default ImGui value.
+            ImGuiSliderFlags Flags = 0;
     };
     class Vec3 : public Variable{
         public:
@@ -87,6 +104,11 @@ namespace SapphireEngine{
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
             void Load(const nlohmann::json& jsonArray) override;
+            float SliderSpeed = 1.0f;
+            float Min = -INFINITY; // For no min or max just leave them on infinity.
+            float Max = INFINITY;
+            const char* Format = "%.3f"; // Thats the default ImGui value.
+            ImGuiSliderFlags Flags = 0;
     };
     class Vec4 : public Variable{
         public:
@@ -97,6 +119,11 @@ namespace SapphireEngine{
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
             void Load(const nlohmann::json& jsonArray) override;
+            float SliderSpeed = 1.0f;
+            float Min = -INFINITY; // For no min or max just leave them on infinity.
+            float Max = INFINITY;
+            const char* Format = "%.3f"; // Thats the default ImGui value.
+            ImGuiSliderFlags Flags = 0;
     };
     class Color : public Variable{
         public:
@@ -107,6 +134,7 @@ namespace SapphireEngine{
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
             void Load(const nlohmann::json& jsonArray) override;
+            ImGuiColorEditFlags Flags = 0;
     };
     class LuaTable : public Variable{
         public:

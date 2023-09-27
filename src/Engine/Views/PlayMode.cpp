@@ -55,7 +55,10 @@ bool CheckForErrors()
 void PlayMode::Render(std::string& MainPath)
 {
     if((*Engine::Get().GetWindows().GetWindowState("Play"))){
-        if(!ImGui::Begin("Play", Engine::Get().GetWindows().GetWindowState("Play")));
+        if(!ImGui::Begin("Play", Engine::Get().GetWindows().GetWindowState("Play"))){
+            ImGui::End();
+            return;
+        }
 
         // glfwGetWindowSize(glfwGetCurrentContext(), &m_WindowWidth, &m_WindowHeight);
         m_WindowWidth = ImGui::GetContentRegionAvail().x;

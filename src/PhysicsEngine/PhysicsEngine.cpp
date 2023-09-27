@@ -97,7 +97,14 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
     obj->OnCollision(current);
     current->OnCollision(obj.get());
     if(obj->GetComponent<RigidBody>()->Static.value<bool>()){
-        current->GetComponent<RigidBody>()->StartingVelocity = -current->GetComponent<RigidBody>()->e.value<float>() * current->GetComponent<RigidBody>()->Velocity.value<glm::vec3>().y > 1.5f ? -current->GetComponent<RigidBody>()->e.value<float>() * current->GetComponent<RigidBody>()->Velocity.value<glm::vec3>() : glm::vec3(0);
+        if(abs(current->GetComponent<RigidBody>()->StartingVelocity.y) < 2.0f){
+            float& mass = current->GetComponent<RigidBody>()->Mass.value<float>();
+            glm::vec3& StartingVelocity = current->GetComponent<RigidBody>()->StartingVelocity;
+            glm::vec3 Force = glm::vec3(0,-PhysicsEngine::g.value<float>(),0) -(mass * StartingVelocity / Engine::Get().GetDeltaTime());
+            current->GetComponent<RigidBody>()->Forces.push_back(-Force);
+        }else{
+            current->GetComponent<RigidBody>()->StartingVelocity = -current->GetComponent<RigidBody>()->e.value<float>() * current->GetComponent<RigidBody>()->Velocity.value<glm::vec3>();
+        }
     }
     return true;
 }

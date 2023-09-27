@@ -1,9 +1,9 @@
 #include "Variables.h"
-#include "UI/Windows.h"
 
 void SapphireEngine::Float::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables){
     if(!m_ShowOnInspector) return;
-    ImGui::DragFloat(Name.c_str(), std::any_cast<float>(&data));
+    ImGui::DragFloat(Name.c_str(), std::any_cast<float>(&data), SliderSpeed,Min,Max,Format,Flags);
+
     if(ImGui::IsItemEdited()){
         Variables[Name] = this;
     }
@@ -69,7 +69,7 @@ void SapphireEngine::Bool::Load(const nlohmann::json &jsonArray)
 void SapphireEngine::String::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
-    ImGui::InputText(Name.c_str(), std::any_cast<std::string>(&data));
+    ImGui::InputText(Name.c_str(), std::any_cast<std::string>(&data), Flags);
     if(ImGui::IsItemEdited()){
         Variables[Name] = this;
     }
@@ -102,7 +102,7 @@ void SapphireEngine::String::Load(const nlohmann::json &jsonArray)
 void SapphireEngine::Vec2::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
-    ImGui::DragFloat2(Name.c_str(), &(*std::any_cast<glm::vec2>(&data))[0]);
+    ImGui::DragFloat2(Name.c_str(), &(*std::any_cast<glm::vec2>(&data))[0], SliderSpeed, Min, Max, Format, Flags);
     if(ImGui::IsItemEdited()){
         Variables[Name] = this;
     }
@@ -154,7 +154,7 @@ void SapphireEngine::Vec2::Load(const nlohmann::json &jsonArray)
 void SapphireEngine::Vec3::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
-    ImGui::DragFloat3(Name.c_str(), &(*std::any_cast<glm::vec3>(&data))[0]);
+    ImGui::DragFloat3(Name.c_str(), &(*std::any_cast<glm::vec3>(&data))[0], SliderSpeed, Min, Max, Format, Flags);
     if(ImGui::IsItemEdited()){
         Variables[Name] = this;
     }
@@ -213,7 +213,7 @@ void SapphireEngine::Vec3::Load(const nlohmann::json &jsonArray)
 void SapphireEngine::Vec4::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
-    ImGui::DragFloat4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0]);
+    ImGui::DragFloat4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0], SliderSpeed, Min, Max, Format, Flags);
     if(ImGui::IsItemEdited()){
         Variables[Name] = this;
     }
@@ -280,7 +280,7 @@ void SapphireEngine::Vec4::Load(const nlohmann::json &jsonArray)
 void SapphireEngine::Color::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables)
 {
     if(!m_ShowOnInspector) return;
-    ImGui::ColorEdit4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0]);
+    ImGui::ColorEdit4(Name.c_str(), &(*std::any_cast<glm::vec4>(&data))[0], Flags);
     if(ImGui::IsItemEdited()){
         Variables[Name] = this;
     }

@@ -182,7 +182,10 @@ constexpr glm::vec2 offset = glm::vec2(7.3f, -6.9f);
 void SceneEditor::Render()
 {
     if(!(*Engine::Get().GetWindows().GetWindowState("Viewport"))) return;
-    if(!ImGui::Begin("Viewport", Engine::Get().GetWindows().GetWindowState("Viewport")));
+    if(!ImGui::Begin("Viewport", Engine::Get().GetWindows().GetWindowState("Viewport"))){
+        ImGui::End();
+        return;
+    }
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
