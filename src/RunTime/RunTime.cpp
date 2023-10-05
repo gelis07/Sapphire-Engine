@@ -46,6 +46,24 @@ void RunTime::Render(std::shared_ptr<Object> object, std::shared_ptr<Object> Cam
 
 void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject, const float& DeltaTime)
 {
+    for (size_t Obj1 = 0; Obj1 < Scene->Objects.size(); Obj1++)
+    {
+        for (size_t Obj2 = Obj1; Obj2< Scene->Objects.size(); Obj2++)
+        {
+            glm::vec2 Normal;
+            float Depth;
+            if(Scene->Objects[Obj1]->GetRenderer()->shape->ShapeType == Shapes::RectangleT){
+               if(Scene->Objects[Obj2]->Name == "MainCamera" || Scene->Objects[Obj2] == Scene->Objects[Obj1]) continue;
+                if(Scene->Objects[Obj2]->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+                    CollisionData CD;
+                    if(PhysicsEngine::CollisionDetection::RectanglexRectangle(Scene->Objects[Obj2], Scene->Objects[Obj1].get(),CD)){
+                        Scene->Objects[Obj1]->GetComponent<RigidBody>()->rb.OnCollisionRotation(Scene->Objects[Obj2].get(), Scene->Objects[Obj1].get(), std::move(CD));
+                        break;
+                    }
+                }
+            }
+        }
+    }
     for (size_t i = 0; i < Scene->Objects.size(); i++)
     {
         Render(Scene->Objects[i], CameraObject);
@@ -55,10 +73,11 @@ void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject, const flo
             rb->Simulate(Scene->Objects[i].get(), DeltaTime);
             //Currently collision checks for object's twice but I'm planning on adding multithreading where all of these things will happen at the same time.
             //So I'm leaving this for now, and I'm gonna fix this when I get more into optimizing this engine.
-            CheckForSkip(rb->CheckForCollisions(Scene->Objects[i].get()));
+            // CheckForSkip(rb->CheckForCollisions(Scene->Objects[i].get()));
         }
     }
     RunTime::SkipFrame = false;
+    Time += DeltaTime;
 }
 
 void RunTime::RunGame(GLFWwindow* window,Scene *Scene, std::shared_ptr<Object>& CameraObject)

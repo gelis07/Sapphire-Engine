@@ -2,7 +2,7 @@
 #include <map>
 #include <variant>
 #include "Variables.h"
-#include "PhysicsEngine/PhysicsEngine.h"
+#include "PhysicsEngine/RigidBody.h"
 #include "Scripting.h"
 #include "Graphics/Shapes.h"
 
@@ -87,30 +87,11 @@ class RigidBody : public Component
 {
     public:
         RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp = false)
-        : Component(std::move(File), std::move(ArgName), ArgId,obj,LuaComp),Static("Static", Variables),e("e", Variables), Trigger("Trigger", Variables), Gravity("Gravity", Variables), Mass("Mass", Variables), Velocity("Velocity", Variables){
-            Variables["Trigger"]->AnyValue() = false;
-            Variables["Gravity"]->AnyValue() = true;
-            Variables["Static"]->AnyValue() = false;
-            Variables["e"]->AnyValue() = 0.6f;
-            e.Min = 0.0f;
-            e.Max = 1.0f;
-            e.SliderSpeed = 0.01f;
-            Variables["Mass"]->AnyValue() = 1.0f;
-            Variables["Velocity"]->AnyValue() = glm::vec3(0);
-            Variables["Velocity"]->ShowOnInspector(false);
-            Variables["Velocity"]->SaveVariable(false);
-            Functions["Impulse"] = Impulse;
+        : Component(std::move(File), std::move(ArgName), ArgId,obj,LuaComp), rb(Variables)
+        {
+             Functions["AddForce"] = AddForce;
         };
-        SapphireEngine::Bool Trigger;
-        SapphireEngine::Bool Gravity;
-        SapphireEngine::Bool Static;
-        SapphireEngine::Float Mass;
-        SapphireEngine::Float e;
-        SapphireEngine::Vec3 Velocity;
-        glm::vec3 accelaration;
-        glm::vec3 StartingVelocity = glm::vec3(0); // This basically means that the variable will be private and will not communicate at all with the user.
-        std::vector<glm::vec3> Forces;
-        void CheckForCollisions(Object* current);
+        PhysicsEngine::Body rb;
         void Simulate(Object *current, const float& DeltaTime);
-        static int Impulse(lua_State* L);
+        static int AddForce(lua_State* L);
 };

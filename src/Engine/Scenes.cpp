@@ -90,6 +90,7 @@ void Scene::Load(const std::string FilePath)
                 RigidBody* comp = new RigidBody(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<RigidBody>(dynamic_cast<RigidBody* >(comp))));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
+
             }
             else
             {
@@ -104,6 +105,14 @@ void Scene::Load(const std::string FilePath)
         obj->GetTransform() = obj->GetComponent<Transform>();
         obj->GetRenderer() = obj->GetComponent<Renderer>();
         obj->GetComponent<Renderer>()->shape = shape;
+        if(std::shared_ptr<RigidBody> RbComp = obj->GetComponent<RigidBody>()){
+            RbComp->rb.Position = &(obj->GetTransform()->Position.value<glm::vec3>());
+            RbComp->rb.Rotation = &(obj->GetTransform()->Rotation.value<glm::vec3>());
+            RbComp->rb.Size = &(obj->GetTransform()->Size.value<glm::vec3>());
+            RbComp->rb.ShapeType = static_cast<int>(obj->GetRenderer()->shape->ShapeType);
+
+        }
+
         Objects.push_back(obj);
     }
     Engine::Get().GetViewport().SelectedObj = nullptr;
@@ -162,6 +171,7 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
+            Obj->GetComponent<RigidBody>()->rb.ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         if (ImGui::MenuItem("Create Rectangle"))
         {
@@ -169,6 +179,7 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
+            Obj->GetComponent<RigidBody>()->rb.ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         ImGui::Separator();
         // if(ImGui::MenuItem("Duplicate")){

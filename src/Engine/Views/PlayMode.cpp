@@ -56,8 +56,8 @@ void PlayMode::Render(std::string& MainPath)
 {
     if((*Engine::Get().GetWindows().GetWindowState("Play"))){
         if(!ImGui::Begin("Play", Engine::Get().GetWindows().GetWindowState("Play"))){
-            ImGui::End();
-            return;
+            // ImGui::End();
+            // return;
         }
 
         // glfwGetWindowSize(glfwGetCurrentContext(), &m_WindowWidth, &m_WindowHeight);
@@ -126,6 +126,7 @@ void PlayMode::Render(std::string& MainPath)
         //The start functions get called
         m_ActiveScene->Load(m_ActiveScene->SceneFile);
         m_Start = true;
+        RunTime::Time = 0.0f;
     } 
     if(Paused){
         for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)

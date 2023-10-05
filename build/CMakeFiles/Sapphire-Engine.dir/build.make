@@ -543,22 +543,39 @@ CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.s"
 	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S C:\Gelis\Programs\Sapphire-Engine\include\Imgui\ImGuizmo.cpp -o CMakeFiles\Sapphire-Engine.dir\include\Imgui\ImGuizmo.cpp.s
 
-CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
-CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
-CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj: C:/Gelis/Programs/Sapphire-Engine/src/PhysicsEngine/PhysicsEngine.cpp
-CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
-CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
-CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Gelis\Programs\Sapphire-Engine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj"
-	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj -MF CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\PhysicsEngine.cpp.obj.d -o CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\PhysicsEngine.cpp.obj -c C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\PhysicsEngine.cpp
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj: C:/Gelis/Programs/Sapphire-Engine/src/PhysicsEngine/RigidBody.cpp
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Gelis\Programs\Sapphire-Engine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_29) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj -MF CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\RigidBody.cpp.obj.d -o CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\RigidBody.cpp.obj -c C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\RigidBody.cpp
 
-CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.i"
-	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\PhysicsEngine.cpp > CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\PhysicsEngine.cpp.i
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.i"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\RigidBody.cpp > CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\RigidBody.cpp.i
 
-CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.s"
-	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\PhysicsEngine.cpp -o CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\PhysicsEngine.cpp.s
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.s"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\RigidBody.cpp -o CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\RigidBody.cpp.s
+
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj: CMakeFiles/Sapphire-Engine.dir/flags.make
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj: CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj: C:/Gelis/Programs/Sapphire-Engine/src/PhysicsEngine/CollisionDetection.cpp
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj: CMakeFiles/Sapphire-Engine.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=C:\Gelis\Programs\Sapphire-Engine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Building CXX object CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -MD -MT CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj -MF CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\CollisionDetection.cpp.obj.d -o CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\CollisionDetection.cpp.obj -c C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\CollisionDetection.cpp
+
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.i"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -E C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\CollisionDetection.cpp > CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\CollisionDetection.cpp.i
+
+CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.s"
+	C:\mingw64\bin\g++.exe $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -S C:\Gelis\Programs\Sapphire-Engine\src\PhysicsEngine\CollisionDetection.cpp -o CMakeFiles\Sapphire-Engine.dir\src\PhysicsEngine\CollisionDetection.cpp.s
 
 # Object files for target Sapphire-Engine
 Sapphire__Engine_OBJECTS = \
@@ -589,7 +606,8 @@ Sapphire__Engine_OBJECTS = \
 "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj" \
 "CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj" \
-"CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj"
+"CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj" \
+"CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj"
 
 # External object files for target Sapphire-Engine
 Sapphire__Engine_EXTERNAL_OBJECTS =
@@ -622,12 +640,13 @@ C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-E
 C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuiFileDialog.cpp.obj
 C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.obj
 C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/include/Imgui/ImGuizmo.cpp.obj
-C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj
+C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj
+C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj
 C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/build.make
 C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/linkLibs.rsp
 C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/objects1.rsp
 C:/Gelis/Programs/Sapphire-Engine/bin/Sapphire-Engine.exe: CMakeFiles/Sapphire-Engine.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Gelis\Programs\Sapphire-Engine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_30) "Linking CXX executable C:\Gelis\Programs\Sapphire-Engine\bin\Sapphire-Engine.exe"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=C:\Gelis\Programs\Sapphire-Engine\build\CMakeFiles --progress-num=$(CMAKE_PROGRESS_31) "Linking CXX executable C:\Gelis\Programs\Sapphire-Engine\bin\Sapphire-Engine.exe"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles\Sapphire-Engine.dir\link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

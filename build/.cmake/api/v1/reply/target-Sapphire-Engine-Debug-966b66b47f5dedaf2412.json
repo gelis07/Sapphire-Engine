@@ -38,31 +38,31 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 48,
+				"line" : 49,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 53,
+				"line" : 54,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 62,
+				"line" : 63,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 42,
+				"line" : 43,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 68,
+				"line" : 69,
 				"parent" : 0
 			}
 		]
@@ -201,7 +201,8 @@
 				25,
 				26,
 				27,
-				28
+				28,
+				29
 			]
 		}
 	],
@@ -296,14 +297,15 @@
 				25,
 				26,
 				27,
-				28
+				28,
+				29
 			]
 		},
 		{
 			"name" : "Precompile Header File",
 			"sourceIndexes" : 
 			[
-				29
+				30
 			]
 		}
 	],
@@ -480,7 +482,13 @@
 		{
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
-			"path" : "src/PhysicsEngine/PhysicsEngine.cpp",
+			"path" : "src/PhysicsEngine/RigidBody.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/PhysicsEngine/CollisionDetection.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

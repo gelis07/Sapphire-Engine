@@ -312,45 +312,13 @@ void Renderer::Render(std::shared_ptr<Object> obj, bool&& IsSelected ,glm::vec3 
     shape->Render(obj, CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
 }
 
-void RigidBody::CheckForCollisions(Object *current) {
-    if(current->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-            if(object->Name == "MainCamera" || object.get() == current) continue;
-            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-                if(PhysicsEngine::RectanglexRectangle(object, current))
-                    break;
-            }else{
-                if(PhysicsEngine::CirclexRectangle(object, current))
-                    break;
-            }
-        }
-    }else{
-        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-            if(object->Name == "MainCamera" || object.get() == current) continue;
-            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-                if(PhysicsEngine::CirclexRectangle(object, current))
-                    break;
-            }else{
-                if(PhysicsEngine::CirclexCircle(object, current))
-                    break;
-            }
-        }
-    }
-}
 
 void RigidBody::Simulate(Object *current, const float& DeltaTime) {
-    if(DeltaTime == 0) return;
-    glm::vec3 gravity = (Gravity.value<bool>() || !(Static.value<bool>())) ? glm::vec3(0,-PhysicsEngine::g.value<float>(),0) : glm::vec3(0);
-    Forces.push_back(gravity);
-    glm::vec3 NetForce = SapphireEngine::VectorSum(Forces);
-    Velocity.value<glm::vec3>() = StartingVelocity -  NetForce * DeltaTime;
-    glm::vec3 accelaration = (Velocity.value<glm::vec3>() - StartingVelocity) / DeltaTime;
-    current->GetComponent<Transform>()->Position.value<glm::vec3>() += StartingVelocity * DeltaTime + (accelaration / 2.0f ) * DeltaTime* DeltaTime;
-    StartingVelocity = Velocity.value<glm::vec3>();
-    Forces.clear();
+    rb.Update(DeltaTime);
+    // rb.CollisionDetection(current);
 }
 
-int RigidBody::Impulse(lua_State *L) {
+int RigidBody::AddForce(lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
     lua_getfield(L, 1, "__userdata");
     RigidBody* rb = static_cast<RigidBody*>(lua_touserdata(L, -1));
@@ -359,6 +327,6 @@ int RigidBody::Impulse(lua_State *L) {
     float y = (float)luaL_checknumber(L, 3);
     float z = (float)luaL_checknumber(L, 4);
 
-    rb->StartingVelocity = PhysicsEngine::Impulse(rb, glm::vec3(x,y,z));
+    rb->rb.Force = glm::vec3(x,y,z);
     return 0;
 }

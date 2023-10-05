@@ -183,8 +183,8 @@ void SceneEditor::Render()
 {
     if(!(*Engine::Get().GetWindows().GetWindowState("Viewport"))) return;
     if(!ImGui::Begin("Viewport", Engine::Get().GetWindows().GetWindowState("Viewport"))){
-        ImGui::End();
-        return;
+        // ImGui::End();
+        // return;
     }
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;

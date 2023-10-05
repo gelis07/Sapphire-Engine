@@ -169,8 +169,14 @@
 },
 {
   "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
-  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\PhysicsEngine\\PhysicsEngine.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\PhysicsEngine\\PhysicsEngine.cpp",
-  "file": "C:/Gelis/Programs/Sapphire-Engine/src/PhysicsEngine/PhysicsEngine.cpp",
-  "output": "CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj"
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\PhysicsEngine\\RigidBody.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\PhysicsEngine\\RigidBody.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/PhysicsEngine/RigidBody.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj"
+},
+{
+  "directory": "C:/Gelis/Programs/Sapphire-Engine/build",
+  "command": "C:\\mingw64\\bin\\g++.exe  @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17 -Winvalid-pch -include C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx -o CMakeFiles\\Sapphire-Engine.dir\\src\\PhysicsEngine\\CollisionDetection.cpp.obj -c C:\\Gelis\\Programs\\Sapphire-Engine\\src\\PhysicsEngine\\CollisionDetection.cpp",
+  "file": "C:/Gelis/Programs/Sapphire-Engine/src/PhysicsEngine/CollisionDetection.cpp",
+  "output": "CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj"
 }
 ]

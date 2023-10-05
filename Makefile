@@ -528,29 +528,53 @@ src/Objects/Objects.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.s
 .PHONY : src/Objects/Objects.cpp.s
 
-src/PhysicsEngine/PhysicsEngine.obj: src/PhysicsEngine/PhysicsEngine.cpp.obj
-.PHONY : src/PhysicsEngine/PhysicsEngine.obj
+src/PhysicsEngine/CollisionDetection.obj: src/PhysicsEngine/CollisionDetection.cpp.obj
+.PHONY : src/PhysicsEngine/CollisionDetection.obj
 
 # target to build an object file
-src/PhysicsEngine/PhysicsEngine.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.obj
-.PHONY : src/PhysicsEngine/PhysicsEngine.cpp.obj
+src/PhysicsEngine/CollisionDetection.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.obj
+.PHONY : src/PhysicsEngine/CollisionDetection.cpp.obj
 
-src/PhysicsEngine/PhysicsEngine.i: src/PhysicsEngine/PhysicsEngine.cpp.i
-.PHONY : src/PhysicsEngine/PhysicsEngine.i
+src/PhysicsEngine/CollisionDetection.i: src/PhysicsEngine/CollisionDetection.cpp.i
+.PHONY : src/PhysicsEngine/CollisionDetection.i
 
 # target to preprocess a source file
-src/PhysicsEngine/PhysicsEngine.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.i
-.PHONY : src/PhysicsEngine/PhysicsEngine.cpp.i
+src/PhysicsEngine/CollisionDetection.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.i
+.PHONY : src/PhysicsEngine/CollisionDetection.cpp.i
 
-src/PhysicsEngine/PhysicsEngine.s: src/PhysicsEngine/PhysicsEngine.cpp.s
-.PHONY : src/PhysicsEngine/PhysicsEngine.s
+src/PhysicsEngine/CollisionDetection.s: src/PhysicsEngine/CollisionDetection.cpp.s
+.PHONY : src/PhysicsEngine/CollisionDetection.s
 
 # target to generate assembly for a file
-src/PhysicsEngine/PhysicsEngine.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/PhysicsEngine.cpp.s
-.PHONY : src/PhysicsEngine/PhysicsEngine.cpp.s
+src/PhysicsEngine/CollisionDetection.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/CollisionDetection.cpp.s
+.PHONY : src/PhysicsEngine/CollisionDetection.cpp.s
+
+src/PhysicsEngine/RigidBody.obj: src/PhysicsEngine/RigidBody.cpp.obj
+.PHONY : src/PhysicsEngine/RigidBody.obj
+
+# target to build an object file
+src/PhysicsEngine/RigidBody.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.obj
+.PHONY : src/PhysicsEngine/RigidBody.cpp.obj
+
+src/PhysicsEngine/RigidBody.i: src/PhysicsEngine/RigidBody.cpp.i
+.PHONY : src/PhysicsEngine/RigidBody.i
+
+# target to preprocess a source file
+src/PhysicsEngine/RigidBody.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.i
+.PHONY : src/PhysicsEngine/RigidBody.cpp.i
+
+src/PhysicsEngine/RigidBody.s: src/PhysicsEngine/RigidBody.cpp.s
+.PHONY : src/PhysicsEngine/RigidBody.s
+
+# target to generate assembly for a file
+src/PhysicsEngine/RigidBody.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.s
+.PHONY : src/PhysicsEngine/RigidBody.cpp.s
 
 src/RunTime/RunTime.obj: src/RunTime/RunTime.cpp.obj
 .PHONY : src/RunTime/RunTime.obj
@@ -876,9 +900,12 @@ help:
 	@echo "... src/Objects/Objects.obj"
 	@echo "... src/Objects/Objects.i"
 	@echo "... src/Objects/Objects.s"
-	@echo "... src/PhysicsEngine/PhysicsEngine.obj"
-	@echo "... src/PhysicsEngine/PhysicsEngine.i"
-	@echo "... src/PhysicsEngine/PhysicsEngine.s"
+	@echo "... src/PhysicsEngine/CollisionDetection.obj"
+	@echo "... src/PhysicsEngine/CollisionDetection.i"
+	@echo "... src/PhysicsEngine/CollisionDetection.s"
+	@echo "... src/PhysicsEngine/RigidBody.obj"
+	@echo "... src/PhysicsEngine/RigidBody.i"
+	@echo "... src/PhysicsEngine/RigidBody.s"
 	@echo "... src/RunTime/RunTime.obj"
 	@echo "... src/RunTime/RunTime.i"
 	@echo "... src/RunTime/RunTime.s"

@@ -78,10 +78,15 @@ std::shared_ptr<Object> Object::CreateObject(std::string &&ObjName)
 
     NewObj->renderer = NewObj->GetComponent<Renderer>(); 
     NewObj->transform = NewObj->GetComponent<Transform>(); 
-
+    
     NewObj->renderer->Color.AnyValue() = glm::vec4(1);
     NewObj->transform->Position.AnyValue() = glm::vec3(0);
     NewObj->transform->Size.AnyValue() = glm::vec3(20.0f, 20.0f, 0.0f);
+
+    NewObj->GetComponent<RigidBody>()->rb.Position = &(NewObj->GetTransform()->Position.value<glm::vec3>());
+    NewObj->GetComponent<RigidBody>()->rb.Rotation = &(NewObj->GetTransform()->Rotation.value<glm::vec3>());
+    NewObj->GetComponent<RigidBody>()->rb.Size = &(NewObj->GetTransform()->Size.value<glm::vec3>());
+
     Engine::Get().GetActiveScene()->Objects.push_back(NewObj);
 
 

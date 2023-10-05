@@ -95,6 +95,10 @@ function OnCollision()
 end)";
         stream.close();
         }
+        if (ImGui::MenuItem("Create Directory"))
+        {
+            fs::create_directory(Engine::Get().GetWindows().CurrentPath + "/NewDirectory");
+        }
         if (ImGui::MenuItem("Copy"))
         {
             m_CopiedFilePath = path;

@@ -1,12 +1,13 @@
-#include "PhysicsEngine.h"
+#include "CollisionDetection.h"
 #include "Objects/Objects.h"
 #include "Engine/Engine.h"
 #include "UI/Windows.h" 
+#include "RunTime/RunTime.h"
 
-SapphireEngine::Float PhysicsEngine::g("g", Windows::SettingsVariables);
+SapphireEngine::Float PhysicsEngine::CollisionDetection::g("g", Windows::SettingsVariables);
 
 
-bool PhysicsEngine::CirclexRectangle(std::shared_ptr<Object> obj, Object* current)
+bool PhysicsEngine::CollisionDetection::CirclexRectangle(std::shared_ptr<Object> obj, Object* current)
 {
     // These points are linked to the geogebra files!
     float Cy = obj->GetTransform()->Position.value<glm::vec3>().y - obj->GetTransform()->Size.value<glm::vec3>().y / 2; // The y of the bottom Left point of the rectangle
@@ -28,12 +29,111 @@ bool PhysicsEngine::CirclexRectangle(std::shared_ptr<Object> obj, Object* curren
     return false;
 
 }
-//Would like to thank Javidx9 for the amazing video on implementing SAT (Seperated Axis Theorem) with c++! https://www.youtube.com/watch?v=7Ik2vowGcU0
-bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* current)
+//Thanks to the video by https://www.youtube.com/watch?v=5gDC1GU3Ivg&list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs&index=22
+
+void PhysicsEngine::CollisionDetection::FindContactPoint(std::shared_ptr<Object> obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
+{
+    ContactPoint1 = glm::vec2(0);
+    ContactPoint2 = glm::vec2(0);
+    ContactPointCount = 0;
+    std::array<glm::vec2, 4> CurrentPoints = ((Shapes::Rectangle*)(current->GetRenderer()->shape.get()))->Points;
+    std::array<glm::vec2, 4> ObjPoints = ((Shapes::Rectangle*)(obj->GetRenderer()->shape.get()))->Points;
+
+    float minDistanceSquared = INFINITY;
+
+    for (size_t i = 0; i < CurrentPoints.size(); i++)
+    {
+        glm::vec2 CurrentPoint = CurrentPoints[i];
+        for (size_t j = 0; j < ObjPoints.size(); j++)
+        {
+            glm::vec2 ObjPoint = ObjPoints[j];
+            glm::vec2 ObjNextPoint = ObjPoints[(j+1) % ObjPoints.size()]; // Making sure its inside the points array
+            float DistanceSquared = 0.0f;
+            glm::vec2 Cp = glm::vec2(0);
+            PointSegmentDistance(CurrentPoint, ObjPoint, ObjNextPoint, DistanceSquared, Cp);
+
+            if(DistanceSquared == minDistanceSquared){
+                if(Cp != ContactPoint1)
+                {
+                    ContactPoint2 = Cp;
+                    ContactPointCount = 2;
+                }
+            }
+            else if(DistanceSquared < minDistanceSquared){
+                minDistanceSquared = DistanceSquared;
+                ContactPointCount = 1;
+                ContactPoint1 = Cp;
+            }
+        }
+        
+    }
+    for (size_t i = 0; i < ObjPoints.size(); i++)
+    {
+        glm::vec2 ObjPoint = CurrentPoints[i];
+        for (size_t j = 0; j < CurrentPoints.size(); j++)
+        {
+            glm::vec2 CurrentPoints = ObjPoints[j];
+            glm::vec2 ObjNextPoint = ObjPoints[(j+1) % ObjPoints.size()]; // Making sure its inside the points array
+            float DistanceSquared = 0.0f;
+            glm::vec2 Cp;
+            PointSegmentDistance(ObjPoint, CurrentPoints, ObjNextPoint, DistanceSquared, Cp);
+
+            if(DistanceSquared == minDistanceSquared){
+                if(Cp != ContactPoint1)
+                {
+                    ContactPoint2 = Cp;
+                    ContactPointCount = 2;
+                }
+            }
+            else if(DistanceSquared < minDistanceSquared){
+                minDistanceSquared = DistanceSquared;
+                ContactPointCount = 1;
+                ContactPoint1 = Cp;
+            }
+        }
+        
+    }
+    
+}
+glm::vec2 PhysicsEngine::CollisionDetection::FindArithmeticMean(std::array<glm::vec2, 4> &Vertices)
+{
+    glm::vec2 Sum;
+
+    for (size_t i = 0; i < Vertices.size(); i++)
+    {
+        Sum += Vertices[i];
+    }
+    Sum /= Vertices.size();
+    return Sum;
+}
+void PhysicsEngine::CollisionDetection::PointSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b, float &distanceSquared, glm::vec2 &cp)
+{
+    glm::vec2 ab = b - a;
+    glm::vec2 ap = p - a;
+
+    float Projection = glm::dot(ap, ab);
+    float abLengthSquared = ab.x * ab.x + ab.y * ab.y;
+    float d = Projection / abLengthSquared;
+    if(d <= 0.0f)
+        cp = a;
+    else if(d >= 1.0f)
+        cp = b;
+    else
+        cp = a + ab * d;
+    
+    float dx = p.x - cp.x;
+    float dy = p.y - cp.y;
+    distanceSquared = dx * dx + dy * dy;
+}
+
+// Would like to thank Javidx9 for the amazing video on implementing SAT (Seperated Axis Theorem) with c++! https://www.youtube.com/watch?v=7Ik2vowGcU0
+bool PhysicsEngine::CollisionDetection::RectanglexRectangle(std::shared_ptr<Object> obj, Object *current, CollisionData& CD)
 {
     Object* Obj1 = obj.get();
     Object* Obj2 = current;
 
+    CD.Normal = glm::vec2(0);
+    CD.Depth = INFINITY;
     std::array<glm::vec2, 4> Obj1Points = ((Shapes::Rectangle*)(Obj1->GetRenderer()->shape.get()))->Points;
     std::array<glm::vec2, 4> Obj2Points = ((Shapes::Rectangle*)(Obj2->GetRenderer()->shape.get()))->Points;
     glm::vec2 Obj1Position = glm::vec2(Obj1->GetTransform()->Position.value<glm::vec3>().x, Obj1->GetTransform()->Position.value<glm::vec3>().y);
@@ -48,7 +148,7 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
     }
     for (size_t shape = 0; shape < 2; shape++)
     {
-        //Testing both shapes
+        //"Inverting" the shapes so both objects are tested on eachother.
         if(shape == 1){
             Obj1 = current;
             Obj2 = obj.get();
@@ -72,7 +172,7 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
             int Ni = (i + 1) % Obj1Points.size();
             //Perpendicular vector to the currently selected axis.
             glm::vec2 AxisProj = glm::vec2(-(Obj1Points[Ni].y - Obj1Points[i].y), Obj1Points[Ni].x - Obj1Points[i].x);
-            
+            AxisProj = glm::normalize(AxisProj);
             float MinObj1 = INFINITY, MaxObj1 = -INFINITY;
             for (size_t j = 0; j < Obj1Points.size(); j++)
             {
@@ -91,24 +191,23 @@ bool PhysicsEngine::RectanglexRectangle(std::shared_ptr<Object> obj, Object* cur
             if(!(MaxObj2 >= MinObj1 && MaxObj1 >= MinObj2)){
                 return false;
             }
+            float AxisDepth = std::min(MaxObj2 - MinObj1, MaxObj1 - MinObj2);
+            if(AxisDepth < CD.Depth){
+                CD.Depth = AxisDepth;
+                CD.Normal = AxisProj;
+            }
         }
     }
-    glm::vec2 T(SapphireEngine::ClampFunc(Obj1Points[1].x, Obj1Points[0].x, current->GetTransform()->Position.value<glm::vec3>()[0]), SapphireEngine::ClampFunc(Obj1Points[3].y, Obj1Points[2].y, current->GetTransform()->Position.value<glm::vec3>()[0]));
-    obj->OnCollision(current);
-    current->OnCollision(obj.get());
-    if(obj->GetComponent<RigidBody>()->Static.value<bool>()){
-        if(abs(current->GetComponent<RigidBody>()->StartingVelocity.y) < 2.0f){
-            float& mass = current->GetComponent<RigidBody>()->Mass.value<float>();
-            glm::vec3& StartingVelocity = current->GetComponent<RigidBody>()->StartingVelocity;
-            glm::vec3 Force = glm::vec3(0,-PhysicsEngine::g.value<float>(),0) -(mass * StartingVelocity / Engine::Get().GetDeltaTime());
-            current->GetComponent<RigidBody>()->Forces.push_back(-Force);
-        }else{
-            current->GetComponent<RigidBody>()->StartingVelocity = -current->GetComponent<RigidBody>()->e.value<float>() * current->GetComponent<RigidBody>()->Velocity.value<glm::vec3>();
-        }
+
+    glm::vec2 Direction = Obj2Position - Obj1Position;
+    if(glm::dot(Direction, CD.Normal) < 0.0f)
+    {
+        CD.Normal = -CD.Normal;
     }
+    FindContactPoint(obj, current, CD.ContactPoint1, CD.ContactPoint2, CD.ContactPointCount);
     return true;
 }
-bool PhysicsEngine::CirclexCircle(std::shared_ptr<Object> obj, Object* current)
+bool PhysicsEngine::CollisionDetection::CirclexCircle(std::shared_ptr<Object> obj, Object* current)
 {
     //! Comments here
     // Checking if the length of the vector with points the circles points is less than the sum of the radiuses
@@ -122,11 +221,3 @@ bool PhysicsEngine::CirclexCircle(std::shared_ptr<Object> obj, Object* current)
     return false;
 }
 
-glm::vec3 PhysicsEngine::Impulse(RigidBody* rb, glm::vec3&& Force)
-{
-    float& mass = rb->Mass.value<float>();
-    glm::vec3 weight = glm::vec3(0,g.value<float>() * mass,0);
-    glm::vec3 Fnet = Force + SapphireEngine::VectorSum(rb->Forces) - weight;
-    float DeltaTime = 0.2f;
-    return glm::vec3(Fnet * DeltaTime) / mass;
-}
