@@ -29,8 +29,16 @@ bool PhysicsEngine::CollisionDetection::CirclexRectangle(std::shared_ptr<Object>
     return false;
 
 }
+constexpr float VerySmallAmount = 0.0005f;
+bool NearlyEqual(float a, float b)
+{
+    return abs(a - b) < VerySmallAmount;
+}
+bool NearlyEqual(glm::vec2& a, glm::vec2& b)
+{
+    return (glm::distance(a, b) * glm::distance(a, b)) < VerySmallAmount * VerySmallAmount;
+}
 //Thanks to the video by https://www.youtube.com/watch?v=5gDC1GU3Ivg&list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs&index=22
-
 void PhysicsEngine::CollisionDetection::FindContactPoint(std::shared_ptr<Object> obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
 {
     ContactPoint1 = glm::vec2(0);
@@ -52,10 +60,11 @@ void PhysicsEngine::CollisionDetection::FindContactPoint(std::shared_ptr<Object>
             glm::vec2 Cp = glm::vec2(0);
             PointSegmentDistance(CurrentPoint, ObjPoint, ObjNextPoint, DistanceSquared, Cp);
 
-            if(DistanceSquared == minDistanceSquared){
-                if(Cp != ContactPoint1)
+            if(NearlyEqual(DistanceSquared, minDistanceSquared)){
+                if(!NearlyEqual(Cp, ContactPoint1))
                 {
                     ContactPoint2 = Cp;
+                    // ContactPoint2 = current->GetTransform()->Position.value<glm::vec3>() + glm::vec3(ContactPoint2,0);
                     ContactPointCount = 2;
                 }
             }
@@ -63,25 +72,27 @@ void PhysicsEngine::CollisionDetection::FindContactPoint(std::shared_ptr<Object>
                 minDistanceSquared = DistanceSquared;
                 ContactPointCount = 1;
                 ContactPoint1 = Cp;
+                // ContactPoint1 = current->GetTransform()->Position.value<glm::vec3>() - glm::vec3(ContactPoint1,0);
             }
         }
         
     }
     for (size_t i = 0; i < ObjPoints.size(); i++)
     {
-        glm::vec2 ObjPoint = CurrentPoints[i];
+        glm::vec2 ObjPoint = ObjPoints[i];
         for (size_t j = 0; j < CurrentPoints.size(); j++)
         {
-            glm::vec2 CurrentPoints = ObjPoints[j];
-            glm::vec2 ObjNextPoint = ObjPoints[(j+1) % ObjPoints.size()]; // Making sure its inside the points array
+            glm::vec2 CurrentPoint = CurrentPoints[j];
+            glm::vec2 CurrentNextPoint = CurrentPoints[(j+1) % CurrentPoints.size()]; // Making sure its inside the points array
             float DistanceSquared = 0.0f;
             glm::vec2 Cp;
-            PointSegmentDistance(ObjPoint, CurrentPoints, ObjNextPoint, DistanceSquared, Cp);
+            PointSegmentDistance(ObjPoint, CurrentPoint, CurrentNextPoint, DistanceSquared, Cp);
 
-            if(DistanceSquared == minDistanceSquared){
-                if(Cp != ContactPoint1)
+            if(NearlyEqual(DistanceSquared, minDistanceSquared)){
+                if(!NearlyEqual(Cp, ContactPoint1))
                 {
                     ContactPoint2 = Cp;
+                    // ContactPoint2 = current->GetTransform()->Position.value<glm::vec3>() + glm::vec3(ContactPoint2,0);
                     ContactPointCount = 2;
                 }
             }
@@ -89,11 +100,17 @@ void PhysicsEngine::CollisionDetection::FindContactPoint(std::shared_ptr<Object>
                 minDistanceSquared = DistanceSquared;
                 ContactPointCount = 1;
                 ContactPoint1 = Cp;
+                // ContactPoint1 = current->GetTransform()->Position.value<glm::vec3>() - glm::vec3(ContactPoint1,0);
+                
             }
         }
         
     }
-    
+    // std::stringstream ss;
+    // ss << "Contact Point 1: x: " << ContactPoint1.x << ", y: " << ContactPoint1.y;
+    // SapphireEngine::Log(ss.str(), SapphireEngine::Info);
+    // ss << "Contact Point 2: x: " << ContactPoint2.x << ", y: " << ContactPoint2.y;
+    // SapphireEngine::Log(ss.str(), SapphireEngine::Info);
 }
 glm::vec2 PhysicsEngine::CollisionDetection::FindArithmeticMean(std::array<glm::vec2, 4> &Vertices)
 {

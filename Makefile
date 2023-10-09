@@ -456,6 +456,30 @@ src/Engine/Views/SceneEditor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.s
 .PHONY : src/Engine/Views/SceneEditor.cpp.s
 
+src/Graphics/Gizmos.obj: src/Graphics/Gizmos.cpp.obj
+.PHONY : src/Graphics/Gizmos.obj
+
+# target to build an object file
+src/Graphics/Gizmos.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj
+.PHONY : src/Graphics/Gizmos.cpp.obj
+
+src/Graphics/Gizmos.i: src/Graphics/Gizmos.cpp.i
+.PHONY : src/Graphics/Gizmos.i
+
+# target to preprocess a source file
+src/Graphics/Gizmos.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.i
+.PHONY : src/Graphics/Gizmos.cpp.i
+
+src/Graphics/Gizmos.s: src/Graphics/Gizmos.cpp.s
+.PHONY : src/Graphics/Gizmos.s
+
+# target to generate assembly for a file
+src/Graphics/Gizmos.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.s
+.PHONY : src/Graphics/Gizmos.cpp.s
+
 src/Graphics/Grid.obj: src/Graphics/Grid.cpp.obj
 .PHONY : src/Graphics/Grid.obj
 
@@ -891,6 +915,9 @@ help:
 	@echo "... src/Engine/Views/SceneEditor.obj"
 	@echo "... src/Engine/Views/SceneEditor.i"
 	@echo "... src/Engine/Views/SceneEditor.s"
+	@echo "... src/Graphics/Gizmos.obj"
+	@echo "... src/Graphics/Gizmos.i"
+	@echo "... src/Graphics/Gizmos.s"
 	@echo "... src/Graphics/Grid.obj"
 	@echo "... src/Graphics/Grid.i"
 	@echo "... src/Graphics/Grid.s"

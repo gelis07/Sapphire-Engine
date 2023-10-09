@@ -6,7 +6,7 @@ class Object
 {
     public:
         Object(std::string&& Name);
-
+        ~Object();
         void RemoveComponent(unsigned int id);
         void RenderGUI(); // render the object on the ImGUI inspector
         void Inspect();
@@ -34,11 +34,11 @@ class Object
         //Please use these functions because it doesn't have to search for these objects!
         std::shared_ptr<Transform>& GetTransform() {return transform;}
         std::shared_ptr<Renderer>& GetRenderer() {return renderer;} 
+        std::vector<std::shared_ptr<Component>> Components;
     private:
         std::shared_ptr<Transform> transform;
         std::shared_ptr<Renderer> renderer;
         bool m_CalledStart = false;
-        std::vector<std::shared_ptr<Component>> Components;
 };
 
 template <typename T>

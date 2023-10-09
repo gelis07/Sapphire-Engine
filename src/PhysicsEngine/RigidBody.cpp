@@ -73,26 +73,34 @@ bool PhysicsEngine::Body::CollisionDetection(Object* current)
 }
 
 
-float CrossProduct(glm::vec2& v1, glm::vec2& v2){
+float CrossProduct(glm::vec2 v1, glm::vec2 v2){
     return v1.x * v2.y - v1.y * v2.x;
 }
 void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
 {
     Body* bodyA = &current->GetComponent<RigidBody>()->rb;
     Body* bodyB = &obj->GetComponent<RigidBody>()->rb;
+    if(bodyB->Static.value<bool>())
+        current->GetTransform()->Position.value<glm::vec3>() += glm::vec3(-CD.Normal * CD.Depth,0);
+    else if(bodyA->Static.value<bool>())
+        obj->GetTransform()->Position.value<glm::vec3>() += glm::vec3(CD.Normal * CD.Depth,0);
+    else{
+        current->GetTransform()->Position.value<glm::vec3>() += glm::vec3(-CD.Normal * CD.Depth / 2.0f,0);
+        obj->GetTransform()->Position.value<glm::vec3>() += glm::vec3(CD.Normal * CD.Depth / 2.0f,0);
+    } 
     glm::vec3& bodyAPos = current->GetTransform()->Position.value<glm::vec3>();
     glm::vec3& bodyASize = current->GetTransform()->Size.value<glm::vec3>();
     glm::vec3& bodyBPos = obj->GetTransform()->Position.value<glm::vec3>();
     glm::vec3& bodyBSize = obj->GetTransform()->Size.value<glm::vec3>();
     float bodyAInvMass = 1.0f / bodyA->Mass.value<float>();
     float bodyBInvMass = 1.0f / bodyB->Mass.value<float>();
-    float bodyAInvInertia = 1.0f / (1.0f / 12.0f) * bodyA->Mass.value<float>() * (bodyASize.x * bodyASize.x + bodyASize.y * bodyASize.y);
-    float bodyBInvInertia = 1.0f / (1.0f / 12.0f) * bodyB->Mass.value<float>() * (bodyBSize.x * bodyBSize.x + bodyBSize.y * bodyBSize.y);
+    float bodyAInvInertia = 1.0f / ((1.0f / 12.0f) * bodyA->Mass.value<float>() * (bodyASize.x * bodyASize.x + bodyASize.y * bodyASize.y));
+    float bodyBInvInertia = 1.0f / ((1.0f / 12.0f) * bodyB->Mass.value<float>() * (bodyBSize.x * bodyBSize.x + bodyBSize.y * bodyBSize.y));
     if(bodyA->Static.value<bool>()){
         bodyAInvMass = 0.0f;
         bodyAInvInertia = 0.0f;
     }
-    if(bodyA->Static.value<bool>()){
+    if(bodyB->Static.value<bool>()){
         bodyBInvMass = 0.0f;
         bodyBInvInertia = 0.0f;
     }
@@ -102,7 +110,7 @@ void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, Coll
     glm::vec2 contact2 = CD.ContactPoint2;
     int contactCount = CD.ContactPointCount;
 
-    float e = std::min(bodyA->Restitution.value<float>(), bodyA->Restitution.value<float>());
+    float e = std::min(bodyA->Restitution.value<float>(), bodyB->Restitution.value<float>());
     std::array<glm::vec2, 2> contactList;
     std::array<glm::vec2, 2> impulseList;
     std::array<glm::vec2, 2> raList;
@@ -127,9 +135,10 @@ void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, Coll
 
         glm::vec2 raPerp = glm::vec2(-ra.y, ra.x);
         glm::vec2 rbPerp = glm::vec2(-rb.y, rb.x);
-
-        glm::vec2 angularLinearVelocityA = raPerp * glm::vec2(bodyA->AngularVelocity);
-        glm::vec2 angularLinearVelocityB = rbPerp * glm::vec2(bodyB->AngularVelocity);
+        raPerp = glm::normalize(raPerp);
+        rbPerp = glm::normalize(rbPerp);
+        glm::vec2 angularLinearVelocityA = raPerp * bodyA->AngularVelocity.z;
+        glm::vec2 angularLinearVelocityB = rbPerp * bodyB->AngularVelocity.z;
 
         glm::vec2 relativeVelocity = 
             (glm::vec2(bodyB->Velocity) + angularLinearVelocityB) - 
@@ -146,8 +155,8 @@ void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, Coll
         float rbPerpDotN = glm::dot(rbPerp, normal);
 
         float denom = bodyAInvMass + bodyBInvMass + 
-            (raPerpDotN * raPerpDotN) * bodyAInvMass + 
-            (rbPerpDotN * rbPerpDotN) * bodyBInvMass;
+            (raPerpDotN * raPerpDotN) * bodyAInvInertia + 
+            (rbPerpDotN * rbPerpDotN) * bodyBInvInertia;
 
         float j = -(1.0f + e) * contactVelocityMag;
         j /= denom;
@@ -164,11 +173,65 @@ void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, Coll
         glm::vec2 rb = rbList[i];
 
         bodyA->Velocity += glm::vec3(-impulse * bodyAInvMass,0);
-        bodyA->AngularVelocity.z += -CrossProduct(ra, impulse) * bodyAInvInertia;
+        bodyA->AngularVelocity.z += -CrossProduct(glm::normalize(ra), impulse) * bodyAInvInertia;
         bodyB->Velocity += glm::vec3(impulse * bodyBInvMass,0);
         bodyB->AngularVelocity.z += CrossProduct(rb, impulse) * bodyBInvInertia;
+        // {
+        //     std::stringstream ss;
+        //     ss << "Contact Point 1 (ra): x:" << ra.x << ", y: " << ra.y;
+        //     SapphireEngine::Log(ss.str(), SapphireEngine::Info);
+        // }
+        // {
+        //     std::stringstream ss;
+        //     ss << "Contact Point 2 (rb): x:" << rb.x << ", y: " << rb.y;
+        //     SapphireEngine::Log(ss.str(), SapphireEngine::Info);
+        // }
+        // {
+        //     std::stringstream ss;
+        //     ss << "Impulse: x:" << impulse.x << ", y: " << impulse.y;
+        //     SapphireEngine::Log(ss.str(), SapphireEngine::Info);
+        // }
+        SapphireEngine::DrawPointGizmos(glm::vec3(ra,0), glm::vec4(0,1,0,1));
+        SapphireEngine::DrawPointGizmos(glm::vec3(rb,0), glm::vec4(0,0,1,1));
     }
 }
+// void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
+// {
+//     Body* bodyA = &current->GetComponent<RigidBody>()->rb;
+//     Body* bodyB = &obj->GetComponent<RigidBody>()->rb;
+//     if(bodyB-Static.value<bool>())
+//         current->GetTransform()->Position.value<glm::vec3>() += glm::vec3(-CD.Normal * CD.Depth,0);
+//     else if(bodyA-Static.value<bool>())
+//         obj->GetTransform()->Position.value<glm::vec3>() += glm::vec3(CD.Normal * CD.Depth,0);
+//     else{
+//         current->GetTransform()->Position.value<glm::vec3>() += glm::vec3(-CD.Normal * CD.Depth / 2.0f,0);
+//         obj->GetTransform()->Position.value<glm::vec3>() += glm::vec3(CD.Normal * CD.Depth / 2.0f,0);
+//     } 
+//     glm::vec3& bodyAPos = current->GetTransform()->Position.value<glm::vec3>();
+//     glm::vec3& bodyASize = current->GetTransform()->Size.value<glm::vec3>();
+//     glm::vec3& bodyBPos = obj->GetTransform()->Position.value<glm::vec3>();
+//     glm::vec3& bodyBSize = obj->GetTransform()->Size.value<glm::vec3>();
+//     float bodyAInvMass = 1.0f / bodyA->Mass.value<float>();
+//     float bodyBInvMass = 1.0f / bodyB->Mass.value<float>();
+//     float bodyAInvInertia = 1.0f / ((1.0f / 12.0f) * bodyA->Mass.value<float>() * (bodyASize.x * bodyASize.x + bodyASize.y * bodyASize.y));
+//     float bodyBInvInertia = 1.0f / ((1.0f / 12.0f) * bodyB->Mass.value<float>() * (bodyBSize.x * bodyBSize.x + bodyBSize.y * bodyBSize.y));
+//     if(bodyA->Static.value<bool>()){
+//         bodyAInvMass = 0.0f;
+//         bodyAInvInertia = 0.0f;
+//     }
+//     if(bodyB->Static.value<bool>()){
+//         bodyBInvMass = 0.0f;
+//         bodyBInvInertia = 0.0f;
+//     }
+
+//     glm::vec2 normal = CD.Normal;
+//     glm::vec2 contact1 = CD.ContactPoint1;
+//     glm::vec2 contact2 = CD.ContactPoint2;
+//     int contactCount = CD.ContactPointCount;
+
+//     float Torque = bodyA->Mass.value<float>() * PhysicsEngine::CollisionDetection::g.value<float>() * (contact1.x - bodyAPos.x);
+//     bodyA->AngularAccelaration.z += Torque * bodyAInvInertia; 
+// }
 
 void PhysicsEngine::Body::OnCollision(Object* current, Object* obj, CollisionData&& CD)
 {

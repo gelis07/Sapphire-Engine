@@ -1,9 +1,6 @@
 #include "Grid.h"
 #include "Graphics/ShaderFunc.h"
 
-
-
-
 void Grid::Init()
 {
     GLCall(glGenVertexArrays(1, &GridVA));

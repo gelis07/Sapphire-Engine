@@ -11,6 +11,10 @@ Object::Object(std::string &&Name)
 {
     this->Name = Name;
 }
+Object::~Object()
+{
+    Components.clear();
+}
 void Object::RemoveComponent(unsigned int id)
 {
     Components.erase(Components.begin() + id);

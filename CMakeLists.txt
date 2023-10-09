@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(Sapphire-Engine
     src/main.cpp
     src/Graphics/Shapes.cpp
+    src/Graphics/Gizmos.cpp
     src/Engine/Scenes.cpp
     src/Engine/Engine.cpp
     src/Engine/Views/PlayMode.cpp
@@ -77,4 +78,5 @@ set_target_properties(Sapphire-Engine PROPERTIES
 # Specify the CMake generator for GCC
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-dev")
+    set(CMAKE_CXX_FLAGS "-mwindows")
 endif()

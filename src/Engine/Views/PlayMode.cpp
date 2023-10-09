@@ -76,8 +76,8 @@ void PlayMode::Render(std::string& MainPath)
         );
 
         std::string Label;
-        if (Paused){ Label = "Play"; }
-        else{ Label = "Pause"; }
+        if (!GameRunning){ Label = "Play"; }
+        else{ Label = "Stop"; }
         ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2, 20));
         // Set the ImGui Button to play the game
         if (ImGui::Button(Label.c_str()))
@@ -85,12 +85,21 @@ void PlayMode::Render(std::string& MainPath)
             if(m_ActiveScene->SceneFile == ""){
                 ImGui::OpenPopup("Save Menu");
             }else{
-                if(Paused) m_ActiveScene->Save(m_ActiveScene->SceneFile);
+                if(!GameRunning) m_ActiveScene->Save(m_ActiveScene->SceneFile);
 
                 if(CheckForErrors())
-                    Paused = !Paused;
+                    GameRunning = !GameRunning;
                 else
                     SapphireEngine::Log("Can't run program with an active lua script with an error!", SapphireEngine::Error);
+            }
+        }
+        if(GameRunning)
+        {
+            ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - 100, 20));
+            // Set the ImGui Button to play the game
+            if (ImGui::Button("Pause"))
+            {
+                Paused = !Paused;
             }
         }
         if (ImGui::BeginPopup("Save Menu"))
@@ -100,7 +109,7 @@ void PlayMode::Render(std::string& MainPath)
             {
                 if(CheckForErrors()){
                     m_ActiveScene->Save(std::string(m_SceneFileName) + ".scene");
-                    Paused = !Paused;
+                    GameRunning = !GameRunning;
                 }
                 else
                     SapphireEngine::Log("Can't run program with an active lua script with an error!", SapphireEngine::Error);
@@ -121,24 +130,25 @@ void PlayMode::Render(std::string& MainPath)
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
-    if(Paused && !m_Start){
+    if(!GameRunning && !m_Start){
         //This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
         //The start functions get called
         m_ActiveScene->Load(m_ActiveScene->SceneFile);
         m_Start = true;
         RunTime::Time = 0.0f;
+        Paused = false;
     } 
-    if(Paused){
+    if(!GameRunning){
         for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
         {
             RunTime::Render(m_ActiveScene->Objects[i], CameraObject);
         }
     }
-    if(!Paused){
+    if(GameRunning){
         RunTime::Run(m_ActiveScene, CameraObject, Engine::Get().GetDeltaTime());
     }
 
     //Changing the start bool to false here so all the start functions get executed
-    if(!Paused) m_Start = false;
+    if(GameRunning) m_Start = false;
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
 }

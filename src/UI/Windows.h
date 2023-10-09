@@ -19,6 +19,7 @@ class Windows{
         void LogWindow();
         void ThemeMaker();
         void TestWindow();
+        void PerformanceWindow();
         void InitWindow(std::string&& WindowName, bool state = true);
         void SetWindowState(std::string&& WindowName, bool state);
         bool* GetWindowState(std::string&& WindowName);

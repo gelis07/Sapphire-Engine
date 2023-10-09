@@ -1,3 +1,3 @@
 "D:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\Sapphire-Engine.dir/objects.a
 C:\mingw64\bin\ar.exe qc CMakeFiles\Sapphire-Engine.dir/objects.a @CMakeFiles\Sapphire-Engine.dir\objects1.rsp
-C:\mingw64\bin\g++.exe  -Wno-dev -g -Wl,--whole-archive CMakeFiles\Sapphire-Engine.dir/objects.a -Wl,--no-whole-archive -o C:\Gelis\Programs\Sapphire-Engine\bin\Sapphire-Engine.exe -Wl,--out-implib,libSapphire-Engine.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Sapphire-Engine.dir\linkLibs.rsp
+C:\mingw64\bin\g++.exe -mwindows -g -Wl,--whole-archive CMakeFiles\Sapphire-Engine.dir/objects.a -Wl,--no-whole-archive -o C:\Gelis\Programs\Sapphire-Engine\bin\Sapphire-Engine.exe -Wl,--out-implib,libSapphire-Engine.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\Sapphire-Engine.dir\linkLibs.rsp

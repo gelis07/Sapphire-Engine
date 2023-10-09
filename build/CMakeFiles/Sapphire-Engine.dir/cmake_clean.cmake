@@ -30,6 +30,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj.d"
   "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj"
   "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj.d"
+  "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj"
+  "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj.d"
   "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj"
   "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj.d"
   "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj"

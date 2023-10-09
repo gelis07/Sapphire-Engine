@@ -7,7 +7,8 @@ class PlayMode{
     public:
         void Init(Scene* activeScene);
         void Render(std::string& MainPath);
-        bool Paused = true;
+        bool GameRunning = false;
+        bool Paused = false;
         std::shared_ptr<Object> CameraObject;
     private:
         unsigned int m_Texture;

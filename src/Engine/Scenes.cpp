@@ -40,10 +40,6 @@ void Scene::Load(const std::string FilePath)
     nlohmann::json Data;
     stream >> Data;
     stream.close();
-    for (auto &&object : Objects)
-    {
-        object->GetComponents().clear();
-    }
     Objects.clear();
     for (size_t i = 0; i < Data.size(); i++)
     {
@@ -69,28 +65,23 @@ void Scene::Load(const std::string FilePath)
             //! Got to find a better way to handle this!
             if(element.key() == "Renderer")
             {
-                Renderer* comp = new Renderer(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(), element.value()["path"] != "");
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Renderer>(dynamic_cast<Renderer*>(comp))));
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(), element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }
             else if(element.key() == "Transform")
             {
-                Transform* comp = new Transform(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }else if(element.key() == "Camera") {
-                Camera* comp = new Camera(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Camera>(dynamic_cast<Camera*>(comp))));
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Camera>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
                 shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader);
                 shape->Wireframe() = true;
                 Engine::Get().GetPlay().CameraObject = obj;
             }
             else if(element.key() == "Rigidbody") {
-                RigidBody* comp = new RigidBody(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "");
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<RigidBody>(dynamic_cast<RigidBody* >(comp))));
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<RigidBody>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
-
             }
             else
             {

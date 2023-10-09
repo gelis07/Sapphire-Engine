@@ -17,9 +17,10 @@ Component::~Component()
 
     for (auto &&Variable : Variables)
     {
-        delete Variable.second;
+        delete(Variable.second);
     }
     Variables.clear();
+    lua_close(L);
 }
 
 void Component::ExecuteFunction(std::string Name)
@@ -307,15 +308,15 @@ void Renderer::Render(std::shared_ptr<Object> obj, bool&& IsSelected ,glm::vec3 
     if(shape == nullptr) return;
     // Here it renders the object's outline to indicate that the current object is selected
     if(IsSelected){
-        shape->Render(obj, CameraPos ,CameraZoom,true, shape->Wireframe(), IsViewport);
+        shape->Render(obj.get(), CameraPos ,CameraZoom,true, shape->Wireframe(), IsViewport);
     }
-    shape->Render(obj, CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
+    shape->Render(obj.get(), CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
 }
 
 
 void RigidBody::Simulate(Object *current, const float& DeltaTime) {
     rb.Update(DeltaTime);
-    // rb.CollisionDetection(current);
+    rb.CollisionDetection(current);
 }
 
 int RigidBody::AddForce(lua_State *L) {

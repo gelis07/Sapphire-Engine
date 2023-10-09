@@ -32,7 +32,14 @@ Shapes::Shape::Shape(unsigned int sh) : m_Shader(sh)
     GLCall(glBindVertexArray(0));
 }
 
-void Shapes::Shape::RenderShape(std::shared_ptr<Object>& Object,std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport)
+Shapes::Shape::~Shape()
+{
+    GLCall(glDeleteVertexArrays(1, &m_VertexArray));
+    GLCall(glDeleteBuffers(1, &m_IndexBuffer));
+    GLCall(glDeleteBuffers(1, &m_VertexBuffer));
+}
+
+void Shapes::Shape::RenderShape(Object* Object,std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport)
 {
     // int width, height;
     // glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
@@ -101,7 +108,7 @@ void Shapes::Shape::RenderShape(std::shared_ptr<Object>& Object,std::vector<Vert
 
 //& Should (almost a must) create a function to abstarct this repetetive code.
 //? Maybe make it the default functon for the shape class?
-void Shapes::Rectangle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
+void Shapes::Rectangle::Render(Object* Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
     std::array<glm::vec2, 4> RectPoints;
     glm::vec3& ObjectSize = Object->GetComponent<Transform>()->Size.value<glm::vec3>();
     //Getting each point of the rectangle
@@ -129,7 +136,7 @@ void Shapes::Rectangle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &
             
 }
 
-void Shapes::Circle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
+void Shapes::Circle::Render(Object* Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame, bool Viewport){
     std::array<glm::vec2, 4> RectPoints;
     glm::vec3& ObjectSize = Object->GetComponent<Transform>()->Size.value<glm::vec3>();
     glm::vec3& ObjectPos = Object->GetComponent<Transform>()->Position.value<glm::vec3>();
@@ -171,7 +178,7 @@ void Shapes::Circle::Render(std::shared_ptr<Object>& Object,const glm::vec3 &Cam
         coordinates has a length less than the square's width/2. To study the code just head to Shaders/Circle.glsl .*/
 }
 
-void Shapes::CameraGizmo::Render(std::shared_ptr<Object>& Object,const glm::vec3 &CamPos, float CameraZoom, bool OutLine, bool WireFrame, bool Viewport)
+void Shapes::CameraGizmo::Render(Object* Object,const glm::vec3 &CamPos, float CameraZoom, bool OutLine, bool WireFrame, bool Viewport)
 {
     std::array<glm::vec2, 4> RectPoints;
     glm::vec3& ObjectSize = Object->GetComponent<Transform>()->Size.value<glm::vec3>();

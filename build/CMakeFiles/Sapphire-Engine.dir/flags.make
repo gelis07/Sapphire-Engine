@@ -6,13 +6,15 @@ CXX_DEFINES =
 
 CXX_INCLUDES = @CMakeFiles/Sapphire-Engine.dir/includes_CXX.rsp
 
-CXX_FLAGS =  -Wno-dev -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17
+CXX_FLAGS = -mwindows -g -std=gnu++17 -fdiagnostics-color=always -g -std=c++17
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx.gch_OPTIONS = -Winvalid-pch;-x;c++-header;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/main.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
+
+# PCH options: CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 
 # PCH options: CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.obj_OPTIONS = -Winvalid-pch;-include;C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx
 

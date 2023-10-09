@@ -38,31 +38,31 @@
 			{
 				"command" : 1,
 				"file" : 0,
-				"line" : 49,
+				"line" : 50,
 				"parent" : 0
 			},
 			{
 				"command" : 2,
 				"file" : 0,
-				"line" : 54,
+				"line" : 55,
 				"parent" : 0
 			},
 			{
 				"command" : 3,
 				"file" : 0,
-				"line" : 63,
+				"line" : 64,
 				"parent" : 0
 			},
 			{
 				"command" : 4,
 				"file" : 0,
-				"line" : 43,
+				"line" : 44,
 				"parent" : 0
 			},
 			{
 				"command" : 5,
 				"file" : 0,
-				"line" : 69,
+				"line" : 70,
 				"parent" : 0
 			}
 		]
@@ -73,7 +73,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : " -Wno-dev -g -std=gnu++17"
+					"fragment" : "-mwindows -g -std=gnu++17"
 				},
 				{
 					"backtrace" : 4,
@@ -127,7 +127,7 @@
 			"compileCommandFragments" : 
 			[
 				{
-					"fragment" : " -Wno-dev -g -std=gnu++17"
+					"fragment" : "-mwindows -g -std=gnu++17"
 				},
 				{
 					"backtrace" : 4,
@@ -202,7 +202,8 @@
 				26,
 				27,
 				28,
-				29
+				29,
+				30
 			]
 		}
 	],
@@ -212,7 +213,7 @@
 		"commandFragments" : 
 		[
 			{
-				"fragment" : "-Wno-dev -g",
+				"fragment" : "-mwindows -g",
 				"role" : "flags"
 			},
 			{
@@ -298,14 +299,15 @@
 				26,
 				27,
 				28,
-				29
+				29,
+				30
 			]
 		},
 		{
 			"name" : "Precompile Header File",
 			"sourceIndexes" : 
 			[
-				30
+				31
 			]
 		}
 	],
@@ -327,6 +329,12 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 1,
 			"path" : "src/Graphics/Shapes.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 1,
+			"path" : "src/Graphics/Gizmos.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

@@ -2,7 +2,6 @@
 #include "Engine/Engine.h"
 #include "FileExplorer/FileExplorer.h"
 
-
 SapphireEngine::String Windows::ThemeName("ThemeName", UserPreferences);
 
 void Windows::Init(std::string&& Path){
@@ -33,6 +32,7 @@ void Windows::Init(std::string&& Path){
     ImGuiStyle& style = ImGui::GetStyle();
 
     InitWindow("Preferences", false);
+    InitWindow("Performance", false);
     InitWindow("Settings", false);
     InitWindow("Project Settings", false);
 
@@ -70,10 +70,11 @@ void Windows::LogWindow()
 {
     if(!(*GetWindowState("Logs"))) return;
     std::string windowName = "Logs";
-    if (SapphireEngine::Logs.size() <= 999) {
+    if (SapphireEngine::Logs.size() <= 50) {
         windowName += " (" + std::to_string(SapphireEngine::Logs.size()) + ")";
     } else {
-        windowName += " (999+)";
+        windowName += " (50+)";
+        // SapphireEngine::Logs.erase(SapphireEngine::Logs.begin(), SapphireEngine::Logs.begin() + (50 - SapphireEngine::Logs.size()));
     }
     windowName += "###LogWindow";
     ImGui::Begin(windowName.c_str(), GetWindowState("Logs"));
@@ -250,9 +251,13 @@ void Windows::EditMenu()
         {
             SetWindowState("Project Settings", true);
         }
+        if(ImGui::Button("Performance"))
+        {
+            SetWindowState("Performance", true);
+        }
         ImGui::EndMenu();
     }
-
+    PerformanceWindow();
     PreferencesWindow();
     ProjectSettings();
     Settings();
@@ -429,4 +434,12 @@ void Windows::ThemeMaker()
 void Windows::TestWindow()
 {
 
+}
+
+void Windows::PerformanceWindow()
+{
+    if(!(*GetWindowState("Performance"))) return;
+    ImGui::Begin("Performance Profiler");
+    ImGui::Text(("Delta time: " + std::to_string(Engine::Get().GetDeltaTime()) + " (FPS: " + std::to_string(10.0f / Engine::Get().GetDeltaTime()) + ")").c_str());
+    ImGui::End();
 }

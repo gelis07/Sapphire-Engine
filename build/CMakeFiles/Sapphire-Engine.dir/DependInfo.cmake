@@ -36,6 +36,8 @@ set(CMAKE_DEPENDS_DEPENDENCY_FILES
   "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx" "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj.d"
   "C:/Gelis/Programs/Sapphire-Engine/src/Engine/Views/SceneEditor.cpp" "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj.d"
   "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx" "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj.d"
+  "C:/Gelis/Programs/Sapphire-Engine/src/Graphics/Gizmos.cpp" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj.d"
+  "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj.d"
   "C:/Gelis/Programs/Sapphire-Engine/src/Graphics/Grid.cpp" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj.d"
   "C:/Gelis/Programs/Sapphire-Engine/build/CMakeFiles/Sapphire-Engine.dir/cmake_pch.hxx" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj.d"
   "C:/Gelis/Programs/Sapphire-Engine/src/Graphics/Shapes.cpp" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj" "gcc" "CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj.d"

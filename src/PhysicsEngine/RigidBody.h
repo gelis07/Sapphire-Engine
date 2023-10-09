@@ -25,6 +25,7 @@ namespace PhysicsEngine{
             glm::vec3 Velocity = glm::vec3(0);
             glm::vec3 Accelaration = glm::vec3(0);
             glm::vec3 AngularVelocity = glm::vec3(0);
+            glm::vec3 AngularAccelaration = glm::vec3(0);
             glm::vec3 Force = glm::vec3(0);
     };
 }
