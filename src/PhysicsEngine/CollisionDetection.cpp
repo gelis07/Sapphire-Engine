@@ -44,8 +44,16 @@ void PhysicsEngine::CollisionDetection::FindContactPoint(std::shared_ptr<Object>
     ContactPoint1 = glm::vec2(0);
     ContactPoint2 = glm::vec2(0);
     ContactPointCount = 0;
+    glm::vec2 CurrentPos = glm::vec2(current->GetTransform()->Position.value<glm::vec3>());
+    glm::vec2 ObjPos = glm::vec2(obj->GetTransform()->Position.value<glm::vec3>());
     std::array<glm::vec2, 4> CurrentPoints = ((Shapes::Rectangle*)(current->GetRenderer()->shape.get()))->Points;
     std::array<glm::vec2, 4> ObjPoints = ((Shapes::Rectangle*)(obj->GetRenderer()->shape.get()))->Points;
+    for (size_t i = 0; i < 4; i++)
+    {
+        CurrentPoints[i] += CurrentPos;
+        ObjPoints[i] += ObjPos;
+    }
+    
 
     float minDistanceSquared = INFINITY;
 
@@ -140,6 +148,7 @@ void PhysicsEngine::CollisionDetection::PointSegmentDistance(glm::vec2 p, glm::v
     
     float dx = p.x - cp.x;
     float dy = p.y - cp.y;
+
     distanceSquared = dx * dx + dy * dy;
 }
 

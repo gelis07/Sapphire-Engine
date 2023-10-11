@@ -15,7 +15,7 @@ void StartUp(){
     glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_TRUE);
-    
+    glfwWindowHint(GLFW_FOCUSED, GLFW_FALSE);
     GLFWwindow* logo_window = glfwCreateWindow(595, 61*3, "Logo", NULL, NULL);
     if (!logo_window)
     {

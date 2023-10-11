@@ -22,6 +22,14 @@ namespace SapphireEngine
         // value = std::min(std::max(min,value) , max);
         return std::min(std::max(min,value) , max);
     }
+    static glm::vec4 RandomColor(){
+        std::random_device rd;
+        std::mt19937 gen(rd());  // Mersenne Twister PRNG
+
+        // Define a distribution for floating-point numbers between 0.0 and 1.0
+        std::uniform_real_distribution<float> dist(0.0, 1.0);
+        return glm::vec4(dist(gen), dist(gen), dist(gen), 1);
+    }
     static void Log(std::string&& log, SapphireEngine::LogType&& type){
         std::pair<std::string, SapphireEngine::LogType> NewLog;
         NewLog.first = log;

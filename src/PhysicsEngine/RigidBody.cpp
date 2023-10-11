@@ -165,7 +165,7 @@ void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, Coll
         glm::vec2 impulse = j * normal;
         impulseList[i] = impulse;
     }
-
+    glm::vec4 Color = SapphireEngine::RandomColor();
     for(int i = 0; i < contactCount; i++)
     {
         glm::vec2 impulse = impulseList[i];
@@ -191,8 +191,8 @@ void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, Coll
         //     ss << "Impulse: x:" << impulse.x << ", y: " << impulse.y;
         //     SapphireEngine::Log(ss.str(), SapphireEngine::Info);
         // }
-        SapphireEngine::DrawPointGizmos(glm::vec3(ra,0), glm::vec4(0,1,0,1));
-        SapphireEngine::DrawPointGizmos(glm::vec3(rb,0), glm::vec4(0,0,1,1));
+        // SapphireEngine::DrawPointGizmos(glm::vec3(ra,0), Color);
+        // SapphireEngine::DrawPointGizmos(glm::vec3(rb,0), Color);
     }
 }
 // void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
