@@ -21,7 +21,7 @@ Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution",
 void PhysicsEngine::Body::Update(const float &DeltaTime)
 {
     if(Static.value<bool>()) return;
-    Force = glm::vec3(0, PhysicsEngine::CollisionDetection::g.value<float>(), 0);
+    Force = glm::vec3(0, PhysicsEngine::CollisionDetection::g.value<float>(), 0) * Mass.value<float>();
     Accelaration = (Force/Mass.value<float>());
     if(std::isnan(Accelaration.x) || std::isnan(Accelaration.y) || std::isnan(Accelaration.z))
         Accelaration = glm::vec3(0);
@@ -35,40 +35,40 @@ bool PhysicsEngine::Body::CollisionDetection(Object* current)
 {
     glm::vec2 Normal;
     float Depth;
+    CollisionData CD;
     if(ShapeType == Shapes::RectangleT){
         for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
             if(object->Name == "MainCamera" || object.get() == current) continue;
             if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-                CollisionData CD;
                 if(PhysicsEngine::CollisionDetection::RectanglexRectangle(object, current,CD)){
                     OnCollisionRotation(current, object.get(), std::move(CD));
                     break;
                 }
             }
-            // else{
-            //     if(PhysicsEngine::CollisionDetection::CirclexRectangle(object, current)){
-            //         OnCollision(current, object.get());
-            //         break;
-            //     }
-            // }
+            else{
+                if(PhysicsEngine::CollisionDetection::CirclexRectangle(object.get(), current,CD)){
+                    OnCollisionRotation(current, object.get(), std::move(CD));
+                    break;
+                }
+            }
         }
     }
-    // else{
-    //     for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-    //         if(object->Name == "MainCamera" || object.get() == current) continue;
-    //         if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-    //             if(PhysicsEngine::CollisionDetection::CirclexRectangle(object, current)){
-    //                 OnCollision(current, object.get());
-    //                 break;
-    //             }
-    //         }else{
-    //             if(PhysicsEngine::CollisionDetection::CirclexCircle(object, current)){
-    //                 OnCollision(current, object.get());
-    //                 break;
-    //             }
-    //         }
-    //     }
-    // }
+    else{
+        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
+            if(object->Name == "MainCamera" || object.get() == current) continue;
+            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+                if(PhysicsEngine::CollisionDetection::CirclexRectangle(current, object.get(),CD)){
+                    OnCollisionRotation(current, object.get(), std::move(CD));
+                    break;
+                }
+            }else{
+                if(PhysicsEngine::CollisionDetection::CirclexCircle(object, current, CD)){
+                    OnCollisionRotation(current, object.get(), std::move(CD));
+                    break;
+                }
+            }
+        }
+    }
     return false;
 }
 
@@ -175,7 +175,7 @@ void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, Coll
         bodyA->Velocity += glm::vec3(-impulse * bodyAInvMass,0);
         bodyA->AngularVelocity.z += -CrossProduct(glm::normalize(ra), impulse) * bodyAInvInertia;
         bodyB->Velocity += glm::vec3(impulse * bodyBInvMass,0);
-        bodyB->AngularVelocity.z += CrossProduct(rb, impulse) * bodyBInvInertia;
+        bodyB->AngularVelocity.z += CrossProduct(glm::normalize(rb), impulse) * bodyBInvInertia;
         // {
         //     std::stringstream ss;
         //     ss << "Contact Point 1 (ra): x:" << ra.x << ", y: " << ra.y;
