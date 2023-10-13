@@ -124,7 +124,6 @@ void Shapes::Rectangle::Render(Object* Object,const glm::vec3 &CamPos ,float Cam
     Points[1] = glm::vec2((RectPoints[1].x) * cos((ObjectRotation)) + (RectPoints[1].y) * (-sin((ObjectRotation))), (RectPoints[1].x) * sin((ObjectRotation)) + (RectPoints[1].y) * cos((ObjectRotation)));
     Points[0] = glm::vec2((RectPoints[0].x) * cos((ObjectRotation)) + (RectPoints[0].y) * (-sin((ObjectRotation))), (RectPoints[0].x) * sin((ObjectRotation)) + (RectPoints[0].y) * cos((ObjectRotation)));
 
-
     RenderShape(Object,{
                 {Points[0].x , Points[0].y},
                 {Points[1].x, Points[1].y},

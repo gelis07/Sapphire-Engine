@@ -53,7 +53,7 @@ bool PhysicsEngine::Body::CollisionDetection(Object* current)
             }
             else{
                 if(PhysicsEngine::CollisionDetection::CirclexRectangle(object.get(), current,CD)){
-                    OnCollisionRotation(current, object.get(), std::move(CD));
+                    OnCollisionRotation(object.get(), current, std::move(CD));
                     break;
                 }
             }

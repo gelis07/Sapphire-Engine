@@ -78,15 +78,7 @@ bool PhysicsEngine::CollisionDetection::CirclexRectangle(Object* obj, Object* cu
     CD.ContactPointCount = 1;
     return true;
 }
-constexpr float VerySmallAmount = 0.0005f;
-bool NearlyEqual(float a, float b)
-{
-    return abs(a - b) < VerySmallAmount;
-}
-bool NearlyEqual(glm::vec2& a, glm::vec2& b)
-{
-    return (glm::distance(a, b) * glm::distance(a, b)) < VerySmallAmount * VerySmallAmount;
-}
+
 //Thanks to the video by https://www.youtube.com/watch?v=5gDC1GU3Ivg&list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs&index=22
 void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<Object> obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
 {
@@ -121,7 +113,6 @@ void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<
                 if(!NearlyEqual(Cp, ContactPoint1))
                 {
                     ContactPoint2 = Cp;
-                    // ContactPoint2 = current->GetTransform()->Position.value<glm::vec3>() + glm::vec3(ContactPoint2,0);
                     ContactPointCount = 2;
                 }
             }
@@ -129,7 +120,6 @@ void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<
                 minDistanceSquared = DistanceSquared;
                 ContactPointCount = 1;
                 ContactPoint1 = Cp;
-                // ContactPoint1 = current->GetTransform()->Position.value<glm::vec3>() - glm::vec3(ContactPoint1,0);
             }
         }
         
@@ -149,7 +139,6 @@ void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<
                 if(!NearlyEqual(Cp, ContactPoint1))
                 {
                     ContactPoint2 = Cp;
-                    // ContactPoint2 = current->GetTransform()->Position.value<glm::vec3>() + glm::vec3(ContactPoint2,0);
                     ContactPointCount = 2;
                 }
             }
@@ -157,17 +146,11 @@ void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<
                 minDistanceSquared = DistanceSquared;
                 ContactPointCount = 1;
                 ContactPoint1 = Cp;
-                // ContactPoint1 = current->GetTransform()->Position.value<glm::vec3>() - glm::vec3(ContactPoint1,0);
                 
             }
         }
         
     }
-    // std::stringstream ss;
-    // ss << "Contact Point 1: x: " << ContactPoint1.x << ", y: " << ContactPoint1.y;
-    // SapphireEngine::Log(ss.str(), SapphireEngine::Info);
-    // ss << "Contact Point 2: x: " << ContactPoint2.x << ", y: " << ContactPoint2.y;
-    // SapphireEngine::Log(ss.str(), SapphireEngine::Info);
 }
 glm::vec2 PhysicsEngine::CollisionDetection::FindPolygonCircleContactPoint(const glm::vec2 &CirclePosition, const float &Radius, const glm::vec2 &PolygonPosition, const std::array<glm::vec2, 4> &PolygonPoints)
 {
@@ -189,6 +172,16 @@ glm::vec2 PhysicsEngine::CollisionDetection::FindPolygonCircleContactPoint(const
     }
 
     return ContactPoint;
+}
+constexpr float VerySmallAmount = 0.0005f;
+bool PhysicsEngine::CollisionDetection::NearlyEqual(float a, float b)
+{
+    return abs(a - b) < VerySmallAmount;
+
+}
+bool PhysicsEngine::CollisionDetection::NearlyEqual(glm::vec2 &a, glm::vec2 &b)
+{
+    return (glm::distance(a, b) * glm::distance(a, b)) < VerySmallAmount * VerySmallAmount;
 }
 int PhysicsEngine::CollisionDetection::FindClosestPointOnPolygon(const glm::vec2 &Position, std::array<glm::vec2, 4> Points)
 {
