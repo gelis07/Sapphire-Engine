@@ -67,8 +67,8 @@ bool PhysicsEngine::CollisionDetection::CirclexRectangle(Object* obj, Object* cu
         CD.Depth = AxisDepth;
         CD.Normal = AxisProj;
     }
-    CD.Depth /= glm::length(CD.Normal);
-    CD.Normal = glm::normalize(CD.Normal);
+    // CD.Depth /= glm::length(CD.Normal);
+    // CD.Normal = glm::normalize(CD.Normal);
     glm::vec2 Direction = Obj1Position - Obj2Position;
     if(glm::dot(Direction, CD.Normal) < 0.0f)
     {
@@ -345,11 +345,11 @@ bool PhysicsEngine::CollisionDetection::CirclexCircle(std::shared_ptr<Object> ob
     // Checking if the length of the vector with points the circles points is less than the sum of the radiuses
     glm::vec2 DistanceVec(current->GetTransform()->Position.value<glm::vec3>().x - obj->GetTransform()->Position.value<glm::vec3>().x, current->GetTransform()->Position.value<glm::vec3>().y - obj->GetTransform()->Position.value<glm::vec3>().y);
     float Distance = SapphireEngine::LengthVec(DistanceVec);
-    float radii = obj->GetTransform()->Size.value<glm::vec3>().x / 2.0f + current->GetTransform()->Size.value<glm::vec3>().x / 2.0f;
+    float radii = obj->GetTransform()->Size.value<glm::vec3>().x / 2.0f + current->GetTransform()->Size.value<glm::vec3>().x / 2.0f; // GetSize().x/2 Basically refers to the radius
     CD.ContactPoint1 = glm::normalize(DistanceVec) * current->GetTransform()->Size.value<glm::vec3>().x / 2.0f;
     CD.ContactPointCount = 1;
     CD.Normal = glm::normalize(glm::vec2(obj->GetTransform()->Position.value<glm::vec3>() - current->GetTransform()->Position.value<glm::vec3>()));
     CD.Depth = radii - Distance;
-    return Distance < radii; // GetSize().x/2 Basically refers to the radius
+    return Distance < radii; 
 }
 

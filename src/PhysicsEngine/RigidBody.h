@@ -21,6 +21,9 @@ namespace PhysicsEngine{
             SapphireEngine::Bool Static;
             SapphireEngine::Float Mass;
             SapphireEngine::Float Restitution;
+            SapphireEngine::Float StaticFriction;
+            SapphireEngine::Float DynamicFriction;
+
             float Inertia;
             glm::vec3 Velocity = glm::vec3(0);
             glm::vec3 Accelaration = glm::vec3(0);
