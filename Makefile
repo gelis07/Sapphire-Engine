@@ -456,30 +456,6 @@ src/Engine/Views/SceneEditor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.s
 .PHONY : src/Engine/Views/SceneEditor.cpp.s
 
-src/Graphics/Gizmos.obj: src/Graphics/Gizmos.cpp.obj
-.PHONY : src/Graphics/Gizmos.obj
-
-# target to build an object file
-src/Graphics/Gizmos.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.obj
-.PHONY : src/Graphics/Gizmos.cpp.obj
-
-src/Graphics/Gizmos.i: src/Graphics/Gizmos.cpp.i
-.PHONY : src/Graphics/Gizmos.i
-
-# target to preprocess a source file
-src/Graphics/Gizmos.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.i
-.PHONY : src/Graphics/Gizmos.cpp.i
-
-src/Graphics/Gizmos.s: src/Graphics/Gizmos.cpp.s
-.PHONY : src/Graphics/Gizmos.s
-
-# target to generate assembly for a file
-src/Graphics/Gizmos.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Gizmos.cpp.s
-.PHONY : src/Graphics/Gizmos.cpp.s
-
 src/Graphics/Grid.obj: src/Graphics/Grid.cpp.obj
 .PHONY : src/Graphics/Grid.obj
 
@@ -503,6 +479,150 @@ src/Graphics/Grid.s: src/Graphics/Grid.cpp.s
 src/Graphics/Grid.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.s
 .PHONY : src/Graphics/Grid.cpp.s
+
+src/Graphics/Renderer/FrameBuffer.obj: src/Graphics/Renderer/FrameBuffer.cpp.obj
+.PHONY : src/Graphics/Renderer/FrameBuffer.obj
+
+# target to build an object file
+src/Graphics/Renderer/FrameBuffer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/FrameBuffer.cpp.obj
+.PHONY : src/Graphics/Renderer/FrameBuffer.cpp.obj
+
+src/Graphics/Renderer/FrameBuffer.i: src/Graphics/Renderer/FrameBuffer.cpp.i
+.PHONY : src/Graphics/Renderer/FrameBuffer.i
+
+# target to preprocess a source file
+src/Graphics/Renderer/FrameBuffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/FrameBuffer.cpp.i
+.PHONY : src/Graphics/Renderer/FrameBuffer.cpp.i
+
+src/Graphics/Renderer/FrameBuffer.s: src/Graphics/Renderer/FrameBuffer.cpp.s
+.PHONY : src/Graphics/Renderer/FrameBuffer.s
+
+# target to generate assembly for a file
+src/Graphics/Renderer/FrameBuffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/FrameBuffer.cpp.s
+.PHONY : src/Graphics/Renderer/FrameBuffer.cpp.s
+
+src/Graphics/Renderer/IndexBuffer.obj: src/Graphics/Renderer/IndexBuffer.cpp.obj
+.PHONY : src/Graphics/Renderer/IndexBuffer.obj
+
+# target to build an object file
+src/Graphics/Renderer/IndexBuffer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/IndexBuffer.cpp.obj
+.PHONY : src/Graphics/Renderer/IndexBuffer.cpp.obj
+
+src/Graphics/Renderer/IndexBuffer.i: src/Graphics/Renderer/IndexBuffer.cpp.i
+.PHONY : src/Graphics/Renderer/IndexBuffer.i
+
+# target to preprocess a source file
+src/Graphics/Renderer/IndexBuffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/IndexBuffer.cpp.i
+.PHONY : src/Graphics/Renderer/IndexBuffer.cpp.i
+
+src/Graphics/Renderer/IndexBuffer.s: src/Graphics/Renderer/IndexBuffer.cpp.s
+.PHONY : src/Graphics/Renderer/IndexBuffer.s
+
+# target to generate assembly for a file
+src/Graphics/Renderer/IndexBuffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/IndexBuffer.cpp.s
+.PHONY : src/Graphics/Renderer/IndexBuffer.cpp.s
+
+src/Graphics/Renderer/Shader.obj: src/Graphics/Renderer/Shader.cpp.obj
+.PHONY : src/Graphics/Renderer/Shader.obj
+
+# target to build an object file
+src/Graphics/Renderer/Shader.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Shader.cpp.obj
+.PHONY : src/Graphics/Renderer/Shader.cpp.obj
+
+src/Graphics/Renderer/Shader.i: src/Graphics/Renderer/Shader.cpp.i
+.PHONY : src/Graphics/Renderer/Shader.i
+
+# target to preprocess a source file
+src/Graphics/Renderer/Shader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Shader.cpp.i
+.PHONY : src/Graphics/Renderer/Shader.cpp.i
+
+src/Graphics/Renderer/Shader.s: src/Graphics/Renderer/Shader.cpp.s
+.PHONY : src/Graphics/Renderer/Shader.s
+
+# target to generate assembly for a file
+src/Graphics/Renderer/Shader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Shader.cpp.s
+.PHONY : src/Graphics/Renderer/Shader.cpp.s
+
+src/Graphics/Renderer/Texture.obj: src/Graphics/Renderer/Texture.cpp.obj
+.PHONY : src/Graphics/Renderer/Texture.obj
+
+# target to build an object file
+src/Graphics/Renderer/Texture.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Texture.cpp.obj
+.PHONY : src/Graphics/Renderer/Texture.cpp.obj
+
+src/Graphics/Renderer/Texture.i: src/Graphics/Renderer/Texture.cpp.i
+.PHONY : src/Graphics/Renderer/Texture.i
+
+# target to preprocess a source file
+src/Graphics/Renderer/Texture.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Texture.cpp.i
+.PHONY : src/Graphics/Renderer/Texture.cpp.i
+
+src/Graphics/Renderer/Texture.s: src/Graphics/Renderer/Texture.cpp.s
+.PHONY : src/Graphics/Renderer/Texture.s
+
+# target to generate assembly for a file
+src/Graphics/Renderer/Texture.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Texture.cpp.s
+.PHONY : src/Graphics/Renderer/Texture.cpp.s
+
+src/Graphics/Renderer/VertexArray.obj: src/Graphics/Renderer/VertexArray.cpp.obj
+.PHONY : src/Graphics/Renderer/VertexArray.obj
+
+# target to build an object file
+src/Graphics/Renderer/VertexArray.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexArray.cpp.obj
+.PHONY : src/Graphics/Renderer/VertexArray.cpp.obj
+
+src/Graphics/Renderer/VertexArray.i: src/Graphics/Renderer/VertexArray.cpp.i
+.PHONY : src/Graphics/Renderer/VertexArray.i
+
+# target to preprocess a source file
+src/Graphics/Renderer/VertexArray.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexArray.cpp.i
+.PHONY : src/Graphics/Renderer/VertexArray.cpp.i
+
+src/Graphics/Renderer/VertexArray.s: src/Graphics/Renderer/VertexArray.cpp.s
+.PHONY : src/Graphics/Renderer/VertexArray.s
+
+# target to generate assembly for a file
+src/Graphics/Renderer/VertexArray.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexArray.cpp.s
+.PHONY : src/Graphics/Renderer/VertexArray.cpp.s
+
+src/Graphics/Renderer/VertexBuffer.obj: src/Graphics/Renderer/VertexBuffer.cpp.obj
+.PHONY : src/Graphics/Renderer/VertexBuffer.obj
+
+# target to build an object file
+src/Graphics/Renderer/VertexBuffer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexBuffer.cpp.obj
+.PHONY : src/Graphics/Renderer/VertexBuffer.cpp.obj
+
+src/Graphics/Renderer/VertexBuffer.i: src/Graphics/Renderer/VertexBuffer.cpp.i
+.PHONY : src/Graphics/Renderer/VertexBuffer.i
+
+# target to preprocess a source file
+src/Graphics/Renderer/VertexBuffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexBuffer.cpp.i
+.PHONY : src/Graphics/Renderer/VertexBuffer.cpp.i
+
+src/Graphics/Renderer/VertexBuffer.s: src/Graphics/Renderer/VertexBuffer.cpp.s
+.PHONY : src/Graphics/Renderer/VertexBuffer.s
+
+# target to generate assembly for a file
+src/Graphics/Renderer/VertexBuffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexBuffer.cpp.s
+.PHONY : src/Graphics/Renderer/VertexBuffer.cpp.s
 
 src/Graphics/Shapes.obj: src/Graphics/Shapes.cpp.obj
 .PHONY : src/Graphics/Shapes.obj
@@ -915,12 +1035,27 @@ help:
 	@echo "... src/Engine/Views/SceneEditor.obj"
 	@echo "... src/Engine/Views/SceneEditor.i"
 	@echo "... src/Engine/Views/SceneEditor.s"
-	@echo "... src/Graphics/Gizmos.obj"
-	@echo "... src/Graphics/Gizmos.i"
-	@echo "... src/Graphics/Gizmos.s"
 	@echo "... src/Graphics/Grid.obj"
 	@echo "... src/Graphics/Grid.i"
 	@echo "... src/Graphics/Grid.s"
+	@echo "... src/Graphics/Renderer/FrameBuffer.obj"
+	@echo "... src/Graphics/Renderer/FrameBuffer.i"
+	@echo "... src/Graphics/Renderer/FrameBuffer.s"
+	@echo "... src/Graphics/Renderer/IndexBuffer.obj"
+	@echo "... src/Graphics/Renderer/IndexBuffer.i"
+	@echo "... src/Graphics/Renderer/IndexBuffer.s"
+	@echo "... src/Graphics/Renderer/Shader.obj"
+	@echo "... src/Graphics/Renderer/Shader.i"
+	@echo "... src/Graphics/Renderer/Shader.s"
+	@echo "... src/Graphics/Renderer/Texture.obj"
+	@echo "... src/Graphics/Renderer/Texture.i"
+	@echo "... src/Graphics/Renderer/Texture.s"
+	@echo "... src/Graphics/Renderer/VertexArray.obj"
+	@echo "... src/Graphics/Renderer/VertexArray.i"
+	@echo "... src/Graphics/Renderer/VertexArray.s"
+	@echo "... src/Graphics/Renderer/VertexBuffer.obj"
+	@echo "... src/Graphics/Renderer/VertexBuffer.i"
+	@echo "... src/Graphics/Renderer/VertexBuffer.s"
 	@echo "... src/Graphics/Shapes.obj"
 	@echo "... src/Graphics/Shapes.i"
 	@echo "... src/Graphics/Shapes.s"

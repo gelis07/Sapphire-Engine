@@ -1,7 +1,10 @@
 #define GLEW_STATIC
 #include <GL/glew.h>
 #include "Utilities.hpp"
-#include "Graphics/ShaderFunc.h"
+#include "Graphics/Renderer/Texture.h"
+#include "Graphics/Renderer/Shader.h"
+#include "Graphics/Renderer/VertexArray.h"
+#include "Graphics/Renderer/IndexBuffer.h"
 #include <chrono>
 #include <thread>
 #include <GLFW/glfw3.h>
@@ -51,77 +54,51 @@ void StartUp(){
 
     GLCall(glClearColor(0.3f, 0.5f, 0.4f, 0.0f));
 
-    unsigned int shader;
-    LoadShader(shader, "Shaders/Texture.glsl");
-    unsigned int VertexBuffer = 1;
-    unsigned int VertexArray = 1;
-    unsigned int IndexBuffer = 1;
-    GLCall(glUseProgram(shader));
-    GLCall(glGenVertexArrays(1, &VertexArray));
-    GLCall(glGenBuffers(1, &VertexBuffer));
-    GLCall(glGenBuffers(1, &IndexBuffer));
-
-    GLCall(glBindVertexArray(VertexArray));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuffer));
+    SapphireRenderer::Shader shader("Shaders/Texture.glsl");
     float Vertices[]{
         -595.0f/2, -61.0f, 0.0f, 0.0f,
         595.0f/2, -61.0f, 1.0f, 0.0f,
         595.0f/2, 61.0f, 1.0f, 1.0f,
         -595.0f/2, 61.0f, 0.0f, 1.0f
     };
-    GLCall(glBufferData(GL_ARRAY_BUFFER, 4 * 4 * sizeof(float), Vertices, GL_STATIC_DRAW));
-
-    GLCall(glEnableVertexAttribArray(0));
-    GLCall(glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)0));
-    GLCall(glEnableVertexAttribArray(1));
-    GLCall(glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (const void*)(sizeof(float) * 2)));
-
     unsigned int Indices[] = {
         0,1,2,
         2,3,0
     };
+    SapphireRenderer::VertexArray VertexArray;
+    SapphireRenderer::VertexBuffer VertexBuffer(4 * 4 * sizeof(float), (GLbyte*)Vertices, GL_STATIC_DRAW);
+    SapphireRenderer::IndexBuffer IndexBuffer(6 * sizeof(unsigned int), (GLbyte*)Indices, GL_STATIC_DRAW);
+    shader.Bind();
+    VertexArray.Bind();
+    VertexBuffer.Bind();
+    IndexBuffer.Bind();
+    SapphireRenderer::VertexBufferLayout layout;
+    layout.Push(GL_FLOAT, 2);
+    layout.Push(GL_FLOAT, 2);
+    VertexArray.AddBuffer(VertexBuffer, layout);
 
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), Indices, GL_STATIC_DRAW));
-    unsigned int textureID;
-    std::string Filepath = "Assets/Logo.png";
-    unsigned char* LocalBuffer;
-    int Width, Height, BPP;
+    stbi_set_flip_vertically_on_load(true);
 
-    stbi_set_flip_vertically_on_load(1);
-    LocalBuffer = stbi_load(Filepath.c_str(), &Width, &Height, &BPP, 4);
-
-    GLCall(glGenTextures(1, &textureID));
-    GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
-
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE));
-    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE));
-
-    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, Width, Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, LocalBuffer));
-    GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-
-
+    SapphireRenderer::Texture Texture("Assets/Logo.png");
+    VertexArray.Bind();
     GLCall(glActiveTexture(GL_TEXTURE0));
-    GLCall(glBindTexture(GL_TEXTURE_2D, textureID));
-
-    GLCall(glUniform4f(glGetUniformLocation(shader, "u_Color"), 0.5f, 0.3f, 0.7f, 1.0f));
-    GLCall(glUniform1i(glGetUniformLocation(shader, "u_Texture"), 0));
+    Texture.Bind();
+    shader.SetUniform("u_Color", glm::vec4(0.5f, 0.3f, 0.7f, 1.0f));
+    shader.SetUniform("u_Texture", (int)0);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, glm::vec3(800/2,600/2,0));
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0,0,0));
     glm::mat4 proj = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, -1.0f, 1.0f);
     glm::mat4 mvp = proj * view * model;
-    GLCall(glUniformMatrix4fv(glGetUniformLocation(shader, "u_MVP"), 1,GL_FALSE, &mvp[0][0]));
+    shader.SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
 
     GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-    GLCall(glBindTexture(GL_TEXTURE_2D, 0));
-    GLCall(glBindVertexArray(0));
-    GLCall(glUseProgram(0));
+    VertexBuffer.Unbind();
+    IndexBuffer.Unbind();
+    Texture.Unbind();
+    VertexArray.Unbind();
+    shader.Unbind();
 
     // Swap buffers to show the logo
     glfwSwapBuffers(logo_window);
@@ -133,5 +110,4 @@ void StartUp(){
 
     // Close the logo window
     glfwDestroyWindow(logo_window);
-    stbi_image_free(LocalBuffer);
 }

@@ -45,10 +45,9 @@ void Engine::Init(std::string Path)
 	glewExperimental = GL_TRUE;
 	glViewport(0, 0, bufferWidth, bufferHeight);
 
-
-    LoadShader(Shapes::CircleShader, "Shaders/Circle.glsl");
-    LoadShader(Shapes::BasicShader, "Shaders/Basic.glsl");
-    LoadShader(Shapes::GridShader, "Shaders/Grid.glsl");
+    SapphireRenderer::Texture::SetTextureParameters();
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::CircleShader.GetID()), "Shaders/Circle.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::BasicShader.GetID()), "Shaders/Basic.glsl");
 
     #ifndef EXPORT
     m_Windows.Init(std::move(Path));

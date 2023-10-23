@@ -5,8 +5,7 @@ void PlayMode::Init(Scene* activeScene)
 {
     m_Window = glfwGetCurrentContext();
     m_ActiveScene = activeScene;
-    m_Texture = CreateViewportTexture();
-    m_FBO = CreateFBO(m_Texture);
+    FrameBuffer.Init();
     Engine::Get().GetWindows().InitWindow("Play");
 
     CameraObject = std::make_shared<Object>("MainCamera");
@@ -21,17 +20,6 @@ void PlayMode::Init(Scene* activeScene)
     CameraObject->GetRenderer()->shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader);
     CameraObject->GetRenderer()->shape->Wireframe() = true;
     activeScene->Objects.push_back(CameraObject);
-}
-
-void PlayMode::RescaleFrameBuffer(float width, float height)
-{
-	glBindTexture(GL_TEXTURE_2D, m_Texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Texture, 0);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
 }
 
 bool CheckForErrors()
@@ -68,7 +56,7 @@ void PlayMode::Render(std::string& MainPath)
         ImVec2 pos = ImGui::GetCursorScreenPos();
         
         ImGui::GetWindowDrawList()->AddImage(
-            reinterpret_cast<ImTextureID*>(m_Texture), 
+            reinterpret_cast<ImTextureID*>(FrameBuffer.GetID()), 
             ImVec2(pos.x, pos.y), 
             ImVec2(pos.x + m_WindowWidth, pos.y + m_WindowHeight), 
             ImVec2(0, 1), 
@@ -123,8 +111,8 @@ void PlayMode::Render(std::string& MainPath)
     }
     
 
-    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
-    RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
+    FrameBuffer.Bind();
+    FrameBuffer.RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
     GLCall(glViewport(0, 0, m_WindowWidth, m_WindowHeight));
 
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
@@ -150,5 +138,5 @@ void PlayMode::Render(std::string& MainPath)
 
     //Changing the start bool to false here so all the start functions get executed
     if(GameRunning) m_Start = false;
-    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    FrameBuffer.Unbind();
 }

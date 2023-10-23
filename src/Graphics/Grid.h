@@ -1,14 +1,18 @@
 #pragma once
 #include "Utilities.hpp"
+#include "Renderer/IndexBuffer.h"
+#include "Renderer/VertexArray.h"
+#include "Renderer/Shader.h"
+#include "Renderer/Texture.h"
 
 class Grid{
     public:
         void Init();
         void Render(glm::vec3& CameraPos, float CameraZoom);
     private:
-        unsigned int GridVA;
-        unsigned int GridVB;
-        unsigned int GridIB;
-        unsigned int GridShader;
+        SapphireRenderer::VertexArray* VertexArray = nullptr;
+        SapphireRenderer::VertexBuffer* VertexBuffer = nullptr;
+        SapphireRenderer::IndexBuffer* IndexBuffer = nullptr;
+        SapphireRenderer::Shader* Shader = nullptr;
 
 };

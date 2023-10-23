@@ -55,10 +55,7 @@ void SceneEditor::Init(Scene* activeScene)
 {
     m_Window = glfwGetCurrentContext();
     m_ActiveScene = activeScene;
-    //Create a framebuffer object to create a texture and render it on the ImGui window
-    m_Texture = CreateViewportTexture();
-    m_FBO = CreateFBO(m_Texture);
-
+    FrameBuffer.Init();
     Engine::Get().GetWindows().InitWindow("Viewport");
     m_Grid.Init();
 }
@@ -105,16 +102,6 @@ static void Default(GLFWwindow* window, double xoffset, double yoffset){
     ImGuiIO& io = ImGui::GetIO();
     io.MouseWheelH += static_cast<float>(xoffset);
     io.MouseWheel += static_cast<float>(yoffset);
-}
-
-void SceneEditor::RescaleFrameBuffer(float width, float height)
-{
-	GLCall(glBindTexture(GL_TEXTURE_2D, m_Texture));
-	GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-	GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
-	GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_Texture, 0));
-	GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }
 
 //Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
@@ -203,7 +190,7 @@ void SceneEditor::Render()
     ImVec2 pos = ImGui::GetCursorScreenPos();
     
     ImGui::GetWindowDrawList()->AddImage(
-        reinterpret_cast<ImTextureID*>(m_Texture), 
+        reinterpret_cast<ImTextureID*>(FrameBuffer.GetID()), 
         ImVec2(pos.x, pos.y), 
         ImVec2(pos.x + m_WindowWidth, pos.y + m_WindowHeight), 
         ImVec2(0, 1), 
@@ -261,9 +248,9 @@ void SceneEditor::Render()
     ImGui::End();
 
 
-    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
+    FrameBuffer.Bind();
 
-    RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
+    FrameBuffer.RescaleFrameBuffer(m_WindowWidth, m_WindowHeight);
     GLCall(glViewport(0, 0, m_WindowWidth, m_WindowHeight));
     
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
@@ -284,5 +271,5 @@ void SceneEditor::Render()
         m_ActiveScene->Objects[i]->id = i;
     }
 
-    GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    FrameBuffer.Unbind();
 }

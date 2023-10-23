@@ -6,40 +6,30 @@
 static glm::vec4 LineColor(1.0f, 0.0f, 0.0f, 1.0f);
 float lineWidth = 5.0f;
 //This is a complicated name but its just the shape constructor
-Shapes::Shape::Shape(unsigned int sh) : m_Shader(sh)
+Shapes::Shape::Shape(SapphireRenderer::Shader& shader) : Shader(shader), VertexArray(), VertexBuffer(), IndexBuffer()
 {
-    m_Shader = sh;
-    GLCall(glGenVertexArrays(1, &m_VertexArray));
-    GLCall(glGenBuffers(1, &m_VertexBuffer));
-    GLCall(glGenBuffers(1, &m_IndexBuffer));
+    Shader = shader;
+    VertexArray.Bind();
+    VertexBuffer.Bind();
+    IndexBuffer.Bind();
+    VertexBuffer.AssignData(8 * sizeof(float), nullptr, GL_DYNAMIC_DRAW);
 
-    GLCall(glBindVertexArray(m_VertexArray));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer));
-    GLCall(glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), nullptr, GL_DYNAMIC_DRAW));
-
-    GLCall(glEnableVertexAttribArray(0));
-    GLCall(glVertexAttribPointer(0, 2,GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
+    SapphireRenderer::VertexBufferLayout layout;
+    layout.Push(GL_FLOAT, 2);
+    VertexArray.AddBuffer(VertexBuffer, layout);
     unsigned int Indices[] = {
         0,1,2,
         2,3,0
     };
 
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), Indices, GL_DYNAMIC_DRAW));
+    IndexBuffer.AssignData(6 * sizeof(unsigned int), (GLbyte*)Indices, GL_DYNAMIC_DRAW);
 
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-    GLCall(glBindVertexArray(0));
+    VertexArray.Unbind();
+    VertexBuffer.Unbind();
+    IndexBuffer.Unbind();
 }
 
-Shapes::Shape::~Shape()
-{
-    GLCall(glDeleteVertexArrays(1, &m_VertexArray));
-    GLCall(glDeleteBuffers(1, &m_IndexBuffer));
-    GLCall(glDeleteBuffers(1, &m_VertexBuffer));
-}
-
-void Shapes::Shape::RenderShape(Object* Object,std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(unsigned int shader)> SetUpUniforms,bool Viewport)
+void Shapes::Shape::RenderShape(Object* Object,std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(SapphireRenderer::Shader& shader)> SetUpUniforms,bool Viewport)
 {
     // int width, height;
     // glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
@@ -48,8 +38,8 @@ void Shapes::Shape::RenderShape(Object* Object,std::vector<Vertex> vertices, con
     m_Projection = glm::ortho(0.0f, Viewport ? WindowSize.x / CameraZoom : WindowSize.x, 0.0f, Viewport ? WindowSize.y / CameraZoom : WindowSize.y, -1.0f, 1.0f);
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, Object->GetComponent<Transform>()->Position.value<glm::vec3>());
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), CamPos);   
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, m_VertexBuffer));
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), CamPos); 
+    VertexBuffer.Bind();
     // Here im rendering an outline for the object
     if(OutLine){
         //Here everyting is happening so the outline is uniformly spaced from the object
@@ -72,26 +62,25 @@ void Shapes::Shape::RenderShape(Object* Object,std::vector<Vertex> vertices, con
             }
         }
     }
-    GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * vertices.size() * 2, vertices.data()));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    VertexBuffer.SubData(sizeof(float) * vertices.size() * 2, (GLbyte*)vertices.data());
+    VertexBuffer.Unbind();
 
-
-    GLCall(glUseProgram(m_Shader));
-    GLCall(glBindVertexArray(m_VertexArray));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_IndexBuffer));
+    Shader.Bind();
+    VertexArray.Bind();
+    IndexBuffer.Bind();
 
     //Here is the standard model view projection matrix
     glm::vec3& Pos = Object->GetComponent<Transform>()->Position.value<glm::vec3>();
     glm::mat4 mvp = m_Projection * view * model;
 
-    GLCall(glUniformMatrix4fv(glGetUniformLocation(m_Shader, "u_MVP"), 1,GL_FALSE, &mvp[0][0]));
-    SetUpUniforms(m_Shader);
+    Shader.SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
+    SetUpUniforms(Shader);
 
-    glm::vec4& Color = Object->GetComponent<Renderer>()->Color.value<glm::vec4>();
+    glm::vec4 Color = Object->GetComponent<Renderer>()->Color.value<glm::vec4>();
     if(OutLine){
-        GLCall(glUniform4f(glGetUniformLocation(m_Shader, "u_Color"), LineColor.r, LineColor.g, LineColor.b, LineColor.a));
+        Shader.SetUniform("u_Color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
     }else{
-        GLCall(glUniform4f(glGetUniformLocation(m_Shader, "u_Color"), Color.r, Color.g, Color.b, Color.a));
+        Shader.SetUniform("u_Color", Color);
     }
     if(!WireFrame){
         GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
@@ -100,10 +89,9 @@ void Shapes::Shape::RenderShape(Object* Object,std::vector<Vertex> vertices, con
     }
     GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
-    GLCall(glUseProgram(0));
-    GLCall(glBindVertexArray(0));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    Shader.Unbind();
+    VertexArray.Unbind();
+    IndexBuffer.Unbind();
 }
 
 //& Should (almost a must) create a function to abstarct this repetetive code.
@@ -129,7 +117,7 @@ void Shapes::Rectangle::Render(Object* Object,const glm::vec3 &CamPos ,float Cam
                 {Points[1].x, Points[1].y},
                 {Points[2].x, Points[2].y},
                {Points[3].x, Points[3].y}
-            }, CamPos,CameraZoom,OutLine, WireFrame, [](unsigned int shader) {  } ,Viewport);
+            }, CamPos,CameraZoom,OutLine, WireFrame, [](SapphireRenderer::Shader& shader) {  } ,Viewport);
             //                                       ^The rectangle doesn't have any extra uniforms
 
             
@@ -154,14 +142,14 @@ void Shapes::Circle::Render(Object* Object,const glm::vec3 &CamPos ,float Camera
     NewRectPoints[3] = glm::vec2((RectPoints[3].x) * cos((ObjectRotation)) + (RectPoints[3].y) * (-sin((ObjectRotation))), (RectPoints[3].x) * sin((ObjectRotation)) + (RectPoints[3].y) * cos((ObjectRotation)));
 
     glm::vec2 StartPos(ObjectPos.x - ObjectSize.x/2 + CamPos.x, ObjectPos.y - ObjectSize.y/2 + CamPos.y);
-    std::function<void(unsigned int shader)> Uniforms = [Viewport, StartPos,CameraZoom, ObjectSize](unsigned int shader) { 
-        GLCall(glUniform1f(glGetUniformLocation(shader, "RectWidth"), ObjectSize.x));
-        GLCall(glUniform1f(glGetUniformLocation(shader, "RectHeight"), ObjectSize.y));
-        GLCall(glUniform2f(glGetUniformLocation(shader, "StartPoint"), StartPos.x, StartPos.y));
+    std::function<void(SapphireRenderer::Shader& shader)> Uniforms = [Viewport, StartPos,CameraZoom, ObjectSize](SapphireRenderer::Shader& shader) { 
+        shader.SetUniform("RectWidth", ObjectSize.x);
+        shader.SetUniform("RectHeight", ObjectSize.y);
+        shader.SetUniform("StartPoint", StartPos);
         if(Viewport){
-            GLCall(glUniform1f(glGetUniformLocation(shader, "CameraZoom"), CameraZoom));
+            shader.SetUniform("CameraZoom", CameraZoom);
         }else{
-            GLCall(glUniform1f(glGetUniformLocation(shader, "CameraZoom"), 1));
+            shader.SetUniform("CameraZoom", 1);
         }
     };
 
@@ -201,6 +189,6 @@ void Shapes::CameraGizmo::Render(Object* Object,const glm::vec3 &CamPos, float C
                 {NewRectPoints[2].x, NewRectPoints[2].y},
                 {NewRectPoints[0].x, NewRectPoints[0].y},
                {NewRectPoints[1].x, NewRectPoints[1].y}
-            }, CamPos,CameraZoom,OutLine, WireFrame, [](unsigned int shader) {  } ,Viewport);
+            }, CamPos,CameraZoom,OutLine, WireFrame, [](SapphireRenderer::Shader& shader) {  } ,Viewport);
             //                                       ^The rectangle doesn't have any extra uniforms
 }

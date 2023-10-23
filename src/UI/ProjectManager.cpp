@@ -24,8 +24,9 @@ ProjectManager::ProjectManager()
     io.FontDefault = io.Fonts->Fonts.back();
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init((char *)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
-    m_IconAtlas.AtlasID = LoadTexture("Assets/IconsAtlas.png");
-    m_IconAtlas.AtlasSize = glm::vec2(4608,512);
+    stbi_set_flip_vertically_on_load(false);
+    m_IconAtlas.AtlasID.Init();
+    m_IconAtlas.AtlasID.Load("Assets/IconsAtlas.png");
 }
 
 int ProjectsSize = 0;
@@ -119,18 +120,18 @@ std::string ProjectManager::Run()
             ImVec2 textSize = ImGui::CalcTextSize(ProjectName.c_str());
             float PosY = (childSize.y - textSize.y) * 0.5f;
             float IconPosY = (childSize.y - 512/14) * 0.5f;
-            glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*7, 0), glm::vec2(512, 512), m_IconAtlas.AtlasSize); 
+            glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*7, 0), glm::vec2(512, 512), m_IconAtlas.AtlasID.GetDimensions()); 
             ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-            ImGui::Image(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+            ImGui::Image(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
             
             if(ImGui::IsWindowHovered()){
-                glm::vec4 BinIconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*8, 0), glm::vec2(512, 512), m_IconAtlas.AtlasSize); 
+                glm::vec4 BinIconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*8, 0), glm::vec2(512, 512), m_IconAtlas.AtlasID.GetDimensions()); 
                 ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - 512/14 - 40, IconPosY)); // Set the cursor position to center the text
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1,1,1,0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1,1,1,0.3));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1,1,1,0.6));
                 ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10);
-                if(ImGui::ImageButton(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID), ImVec2(512/14, 512/14), ImVec2(BinIconUVs.x, BinIconUVs.y), ImVec2(BinIconUVs.z, BinIconUVs.w)));
+                if(ImGui::ImageButton(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(BinIconUVs.x, BinIconUVs.y), ImVec2(BinIconUVs.z, BinIconUVs.w)));
                 if(ImGui::IsItemClicked()){
                     ShouldDeleteProject = Project.key();
                 }
@@ -209,6 +210,7 @@ std::string ProjectManager::Run()
         GLCall(glfwSwapBuffers(window));
         GLCall(glfwPollEvents());
     }
+    m_IconAtlas.AtlasID.Unbind();
     glfwDestroyWindow(window);
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

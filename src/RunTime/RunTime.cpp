@@ -19,9 +19,8 @@ void RunTime::Init(GLFWwindow* window,Scene* Scene, std::shared_ptr<Object>& Cam
         std::cout << "Error!" << std::endl;
 
 
-    LoadShader(Shapes::CircleShader, "Shaders/Circle.glsl");
-    LoadShader(Shapes::BasicShader, "Shaders/Basic.glsl");
-    LoadShader(Shapes::GridShader, "Shaders/Grid.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::CircleShader.GetID()), "Shaders/Circle.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::BasicShader.GetID()), "Shaders/Basic.glsl");
 
     // Scene->Load("/Test.scene");
 }

@@ -3,34 +3,31 @@
 
 void Grid::Init()
 {
-    GLCall(glGenVertexArrays(1, &GridVA));
-    GLCall(glGenBuffers(1, &GridVB));
-    GLCall(glGenBuffers(1, &GridIB));
-
-    GLCall(glBindVertexArray(GridVA));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, GridVB));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GridIB));
     float Vertices[] = {
         -960, -560,
         960, -560,
         960, 560,
         -960, 560
     };
-    GLCall(glBufferData(GL_ARRAY_BUFFER, 8 * sizeof(float), Vertices, GL_STATIC_DRAW));
-
-    GLCall(glEnableVertexAttribArray(0));
-    GLCall(glVertexAttribPointer(0, 2,GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0));
     unsigned int Indices[] = {
         0,1,2,
         2,3,0
     };
-    LoadShader(GridShader, "Shaders/Grid.glsl");
+    VertexArray = new SapphireRenderer::VertexArray();
+    VertexBuffer = new SapphireRenderer::VertexBuffer(8 * sizeof(float), (GLbyte*)Vertices, GL_STATIC_DRAW);
+    IndexBuffer = new SapphireRenderer::IndexBuffer(6 * sizeof(unsigned int), (GLbyte*)Indices, GL_STATIC_DRAW);
+    Shader = new SapphireRenderer::Shader("Shaders/Grid.glsl");
+    VertexArray->Bind();
+    VertexBuffer->Bind();
+    IndexBuffer->Bind();
 
-    GLCall(glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), Indices, GL_STATIC_DRAW));
+    SapphireRenderer::VertexBufferLayout layout;
+    layout.Push(GL_FLOAT, 2);
+    VertexArray->AddBuffer(*VertexBuffer, layout);
 
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-    GLCall(glBindVertexArray(0));
+    VertexBuffer->Unbind();
+    IndexBuffer->Unbind();
+    VertexArray->Unbind();
 }
 
 void Grid::Render(glm::vec3& CameraPos, float CameraZoom)
@@ -41,21 +38,22 @@ void Grid::Render(glm::vec3& CameraPos, float CameraZoom)
     glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));    
     glm::mat4 mvp = proj * view * model;
 
-    GLCall(glUseProgram(GridShader));
-    GLCall(glBindVertexArray(GridVA));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, GridIB));
+    Shader->Bind();
+    VertexArray->Bind();
+    IndexBuffer->Bind();
 
-    GLCall(glUniformMatrix4fv(glGetUniformLocation(GridShader, "u_MVP"), 1,GL_FALSE, &mvp[0][0]));
-    GLCall(glUniform1f(glGetUniformLocation(GridShader, "GridSpacing"), 0.5f));
-    GLCall(glUniform1f(glGetUniformLocation(GridShader, "CameraZoom"), CameraZoom));
-    GLCall(glUniform2f(glGetUniformLocation(GridShader, "CameraSize"), 960, 560));
-    GLCall(glUniform2f(glGetUniformLocation(GridShader, "CenterPoint"), CameraPos.x, CameraPos.y));
-    GLCall(glUniform4f(glGetUniformLocation(GridShader, "u_Color"), 0.2f, 0.2f, 0.2f, 1.0f));
+    Shader->SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
+    Shader->SetUniform("GridSpacing", 0.5f);
+    Shader->SetUniform("CameraZoom", CameraZoom);
+    Shader->SetUniform("CameraSize", glm::vec2(960, 560));
+    Shader->SetUniform("CenterPoint", glm::vec2(CameraPos));
+    Shader->SetUniform("u_Color", glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
+
     GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
     GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
 
-    GLCall(glUseProgram(0));
-    GLCall(glBindVertexArray(0));
-    GLCall(glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0));
-    GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+    Shader->Unbind();
+    VertexArray->Unbind();
+    IndexBuffer->Unbind();
+    VertexBuffer->Unbind();
 }

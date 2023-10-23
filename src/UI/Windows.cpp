@@ -98,7 +98,7 @@ void Windows::LogWindow()
             {
                 glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*6, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasSize); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
                 ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
@@ -110,7 +110,7 @@ void Windows::LogWindow()
             {
                 glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasSize); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
                 ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
@@ -122,7 +122,7 @@ void Windows::LogWindow()
             {
                 glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*4, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasSize); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
 
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));

@@ -42,8 +42,8 @@ void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, Te
     }
     ImGui::BeginChild(entry.path().string().c_str(), ImVec2(m_IconSize.x / 5 + 25, m_IconSize.y / 5 + 50), true);
 
-    glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(m_IconPos.x, m_IconPos.y), glm::vec2(m_IconSize.x, m_IconSize.y), IconAtlas.AtlasSize); 
-    ImGui::Image(reinterpret_cast<ImTextureID>(IconAtlas.AtlasID), ImVec2(m_IconSize.x/5, m_IconSize.y/5), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+    glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(m_IconPos.x, m_IconPos.y), glm::vec2(m_IconSize.x, m_IconSize.y), IconAtlas.AtlasID.GetDimensions()); 
+    ImGui::Image(reinterpret_cast<ImTextureID>(IconAtlas.AtlasID.GetID()), ImVec2(m_IconSize.x/5, m_IconSize.y/5), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
     if(Renaming){
         ImGui::InputText("##RenamedFile",&Name);
         if(glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_ENTER)){
