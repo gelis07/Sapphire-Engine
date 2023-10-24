@@ -319,7 +319,7 @@ void RigidBody::Simulate(Object *current, const float& DeltaTime) {
     rb.CollisionDetection(current);
 }
 
-int RigidBody::AddForce(lua_State *L) {
+int RigidBody::Impulse(lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
     lua_getfield(L, 1, "__userdata");
     RigidBody* rb = static_cast<RigidBody*>(lua_touserdata(L, -1));
@@ -327,7 +327,11 @@ int RigidBody::AddForce(lua_State *L) {
     float x = (float)luaL_checknumber(L, 2);
     float y = (float)luaL_checknumber(L, 3);
     float z = (float)luaL_checknumber(L, 4);
-
-    rb->rb.Force = glm::vec3(x,y,z);
+    glm::vec3 Force(x,y,z);
+    float& mass = rb->rb.Mass.value<float>();
+    glm::vec3 weight = glm::vec3(0,PhysicsEngine::CollisionDetection::g.value<float>() * mass,0);
+    glm::vec3 Fnet = Force - weight;
+    float DeltaTime = 0.2f;
+    rb->rb.Velocity = glm::vec3(Fnet * DeltaTime) / mass;
     return 0;
 }

@@ -43,7 +43,7 @@ void Engine::Init(std::string Path)
 	glfwGetFramebufferSize(m_Window, &bufferWidth, &bufferHeight);
 	glfwMakeContextCurrent(m_Window);
 	glewExperimental = GL_TRUE;
-	glViewport(0, 0, bufferWidth, bufferHeight);
+	// glViewport(0, 0, bufferWidth, bufferHeight);
 
     SapphireRenderer::Texture::SetTextureParameters();
     SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::CircleShader.GetID()), "Shaders/Circle.glsl");

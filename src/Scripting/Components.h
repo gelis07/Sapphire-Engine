@@ -89,9 +89,9 @@ class RigidBody : public Component
         RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp = false)
         : Component(std::move(File), std::move(ArgName), ArgId,obj,LuaComp), rb(Variables)
         {
-            Functions["AddForce"] = AddForce;
+            Functions["Impulse"] = Impulse;
         };
         PhysicsEngine::Body rb;
         void Simulate(Object *current, const float& DeltaTime);
-        static int AddForce(lua_State* L);
+        static int Impulse(lua_State* L);
 };
