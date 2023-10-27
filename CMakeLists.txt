@@ -10,6 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(Sapphire-Engine
     src/main.cpp
     src/Graphics/Shapes.cpp
+    src/Graphics/Renderer.cpp
     src/Graphics/Renderer/FrameBuffer.cpp
     src/Graphics/Renderer/IndexBuffer.cpp
     src/Graphics/Renderer/Shader.cpp
@@ -25,6 +26,7 @@ add_executable(Sapphire-Engine
     src/Scripting/Scripting.cpp
     src/Scripting/Variables.cpp
     src/Objects/Objects.cpp
+    src/Objects/Transform.cpp
     src/Scripting/LuaUtilities.cpp
     src/Scripting/Components.cpp
     src/UI/FileExplorer/File.cpp

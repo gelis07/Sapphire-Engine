@@ -1,6 +1,9 @@
 #pragma once
 #include "Graphics/Shapes.h"
 #include "Scripting/Components.h"
+#include "Transform.h"
+#include "PhysicsEngine/RigidBody.h"
+#include "Graphics/Renderer.h"
 
 class Object
 {

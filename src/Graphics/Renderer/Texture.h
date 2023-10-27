@@ -18,7 +18,7 @@ namespace SapphireRenderer{
             void Unbind() const;
 
             const GLuint& GetID() const {return ID;}
-            const glm::vec2 GetDimensions() {return glm::vec2(width, height);}
+            const glm::vec2 GetDimensions() const {return glm::vec2(width, height);}
         private:
             GLuint ID = 0;
             unsigned char* Data;

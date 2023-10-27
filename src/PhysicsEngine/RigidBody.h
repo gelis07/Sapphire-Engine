@@ -1,22 +1,21 @@
 #pragma once
 #include "CollisionDetection.h"
-
+#include "Objects/Transform.h"
 
 class Object;
 
 namespace PhysicsEngine{
-    class Body{
+    class RigidBody : public Component{
         public:
-            glm::vec3* Position;
-            glm::vec3* Rotation;
-            glm::vec3* Size;
+            Transform* transform;
             int ShapeType;
-            Body(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables);
+            RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp = false);
             void Update(const float& DeltaTime);
             bool CollisionDetection(Object* current);
             void OnCollision(Object* current, Object* obj, CollisionData&& CD);
             void OnCollisionRotation(Object* current, Object* obj, CollisionData&& CD);
-
+            void Simulate(Object *current, const float& DeltaTime);
+            static int Impulse(lua_State* L);
             SapphireEngine::Bool Trigger;
             SapphireEngine::Bool Static;
             SapphireEngine::Float Mass;

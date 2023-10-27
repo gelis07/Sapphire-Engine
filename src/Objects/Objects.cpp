@@ -6,7 +6,6 @@
 #include "RunTime/RunTime.h"
 
 
-
 Object::Object(std::string &&Name)
 {
     this->Name = Name;
@@ -76,20 +75,23 @@ void Object::OnUpdate()
 std::shared_ptr<Object> Object::CreateObject(std::string &&ObjName)
 {
     std::shared_ptr<Object> NewObj = std::make_shared<Object>(std::move(ObjName));
-    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0,NewObj.get(), false)));
+    std::vector<glm::vec3> points;
+    points.push_back(glm::vec3(-1,-1,0));
+    points.push_back(glm::vec3(1,-1,0));
+    points.push_back(glm::vec3(1,1,0));
+    points.push_back(glm::vec3(-1,1,0));
+    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0,NewObj.get(),std::move(points), false)));
     NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, NewObj.get(),false)));
-    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<RigidBody>("", "Rigidbody", 0,NewObj.get(), false)));
+    NewObj->Components.push_back(std::static_pointer_cast<Component>(std::make_shared<PhysicsEngine::RigidBody>("", "Rigidbody", 0,NewObj.get(), false)));
 
     NewObj->renderer = NewObj->GetComponent<Renderer>(); 
     NewObj->transform = NewObj->GetComponent<Transform>(); 
     
-    NewObj->renderer->Color.AnyValue() = glm::vec4(1);
-    NewObj->transform->Position.AnyValue() = glm::vec3(0);
-    NewObj->transform->Size.AnyValue() = glm::vec3(20.0f, 20.0f, 0.0f);
+    NewObj->renderer->Color.Get() = glm::vec4(1);
+    NewObj->transform->SetSize(glm::vec3(0));
+    NewObj->transform->SetSize(glm::vec3(20.0f, 20.0f, 0.0f));
 
-    NewObj->GetComponent<RigidBody>()->rb.Position = &(NewObj->GetTransform()->Position.value<glm::vec3>());
-    NewObj->GetComponent<RigidBody>()->rb.Rotation = &(NewObj->GetTransform()->Rotation.value<glm::vec3>());
-    NewObj->GetComponent<RigidBody>()->rb.Size = &(NewObj->GetTransform()->Size.value<glm::vec3>());
+    NewObj->GetComponent<PhysicsEngine::RigidBody>()->transform = NewObj->GetTransform().get();
 
     Engine::Get().GetActiveScene()->Objects.push_back(NewObj);
 
@@ -192,7 +194,12 @@ std::shared_ptr<Object> Object::LoadPrefab(std::string FilePath)
         }
         else if(element.key() == "Transform")
         {
-            Transform* comp = new Transform(element.value()["path"], element.key(), object->GetComponents().size(), object.get(),element.value()["path"] != "");
+            std::vector<glm::vec3> points;
+            points.push_back(glm::vec3(-1,-1,0));
+            points.push_back(glm::vec3(1,-1,0));
+            points.push_back(glm::vec3(1,1,0));
+            points.push_back(glm::vec3(-1,1,0));
+            Transform* comp = new Transform(element.value()["path"], element.key(), object->GetComponents().size(), object.get(),std::move(points),element.value()["path"] != "");
             object->GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
             object->GetComponents().back()->Load(element.value()["Variables"]);
         }else

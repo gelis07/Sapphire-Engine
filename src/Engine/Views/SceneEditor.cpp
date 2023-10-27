@@ -13,12 +13,12 @@ std::shared_ptr<Object> SceneEditor::OnClick(GLFWwindow* window, std::vector<std
         {
             Shapes::Circle* circlePtr = dynamic_cast<Shapes::Circle*>(Objects[i]->GetRenderer()->shape.get());
             //value so I can get the correct mouse position even if the camera is zoomed in/out.
-            float scalor = (Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>().x / ViewCamera.Zoom)/Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>().x;
+            float scalor = (Engine::Get().GetPlay().CameraObject->GetTransform()->GetSize().x / ViewCamera.Zoom)/Engine::Get().GetPlay().CameraObject->GetTransform()->GetSize().x;
             glm::vec2 CursorPosToWind((CursorPos.x - WindowPosition.x) * scalor - ViewCamera.position.x, -((CursorPos.y - WindowPosition.y) * scalor + ViewCamera.position.y));
             //Checking if the object is a circle or a rectangle
             if(circlePtr)
             {
-                if(sqrt(pow((CursorPosToWind.x- Objects[i]->GetTransform()->Position.value<glm::vec3>().x), 2) + pow((CursorPosToWind.y - Objects[i]->GetTransform()->Position.value<glm::vec3>().y), 2)) < Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2)
+                if(sqrt(pow((CursorPosToWind.x- Objects[i]->GetTransform()->GetPosition().x), 2) + pow((CursorPosToWind.y - Objects[i]->GetTransform()->GetPosition().y), 2)) < Objects[i]->GetTransform()->GetSize().x/2)
                 {
                     //The camera can be a little tricky for the time being because its testing for its whole width and height but it should check for a small portion 
                     //At the position so we are skipping it for now
@@ -30,10 +30,10 @@ std::shared_ptr<Object> SceneEditor::OnClick(GLFWwindow* window, std::vector<std
             }else if(!circlePtr)
             {
 
-                float Dx = Objects[i]->GetTransform()->Position.value<glm::vec3>().x + Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2; // The x of the bottom left point of the rectangle
-                float Cx = Objects[i]->GetTransform()->Position.value<glm::vec3>().x - Objects[i]->GetTransform()->Size.value<glm::vec3>().x/2; // The x of the bottom right point of the rectangle
-                float Cy = Objects[i]->GetTransform()->Position.value<glm::vec3>().y - Objects[i]->GetTransform()->Size.value<glm::vec3>().y/2; // The y of the bottom right point of the rectangle
-                float By = Objects[i]->GetTransform()->Position.value<glm::vec3>().y + Objects[i]->GetTransform()->Size.value<glm::vec3>().y/2; // The y of the top right point of the rectangle
+                float Dx = Objects[i]->GetTransform()->GetPosition().x + Objects[i]->GetTransform()->GetSize().x/2; // The x of the bottom left point of the rectangle
+                float Cx = Objects[i]->GetTransform()->GetPosition().x - Objects[i]->GetTransform()->GetSize().x/2; // The x of the bottom right point of the rectangle
+                float Cy = Objects[i]->GetTransform()->GetPosition().y - Objects[i]->GetTransform()->GetSize().y/2; // The y of the bottom right point of the rectangle
+                float By = Objects[i]->GetTransform()->GetPosition().y + Objects[i]->GetTransform()->GetSize().y/2; // The y of the top right point of the rectangle
 
                 if(CursorPosToWind.x < Dx && CursorPosToWind.x > Cx && CursorPosToWind.y < By && CursorPosToWind.y > Cy)
                 {
@@ -163,7 +163,7 @@ bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm:
 
 
 // Its the little offset between the texture's position and the ImGui window's position. I played around with the values and these seem good. Perfect solution I know xD.
-constexpr glm::vec2 offset = glm::vec2(7.3f, -6.9f);
+constexpr glm::vec2 offset = glm::vec2(1.3f, 11.1f);
 
 // Thank you for the tutorial! https://www.codingwiththomas.com/blog/rendering-an-opengl-framebuffer-into-a-dear-imgui-window
 void SceneEditor::Render()
@@ -176,7 +176,7 @@ void SceneEditor::Render()
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
-    Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(m_WindowWidth, m_WindowHeight, 0);
+    Engine::Get().GetPlay().CameraObject->GetTransform()->SetSize(glm::vec3(m_WindowWidth, m_WindowHeight, 0));
 
 
     std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y) + offset);
@@ -200,15 +200,16 @@ void SceneEditor::Render()
     // Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
     ImGuizmo::SetOrthographic(true);
     ImGuizmo::SetDrawlist();
-
+    
     ImGuizmo::SetRect(ImGui::GetWindowPos().x + offset.x, ImGui::GetWindowPos().y + offset.y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
     
     if(SelectedObj != nullptr){
-        glm::vec3& Position = SelectedObj->GetTransform()->Position.value<glm::vec3>();
-        glm::vec3& Rotation = SelectedObj->GetTransform()->Rotation.value<glm::vec3>();
-        glm::vec3& Scale = SelectedObj->GetTransform()->Size.value<glm::vec3>();
-
-        glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom, 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom, -1.0f, 1.0f);
+        const glm::vec3& Position = SelectedObj->GetTransform()->GetPosition();
+        const glm::vec3& Rotation = SelectedObj->GetTransform()->GetRotation();
+        const glm::vec3& Scale = SelectedObj->GetTransform()->GetSize();
+        // m_Projection = glm::ortho( -WindowSize.x/2.0f / CameraZoom, WindowSize.x/2.0f / CameraZoom, -WindowSize.y / 2.0f / CameraZoom, WindowSize.y / 2.0f / CameraZoom, -1.0f, 1.0f);
+        // glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom, 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom, -1.0f, 1.0f);
+        glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
 
         glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position);
 
@@ -230,12 +231,12 @@ void SceneEditor::Render()
             DecomposeTransform(Transform, translation, rotation, scale);
 
             if(m_Operation == ImGuizmo::OPERATION::TRANSLATE)
-                Position = translation;
+                SelectedObj->GetTransform()->SetPosition(translation);
             else if(m_Operation == ImGuizmo::OPERATION::SCALE)
-                Scale = scale;
+                SelectedObj->GetTransform()->SetSize(scale);
             else if(m_Operation == ImGuizmo::OPERATION::ROTATE){
                 glm::vec3 deltaRotation = rotation - Rotation;
-                Rotation.z += deltaRotation.z;
+                SelectedObj->GetTransform()->Rotate(deltaRotation.z);
             }
         }
     }
@@ -260,11 +261,11 @@ void SceneEditor::Render()
     for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
     {
         if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetRenderer())
-            renderer->Render(m_ActiveScene->Objects[i], m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom, true);
+            renderer->Render(*(m_ActiveScene->Objects[i]->GetTransform()), m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom);
         else{
             //Check if it does indeed exist and is not set to the renderer variable on the object set it,
             if(m_ActiveScene->Objects[i]->GetRenderer() = m_ActiveScene->Objects[i]->GetComponent<Renderer>()) 
-                m_ActiveScene->Objects[i]->GetRenderer()->Render(m_ActiveScene->Objects[i], m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom, true);
+                m_ActiveScene->Objects[i]->GetRenderer()->Render(*(m_ActiveScene->Objects[i]->GetTransform()), m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom);
             else
                 SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
         }

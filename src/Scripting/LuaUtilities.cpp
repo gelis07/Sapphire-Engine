@@ -124,7 +124,7 @@ int LuaUtilities::GetCameraPos(lua_State *L)
     }
     lua_newtable(L);
 
-    glm::vec3& CameraPos = Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>();
+    const glm::vec3& CameraPos = Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->GetPosition();
     lua_pushnumber(L, CameraPos.x);
     lua_setfield(L, -2, "x");
 
@@ -142,7 +142,7 @@ int LuaUtilities::SetCameraPos(lua_State *L)
     lua_Number x = lua_tonumber(L, -2);
     lua_Number y = lua_tonumber(L, -1);
 
-    Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Position.value<glm::vec3>() = glm::vec3(x, y, 0);
+    Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->SetPosition(glm::vec3(x, y, 0));
     return 0;
 }
 int LuaUtilities::GetCameraSize(lua_State *L)
@@ -153,7 +153,7 @@ int LuaUtilities::GetCameraSize(lua_State *L)
     }
     lua_newtable(L);
 
-    glm::vec3& CameraSize = Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Size.value<glm::vec3>();
+    const glm::vec3& CameraSize = Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->GetSize();
     lua_pushnumber(L, CameraSize.x);
     lua_setfield(L, -2, "x");
 
@@ -171,7 +171,7 @@ int LuaUtilities::SetCameraSize(lua_State *L)
     lua_Number x = lua_tonumber(L, -2);
     lua_Number y = lua_tonumber(L, -1);
 
-    Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(x, y, 0);
+    Engine::Get().GetPlay().CameraObject->GetComponent<Transform>()->SetSize(glm::vec3(x, y, 0));
     return 0;
 }
 int LuaUtilities::CreateObject(lua_State *L)

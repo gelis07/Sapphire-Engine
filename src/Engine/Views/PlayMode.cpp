@@ -9,9 +9,13 @@ void PlayMode::Init(Scene* activeScene)
     Engine::Get().GetWindows().InitWindow("Play");
 
     CameraObject = std::make_shared<Object>("MainCamera");
-
-    CameraObject->AddComponent<Transform>(new Transform("", "Transform", 1, CameraObject.get(),false));
-    CameraObject->AddComponent<Camera>(new Camera("", "Camera", 2,  CameraObject.get(),false));
+    std::vector<glm::vec3> points;
+    points.push_back(glm::vec3(-1,-1,0));
+    points.push_back(glm::vec3(1,-1,0));
+    points.push_back(glm::vec3(1,1,0));
+    points.push_back(glm::vec3(-1,1,0));
+    CameraObject->AddComponent<Transform>(new Transform("", "Transform", 1, CameraObject.get(),std::move(points),false));
+    CameraObject->AddComponent<LuaCamera>(new LuaCamera("", "Camera", 2,  CameraObject.get(),false));
     CameraObject->AddComponent<Renderer>(new Renderer("", "Renderer", 3, CameraObject.get(), false));
 
     CameraObject->GetTransform() = CameraObject->GetComponent<Transform>();
@@ -51,7 +55,7 @@ void PlayMode::Render(std::string& MainPath)
         // glfwGetWindowSize(glfwGetCurrentContext(), &m_WindowWidth, &m_WindowHeight);
         m_WindowWidth = ImGui::GetContentRegionAvail().x;
         m_WindowHeight = ImGui::GetContentRegionAvail().y;
-        CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(m_WindowWidth, m_WindowHeight, 0);
+        CameraObject->GetTransform()->SetSize(glm::vec3(m_WindowWidth, m_WindowHeight, 0));
         
         ImVec2 pos = ImGui::GetCursorScreenPos();
         

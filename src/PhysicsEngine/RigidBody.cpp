@@ -3,14 +3,16 @@
 #include "Engine/Engine.h"
 
 
-PhysicsEngine::Body::Body(std::unordered_map<std::string, SapphireEngine::Variable *>& Variables) : Trigger("Trigger", Variables), 
-Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables) 
+PhysicsEngine::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp) : Trigger("Trigger", Variables), 
+Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
+StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),
+    Component(std::move(File), std::move(ArgName), ArgId,obj,LuaComp)
 {
-    Variables["Trigger"]->AnyValue() = false;
-    Variables["Static"]->AnyValue() = false;
-    Variables["Restitution"]->AnyValue() = 0.6f;
-    Variables["Static Friction"]->AnyValue() = 0.6f;
-    Variables["Dynamic Friction"]->AnyValue() = 0.4f;
+    Trigger.Get() = false;
+    Static.Get() = false;
+    Restitution.Get() = 0.6f;
+    StaticFriction.Get() = 0.6f;
+    DynamicFriction.Get() = 0.4f;
     Restitution.Min = 0.0f;
     Restitution.Max = 1.0f;
     DynamicFriction.Min = 0.0f;
@@ -18,26 +20,25 @@ Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution",
     StaticFriction.Min = 0.0f;
     StaticFriction.Max = 1.0f;
     Restitution.SliderSpeed = 0.01f;
-    Variables["Mass"]->AnyValue() = 1.0f;
+    Mass.Get() = 1.0f;
     Mass.Min = 0.001f;
-
-
+    Functions["Impulse"] = Impulse;
 }
 
-void PhysicsEngine::Body::Update(const float &DeltaTime)
+void PhysicsEngine::RigidBody::Update(const float &DeltaTime)
 {
-    if(Static.value<bool>()) return;
-    Force = glm::vec3(0, PhysicsEngine::CollisionDetection::g.value<float>(), 0) * Mass.value<float>();
-    Accelaration = (Force/Mass.value<float>());
+    if(Static.Get()) return;
+    Force = glm::vec3(0, PhysicsEngine::CollisionDetection::g.Get(), 0) * Mass.Get();
+    Accelaration = (Force/Mass.Get());
     if(std::isnan(Accelaration.x) || std::isnan(Accelaration.y) || std::isnan(Accelaration.z))
         Accelaration = glm::vec3(0);
     Velocity += Accelaration * DeltaTime;
 
-    *Position += Velocity * DeltaTime;
-    *Rotation += AngularVelocity * DeltaTime;
+    transform->Move(Velocity * DeltaTime);
+    transform->Rotate(AngularVelocity.z * DeltaTime);
 }
 
-bool PhysicsEngine::Body::CollisionDetection(Object* current)
+bool PhysicsEngine::RigidBody::CollisionDetection(Object* current)
 {
     glm::vec2 Normal;
     float Depth;
@@ -82,36 +83,36 @@ bool PhysicsEngine::Body::CollisionDetection(Object* current)
 float CrossProduct(glm::vec2 v1, glm::vec2 v2){
     return v1.x * v2.y - v1.y * v2.x;
 }
-void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
+void PhysicsEngine::RigidBody::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
 {
-    Body* bodyA = &current->GetComponent<RigidBody>()->rb;
-    Body* bodyB = &obj->GetComponent<RigidBody>()->rb;
+    RigidBody* bodyA = current->GetComponent<RigidBody>().get();
+    RigidBody* bodyB = obj->GetComponent<RigidBody>().get();
 
-    glm::vec3& bodyAPos = current->GetTransform()->Position.value<glm::vec3>();
-    glm::vec3& bodyASize = current->GetTransform()->Size.value<glm::vec3>();
-    glm::vec3& bodyBPos = obj->GetTransform()->Position.value<glm::vec3>();
-    glm::vec3& bodyBSize = obj->GetTransform()->Size.value<glm::vec3>();
-    float bodyAInvMass = 1.0f / bodyA->Mass.value<float>();
-    float bodyBInvMass = 1.0f / bodyB->Mass.value<float>();
-    float bodyAInvInertia = 1.0f / ((1.0f / 12.0f) * bodyA->Mass.value<float>() * (bodyASize.x * bodyASize.x + bodyASize.y * bodyASize.y));
-    float bodyBInvInertia = 1.0f / ((1.0f / 12.0f) * bodyB->Mass.value<float>() * (bodyBSize.x * bodyBSize.x + bodyBSize.y * bodyBSize.y));
-    if(bodyA->Static.value<bool>()){
+    const glm::vec3& bodyAPos = current->GetTransform()->GetPosition();
+    const glm::vec3& bodyASize = current->GetTransform()->GetSize();
+    const glm::vec3& bodyBPos = obj->GetTransform()->GetPosition();
+    const glm::vec3& bodyBSize = obj->GetTransform()->GetSize();
+    float bodyAInvMass = 1.0f / bodyA->Mass.Get();
+    float bodyBInvMass = 1.0f / bodyB->Mass.Get();
+    float bodyAInvInertia = 1.0f / ((1.0f / 12.0f) * bodyA->Mass.Get() * (bodyASize.x * bodyASize.x + bodyASize.y * bodyASize.y));
+    float bodyBInvInertia = 1.0f / ((1.0f / 12.0f) * bodyB->Mass.Get() * (bodyBSize.x * bodyBSize.x + bodyBSize.y * bodyBSize.y));
+    if(bodyA->Static.Get()){
         bodyAInvMass = 0.0f;
         bodyAInvInertia = 0.0f;
     }
-    if(bodyB->Static.value<bool>()){
+    if(bodyB->Static.Get()){
         bodyBInvMass = 0.0f;
         bodyBInvInertia = 0.0f;
     }
     //Not realistic, but good enough for a video game.
-    float StaticFriction = (bodyA->StaticFriction.value<float>() + bodyB->StaticFriction.value<float>()) * 0.5f;
-    float DynamicFriction = (bodyA->DynamicFriction.value<float>() + bodyB->DynamicFriction.value<float>()) * 0.5f;
+    float StaticFriction = (bodyA->StaticFriction.Get() + bodyB->StaticFriction.Get()) * 0.5f;
+    float DynamicFriction = (bodyA->DynamicFriction.Get() + bodyB->DynamicFriction.Get()) * 0.5f;
     glm::vec2 normal = CD.Normal;
     glm::vec2 contact1 = CD.ContactPoint1;
     glm::vec2 contact2 = CD.ContactPoint2;
     int contactCount = CD.ContactPointCount;
 
-    float e = std::min(bodyA->Restitution.value<float>(), bodyB->Restitution.value<float>());
+    float e = std::min(bodyA->Restitution.Get(), bodyB->Restitution.Get());
     std::array<glm::vec2, 2> contactList {glm::vec2(0),glm::vec2(0)};
     std::array<glm::vec2, 2> impulseList = {glm::vec2(0),glm::vec2(0)};
     std::array<glm::vec2, 2> FrictionImpulseList = {glm::vec2(0),glm::vec2(0)};
@@ -228,35 +229,35 @@ void PhysicsEngine::Body::OnCollisionRotation(Object *current, Object *obj, Coll
         bodyB->Velocity += glm::vec3(impulse * bodyBInvMass,0);
         bodyB->AngularVelocity.z += CrossProduct(glm::normalize(rb), impulse) * bodyBInvInertia;
     }
-    if(bodyB->Static.value<bool>())
-        current->GetTransform()->Position.value<glm::vec3>() += glm::vec3(-CD.Normal * CD.Depth,0);
-    else if(bodyA->Static.value<bool>())
-        obj->GetTransform()->Position.value<glm::vec3>() += glm::vec3(CD.Normal * CD.Depth,0);
+    if(bodyB->Static.Get())
+        current->GetTransform()->Move(glm::vec3(-CD.Normal * CD.Depth,0));
+    else if(bodyA->Static.Get())
+        obj->GetTransform()->Move(glm::vec3(CD.Normal * CD.Depth,0));
     else{
-        current->GetTransform()->Position.value<glm::vec3>() += glm::vec3(-CD.Normal * CD.Depth / 2.0f,0);
-        obj->GetTransform()->Position.value<glm::vec3>() += glm::vec3(CD.Normal * CD.Depth / 2.0f,0);
+        current->GetTransform()->Move(glm::vec3(-CD.Normal * CD.Depth / 2.0f,0));
+        obj->GetTransform()->Move(glm::vec3(CD.Normal * CD.Depth / 2.0f,0));
     } 
 }
 
-void PhysicsEngine::Body::OnCollision(Object* current, Object* obj, CollisionData&& CD)
+void PhysicsEngine::RigidBody::OnCollision(Object* current, Object* obj, CollisionData&& CD)
 {
     obj->OnCollision(current);
     current->OnCollision(obj);
 
 
-    PhysicsEngine::Body* CurrentRb = &(current->GetComponent<RigidBody>()->rb);
-    PhysicsEngine::Body* ObjRb = &(obj->GetComponent<RigidBody>()->rb);
-    if(CurrentRb->Static.value<bool>() && ObjRb->Static.value<bool>())
+    PhysicsEngine::RigidBody* CurrentRb = current->GetComponent<RigidBody>().get();
+    PhysicsEngine::RigidBody* ObjRb = obj->GetComponent<RigidBody>().get();
+    if(CurrentRb->Static.Get() && ObjRb->Static.Get())
         return;
     
     glm::vec2 RelativeVelocity = ObjRb->Velocity - CurrentRb->Velocity;
     if(glm::dot(RelativeVelocity, CD.Normal) > 0.0f)
         return;
 
-    float CurrentRbInvMass = CurrentRb->Static.value<bool>() ? 0.0f : 1.0f / CurrentRb->Mass.value<float>();
-    float ObjRbInvMass = ObjRb->Static.value<bool>() ? 0.0f : 1.0f / ObjRb->Mass.value<float>();
+    float CurrentRbInvMass = CurrentRb->Static.Get() ? 0.0f : 1.0f / CurrentRb->Mass.Get();
+    float ObjRbInvMass = ObjRb->Static.Get() ? 0.0f : 1.0f / ObjRb->Mass.Get();
 
-    float e = std::min(CurrentRb->Restitution.value<float>(),ObjRb->Restitution.value<float>());
+    float e = std::min(CurrentRb->Restitution.Get(),ObjRb->Restitution.Get());
     float j = -(1.0f + e) * glm::dot(RelativeVelocity, CD.Normal);
     j /= CurrentRbInvMass + ObjRbInvMass;
     glm::vec2 Impulse = j * CD.Normal;
@@ -264,12 +265,36 @@ void PhysicsEngine::Body::OnCollision(Object* current, Object* obj, CollisionDat
     CurrentRb->Velocity -= glm::vec3(Impulse * CurrentRbInvMass,0);
     ObjRb->Velocity += glm::vec3(Impulse * ObjRbInvMass,0);
 
-    if(CurrentRb-Static.value<bool>())
-        current->GetTransform()->Position.value<glm::vec3>() += glm::vec3(-CD.Normal * CD.Depth,0);
-    else if(ObjRb-Static.value<bool>())
-        obj->GetTransform()->Position.value<glm::vec3>() += glm::vec3(CD.Normal * CD.Depth,0);
+    if(CurrentRb-Static.Get())
+        current->GetTransform()->Move(glm::vec3(-CD.Normal * CD.Depth,0));
+    else if(ObjRb-Static.Get())
+        obj->GetTransform()->Move(glm::vec3(CD.Normal * CD.Depth,0));
     else{
-        current->GetTransform()->Position.value<glm::vec3>() += glm::vec3(-CD.Normal * CD.Depth / 2.0f,0);
-        obj->GetTransform()->Position.value<glm::vec3>() += glm::vec3(CD.Normal * CD.Depth / 2.0f,0);
+        current->GetTransform()->Move(glm::vec3(-CD.Normal * CD.Depth / 2.0f,0));
+        obj->GetTransform()->Move(glm::vec3(CD.Normal * CD.Depth / 2.0f,0));
     } 
 }
+
+
+void PhysicsEngine::RigidBody::Simulate(Object *current, const float& DeltaTime) {
+    Update(DeltaTime);
+    CollisionDetection(current);
+}
+
+int PhysicsEngine::RigidBody::Impulse(lua_State *L) {
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    PhysicsEngine::RigidBody* rb = static_cast<PhysicsEngine::RigidBody*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    float z = (float)luaL_checknumber(L, 4);
+    glm::vec3 Force(x,y,z);
+    float& mass = rb->Mass.Get();
+    glm::vec3 weight = glm::vec3(0,PhysicsEngine::CollisionDetection::g.Get() * mass,0);
+    glm::vec3 Fnet = Force - weight;
+    float DeltaTime = 0.2f;
+    rb->Velocity = glm::vec3(Fnet * DeltaTime) / mass;
+    return 0;
+}
+

@@ -10,14 +10,12 @@ SapphireEngine::Float PhysicsEngine::CollisionDetection::g("g", Windows::Setting
 bool PhysicsEngine::CollisionDetection::CirclexRectangle(Object* obj, Object* current,CollisionData& CD)
 {
     CD.Depth = INFINITY;
-    std::array<glm::vec2, 4> Obj1Points = ((Shapes::Rectangle*)(current->GetRenderer()->shape.get()))->Points;
-    glm::vec2 Obj1Position = glm::vec2(current->GetTransform()->Position.value<glm::vec3>().x, current->GetTransform()->Position.value<glm::vec3>().y);
-    glm::vec2 Obj2Position = glm::vec2(obj->GetTransform()->Position.value<glm::vec3>().x, obj->GetTransform()->Position.value<glm::vec3>().y);
-    float Obj2Radius = obj->GetTransform()->Size.value<glm::vec3>().x / 2.0f;
-    for (size_t i = 0; i < Obj1Points.size(); i++)
-    {
-        Obj1Points[i] += Obj1Position;
-    }
+    std::array<glm::vec3, 4> Obj1Points = {current->GetTransform()->GetPoints()[0], current->GetTransform()->GetPoints()[1],
+    current->GetTransform()->GetPoints()[2], current->GetTransform()->GetPoints()[3]};
+    glm::vec2 Obj1Position = glm::vec2(current->GetTransform()->GetPosition().x, current->GetTransform()->GetPosition().y);
+    glm::vec2 Obj2Position = glm::vec2(obj->GetTransform()->GetPosition().x, obj->GetTransform()->GetPosition().y);
+    float Obj2Radius = obj->GetTransform()->GetSize().x / 2.0f;
+
     float AxisDepth = 0;
     glm::vec2 AxisProj;
     for (size_t i = 0; i < Obj1Points.size(); i++)
@@ -47,9 +45,9 @@ bool PhysicsEngine::CollisionDetection::CirclexRectangle(Object* obj, Object* cu
     }
 
     int CpIndex = FindClosestPointOnPolygon(Obj2Position, Obj1Points);
-    glm::vec2& Cp = Obj1Points[CpIndex];
+    glm::vec3& Cp = Obj1Points[CpIndex];
     float MinObj1 = INFINITY, MaxObj1 = -INFINITY;
-    AxisProj = Cp - Obj2Position;
+    AxisProj = glm::vec2(Cp) - Obj2Position;
     AxisProj = glm::normalize(AxisProj);
     for (size_t j = 0; j < Obj1Points.size(); j++)
     {
@@ -85,16 +83,12 @@ void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<
     ContactPoint1 = glm::vec2(0);
     ContactPoint2 = glm::vec2(0);
     ContactPointCount = 0;
-    glm::vec2 CurrentPos = glm::vec2(current->GetTransform()->Position.value<glm::vec3>());
-    glm::vec2 ObjPos = glm::vec2(obj->GetTransform()->Position.value<glm::vec3>());
-    std::array<glm::vec2, 4> CurrentPoints = ((Shapes::Rectangle*)(current->GetRenderer()->shape.get()))->Points;
-    std::array<glm::vec2, 4> ObjPoints = ((Shapes::Rectangle*)(obj->GetRenderer()->shape.get()))->Points;
-    for (size_t i = 0; i < 4; i++)
-    {
-        CurrentPoints[i] += CurrentPos;
-        ObjPoints[i] += ObjPos;
-    }
-    
+    glm::vec2 CurrentPos = glm::vec2(current->GetTransform()->GetPosition());
+    glm::vec2 ObjPos = glm::vec2(obj->GetTransform()->GetPosition());
+    std::array<glm::vec3, 4> CurrentPoints = {current->GetTransform()->GetPoints()[0], current->GetTransform()->GetPoints()[1],
+    current->GetTransform()->GetPoints()[2], current->GetTransform()->GetPoints()[3]};
+    std::array<glm::vec3, 4> ObjPoints = {obj->GetTransform()->GetPoints()[0], obj->GetTransform()->GetPoints()[1],
+    obj->GetTransform()->GetPoints()[2], obj->GetTransform()->GetPoints()[3]};
 
     float minDistanceSquared = INFINITY;
 
@@ -152,7 +146,7 @@ void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<
         
     }
 }
-glm::vec2 PhysicsEngine::CollisionDetection::FindPolygonCircleContactPoint(const glm::vec2 &CirclePosition, const float &Radius, const glm::vec2 &PolygonPosition, const std::array<glm::vec2, 4> &PolygonPoints)
+glm::vec2 PhysicsEngine::CollisionDetection::FindPolygonCircleContactPoint(const glm::vec2 &CirclePosition, const float &Radius, const glm::vec2 &PolygonPosition, const std::array<glm::vec3, 4> &PolygonPoints)
 {
     float MinDistanceSquared = INFINITY;
     glm::vec2 ContactPoint = glm::vec2(0);
@@ -183,15 +177,15 @@ bool PhysicsEngine::CollisionDetection::NearlyEqual(glm::vec2 &a, glm::vec2 &b)
 {
     return (glm::distance(a, b) * glm::distance(a, b)) < VerySmallAmount * VerySmallAmount;
 }
-int PhysicsEngine::CollisionDetection::FindClosestPointOnPolygon(const glm::vec2 &Position, std::array<glm::vec2, 4> Points)
+int PhysicsEngine::CollisionDetection::FindClosestPointOnPolygon(const glm::vec2 &Position, std::array<glm::vec3, 4> Points)
 {
     int result = -1;
     float MinDistance = INFINITY;
     for (size_t i = 0; i < Points.size(); i++)
     {
-        glm::vec2& Point = Points[i];
+        glm::vec3& Point = Points[i];
 
-        float Distance = SapphireEngine::LengthVec(glm::vec2(Point - Position));
+        float Distance = SapphireEngine::LengthVec(glm::vec2(glm::vec2(Point) - Position));
 
         if(Distance < MinDistance){
             MinDistance = Distance;
@@ -218,16 +212,16 @@ void PhysicsEngine::CollisionDetection::ProjectCircle(const glm::vec2 &Position,
         o_Max = t;
     }
 }
-glm::vec2 PhysicsEngine::CollisionDetection::FindArithmeticMean(std::array<glm::vec2, 4> &Vertices)
+glm::vec2 PhysicsEngine::CollisionDetection::FindArithmeticMean(std::array<glm::vec3, 4> &Vertices)
 {
-    glm::vec2 Sum;
+    glm::vec3 Sum;
 
     for (size_t i = 0; i < Vertices.size(); i++)
     {
         Sum += Vertices[i];
     }
     Sum /= Vertices.size();
-    return Sum;
+    return glm::vec2(Sum);
 }
 void PhysicsEngine::CollisionDetection::PointSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b, float &distanceSquared, glm::vec2 &cp)
 {
@@ -258,18 +252,12 @@ bool PhysicsEngine::CollisionDetection::RectanglexRectangle(std::shared_ptr<Obje
 
     CD.Normal = glm::vec2(0);
     CD.Depth = INFINITY;
-    std::array<glm::vec2, 4> Obj1Points = ((Shapes::Rectangle*)(Obj1->GetRenderer()->shape.get()))->Points;
-    std::array<glm::vec2, 4> Obj2Points = ((Shapes::Rectangle*)(Obj2->GetRenderer()->shape.get()))->Points;
-    glm::vec2 Obj1Position = glm::vec2(Obj1->GetTransform()->Position.value<glm::vec3>().x, Obj1->GetTransform()->Position.value<glm::vec3>().y);
-    glm::vec2 Obj2Position = glm::vec2(Obj2->GetTransform()->Position.value<glm::vec3>().x, Obj2->GetTransform()->Position.value<glm::vec3>().y);
-    for (size_t i = 0; i < Obj1Points.size(); i++)
-    {
-        Obj1Points[i] += Obj1Position;
-    }
-    for (size_t i = 0; i < Obj2Points.size(); i++)
-    {
-        Obj2Points[i] += Obj2Position;
-    }
+    std::array<glm::vec3, 4> Obj1Points = {Obj1->GetTransform()->GetPoints()[0], Obj1->GetTransform()->GetPoints()[1],
+    Obj1->GetTransform()->GetPoints()[2], Obj1->GetTransform()->GetPoints()[3]};
+    std::array<glm::vec3, 4> Obj2Points = {Obj2->GetTransform()->GetPoints()[0], Obj2->GetTransform()->GetPoints()[1],
+    Obj2->GetTransform()->GetPoints()[2], Obj2->GetTransform()->GetPoints()[3]};
+    glm::vec2 Obj1Position = glm::vec2(Obj1->GetTransform()->GetPosition().x, Obj1->GetTransform()->GetPosition().y);
+    glm::vec2 Obj2Position = glm::vec2(Obj2->GetTransform()->GetPosition().x, Obj2->GetTransform()->GetPosition().y);
     for (size_t shape = 0; shape < 2; shape++)
     {
         //"Inverting" the shapes so both objects are tested on eachother.
@@ -277,18 +265,12 @@ bool PhysicsEngine::CollisionDetection::RectanglexRectangle(std::shared_ptr<Obje
             Obj1 = current;
             Obj2 = obj.get();
 
-            Obj1Points = ((Shapes::Rectangle*)(Obj1->GetRenderer()->shape.get()))->Points;
-            Obj2Points = ((Shapes::Rectangle*)(Obj2->GetRenderer()->shape.get()))->Points;
-            Obj1Position = glm::vec2(Obj1->GetTransform()->Position.value<glm::vec3>().x, Obj1->GetTransform()->Position.value<glm::vec3>().y);
-            Obj2Position = glm::vec2(Obj2->GetTransform()->Position.value<glm::vec3>().x, Obj2->GetTransform()->Position.value<glm::vec3>().y);
-            for (size_t i = 0; i < Obj1Points.size(); i++)
-            {
-                Obj1Points[i] += Obj1Position;
-            }
-            for (size_t i = 0; i < Obj2Points.size(); i++)
-            {
-                Obj2Points[i] += Obj2Position;
-            }
+            Obj1Points = {Obj1->GetTransform()->GetPoints()[0], Obj1->GetTransform()->GetPoints()[1],
+            Obj1->GetTransform()->GetPoints()[2], Obj1->GetTransform()->GetPoints()[3]};
+            Obj2Points = {Obj2->GetTransform()->GetPoints()[0], Obj2->GetTransform()->GetPoints()[1],
+            Obj2->GetTransform()->GetPoints()[2], Obj2->GetTransform()->GetPoints()[3]};
+            Obj1Position = glm::vec2(Obj1->GetTransform()->GetPosition().x, Obj1->GetTransform()->GetPosition().y);
+            Obj2Position = glm::vec2(Obj2->GetTransform()->GetPosition().x, Obj2->GetTransform()->GetPosition().y);
         }
         for (size_t i = 0; i < Obj1Points.size(); i++)
         {
@@ -336,12 +318,12 @@ bool PhysicsEngine::CollisionDetection::CirclexCircle(std::shared_ptr<Object> ob
 {
     //! Comments here
     // Checking if the length of the vector with points the circles points is less than the sum of the radiuses
-    glm::vec2 DistanceVec(current->GetTransform()->Position.value<glm::vec3>().x - obj->GetTransform()->Position.value<glm::vec3>().x, current->GetTransform()->Position.value<glm::vec3>().y - obj->GetTransform()->Position.value<glm::vec3>().y);
+    glm::vec2 DistanceVec(current->GetTransform()->GetPosition().x - obj->GetTransform()->GetPosition().x, current->GetTransform()->GetPosition().y - obj->GetTransform()->GetPosition().y);
     float Distance = SapphireEngine::LengthVec(DistanceVec);
-    float radii = obj->GetTransform()->Size.value<glm::vec3>().x / 2.0f + current->GetTransform()->Size.value<glm::vec3>().x / 2.0f; // GetSize().x/2 Basically refers to the radius
-    CD.ContactPoint1 = glm::normalize(DistanceVec) * current->GetTransform()->Size.value<glm::vec3>().x / 2.0f;
+    float radii = obj->GetTransform()->GetSize().x / 2.0f + current->GetTransform()->GetSize().x / 2.0f; // GetSize().x/2 Basically refers to the radius
+    CD.ContactPoint1 = glm::normalize(DistanceVec) * current->GetTransform()->GetSize().x / 2.0f;
     CD.ContactPointCount = 1;
-    CD.Normal = glm::normalize(glm::vec2(obj->GetTransform()->Position.value<glm::vec3>() - current->GetTransform()->Position.value<glm::vec3>()));
+    CD.Normal = glm::normalize(glm::vec2(obj->GetTransform()->GetPosition() - current->GetTransform()->GetPosition()));
     CD.Depth = radii - Distance;
     return Distance < radii; 
 }

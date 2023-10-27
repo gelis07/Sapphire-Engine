@@ -49,21 +49,21 @@ std::unordered_map<std::string, SapphireEngine::Variable*> ScriptingEngine::GetT
 
         if(lua_isnumber(L, -2)){
             Value = new SapphireEngine::Float(Key, TableValues);
-            Value->AnyValue() = (float)lua_tonumber(L, -2);
+            ((SapphireEngine::Float*)Value)->Get() = (float)lua_tonumber(L, -2);
             i++;
         }else if(lua_isboolean(L, -2)){
             Value = new SapphireEngine::Bool(Key, TableValues);
-            Value->AnyValue() = lua_isboolean(L, -2);
+            ((SapphireEngine::Bool*)Value)->Get() = lua_isboolean(L, -2);
             i++;
         }else if(lua_istable(L, -2)){
             SubTables.push_back(Key);
             Value = new SapphireEngine::LuaTable(Key, TableValues);
-            Value->AnyValue() = ScriptingEngine::GetTable(L, Name, SubTables);
+            ((SapphireEngine::LuaTable*)Value)->Get() = ScriptingEngine::GetTable(L, Name, SubTables);
             SubTables.pop_back();
             i++;
         }else if(lua_isstring(L, -2)){
             Value = new SapphireEngine::String(Key, TableValues);
-            Value->AnyValue() = std::string(lua_tostring(L, -1));
+            ((SapphireEngine::String*)Value)->Get() = std::string(lua_tostring(L, -1));
             i++;
         }
         lua_pop(L, i);

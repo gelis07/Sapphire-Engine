@@ -37,7 +37,7 @@ void Component::UpdateLuaVariables()
             lua_setglobal(L, Var.first.c_str());
         else{
             lua_getglobal(L, Var.second->GetName().c_str());
-            for(auto&& x : Var.second->value<TableVariable>()){
+            for(auto&& x : ((SapphireEngine::LuaTable*)(Var.second))->Get()){
                 lua_setfield(L, -1, x.first.c_str());
                 
             }
@@ -81,7 +81,7 @@ bool Component::GetLuaVariables(Object* obj)
             if(type == LUA_TTABLE && isKnownModule(L, var.Name.c_str())){
                 var.Value = new SapphireEngine::LuaTable(var.Name, NewVariables);
                 std::unordered_map<std::string, SapphireEngine::Variable*> test = ScriptingEngine::GetTable(L, std::string(var.Name), {});
-                var.Value->AnyValue() = test;
+                ((SapphireEngine::LuaTable*)var.Value)->Get() = test;
                 lua_pop(L, 1);
                 continue;
             }
@@ -89,7 +89,7 @@ bool Component::GetLuaVariables(Object* obj)
             //Checking up here because lua_tostring(L, -1) returns 0x0 for false and the if statement returns false and doesn't register the variable
             if(type == LUA_TBOOLEAN){
                 var.Value = new SapphireEngine::Bool(var.Name, NewVariables);
-                var.Value->AnyValue() = !(VarValue == nullptr);
+                ((SapphireEngine::Bool*)var.Value)->Get() = !(VarValue == nullptr);
                 lua_pop(L, 1);
                 continue;
             }
@@ -98,10 +98,10 @@ bool Component::GetLuaVariables(Object* obj)
             if (VarValue && var.Name != "_VERSION") {
                 if(type == LUA_TSTRING){
                     var.Value = new SapphireEngine::String(var.Name, NewVariables);
-                    var.Value->AnyValue() = std::string(lua_tostring(L, -1));
+                    ((SapphireEngine::String*)var.Value)->Get() = std::string(lua_tostring(L, -1));
                 }else if(type == LUA_TNUMBER){
                     var.Value = new SapphireEngine::Float(var.Name, NewVariables);
-                    var.Value->AnyValue() = (float)lua_tonumber(L, -1);
+                    ((SapphireEngine::Float*)var.Value)->Get() = (float)lua_tonumber(L, -1);
                 }
                 lua_pop(L, 1);
             }
@@ -302,36 +302,4 @@ void Component::Load(nlohmann::json JSON)
     }
 }
 
-void Renderer::Render(std::shared_ptr<Object> obj, bool&& IsSelected ,glm::vec3 CameraPos,float CameraZoom, bool IsViewport)
-{
-    //That means that the object is an empty
-    if(shape == nullptr) return;
-    // Here it renders the object's outline to indicate that the current object is selected
-    if(IsSelected){
-        shape->Render(obj.get(), CameraPos ,CameraZoom,true, shape->Wireframe(), IsViewport);
-    }
-    shape->Render(obj.get(), CameraPos ,CameraZoom,false, shape->Wireframe(), IsViewport);
-}
 
-
-void RigidBody::Simulate(Object *current, const float& DeltaTime) {
-    rb.Update(DeltaTime);
-    rb.CollisionDetection(current);
-}
-
-int RigidBody::Impulse(lua_State *L) {
-    luaL_checktype(L, 1, LUA_TTABLE);
-    lua_getfield(L, 1, "__userdata");
-    RigidBody* rb = static_cast<RigidBody*>(lua_touserdata(L, -1));
-    lua_pop(L, 1);
-    float x = (float)luaL_checknumber(L, 2);
-    float y = (float)luaL_checknumber(L, 3);
-    float z = (float)luaL_checknumber(L, 4);
-    glm::vec3 Force(x,y,z);
-    float& mass = rb->rb.Mass.value<float>();
-    glm::vec3 weight = glm::vec3(0,PhysicsEngine::CollisionDetection::g.value<float>() * mass,0);
-    glm::vec3 Fnet = Force - weight;
-    float DeltaTime = 0.2f;
-    rb->rb.Velocity = glm::vec3(Fnet * DeltaTime) / mass;
-    return 0;
-}

@@ -48,13 +48,13 @@ void Windows::Init(std::string&& Path){
     }
     catch (...){
         std::ofstream stream("Assets/Preferences.json");
-        ThemeName.AnyValue() = std::string("purple"); 
+        ThemeName.Get() = std::string("purple"); 
     }
     for (auto &&setting : Data.items())
     {
         UserPreferences[setting.key()]->Load(setting.value());
     }
-    Load(ThemeName.value<std::string>());
+    Load(ThemeName.Get());
 }
 void Windows::DockSpace()
 {
@@ -96,7 +96,7 @@ void Windows::LogWindow()
         {
             case SapphireEngine::Info:
             {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*6, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasSize); 
+                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*6, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
                 ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
@@ -108,7 +108,7 @@ void Windows::LogWindow()
             }
             case SapphireEngine::Warning:
             {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasSize); 
+                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
                 ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
@@ -120,7 +120,7 @@ void Windows::LogWindow()
             }
             case SapphireEngine::Error:
             {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*4, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasSize); 
+                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*4, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
                 ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
@@ -333,14 +333,14 @@ void Windows::PreferencesWindow()
     if(!(*GetWindowState("Preferences"))) return;
     ImGui::Begin("Preferences", &WindowStates["Preferences"]);
 
-    if(ImGui::BeginCombo("Theme", ThemeName.value<std::string>().c_str())){
+    if(ImGui::BeginCombo("Theme", ThemeName.Get().c_str())){
         for(const auto &entry : std::filesystem::directory_iterator("Themes/")){
             std::string name = entry.path().filename().string();
             name = name.erase(name.size() - 5, name.size());
             if(ImGui::Selectable(name.c_str()))
             {
                 Load(name);
-                ThemeName.value<std::string>() = name;
+                ThemeName.Get() = name;
             }
         }
         ImGui::EndCombo();

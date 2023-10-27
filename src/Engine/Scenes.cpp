@@ -70,17 +70,22 @@ void Scene::Load(const std::string FilePath)
             }
             else if(element.key() == "Transform")
             {
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
+                std::vector<glm::vec3> points;
+                points.push_back(glm::vec3(-1,-1,0));
+                points.push_back(glm::vec3(1,-1,0));
+                points.push_back(glm::vec3(1,1,0));
+                points.push_back(glm::vec3(-1,1,0));
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>(element.value()["path"], element.key(), obj->GetComponents().size(),obj.get(),std::move(points),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }else if(element.key() == "Camera") {
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Camera>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<LuaCamera>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
                 shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader);
                 shape->Wireframe() = true;
                 Engine::Get().GetPlay().CameraObject = obj;
             }
             else if(element.key() == "Rigidbody") {
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<RigidBody>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<PhysicsEngine::RigidBody>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }
             else
@@ -91,17 +96,16 @@ void Scene::Load(const std::string FilePath)
             }
         }
         if(obj == Engine::Get().GetPlay().CameraObject)
-            obj->GetComponent<Transform>()->Size.value<glm::vec3>() = glm::vec3(Engine::Get().GetViewport().GetWindowSize().x, Engine::Get().GetViewport().GetWindowSize().y, 0);
+            obj->GetComponent<Transform>()->SetSize(glm::vec3(Engine::Get().GetViewport().GetWindowSize().x, Engine::Get().GetViewport().GetWindowSize().y, 0));
 
         obj->GetTransform() = obj->GetComponent<Transform>();
+        obj->GetTransform()->UpdateModel();
+        obj->GetTransform()->UpdatePoints();
         obj->GetRenderer() = obj->GetComponent<Renderer>();
         obj->GetComponent<Renderer>()->shape = shape;
-        if(std::shared_ptr<RigidBody> RbComp = obj->GetComponent<RigidBody>()){
-            RbComp->rb.Position = &(obj->GetTransform()->Position.value<glm::vec3>());
-            RbComp->rb.Rotation = &(obj->GetTransform()->Rotation.value<glm::vec3>());
-            RbComp->rb.Size = &(obj->GetTransform()->Size.value<glm::vec3>());
-            RbComp->rb.ShapeType = static_cast<int>(obj->GetRenderer()->shape->ShapeType);
-
+        if(std::shared_ptr<PhysicsEngine::RigidBody> RbComp = obj->GetComponent<PhysicsEngine::RigidBody>()){
+            RbComp->transform = obj->GetTransform().get();
+            RbComp->ShapeType = static_cast<int>(obj->GetRenderer()->shape->ShapeType);
         }
 
         Objects.push_back(obj);
@@ -162,7 +166,7 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
-            Obj->GetComponent<RigidBody>()->rb.ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
+            Obj->GetComponent<PhysicsEngine::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         if (ImGui::MenuItem("Create Rectangle"))
         {
@@ -170,7 +174,7 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
-            Obj->GetComponent<RigidBody>()->rb.ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
+            Obj->GetComponent<PhysicsEngine::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         ImGui::Separator();
         // if(ImGui::MenuItem("Duplicate")){

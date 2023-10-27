@@ -7,6 +7,7 @@
 #include "Renderer/VertexArray.h"
 #include "Renderer/Shader.h"
 #include "Renderer/Texture.h"
+#include "Objects/Transform.h"
 //The shapes class needs a refrence to an object because it neeeds to access its position and scale
 class Object;
 
@@ -33,10 +34,10 @@ namespace Shapes
             bool& Wireframe() {return m_Wireframe;}
             Shape(SapphireRenderer::Shader& shader);
             // That's the function that actually render's a shape
-            void RenderShape(Object* Object, std::vector<Vertex> vertices, const glm::vec3 &CamPos, float CameraZoom,bool OutLine ,bool WireFrame, std::function<void(SapphireRenderer::Shader& shader)> SetUpUniforms,bool Viewport = true);
+            void RenderShape(Transform& transform,const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(SapphireRenderer::Shader& shader)> SetUpUniforms);
 
             // Here is a virtual Render() function for every sub class to do it's own calculations before passing in the data on RenderShape()
-            virtual void Render(Object* Object,const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) {} 
+            virtual void Render(Transform& transform, const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame) {} 
         private:
             SapphireRenderer::Shader& Shader;
             SapphireRenderer::VertexBuffer VertexBuffer;
@@ -49,22 +50,21 @@ namespace Shapes
     class Rectangle : public Shape
     {
         public:
-            std::array<glm::vec2, 4> Points;
             Rectangle(SapphireRenderer::Shader& shader) : Shape(shader) {ShapeType = RectangleT;}
-            void Render(Object* Object,const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
+            void Render(Transform& transform, const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame) override;
     };
     class Circle : public Shape
     {
         public:
             Circle(SapphireRenderer::Shader& shader) : Shape(shader) {ShapeType = CircleT;}
-            void Render(Object* Object,const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
+            void Render(Transform& transform, const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame) override;
     };
     //To display the camera gizmo like portion of the screen.
     class CameraGizmo : public Shape
     {
         public:
             CameraGizmo(SapphireRenderer::Shader& shader) : Shape(shader) {ShapeType = RectangleT;}
-            void Render(Object* Object,const glm::vec3 &CamPos,float CameraZoom,bool OutLine, bool WireFrame = false, bool Viewport = true) override;
+            void Render(Transform& transform, const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame) override;
     };
     
 

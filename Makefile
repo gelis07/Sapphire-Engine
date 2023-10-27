@@ -480,6 +480,30 @@ src/Graphics/Grid.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.s
 .PHONY : src/Graphics/Grid.cpp.s
 
+src/Graphics/Renderer.obj: src/Graphics/Renderer.cpp.obj
+.PHONY : src/Graphics/Renderer.obj
+
+# target to build an object file
+src/Graphics/Renderer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer.cpp.obj
+.PHONY : src/Graphics/Renderer.cpp.obj
+
+src/Graphics/Renderer.i: src/Graphics/Renderer.cpp.i
+.PHONY : src/Graphics/Renderer.i
+
+# target to preprocess a source file
+src/Graphics/Renderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer.cpp.i
+.PHONY : src/Graphics/Renderer.cpp.i
+
+src/Graphics/Renderer.s: src/Graphics/Renderer.cpp.s
+.PHONY : src/Graphics/Renderer.s
+
+# target to generate assembly for a file
+src/Graphics/Renderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer.cpp.s
+.PHONY : src/Graphics/Renderer.cpp.s
+
 src/Graphics/Renderer/FrameBuffer.obj: src/Graphics/Renderer/FrameBuffer.cpp.obj
 .PHONY : src/Graphics/Renderer/FrameBuffer.obj
 
@@ -671,6 +695,30 @@ src/Objects/Objects.s: src/Objects/Objects.cpp.s
 src/Objects/Objects.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.s
 .PHONY : src/Objects/Objects.cpp.s
+
+src/Objects/Transform.obj: src/Objects/Transform.cpp.obj
+.PHONY : src/Objects/Transform.obj
+
+# target to build an object file
+src/Objects/Transform.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Transform.cpp.obj
+.PHONY : src/Objects/Transform.cpp.obj
+
+src/Objects/Transform.i: src/Objects/Transform.cpp.i
+.PHONY : src/Objects/Transform.i
+
+# target to preprocess a source file
+src/Objects/Transform.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Transform.cpp.i
+.PHONY : src/Objects/Transform.cpp.i
+
+src/Objects/Transform.s: src/Objects/Transform.cpp.s
+.PHONY : src/Objects/Transform.s
+
+# target to generate assembly for a file
+src/Objects/Transform.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Transform.cpp.s
+.PHONY : src/Objects/Transform.cpp.s
 
 src/PhysicsEngine/CollisionDetection.obj: src/PhysicsEngine/CollisionDetection.cpp.obj
 .PHONY : src/PhysicsEngine/CollisionDetection.obj
@@ -1038,6 +1086,9 @@ help:
 	@echo "... src/Graphics/Grid.obj"
 	@echo "... src/Graphics/Grid.i"
 	@echo "... src/Graphics/Grid.s"
+	@echo "... src/Graphics/Renderer.obj"
+	@echo "... src/Graphics/Renderer.i"
+	@echo "... src/Graphics/Renderer.s"
 	@echo "... src/Graphics/Renderer/FrameBuffer.obj"
 	@echo "... src/Graphics/Renderer/FrameBuffer.i"
 	@echo "... src/Graphics/Renderer/FrameBuffer.s"
@@ -1062,6 +1113,9 @@ help:
 	@echo "... src/Objects/Objects.obj"
 	@echo "... src/Objects/Objects.i"
 	@echo "... src/Objects/Objects.s"
+	@echo "... src/Objects/Transform.obj"
+	@echo "... src/Objects/Transform.i"
+	@echo "... src/Objects/Transform.s"
 	@echo "... src/PhysicsEngine/CollisionDetection.obj"
 	@echo "... src/PhysicsEngine/CollisionDetection.i"
 	@echo "... src/PhysicsEngine/CollisionDetection.s"

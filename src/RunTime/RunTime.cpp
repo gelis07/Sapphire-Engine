@@ -1,6 +1,5 @@
 #include "RunTime.h"
 #include "Engine/Engine.h"
-#include "Graphics/ShaderFunc.h"
 
 void RunTime::Init(GLFWwindow* window,Scene* Scene, std::shared_ptr<Object>& CameraObject)
 {
@@ -29,11 +28,11 @@ void RunTime::Render(std::shared_ptr<Object> object, std::shared_ptr<Object> Cam
 {
     if(std::shared_ptr<Renderer> renderer = object->GetRenderer()) {
         if(object != CameraObject)
-            renderer->Render(object,false, -CameraObject->GetTransform()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
+            renderer->Render(*object->GetTransform(), false, -CameraObject->GetTransform()->GetPosition(), 1.0f);
     }
     else
         if(object->GetRenderer() = object->GetComponent<Renderer>()) 
-            object->GetRenderer()->Render(object,false, -CameraObject->GetTransform()->Position.value<glm::vec3>(),CameraObject->GetComponent<Camera>()->Zoom.value<float>(), false);
+            renderer->Render(*object->GetTransform(), false, -CameraObject->GetTransform()->GetPosition(), 1.0f);
         else
             SapphireEngine::Log(object->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
 }
@@ -69,7 +68,7 @@ void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject, const flo
         if(Engine::Get().GetPlay().Paused) continue;
         CheckForSkip(Scene->Objects[i]->OnStart());
         CheckForSkip(Scene->Objects[i]->OnUpdate());
-        if(std::shared_ptr<RigidBody> rb = Scene->Objects[i]->GetComponent<RigidBody>()) {
+        if(std::shared_ptr<PhysicsEngine::RigidBody> rb = Scene->Objects[i]->GetComponent<PhysicsEngine::RigidBody>()) {
             rb->Simulate(Scene->Objects[i].get(), DeltaTime);
             //Currently collision checks for object's twice but I'm planning on adding multithreading where all of these things will happen at the same time.
             //So I'm leaving this for now, and I'm gonna fix this when I get more into optimizing this engine.
@@ -89,7 +88,7 @@ void RunTime::RunGame(GLFWwindow* window,Scene *Scene, std::shared_ptr<Object>& 
     {
         int width, height;
         glfwGetWindowSize(glfwGetCurrentContext(), &width, &height);
-        Engine::Get().GetPlay().CameraObject->GetTransform()->Size.value<glm::vec3>() = glm::vec3(width, height, 0);
+        Engine::Get().GetPlay().CameraObject->GetTransform()->SetSize(glm::vec3(width, height, 0));
         GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
