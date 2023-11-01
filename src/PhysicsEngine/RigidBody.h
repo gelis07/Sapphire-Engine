@@ -4,7 +4,7 @@
 
 class Object;
 
-namespace PhysicsEngine{
+namespace SapphirePhysics{
     class RigidBody : public Component{
         public:
             Transform* transform;

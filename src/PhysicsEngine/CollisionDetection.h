@@ -11,7 +11,7 @@ struct CollisionData{
 };
 
 class Object;
-namespace PhysicsEngine{
+namespace SapphirePhysics{
     class CollisionDetection {
         public:
             static SapphireEngine::Float g; 

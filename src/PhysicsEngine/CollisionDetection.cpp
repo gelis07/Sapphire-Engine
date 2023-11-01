@@ -4,10 +4,10 @@
 #include "UI/Windows.h" 
 #include "RunTime/RunTime.h"
 
-SapphireEngine::Float PhysicsEngine::CollisionDetection::g("g", Windows::SettingsVariables);
+SapphireEngine::Float SapphirePhysics::CollisionDetection::g("g", Windows::SettingsVariables);
 
 
-bool PhysicsEngine::CollisionDetection::CirclexRectangle(Object* obj, Object* current,CollisionData& CD)
+bool SapphirePhysics::CollisionDetection::CirclexRectangle(Object* obj, Object* current,CollisionData& CD)
 {
     CD.Depth = INFINITY;
     std::array<glm::vec3, 4> Obj1Points = {current->GetTransform()->GetPoints()[0], current->GetTransform()->GetPoints()[1],
@@ -78,7 +78,7 @@ bool PhysicsEngine::CollisionDetection::CirclexRectangle(Object* obj, Object* cu
 }
 
 //Thanks to the video by https://www.youtube.com/watch?v=5gDC1GU3Ivg&list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs&index=22
-void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<Object> obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
+void SapphirePhysics::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<Object> obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
 {
     ContactPoint1 = glm::vec2(0);
     ContactPoint2 = glm::vec2(0);
@@ -146,7 +146,7 @@ void PhysicsEngine::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<
         
     }
 }
-glm::vec2 PhysicsEngine::CollisionDetection::FindPolygonCircleContactPoint(const glm::vec2 &CirclePosition, const float &Radius, const glm::vec2 &PolygonPosition, const std::array<glm::vec3, 4> &PolygonPoints)
+glm::vec2 SapphirePhysics::CollisionDetection::FindPolygonCircleContactPoint(const glm::vec2 &CirclePosition, const float &Radius, const glm::vec2 &PolygonPosition, const std::array<glm::vec3, 4> &PolygonPoints)
 {
     float MinDistanceSquared = INFINITY;
     glm::vec2 ContactPoint = glm::vec2(0);
@@ -168,16 +168,16 @@ glm::vec2 PhysicsEngine::CollisionDetection::FindPolygonCircleContactPoint(const
     return ContactPoint;
 }
 constexpr float VerySmallAmount = 0.0005f;
-bool PhysicsEngine::CollisionDetection::NearlyEqual(float a, float b)
+bool SapphirePhysics::CollisionDetection::NearlyEqual(float a, float b)
 {
     return abs(a - b) < VerySmallAmount;
 
 }
-bool PhysicsEngine::CollisionDetection::NearlyEqual(glm::vec2 &a, glm::vec2 &b)
+bool SapphirePhysics::CollisionDetection::NearlyEqual(glm::vec2 &a, glm::vec2 &b)
 {
     return (glm::distance(a, b) * glm::distance(a, b)) < VerySmallAmount * VerySmallAmount;
 }
-int PhysicsEngine::CollisionDetection::FindClosestPointOnPolygon(const glm::vec2 &Position, std::array<glm::vec3, 4> Points)
+int SapphirePhysics::CollisionDetection::FindClosestPointOnPolygon(const glm::vec2 &Position, std::array<glm::vec3, 4> Points)
 {
     int result = -1;
     float MinDistance = INFINITY;
@@ -195,7 +195,7 @@ int PhysicsEngine::CollisionDetection::FindClosestPointOnPolygon(const glm::vec2
     
     return result;
 }
-void PhysicsEngine::CollisionDetection::ProjectCircle(const glm::vec2 &Position, float Radius, glm::vec2 Axis, float &o_Min, float &o_Max)
+void SapphirePhysics::CollisionDetection::ProjectCircle(const glm::vec2 &Position, float Radius, glm::vec2 Axis, float &o_Min, float &o_Max)
 {
     glm::vec2 Direction = glm::normalize(Axis);
     glm::vec2 DirectionAndRadius = Direction * Radius;
@@ -212,7 +212,7 @@ void PhysicsEngine::CollisionDetection::ProjectCircle(const glm::vec2 &Position,
         o_Max = t;
     }
 }
-glm::vec2 PhysicsEngine::CollisionDetection::FindArithmeticMean(std::array<glm::vec3, 4> &Vertices)
+glm::vec2 SapphirePhysics::CollisionDetection::FindArithmeticMean(std::array<glm::vec3, 4> &Vertices)
 {
     glm::vec3 Sum;
 
@@ -223,7 +223,7 @@ glm::vec2 PhysicsEngine::CollisionDetection::FindArithmeticMean(std::array<glm::
     Sum /= Vertices.size();
     return glm::vec2(Sum);
 }
-void PhysicsEngine::CollisionDetection::PointSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b, float &distanceSquared, glm::vec2 &cp)
+void SapphirePhysics::CollisionDetection::PointSegmentDistance(glm::vec2 p, glm::vec2 a, glm::vec2 b, float &distanceSquared, glm::vec2 &cp)
 {
     glm::vec2 ab = b - a;
     glm::vec2 ap = p - a;
@@ -245,7 +245,7 @@ void PhysicsEngine::CollisionDetection::PointSegmentDistance(glm::vec2 p, glm::v
 }
 
 // Would like to thank Javidx9 for the amazing video on implementing SAT (Seperated Axis Theorem) with c++! https://www.youtube.com/watch?v=7Ik2vowGcU0
-bool PhysicsEngine::CollisionDetection::RectanglexRectangle(std::shared_ptr<Object> obj, Object *current, CollisionData& CD)
+bool SapphirePhysics::CollisionDetection::RectanglexRectangle(std::shared_ptr<Object> obj, Object *current, CollisionData& CD)
 {
     Object* Obj1 = obj.get();
     Object* Obj2 = current;
@@ -314,7 +314,7 @@ bool PhysicsEngine::CollisionDetection::RectanglexRectangle(std::shared_ptr<Obje
     FindPolygonContactPoint(obj, current, CD.ContactPoint1, CD.ContactPoint2, CD.ContactPointCount);
     return true;
 }
-bool PhysicsEngine::CollisionDetection::CirclexCircle(std::shared_ptr<Object> obj, Object* current, CollisionData& CD)
+bool SapphirePhysics::CollisionDetection::CirclexCircle(std::shared_ptr<Object> obj, Object* current, CollisionData& CD)
 {
     //! Comments here
     // Checking if the length of the vector with points the circles points is less than the sum of the radiuses

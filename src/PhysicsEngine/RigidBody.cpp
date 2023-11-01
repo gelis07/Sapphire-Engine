@@ -3,7 +3,7 @@
 #include "Engine/Engine.h"
 
 
-PhysicsEngine::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp) : Trigger("Trigger", Variables), 
+SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp) : Trigger("Trigger", Variables), 
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
 StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),
     Component(std::move(File), std::move(ArgName), ArgId,obj,LuaComp)
@@ -25,10 +25,10 @@ StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction",
     Functions["Impulse"] = Impulse;
 }
 
-void PhysicsEngine::RigidBody::Update(const float &DeltaTime)
+void SapphirePhysics::RigidBody::Update(const float &DeltaTime)
 {
     if(Static.Get()) return;
-    Force = glm::vec3(0, PhysicsEngine::CollisionDetection::g.Get(), 0) * Mass.Get();
+    Force = glm::vec3(0, SapphirePhysics::CollisionDetection::g.Get(), 0) * Mass.Get();
     Accelaration = (Force/Mass.Get());
     if(std::isnan(Accelaration.x) || std::isnan(Accelaration.y) || std::isnan(Accelaration.z))
         Accelaration = glm::vec3(0);
@@ -38,7 +38,7 @@ void PhysicsEngine::RigidBody::Update(const float &DeltaTime)
     transform->Rotate(AngularVelocity.z * DeltaTime);
 }
 
-bool PhysicsEngine::RigidBody::CollisionDetection(Object* current)
+bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
 {
     glm::vec2 Normal;
     float Depth;
@@ -47,13 +47,13 @@ bool PhysicsEngine::RigidBody::CollisionDetection(Object* current)
         for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
             if(object->Name == "MainCamera" || object.get() == current) continue;
             if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-                if(PhysicsEngine::CollisionDetection::RectanglexRectangle(object, current,CD)){
+                if(SapphirePhysics::CollisionDetection::RectanglexRectangle(object, current,CD)){
                     OnCollisionRotation(current, object.get(), std::move(CD));
                     break;
                 }
             }
             else{
-                if(PhysicsEngine::CollisionDetection::CirclexRectangle(object.get(), current,CD)){
+                if(SapphirePhysics::CollisionDetection::CirclexRectangle(object.get(), current,CD)){
                     OnCollisionRotation(object.get(), current, std::move(CD));
                     break;
                 }
@@ -64,12 +64,12 @@ bool PhysicsEngine::RigidBody::CollisionDetection(Object* current)
         for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
             if(object->Name == "MainCamera" || object.get() == current) continue;
             if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
-                if(PhysicsEngine::CollisionDetection::CirclexRectangle(current, object.get(),CD)){
+                if(SapphirePhysics::CollisionDetection::CirclexRectangle(current, object.get(),CD)){
                     OnCollisionRotation(current, object.get(), std::move(CD));
                     break;
                 }
             }else{
-                if(PhysicsEngine::CollisionDetection::CirclexCircle(object, current, CD)){
+                if(SapphirePhysics::CollisionDetection::CirclexCircle(object, current, CD)){
                     OnCollisionRotation(current, object.get(), std::move(CD));
                     break;
                 }
@@ -83,7 +83,7 @@ bool PhysicsEngine::RigidBody::CollisionDetection(Object* current)
 float CrossProduct(glm::vec2 v1, glm::vec2 v2){
     return v1.x * v2.y - v1.y * v2.x;
 }
-void PhysicsEngine::RigidBody::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
+void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
 {
     RigidBody* bodyA = current->GetComponent<RigidBody>().get();
     RigidBody* bodyB = obj->GetComponent<RigidBody>().get();
@@ -239,14 +239,14 @@ void PhysicsEngine::RigidBody::OnCollisionRotation(Object *current, Object *obj,
     } 
 }
 
-void PhysicsEngine::RigidBody::OnCollision(Object* current, Object* obj, CollisionData&& CD)
+void SapphirePhysics::RigidBody::OnCollision(Object* current, Object* obj, CollisionData&& CD)
 {
     obj->OnCollision(current);
     current->OnCollision(obj);
 
 
-    PhysicsEngine::RigidBody* CurrentRb = current->GetComponent<RigidBody>().get();
-    PhysicsEngine::RigidBody* ObjRb = obj->GetComponent<RigidBody>().get();
+    SapphirePhysics::RigidBody* CurrentRb = current->GetComponent<RigidBody>().get();
+    SapphirePhysics::RigidBody* ObjRb = obj->GetComponent<RigidBody>().get();
     if(CurrentRb->Static.Get() && ObjRb->Static.Get())
         return;
     
@@ -276,22 +276,22 @@ void PhysicsEngine::RigidBody::OnCollision(Object* current, Object* obj, Collisi
 }
 
 
-void PhysicsEngine::RigidBody::Simulate(Object *current, const float& DeltaTime) {
+void SapphirePhysics::RigidBody::Simulate(Object *current, const float& DeltaTime) {
     Update(DeltaTime);
     CollisionDetection(current);
 }
 
-int PhysicsEngine::RigidBody::Impulse(lua_State *L) {
+int SapphirePhysics::RigidBody::Impulse(lua_State *L) {
     luaL_checktype(L, 1, LUA_TTABLE);
     lua_getfield(L, 1, "__userdata");
-    PhysicsEngine::RigidBody* rb = static_cast<PhysicsEngine::RigidBody*>(lua_touserdata(L, -1));
+    SapphirePhysics::RigidBody* rb = static_cast<SapphirePhysics::RigidBody*>(lua_touserdata(L, -1));
     lua_pop(L, 1);
     float x = (float)luaL_checknumber(L, 2);
     float y = (float)luaL_checknumber(L, 3);
     float z = (float)luaL_checknumber(L, 4);
     glm::vec3 Force(x,y,z);
     float& mass = rb->Mass.Get();
-    glm::vec3 weight = glm::vec3(0,PhysicsEngine::CollisionDetection::g.Get() * mass,0);
+    glm::vec3 weight = glm::vec3(0,SapphirePhysics::CollisionDetection::g.Get() * mass,0);
     glm::vec3 Fnet = Force - weight;
     float DeltaTime = 0.2f;
     rb->Velocity = glm::vec3(Fnet * DeltaTime) / mass;

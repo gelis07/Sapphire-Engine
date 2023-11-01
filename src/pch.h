@@ -22,7 +22,9 @@
 #include <vector>
 #include <typeinfo>
 #include <map>
+#include <queue>
 #include <variant>
+#include <optional>
 #include <unordered_map>
 #include <glm/gtc/type_ptr.hpp>
 #define GLM_ENABLE_EXPERIMENTAL

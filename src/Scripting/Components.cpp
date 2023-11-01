@@ -39,7 +39,6 @@ void Component::UpdateLuaVariables()
             lua_getglobal(L, Var.second->GetName().c_str());
             for(auto&& x : ((SapphireEngine::LuaTable*)(Var.second))->Get()){
                 lua_setfield(L, -1, x.first.c_str());
-                
             }
         }
     }

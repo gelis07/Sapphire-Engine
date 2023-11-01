@@ -20,7 +20,7 @@ void SapphireRenderer::VertexArray::AddBuffer(const VertexBuffer &VBO, const Ver
     {
         const auto& element = elements[i];
         GLCall(glEnableVertexAttribArray(i));
-        GLCall(glVertexAttribPointer(i, element.Count,element.Type, element.Normalized, layout.GetStride(), (const void*)offset));
+        GLCall(glVertexAttribPointer(i, element.Count,element.Type, element.Normalized, layout.GetStride(), reinterpret_cast<const void*>(offset)));
         offset += element.Count * VertexBufferElement::GetSizeOfType(element.Type);
     }
     Unbind();

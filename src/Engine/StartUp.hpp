@@ -48,7 +48,7 @@ void StartUp(){
 
     // Set the window position to the center position
     glfwSetWindowPos(logo_window, center_x, center_y);
-
+    SapphireRenderer::Texture::SetTextureParameters();
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -77,9 +77,7 @@ void StartUp(){
     layout.Push(GL_FLOAT, 2);
     VertexArray.AddBuffer(VertexBuffer, layout);
 
-    stbi_set_flip_vertically_on_load(true);
-
-    SapphireRenderer::Texture Texture("Assets/Logo.png");
+    SapphireRenderer::Texture Texture("Assets/Logo.png", true);
     VertexArray.Bind();
     GLCall(glActiveTexture(GL_TEXTURE0));
     Texture.Bind();

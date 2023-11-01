@@ -163,8 +163,7 @@ bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm:
 
 
 // Its the little offset between the texture's position and the ImGui window's position. I played around with the values and these seem good. Perfect solution I know xD.
-constexpr glm::vec2 offset = glm::vec2(1.3f, 11.1f);
-
+constexpr glm::vec2 offset = glm::vec2(8, -6);
 // Thank you for the tutorial! https://www.codingwiththomas.com/blog/rendering-an-opengl-framebuffer-into-a-dear-imgui-window
 void SceneEditor::Render()
 {
@@ -176,6 +175,11 @@ void SceneEditor::Render()
 
     m_WindowWidth = ImGui::GetContentRegionAvail().x;
     m_WindowHeight = ImGui::GetContentRegionAvail().y;
+
+    MoveCamera(glm::vec2(m_WindowWidth, m_WindowHeight), glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y));
+    glfwSetWindowUserPointer(m_Window, &ViewCamera);
+    glfwSetScrollCallback(m_Window, ImGui::IsWindowHovered() ? Zooming : Default);
+
     Engine::Get().GetPlay().CameraObject->GetTransform()->SetSize(glm::vec3(m_WindowWidth, m_WindowHeight, 0));
 
 
@@ -203,15 +207,14 @@ void SceneEditor::Render()
     
     ImGuizmo::SetRect(ImGui::GetWindowPos().x + offset.x, ImGui::GetWindowPos().y + offset.y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
     
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position + glm::vec3(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y, 0) / 2.0f);
     if(SelectedObj != nullptr){
         const glm::vec3& Position = SelectedObj->GetTransform()->GetPosition();
         const glm::vec3& Rotation = SelectedObj->GetTransform()->GetRotation();
         const glm::vec3& Scale = SelectedObj->GetTransform()->GetSize();
-        // m_Projection = glm::ortho( -WindowSize.x/2.0f / CameraZoom, WindowSize.x/2.0f / CameraZoom, -WindowSize.y / 2.0f / CameraZoom, WindowSize.y / 2.0f / CameraZoom, -1.0f, 1.0f);
-        // glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom, 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom, -1.0f, 1.0f);
-        glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
+        glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom, 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom, -1.0f, 1.0f);
+        // glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
 
-        glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position);
 
         glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
         glm::mat4 Transform = glm::translate(glm::mat4(1.0f), Position) * rotation * glm::scale(glm::mat4(1.0f), Scale);
@@ -242,10 +245,6 @@ void SceneEditor::Render()
     }
 
 
-    MoveCamera(glm::vec2(m_WindowWidth, m_WindowHeight), glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y));
-    glfwSetWindowUserPointer(m_Window, &ViewCamera);
-    glfwSetScrollCallback(m_Window, ImGui::IsWindowHovered() ? Zooming : Default);
-
     ImGui::End();
 
 
@@ -261,11 +260,11 @@ void SceneEditor::Render()
     for (size_t i = 0; i < m_ActiveScene->Objects.size(); i++)
     {
         if(std::shared_ptr<Renderer> renderer = m_ActiveScene->Objects[i]->GetRenderer())
-            renderer->Render(*(m_ActiveScene->Objects[i]->GetTransform()), m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom);
+            renderer->Render(*(m_ActiveScene->Objects[i]->GetTransform()), view,m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom);
         else{
             //Check if it does indeed exist and is not set to the renderer variable on the object set it,
             if(m_ActiveScene->Objects[i]->GetRenderer() = m_ActiveScene->Objects[i]->GetComponent<Renderer>()) 
-                m_ActiveScene->Objects[i]->GetRenderer()->Render(*(m_ActiveScene->Objects[i]->GetTransform()), m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom);
+                m_ActiveScene->Objects[i]->GetRenderer()->Render(*(m_ActiveScene->Objects[i]->GetTransform()), view,m_ActiveScene->Objects[i] == SelectedObj, ViewCamera.position, ViewCamera.Zoom);
             else
                 SapphireEngine::Log(m_ActiveScene->Objects[i]->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
         }

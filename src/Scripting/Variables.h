@@ -54,6 +54,7 @@ namespace SapphireEngine{
             const char* Format = "%.3f"; // Thats the default ImGui value.
             ImGuiSliderFlags Flags = 0;
             float& Get() {return data;}
+            const float& Get() const {return data;}
         private:
             float data;
     };
@@ -68,6 +69,7 @@ namespace SapphireEngine{
             void GetFromLua(lua_State* L) override;
             void Load(const nlohmann::json& jsonArray) override;
             bool& Get() {return data;}
+            const bool& Get() const {return data;}
         private:
             bool data;
     };
@@ -83,6 +85,7 @@ namespace SapphireEngine{
             void Load(const nlohmann::json& jsonArray) override;
             ImGuiInputTextFlags Flags = 0;
             std::string& Get() {return data;}
+            const std::string& Get() const {return data;}
         private:
             std::string data;
     };
@@ -101,6 +104,7 @@ namespace SapphireEngine{
             const char* Format = "%.3f"; // Thats the default ImGui value.
             ImGuiSliderFlags Flags = 0;
             glm::vec2& Get() {return data;}
+            const glm::vec2& Get() const {return data;}
         private:
             glm::vec2 data;
     };
@@ -119,6 +123,7 @@ namespace SapphireEngine{
             const char* Format = "%.3f"; // Thats the default ImGui value.
             ImGuiSliderFlags Flags = 0;
             glm::vec3& Get() {return data;}
+            const glm::vec3& Get() const {return data;}
         private:
             glm::vec3 data;
     };
@@ -137,6 +142,7 @@ namespace SapphireEngine{
             const char* Format = "%.3f"; // Thats the default ImGui value.
             ImGuiSliderFlags Flags = 0;
             glm::vec4& Get() {return data;}
+            const glm::vec4& Get() const {return data;}
         private:
             glm::vec4 data;
     };
@@ -151,6 +157,7 @@ namespace SapphireEngine{
             void Load(const nlohmann::json& jsonArray) override;
             ImGuiColorEditFlags Flags = 0;
             glm::vec4& Get() {return data;}
+            const glm::vec4& Get() const {return data;}
         private:
             glm::vec4 data;
     };
@@ -163,7 +170,8 @@ namespace SapphireEngine{
             void SendToLua(lua_State* L) override;
             void GetFromLua(lua_State* L) override;
             void Load(const nlohmann::json& jsonArray) override;
-            std::unordered_map<std::string, Variable*> Get() {return data;}
+            std::unordered_map<std::string, Variable*>& Get() {return data;}
+            const std::unordered_map<std::string, Variable*>& Get() const {return data;}
         private:
             std::unordered_map<std::string, Variable*> data;
     };

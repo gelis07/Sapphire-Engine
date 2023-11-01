@@ -49,17 +49,6 @@ void Scene::Load(const std::string FilePath)
 
         std::shared_ptr<Shapes::Shape> shape;
         std::shared_ptr<Object> obj = std::make_shared<Object>(JsonObj["Name"]);
-        switch (JsonObj["shape"].get<int>())
-        {
-            case Shapes::CircleT:
-                shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
-                break;
-            case Shapes::RectangleT:
-                shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
-                break;
-            default:
-                shape = nullptr;
-        }
         nlohmann::json& JsonComp = JsonObj["Components"];
         for (auto& element : JsonObj["Components"].items()) {
             //! Got to find a better way to handle this!
@@ -71,21 +60,19 @@ void Scene::Load(const std::string FilePath)
             else if(element.key() == "Transform")
             {
                 std::vector<glm::vec3> points;
-                points.push_back(glm::vec3(-1,-1,0));
-                points.push_back(glm::vec3(1,-1,0));
-                points.push_back(glm::vec3(1,1,0));
-                points.push_back(glm::vec3(-1,1,0));
+                points.push_back(glm::vec3(-0.5f,-0.5f,0));
+                points.push_back(glm::vec3(0.5f,-0.5f,0));
+                points.push_back(glm::vec3(0.5f,0.5f,0));
+                points.push_back(glm::vec3(-0.5f,0.5f,0));
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>(element.value()["path"], element.key(), obj->GetComponents().size(),obj.get(),std::move(points),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }else if(element.key() == "Camera") {
                 obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<LuaCamera>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
-                shape = std::make_shared<Shapes::CameraGizmo>(Shapes::BasicShader);
-                shape->Wireframe() = true;
                 Engine::Get().GetPlay().CameraObject = obj;
             }
             else if(element.key() == "Rigidbody") {
-                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<PhysicsEngine::RigidBody>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
+                obj->GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>(element.value()["path"], element.key(), obj->GetComponents().size(), obj.get(),element.value()["path"] != "")));
                 obj->GetComponents().back()->Load(element.value()["Variables"]);
             }
             else
@@ -95,15 +82,30 @@ void Scene::Load(const std::string FilePath)
                 obj->AddComponent<Component>(comp);
             }
         }
-        if(obj == Engine::Get().GetPlay().CameraObject)
+
+
+        switch (JsonObj["shape"].get<int>())
+        {
+            case Shapes::CircleT:
+                shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
+                break;
+            case Shapes::RectangleT:
+                shape = std::make_shared<Shapes::Rectangle>(Shapes::TextureShader, obj->GetComponent<Renderer>()->TexturePath.Get());
+                break;
+            default:
+                shape = nullptr;
+        }
+        if(obj == Engine::Get().GetPlay().CameraObject){
             obj->GetComponent<Transform>()->SetSize(glm::vec3(Engine::Get().GetViewport().GetWindowSize().x, Engine::Get().GetViewport().GetWindowSize().y, 0));
+            shape->Wireframe() = true;
+        }
 
         obj->GetTransform() = obj->GetComponent<Transform>();
         obj->GetTransform()->UpdateModel();
         obj->GetTransform()->UpdatePoints();
         obj->GetRenderer() = obj->GetComponent<Renderer>();
         obj->GetComponent<Renderer>()->shape = shape;
-        if(std::shared_ptr<PhysicsEngine::RigidBody> RbComp = obj->GetComponent<PhysicsEngine::RigidBody>()){
+        if(std::shared_ptr<SapphirePhysics::RigidBody> RbComp = obj->GetComponent<SapphirePhysics::RigidBody>()){
             RbComp->transform = obj->GetTransform().get();
             RbComp->ShapeType = static_cast<int>(obj->GetRenderer()->shape->ShapeType);
         }
@@ -166,7 +168,7 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
-            Obj->GetComponent<PhysicsEngine::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
+            Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         if (ImGui::MenuItem("Create Rectangle"))
         {
@@ -174,7 +176,15 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
-            Obj->GetComponent<PhysicsEngine::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
+            Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
+        }
+        if (ImGui::MenuItem("Create Sprite"))
+        {
+            std::stringstream ss;
+            ss << "Object: " << Objects.size();
+            std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::TextureShader, "");
+            Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         ImGui::Separator();
         // if(ImGui::MenuItem("Duplicate")){

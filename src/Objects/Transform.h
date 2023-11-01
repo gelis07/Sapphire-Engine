@@ -13,18 +13,18 @@ class Transform : public Component
         void UpdatePoints();
         //Getters and Setters.
         void SetPosition(const glm::vec3& NewPosition);
-        const glm::vec3& GetPosition() {return Position.Get();}
+        const glm::vec3& GetPosition() const {return Position.Get();}
 
         void SetRotation(const float& NewRotation);
-        const glm::vec3& GetRotation() {return Rotation.Get();}
+        const glm::vec3& GetRotation() const {return Rotation.Get();}
 
         void SetSize(const glm::vec3& NewSize);
-        const glm::vec3& GetSize() {return Size.Get();}
+        const glm::vec3& GetSize() const {return Size.Get();}
 
-        const std::vector<glm::vec3>& GetPoints() { return Points;}
-        const std::vector<glm::vec3>& GetOriginalPoints() { return OriginalPoints;}
+        const std::vector<glm::vec3>& GetPoints() const { return Points;}
+        const std::vector<glm::vec3>& GetOriginalPoints() const { return OriginalPoints;}
 
-        const glm::mat4& GetModel() {return Model;}
+        const glm::mat4& GetModel() const {return Model;}
         glm::mat4 Model;
     private:
         std::vector<glm::vec3> OriginalPoints;

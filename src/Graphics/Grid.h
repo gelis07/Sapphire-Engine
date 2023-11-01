@@ -8,11 +8,11 @@
 class Grid{
     public:
         void Init();
-        void Render(glm::vec3& CameraPos, float CameraZoom);
+        void Render(const glm::vec3& CameraPos, float CameraZoom);
     private:
         SapphireRenderer::VertexArray* VertexArray = nullptr;
         SapphireRenderer::VertexBuffer* VertexBuffer = nullptr;
         SapphireRenderer::IndexBuffer* IndexBuffer = nullptr;
         SapphireRenderer::Shader* Shader = nullptr;
-
+        glm::mat4 mvp;
 };

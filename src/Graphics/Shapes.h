@@ -13,7 +13,8 @@ class Object;
 
 
 struct Vertex{
-    float Pos[2];
+    glm::vec2 Pos;
+    glm::vec2 TextureCoord;
 };
 struct TextureAtlas{
     glm::vec2 IconSize;
@@ -21,10 +22,18 @@ struct TextureAtlas{
     SapphireRenderer::Texture AtlasID;
 };
 
+struct ViewportCamera{
+    float Zoom = 1;
+    glm::vec3 position = glm::vec3(0);
+    glm::mat4 View = glm::mat4(0.0f);
+};
+
+
 namespace Shapes
 {
     inline SapphireRenderer::Shader BasicShader;
     inline SapphireRenderer::Shader CircleShader;
+    inline SapphireRenderer::Shader TextureShader;
     enum Type{
         RectangleT=1,CircleT=2,Null=-1
     };
@@ -32,17 +41,18 @@ namespace Shapes
         public:
             Shapes::Type ShapeType = Shapes::Null;
             bool& Wireframe() {return m_Wireframe;}
-            Shape(SapphireRenderer::Shader& shader);
+            Shape(const SapphireRenderer::Shader& shader, const std::string& path = "");
             // That's the function that actually render's a shape
-            void RenderShape(Transform& transform,const glm::vec3 &CamPos, float CameraZoom, bool OutLine ,bool WireFrame, std::function<void(SapphireRenderer::Shader& shader)> SetUpUniforms);
-
+            void RenderShape(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, float CameraZoom, bool OutLine ,bool WireFrame, const std::function<void(SapphireRenderer::Shader& shader)>& SetUpUniforms);
+            void Load(const std::string& path, bool flip = false);
             // Here is a virtual Render() function for every sub class to do it's own calculations before passing in the data on RenderShape()
-            virtual void Render(Transform& transform, const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame) {} 
+            virtual void Render(const Transform& transform,const glm::vec4& Color, const glm::vec3 &CamPos, const glm::mat4& view,float CameraZoom,bool OutLine, bool WireFrame) {} 
         private:
-            SapphireRenderer::Shader& Shader;
+            SapphireRenderer::Shader Shader;
             SapphireRenderer::VertexBuffer VertexBuffer;
             SapphireRenderer::VertexArray VertexArray;
             SapphireRenderer::IndexBuffer IndexBuffer;
+            std::optional<SapphireRenderer::Texture> Texture;
             glm::mat4 m_Projection;
             bool m_Wireframe = false;
     };
@@ -50,23 +60,14 @@ namespace Shapes
     class Rectangle : public Shape
     {
         public:
-            Rectangle(SapphireRenderer::Shader& shader) : Shape(shader) {ShapeType = RectangleT;}
-            void Render(Transform& transform, const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame) override;
+            Rectangle(const SapphireRenderer::Shader& shader, const std::string& path = "") : Shape(shader, path) {ShapeType = RectangleT;}
+            void Render(const Transform& transform,const glm::vec4& Color, const glm::vec3 &CamPos, const glm::mat4& view,float CameraZoom,bool OutLine, bool WireFrame) override;
     };
     class Circle : public Shape
     {
         public:
-            Circle(SapphireRenderer::Shader& shader) : Shape(shader) {ShapeType = CircleT;}
-            void Render(Transform& transform, const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame) override;
+            Circle(const SapphireRenderer::Shader& shader) : Shape(shader) {ShapeType = CircleT;}
+            void Render(const Transform& transform,const glm::vec4& Color, const glm::vec3 &CamPos, const glm::mat4& view,float CameraZoom,bool OutLine, bool WireFrame) override;
     };
-    //To display the camera gizmo like portion of the screen.
-    class CameraGizmo : public Shape
-    {
-        public:
-            CameraGizmo(SapphireRenderer::Shader& shader) : Shape(shader) {ShapeType = RectangleT;}
-            void Render(Transform& transform, const glm::vec3 &CamPos ,float CameraZoom,bool OutLine, bool WireFrame) override;
-    };
-    
-
 }
 

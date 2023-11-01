@@ -3,10 +3,10 @@
 void Grid::Init()
 {
     float Vertices[] = {
-        -960, -560,
-        960, -560,
-        960, 560,
-        -960, 560
+        -1, -1,
+        1, -1,
+        1, 1,
+        -1, 1
     };
     unsigned int Indices[] = {
         0,1,2,
@@ -27,24 +27,22 @@ void Grid::Init()
     VertexBuffer->Unbind();
     IndexBuffer->Unbind();
     VertexArray->Unbind();
+    
+    // glm::mat4 proj = glm::ortho(-480.0f, 480.0f, -280.0f, 280.0f, -1.0f, 1.0f);
+    // glm::mat4 model = glm::mat4(1.0f);
+    // model = glm::translate(model, glm::vec3(0.0f));
+    // glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));    
+    // mvp = proj * view * model;
 }
 
-void Grid::Render(glm::vec3& CameraPos, float CameraZoom)
+void Grid::Render(const glm::vec3& CameraPos, float CameraZoom)
 {
-    glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 560.0f, -1.0f, 1.0f);
-    glm::mat4 model = glm::mat4(1.0f);
-    model = glm::translate(model, glm::vec3(0.0f));
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));    
-    glm::mat4 mvp = proj * view * model;
 
     Shader->Bind();
     VertexArray->Bind();
     IndexBuffer->Bind();
 
-    Shader->SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
-    Shader->SetUniform("GridSpacing", 0.5f);
     Shader->SetUniform("CameraZoom", CameraZoom);
-    Shader->SetUniform("CameraSize", glm::vec2(960, 560));
     Shader->SetUniform("CenterPoint", glm::vec2(CameraPos));
     Shader->SetUniform("u_Color", glm::vec4(0.2f, 0.2f, 0.2f, 1.0f));
 
