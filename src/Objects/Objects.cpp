@@ -132,9 +132,31 @@ void Object::Inspect()
     std::shared_ptr<File> *File = FileExplorerDrop.ReceiveDrop(ImGui::GetCurrentWindow());
     if (File != NULL)
     {
-        Component *NewComponent = new Component((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size(),this,true);
-        if (NewComponent->GetLuaVariables(this))
-            AddComponent<Component>(NewComponent);
+        if(File->get()->Extension == ".lua"){
+            Component *NewComponent = new Component((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size(),this,true);
+            if (NewComponent->GetLuaVariables(this))
+                AddComponent<Component>(NewComponent);
+        }else if(File->get()->Extension == ".png"){
+            GetRenderer()->TexturePath.Get() = (*File)->Path;
+            GetRenderer()->shape->Load(Engine::Get().GetMainPath() + (*File)->Path, true);
+        }else if(File->get()->Extension == ".anim"){
+            // std::vector<SapphireRenderer::KeyFramePair> KeyFrames;
+            // SapphireRenderer::KeyFramePair test;
+            // test.TimeStamp = 0.3f;
+            // test.offset = glm::vec2(0,0);
+            // KeyFrames.push_back(test);
+            // SapphireRenderer::KeyFramePair test2;
+            // test2.TimeStamp = 0.6f;
+            // test2.offset = glm::vec2(0.5f, 0);
+            // KeyFrames.push_back(test2);
+            // std::vector<Vertex> Vertices;
+            // Vertices.push_back({glm::vec2(-0.5f, -0.5f),glm::vec2(0.0f, 0.0f)});
+            // Vertices.push_back({glm::vec2(0.5f, -0.5f), glm::vec2(0.5f, 0.0f)});
+            // Vertices.push_back({glm::vec2(0.5f, 0.5f), glm::vec2(0.5f, 1.0f)});
+            // Vertices.push_back({glm::vec2(-0.5f, 0.5f), glm::vec2(0.0f, 1.0f)});
+            // GetRenderer()->shape = std::make_shared<SapphireRenderer::Animation>(SapphireRenderer::Animation::LoadAnim(Engine::Get().GetMainPath() + (*File)->Path),std::move(Vertices),SapphireRenderer::TextureShader, std::string("C:/Gelis/OMORFONN.png"));
+            // ((SapphireRenderer::Animation*)GetRenderer()->shape.get())->SaveAnim(Engine::Get().GetMainPath() + "/animation.anim");
+        }
     }
 
     ImGui::End();
@@ -170,15 +192,15 @@ std::shared_ptr<Object> Object::LoadPrefab(std::string FilePath)
     stream >> JsonObj;
     stream.close();
 
-    std::shared_ptr<Shapes::Shape> shape;
+    std::shared_ptr<SapphireRenderer::Shape> shape;
     std::shared_ptr<Object> object = std::make_shared<Object>(JsonObj["Name"]);
     switch (JsonObj["shape"].get<int>())
     {
-        case Shapes::CircleT:
-            shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
+        case SapphireRenderer::CircleT:
+            shape = std::make_shared<SapphireRenderer::Circle>(SapphireRenderer::CircleShader);
             break;
-        case Shapes::RectangleT:
-            shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
+        case SapphireRenderer::RectangleT:
+            shape = std::make_shared<SapphireRenderer::Rectangle>(SapphireRenderer::BasicShader);
             break;
         default:
             shape = nullptr;

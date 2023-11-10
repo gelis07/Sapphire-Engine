@@ -47,7 +47,7 @@ void Scene::Load(const std::string FilePath)
         ss << "Object: " << i;
         nlohmann::json JsonObj = Data[ss.str().c_str()];
 
-        std::shared_ptr<Shapes::Shape> shape;
+        std::shared_ptr<SapphireRenderer::Shape> shape;
         std::shared_ptr<Object> obj = std::make_shared<Object>(JsonObj["Name"]);
         nlohmann::json& JsonComp = JsonObj["Components"];
         for (auto& element : JsonObj["Components"].items()) {
@@ -86,14 +86,17 @@ void Scene::Load(const std::string FilePath)
 
         switch (JsonObj["shape"].get<int>())
         {
-            case Shapes::CircleT:
-                shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
+            case SapphireRenderer::CircleT:
+                shape = std::make_shared<SapphireRenderer::Circle>(SapphireRenderer::CircleShader);
                 break;
-            case Shapes::RectangleT:
-                shape = std::make_shared<Shapes::Rectangle>(Shapes::TextureShader, obj->GetComponent<Renderer>()->TexturePath.Get());
+            case SapphireRenderer::RectangleT:
+                shape = std::make_shared<SapphireRenderer::Rectangle>(SapphireRenderer::TextureShader, obj->GetComponent<Renderer>()->TexturePath.Get());
                 break;
             default:
                 shape = nullptr;
+        }
+        if(obj->GetComponent<Renderer>()->TexturePath.Get() != ""){
+            shape->Load(Engine::Get().GetMainPath() + obj->GetComponent<Renderer>()->TexturePath.Get(), true);
         }
         if(obj == Engine::Get().GetPlay().CameraObject){
             obj->GetComponent<Transform>()->SetSize(glm::vec3(Engine::Get().GetViewport().GetWindowSize().x, Engine::Get().GetViewport().GetWindowSize().y, 0));
@@ -167,7 +170,7 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             std::stringstream ss;
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
-            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Circle>(SapphireRenderer::CircleShader);
             Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         if (ImGui::MenuItem("Create Rectangle"))
@@ -175,7 +178,7 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             std::stringstream ss;
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
-            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Rectangle>(SapphireRenderer::BasicShader);
             Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         if (ImGui::MenuItem("Create Sprite"))
@@ -183,7 +186,31 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             std::stringstream ss;
             ss << "Object: " << Objects.size();
             std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
-            Obj->GetComponent<Renderer>()->shape = std::make_shared<Shapes::Rectangle>(Shapes::TextureShader, "");
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Rectangle>(SapphireRenderer::TextureShader, "");
+            Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
+        }
+        if (ImGui::MenuItem("Create Animated"))
+        {
+            std::stringstream ss;
+            ss << "Object: " << Objects.size();
+            std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
+            std::vector<SapphireRenderer::KeyFrame> MainKeyframes ={
+                {0.1f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite1.png"},
+                {0.2f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite2.png"},
+                {0.3f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite3.png"},
+                {0.4f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite4.png"},
+                {0.5f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite5.png"},
+                {0.6f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite6.png"},
+                {0.7f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite7.png"},
+                {0.8f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite8.png"}
+            };
+
+            std::vector<Vertex> Vertices;
+            Vertices.push_back({glm::vec2(-0.5f, -0.5f),glm::vec2(0.0f, 0.0f)});
+            Vertices.push_back({glm::vec2(0.5f, -0.5f), glm::vec2(0.3f, 0.0f)});
+            Vertices.push_back({glm::vec2(0.5f, 0.5f), glm::vec2(0.3f, 1.0f)});
+            Vertices.push_back({glm::vec2(-0.5f, 0.5f), glm::vec2(0.0f, 1.0f)});
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Animation>(std::move(MainKeyframes),std::move(Vertices),SapphireRenderer::TextureShader, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/hi.png");
             Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
         ImGui::Separator();

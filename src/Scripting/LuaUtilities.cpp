@@ -183,11 +183,11 @@ int LuaUtilities::CreateObject(lua_State *L)
     const char* ObjName = lua_tostring(L, -2);
     const char* ObjShape = lua_tostring(L, -1);
     std::shared_ptr<Object> obj = Object::CreateObject(std::string(ObjName));
-    std::shared_ptr<Shapes::Shape> shape;
+    std::shared_ptr<SapphireRenderer::Shape> shape;
     if(std::string(ObjShape) == "Rectangle"){
-        shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
+        shape = std::make_shared<SapphireRenderer::Rectangle>(SapphireRenderer::BasicShader);
     }else{
-        shape = std::make_shared<Shapes::Circle>(Shapes::CircleShader);
+        shape = std::make_shared<SapphireRenderer::Circle>(SapphireRenderer::CircleShader);
     }
     obj->GetComponent<Renderer>()->shape = shape;
     lua_pushlightuserdata(L, obj.get());

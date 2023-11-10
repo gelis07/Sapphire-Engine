@@ -2,6 +2,8 @@
 #include "json.hpp"
 #include "Imgui/ImGuiFileDialog.h"
 
+
+constexpr int ICON_SIZE = 32;
 ProjectManager::ProjectManager()
 {
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
@@ -26,7 +28,7 @@ ProjectManager::ProjectManager()
     ImGui_ImplOpenGL3_Init((char *)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     stbi_set_flip_vertically_on_load(false);
     m_IconAtlas.AtlasID.Init();
-    m_IconAtlas.AtlasID.Load("Assets/IconsAtlas.png");
+    m_IconAtlas.AtlasID.Load("Assets/MinIconAtlas.png");
 }
 
 int ProjectsSize = 0;
@@ -119,19 +121,19 @@ std::string ProjectManager::Run()
             ImVec2 childSize = ImGui::GetWindowSize();
             ImVec2 textSize = ImGui::CalcTextSize(ProjectName.c_str());
             float PosY = (childSize.y - textSize.y) * 0.5f;
-            float IconPosY = (childSize.y - 512/14) * 0.5f;
-            glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*7, 0), glm::vec2(512, 512), m_IconAtlas.AtlasID.GetDimensions()); 
+            float IconPosY = (childSize.y - ICON_SIZE) * 0.5f;
+            glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(ICON_SIZE*3, 0), glm::vec2(ICON_SIZE, ICON_SIZE), m_IconAtlas.AtlasID.GetDimensions()); 
             ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-            ImGui::Image(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+            ImGui::Image(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID.GetID()), ImVec2(ICON_SIZE, ICON_SIZE), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
             
             if(ImGui::IsWindowHovered()){
-                glm::vec4 BinIconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*8, 0), glm::vec2(512, 512), m_IconAtlas.AtlasID.GetDimensions()); 
-                ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - 512/14 - 40, IconPosY)); // Set the cursor position to center the text
+                glm::vec4 BinIconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(ICON_SIZE*4, 0), glm::vec2(ICON_SIZE, ICON_SIZE), m_IconAtlas.AtlasID.GetDimensions()); 
+                ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - ICON_SIZE - 40, IconPosY)); // Set the cursor position to center the text
                 ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(1,1,1,0));
                 ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(1,1,1,0.3));
                 ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(1,1,1,0.6));
                 ImGui::PushStyleVar(ImGuiStyleVar_FrameRounding, 10);
-                if(ImGui::ImageButton(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(BinIconUVs.x, BinIconUVs.y), ImVec2(BinIconUVs.z, BinIconUVs.w)));
+                if(ImGui::ImageButton(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID.GetID()), ImVec2(ICON_SIZE, ICON_SIZE), ImVec2(BinIconUVs.x, BinIconUVs.y), ImVec2(BinIconUVs.z, BinIconUVs.w)));
                 if(ImGui::IsItemClicked()){
                     ShouldDeleteProject = Project.key();
                 }

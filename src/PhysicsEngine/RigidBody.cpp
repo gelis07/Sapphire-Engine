@@ -43,10 +43,10 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
     glm::vec2 Normal;
     float Depth;
     CollisionData CD;
-    if(ShapeType == Shapes::RectangleT){
+    if(ShapeType == SapphireRenderer::RectangleT){
         for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
             if(object->Name == "MainCamera" || object.get() == current) continue;
-            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+            if(object->GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
                 if(SapphirePhysics::CollisionDetection::RectanglexRectangle(object, current,CD)){
                     OnCollisionRotation(current, object.get(), std::move(CD));
                     break;
@@ -63,7 +63,7 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
     else{
         for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
             if(object->Name == "MainCamera" || object.get() == current) continue;
-            if(object->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+            if(object->GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
                 if(SapphirePhysics::CollisionDetection::CirclexRectangle(current, object.get(),CD)){
                     OnCollisionRotation(current, object.get(), std::move(CD));
                     break;

@@ -11,6 +11,7 @@ class Component
     public:
         Component(std::string File, std::string ArgName , unsigned int ArgId, Object* Obj,bool LuaComp=false);
         ~Component();
+        virtual void CustomRendering() {};
         void ExecuteFunction(std::string Name);
         void UpdateLuaVariables();
         bool GetLuaVariables(Object* obj);
@@ -27,7 +28,6 @@ class Component
         std::unordered_map<std::string, lua_CFunction> Functions;
     protected:
         TableVariable VariablesToUpdate;
-        virtual void test() {} //! This... is just so dumb.
         void Reload(Object* obj);
         lua_State* L = nullptr;
         int m_ID;

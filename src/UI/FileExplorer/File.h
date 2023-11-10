@@ -4,6 +4,8 @@
 #include <typeindex>
 #include "Engine/Engine.h"
 
+constexpr int ICON_SIZE = 128;
+
 class File{
     public:
         inline static std::unordered_map<std::string, std::function<std::shared_ptr<File>()>> FileCreationMap;
@@ -18,6 +20,7 @@ class File{
         virtual void SetIconPos() {} // Indicates the position of the file's icon on the IconAtlas.png texture
         std::string Path;
         std::string Name;
+        std::string Extension;
     protected:
         glm::vec2 m_IconPos = glm::vec2(0);
         glm::vec2 m_IconSize = glm::vec2(0);
@@ -28,8 +31,8 @@ class Default : public File
 {
     public:
         void SetIconPos() override{ 
-            m_IconPos = glm::vec2(512*2,0); 
-            m_IconSize = glm::vec2(512,512); 
+            m_IconPos = glm::vec2(0,ICON_SIZE); 
+            m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
         }
         void OnClick(std::filesystem::directory_entry entry) 
         {
@@ -43,8 +46,8 @@ class Folder : public File
 {
     public:
         void SetIconPos() override{ 
-            m_IconPos = glm::vec2(512*5,0); 
-            m_IconSize = glm::vec2(512,512); 
+            m_IconPos = glm::vec2(0,ICON_SIZE*2); 
+            m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
         }
         void OnClick(std::filesystem::directory_entry entry) 
         {
@@ -60,8 +63,8 @@ class LuaFile : public File
 {
     public:
         void SetIconPos() override{ 
-            m_IconPos = glm::vec2(512*3,0); 
-            m_IconSize = glm::vec2(512,512); 
+            m_IconPos = glm::vec2(ICON_SIZE,ICON_SIZE); 
+            m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
         }
         void OnClick(std::filesystem::directory_entry entry) 
         {
@@ -78,7 +81,7 @@ class SceneFile : public File
     public:
         void SetIconPos() override{
             m_IconPos = glm::vec2(0,0);
-            m_IconSize = glm::vec2(512,512); 
+            m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
         }
         void OnClick(std::filesystem::directory_entry entry) override
         {
@@ -87,5 +90,37 @@ class SceneFile : public File
         void OnDoubleClick(std::filesystem::directory_entry entry) override
         {
             Engine::Get().GetActiveScene()->Load(entry.path().filename().string());
+        }
+};
+class ImageFile : public File
+{
+    public:
+        void SetIconPos() override{
+            m_IconPos = glm::vec2(ICON_SIZE,ICON_SIZE*2);
+            m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
+        }
+        void OnClick(std::filesystem::directory_entry entry) override
+        {
+
+        }
+        void OnDoubleClick(std::filesystem::directory_entry entry) override
+        {
+            system((entry.path().string()).c_str());
+        }
+};
+class AnimationFile : public File
+{
+    public:
+        void SetIconPos() override{
+            m_IconPos = glm::vec2(ICON_SIZE,0);
+            m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
+        }
+        void OnClick(std::filesystem::directory_entry entry) override
+        {
+
+        }
+        void OnDoubleClick(std::filesystem::directory_entry entry) override
+        {
+            
         }
 };

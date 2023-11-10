@@ -18,8 +18,8 @@ void RunTime::Init(GLFWwindow* window,Scene* Scene, std::shared_ptr<Object>& Cam
         std::cout << "Error!" << std::endl;
 
 
-    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::CircleShader.GetID()), "Shaders/Circle.glsl");
-    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::BasicShader.GetID()), "Shaders/Basic.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::CircleShader.GetID()), "Shaders/Circle.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::BasicShader.GetID()), "Shaders/Basic.glsl");
 
     // Scene->Load("/Test.scene");
 }
@@ -51,9 +51,9 @@ void RunTime::Run(Scene* Scene, std::shared_ptr<Object>& CameraObject, const flo
     //     {
     //         glm::vec2 Normal;
     //         float Depth;
-    //         if(Scene->Objects[Obj1]->GetRenderer()->shape->ShapeType == Shapes::RectangleT){
+    //         if(Scene->Objects[Obj1]->GetRenderer()->shape->ShapeType == SapphireRenderer::RectangleT){
     //            if(Scene->Objects[Obj2]->Name == "MainCamera" || Scene->Objects[Obj2] == Scene->Objects[Obj1]) continue;
-    //             if(Scene->Objects[Obj2]->GetComponent<Renderer>()->shape->ShapeType == Shapes::RectangleT){
+    //             if(Scene->Objects[Obj2]->GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
     //                 CollisionData CD;
     //                 if(SapphirePhysics::CollisionDetection::RectanglexRectangle(Scene->Objects[Obj2], Scene->Objects[Obj1].get(),CD)){
     //                     Scene->Objects[Obj1]->GetComponent<RigidBody>()->rb.OnCollisionRotation(Scene->Objects[Obj1].get(), Scene->Objects[Obj2].get(), std::move(CD));

@@ -55,6 +55,7 @@ namespace SapphireEngine
         }
         return s;
     }
+
     static glm::vec4 LoadIconFromAtlas(glm::vec2 coord, glm::vec2 size, glm::vec2 AtlasSize)
     {
         return glm::vec4(coord.x / AtlasSize.x, coord.y / AtlasSize.y, (coord.x + size.x) / AtlasSize.x, (coord.y + size.y) / AtlasSize.y);

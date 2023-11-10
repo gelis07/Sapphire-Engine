@@ -11,7 +11,7 @@ std::shared_ptr<Object> SceneEditor::OnClick(GLFWwindow* window, std::vector<std
     {
         for (size_t i = 0; i < Objects.size(); i++)
         {
-            Shapes::Circle* circlePtr = dynamic_cast<Shapes::Circle*>(Objects[i]->GetRenderer()->shape.get());
+            SapphireRenderer::Circle* circlePtr = dynamic_cast<SapphireRenderer::Circle*>(Objects[i]->GetRenderer()->shape.get());
             //value so I can get the correct mouse position even if the camera is zoomed in/out.
             float scalor = (Engine::Get().GetPlay().CameraObject->GetTransform()->GetSize().x / ViewCamera.Zoom)/Engine::Get().GetPlay().CameraObject->GetTransform()->GetSize().x;
             glm::vec2 CursorPosToWind((CursorPos.x - WindowPosition.x) * scalor - ViewCamera.position.x, -((CursorPos.y - WindowPosition.y) * scalor + ViewCamera.position.y));
@@ -183,12 +183,12 @@ void SceneEditor::Render()
     Engine::Get().GetPlay().CameraObject->GetTransform()->SetSize(glm::vec3(m_WindowWidth, m_WindowHeight, 0));
 
 
-    std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y) + offset);
+    // std::shared_ptr<Object> ClickedObj = OnClick(m_Window, m_ActiveScene->Objects, glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y) + offset);
 
 
     
-    if(ClickedObj != nullptr && ClickedObj->Name != "MainCamera" && !m_ClickedOnObj && !ImGuizmo::IsUsing())
-        SelectedObj = ClickedObj;
+    // if(ClickedObj != nullptr && ClickedObj->Name != "MainCamera" && !m_ClickedOnObj && !ImGuizmo::IsUsing())
+    //     SelectedObj = ClickedObj;
 
 
     ImVec2 pos = ImGui::GetCursorScreenPos();

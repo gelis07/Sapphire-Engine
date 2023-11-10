@@ -185,6 +185,7 @@ void Component::Render()
     {
         Var.second->RenderGUI(VariablesToUpdate);
     }
+    CustomRendering();
 }
 
 void Component::Reload(Object* obj)

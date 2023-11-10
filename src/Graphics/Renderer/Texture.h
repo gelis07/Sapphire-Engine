@@ -25,6 +25,7 @@ namespace SapphireRenderer{
         private:
             int Slot = -1;
             GLuint ID = 0;
+            unsigned int Size = 0;
             unsigned char* Data = nullptr;
             int width, height, nrChannels;
             static std::queue<int> FreeTextureSlots;

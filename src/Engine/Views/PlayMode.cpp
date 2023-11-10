@@ -21,7 +21,7 @@ void PlayMode::Init(Scene* activeScene)
     CameraObject->GetTransform() = CameraObject->GetComponent<Transform>();
     CameraObject->GetRenderer() = CameraObject->GetComponent<Renderer>();
     
-    CameraObject->GetRenderer()->shape = std::make_shared<Shapes::Rectangle>(Shapes::BasicShader);
+    CameraObject->GetRenderer()->shape = std::make_shared<SapphireRenderer::Rectangle>(SapphireRenderer::BasicShader);
     CameraObject->GetRenderer()->shape->Wireframe() = true;
     activeScene->Objects.push_back(CameraObject);
 }

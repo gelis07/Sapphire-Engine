@@ -3,7 +3,7 @@
 #include "FileExplorer/FileExplorer.h"
 
 SapphireEngine::String Windows::ThemeName("ThemeName", UserPreferences);
-
+constexpr int MIN_ICON_SIZE = 32;
 void Windows::Init(std::string&& Path){
 
     IMGUI_CHECKVERSION();
@@ -96,9 +96,9 @@ void Windows::LogWindow()
         {
             case SapphireEngine::Info:
             {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*6, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
+                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(MIN_ICON_SIZE*2, 0), glm::vec2(MIN_ICON_SIZE, MIN_ICON_SIZE), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(MIN_ICON_SIZE, MIN_ICON_SIZE), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
                 ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
@@ -108,9 +108,9 @@ void Windows::LogWindow()
             }
             case SapphireEngine::Warning:
             {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
+                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(0, 0), glm::vec2(MIN_ICON_SIZE, MIN_ICON_SIZE), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(MIN_ICON_SIZE, MIN_ICON_SIZE), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
                 ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
@@ -120,9 +120,9 @@ void Windows::LogWindow()
             }
             case SapphireEngine::Error:
             {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(512*4, 0), glm::vec2(512, 512), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
+                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(MIN_ICON_SIZE, 0), glm::vec2(MIN_ICON_SIZE, MIN_ICON_SIZE), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
                 ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(512/14, 512/14), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
+                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(MIN_ICON_SIZE, MIN_ICON_SIZE), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
 
 
                 ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));

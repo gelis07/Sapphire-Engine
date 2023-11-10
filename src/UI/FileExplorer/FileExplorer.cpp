@@ -11,8 +11,12 @@ void FileExplorer::Init(){
     File::RegisterFile("folder", SET_FILE(Folder));
     File::RegisterFile(".lua", SET_FILE(LuaFile));
     File::RegisterFile(".scene", SET_FILE(SceneFile));
+    File::RegisterFile(".png", SET_FILE(ImageFile));
+    File::RegisterFile(".anim", SET_FILE(AnimationFile));
     m_IconAtlas.AtlasID.Init();
     m_IconAtlas.AtlasID.Load("Assets/IconsAtlas.png");
+    m_MinIconAtlas.AtlasID.Init();
+    m_MinIconAtlas.AtlasID.Load("Assets/MinIconAtlas.png");
     Engine::Get().GetWindows().InitWindow("FileExplorer");
 }
 //I need this function because std::fileysten::copy_options::overwrite_existing still causes a crash if the file exists. After some research I think its a bug from gcc.

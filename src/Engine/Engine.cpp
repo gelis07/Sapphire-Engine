@@ -28,7 +28,6 @@ void Engine::Init(std::string Path)
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
     glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
 
-
     //The window is gonna be maximized from the glfw hint above so the width and height are useless
     m_Window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
     glfwMakeContextCurrent(m_Window);
@@ -42,13 +41,12 @@ void Engine::Init(std::string Path)
 	glfwGetFramebufferSize(m_Window, &bufferWidth, &bufferHeight);
 	glfwMakeContextCurrent(m_Window);
 	glewExperimental = GL_TRUE;
-	// glViewport(0, 0, bufferWidth, bufferHeight);
 
-    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::CircleShader.GetID()), "Shaders/Circle.glsl");
-    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::BasicShader.GetID()), "Shaders/Basic.glsl");
-    SapphireRenderer::LoadShader(const_cast<GLuint&>(Shapes::TextureShader.GetID()), "Shaders/Texture.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::CircleShader.GetID()), "Shaders/Circle.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::BasicShader.GetID()), "Shaders/Basic.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::TextureShader.GetID()), "Shaders/Texture.glsl");
+    SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::AnimationShader.GetID()), "Shaders/Animation.glsl");
 
-    #ifndef EXPORT
     m_Windows.Init(std::move(Path));
     m_Viewport.Init(&m_ActiveScene);
     m_PlayMode.Init(&m_ActiveScene);
@@ -62,12 +60,6 @@ void Engine::Init(std::string Path)
     stream.close();
     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
-    #endif
-
-    #ifdef EXPORT
-    m_Windows.MainPath = std::move(Path);
-    m_PlayMode.Init(&m_ActiveScene);
-    #endif
     glfwSetWindowSizeCallback(m_Window, ResizeIO);
     glfwSetWindowFocusCallback(m_Window, window_focus_callback);
     FileExplorer::Init();

@@ -16,12 +16,14 @@ SapphireRenderer::FrameBuffer::~FrameBuffer()
 
 void SapphireRenderer::FrameBuffer::Bind() const
 {
+    FBOTexture.Bind();
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, ID));
 }
 
 void SapphireRenderer::FrameBuffer::Unbind() const
 {
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    FBOTexture.Unbind();
 }
 
 void SapphireRenderer::FrameBuffer::RescaleFrameBuffer(float width, float height)

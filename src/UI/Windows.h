@@ -44,6 +44,7 @@ class Windows{
         template <typename T>
         void SaveProjectVariable(std::string&& path, std::string&& VariableName, T data);
         float SatAmount;
+        
         std::unordered_map<std::string, bool> WindowStates = 
             {{"Preferences", false},
             {"Settings", false},
