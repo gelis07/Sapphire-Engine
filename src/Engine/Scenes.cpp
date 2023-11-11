@@ -189,30 +189,6 @@ void Scene::CreateMenu(std::shared_ptr<Object> &SelectedObj){
             Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Rectangle>(SapphireRenderer::TextureShader, "");
             Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
-        if (ImGui::MenuItem("Create Animated"))
-        {
-            std::stringstream ss;
-            ss << "Object: " << Objects.size();
-            std::shared_ptr<Object> Obj = Object::CreateObject(ss.str());
-            std::vector<SapphireRenderer::KeyFrame> MainKeyframes ={
-                {0.1f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite1.png"},
-                {0.2f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite2.png"},
-                {0.3f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite3.png"},
-                {0.4f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite4.png"},
-                {0.5f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite5.png"},
-                {0.6f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite6.png"},
-                {0.7f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite7.png"},
-                {0.8f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite8.png"}
-            };
-
-            std::vector<Vertex> Vertices;
-            Vertices.push_back({glm::vec2(-0.5f, -0.5f),glm::vec2(0.0f, 0.0f)});
-            Vertices.push_back({glm::vec2(0.5f, -0.5f), glm::vec2(0.3f, 0.0f)});
-            Vertices.push_back({glm::vec2(0.5f, 0.5f), glm::vec2(0.3f, 1.0f)});
-            Vertices.push_back({glm::vec2(-0.5f, 0.5f), glm::vec2(0.0f, 1.0f)});
-            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Animation>(std::move(MainKeyframes),std::move(Vertices),SapphireRenderer::TextureShader, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/hi.png");
-            Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
-        }
         ImGui::Separator();
         // if(ImGui::MenuItem("Duplicate")){
         //     DuplicateObject(SelectedObj, Objects);

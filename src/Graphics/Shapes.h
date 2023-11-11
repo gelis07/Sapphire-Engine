@@ -97,25 +97,6 @@ namespace SapphireRenderer
             glm::mat4 m_Projection;
             bool m_Wireframe = false;
     };
-    class Animation : public Shape {
-        public:
-            void SaveAnim(const std::string& filename);
-            void SaveAnim(const std::string& filename, const std::vector<KeyFrame>& aKeyFrames);
-            static std::vector<KeyFramePair> LoadAnim(const std::string& filename);
-            void SelectKeyFrame();
-            Animation(std::vector<KeyFrame>&& aKeyFrames,std::vector<Vertex>&& Vertices,const SapphireRenderer::Shader& shader, const std::string& path = "");
-            Animation(std::vector<KeyFramePair>&& aKeyFrames,std::vector<Vertex>&& Vertices,const SapphireRenderer::Shader& shader, const std::string& path = "");
-            void Render(const Transform& transform,const glm::vec4& Color, const glm::vec3 &CamPos, const glm::mat4& view,float CameraZoom,bool OutLine, bool WireFrame) override;
-        private:
-            //Thanks to https://www.geeksforgeeks.org/cpp-program-for-quicksort/
-            int partition(std::vector<KeyFramePair>& arr, int start, int end);
-            void quickSort(std::vector<KeyFramePair>& arr, int start, int end);
-            double LastRecoredTime = 0.0;
-            unsigned int CurrentKeyFrameIdx = 0;
-            std::vector<KeyFramePair> KeyFrames;
-            static float KeyFrameWidthSum(const std::vector<KeyFrameData>& keyframes);
-            static float KeyFrameMaxHeight(const std::vector<KeyFrameData>& keyframes);
-    };
     class Rectangle : public Shape
     {
         public:
