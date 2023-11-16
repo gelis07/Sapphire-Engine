@@ -1,6 +1,6 @@
 #include "Application.h"
 
-Application::Application()
+void Application::Init()
 {
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
@@ -11,8 +11,8 @@ Application::Application()
     window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
     glfwMakeContextCurrent(window);
     glfwSwapInterval(1);
-    if(glewInit() != GLEW_OK)
-        std::cout << "Error!" << std::endl;
+    // if(glewInit() != GLEW_OK)
+    //     std::cout << "Error!" << std::endl;
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     
@@ -21,11 +21,33 @@ Application::Application()
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
 
+
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    IMGUI_CHECKVERSION();
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    {
+        int width, height;
+        glfwGetWindowSize(glfwGetCurrentContext(),&width, &height);
+        io.DisplaySize = ImVec2(width, height);
+    }
+    ImFontConfig config;
+    config.OversampleH = 1;
+    config.OversampleV = 1;
+    config.PixelSnapH = true;
+    io.Fonts->AddFontFromFileTTF("Assets/font.ttf", 16.0f, &config);
+    io.FontDefault = io.Fonts->Fonts.back();
+    io.ConfigWindowsMoveFromTitleBarOnly = true;
+    bool dockspaceOpen = true;
+
+    ImGuiWindowFlags dockspaceFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     glfwSetWindowUserPointer(window, this);
-    glfwSetWindowSizeCallback(window, OnResizeCallBack);
-    glfwSetWindowFocusCallback(window, OnWindowFocusCallBack);
+    // glfwSetWindowSizeCallback(window, OnResizeCallBack);
+    // glfwSetWindowFocusCallback(window, OnWindowFocusCallBack);
     OnStart();
 }
 

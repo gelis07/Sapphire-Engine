@@ -2,14 +2,18 @@
 #include <iostream>
 #include "Views/SceneEditor.h"
 #include "Views/PlayMode.h"
+#include "Application/Application.h"
 #include <array>
 
-class Engine{
+class Engine : public Application{
     public:
         Engine(const Engine&) = delete;
         static Engine& Get() {return Instance;}
-        void Init(std::string Path);
-        void Run();
+        void OnStart() override;
+        void OnUpdate(const float DeltaTime) override;
+        void OnExit() override;
+        void OnResize(GLFWwindow* window, int width, int height) override;
+        void OnWindowFocus(GLFWwindow* window, int focused) override;
         void Export();
         Scene* GetActiveScene();
         const std::string& GetMainPath();
@@ -18,9 +22,8 @@ class Engine{
         Windows& GetWindows() {return m_Windows;}
         const float& GetDeltaTime() {return DeltaTime;}
     private:
-        Engine(){}
+        Engine() { }
         float DeltaTime;
-        float LastTime;
         glm::vec4 BackgroundColor;
         Scene m_ActiveScene;
         GLFWwindow* m_Window;

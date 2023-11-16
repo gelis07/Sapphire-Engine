@@ -360,6 +360,30 @@ include/Imgui/imgui_widgets.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.s
 .PHONY : include/Imgui/imgui_widgets.cpp.s
 
+src/Application/Application.obj: src/Application/Application.cpp.obj
+.PHONY : src/Application/Application.obj
+
+# target to build an object file
+src/Application/Application.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Application/Application.cpp.obj
+.PHONY : src/Application/Application.cpp.obj
+
+src/Application/Application.i: src/Application/Application.cpp.i
+.PHONY : src/Application/Application.i
+
+# target to preprocess a source file
+src/Application/Application.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Application/Application.cpp.i
+.PHONY : src/Application/Application.cpp.i
+
+src/Application/Application.s: src/Application/Application.cpp.s
+.PHONY : src/Application/Application.s
+
+# target to generate assembly for a file
+src/Application/Application.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Application/Application.cpp.s
+.PHONY : src/Application/Application.cpp.s
+
 src/Engine/Engine.obj: src/Engine/Engine.cpp.obj
 .PHONY : src/Engine/Engine.obj
 
@@ -1071,6 +1095,9 @@ help:
 	@echo "... include/Imgui/imgui_widgets.obj"
 	@echo "... include/Imgui/imgui_widgets.i"
 	@echo "... include/Imgui/imgui_widgets.s"
+	@echo "... src/Application/Application.obj"
+	@echo "... src/Application/Application.i"
+	@echo "... src/Application/Application.s"
 	@echo "... src/Engine/Engine.obj"
 	@echo "... src/Engine/Engine.i"
 	@echo "... src/Engine/Engine.s"

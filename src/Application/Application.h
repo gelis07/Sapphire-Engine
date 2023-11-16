@@ -14,7 +14,7 @@
 class Application
 {
     public:
-        Application();
+        void Init();
         void Update();
         const float& GetDeltaTime() const {return DeltaTime;}
         ~Application();

@@ -6,29 +6,30 @@ SapphireEngine::String Windows::ThemeName("ThemeName", UserPreferences);
 constexpr int MIN_ICON_SIZE = 32;
 void Windows::Init(std::string&& Path){
 
-    IMGUI_CHECKVERSION();
-    DefaultContext = ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO();
-    IO = &io;
-    IMGUI_CHECKVERSION();
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-    {
-        int width, height;
-        glfwGetWindowSize(glfwGetCurrentContext(),&width, &height);
-        io.DisplaySize = ImVec2(width, height);
-    }
-    ImFontConfig config;
-    config.OversampleH = 1;
-    config.OversampleV = 1;
-    config.PixelSnapH = true;
-    io.Fonts->AddFontFromFileTTF("Assets/font.ttf", 16.0f, &config);
-    io.FontDefault = io.Fonts->Fonts.back();
-    io.ConfigWindowsMoveFromTitleBarOnly = true;
-    bool dockspaceOpen = true;
-    this->MainPath = Path;
-    this->CurrentPath = Path;
-    ImGuiWindowFlags dockspaceFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
+    // IMGUI_CHECKVERSION();
+    // DefaultContext = ImGui::CreateContext();
+    // ImGuiIO& io = ImGui::GetIO();
+    // IO = &io;
+    // IMGUI_CHECKVERSION();
+    // io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+    // {
+    //     int width, height;
+    //     glfwGetWindowSize(glfwGetCurrentContext(),&width, &height);
+    //     io.DisplaySize = ImVec2(width, height);
+    // }
+    // ImFontConfig config;
+    // config.OversampleH = 1;
+    // config.OversampleV = 1;
+    // config.PixelSnapH = true;
+    // io.Fonts->AddFontFromFileTTF("Assets/font.ttf", 16.0f, &config);
+    // io.FontDefault = io.Fonts->Fonts.back();
+    // io.ConfigWindowsMoveFromTitleBarOnly = true;
+    // bool dockspaceOpen = true;
+    // this->MainPath = Path;
+    // this->CurrentPath = Path;
+    // ImGuiWindowFlags dockspaceFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
+    this->MainPath = "C:/Gelis/Programs/Flappy_Bird/Assets";
+    this->CurrentPath = "C:/Gelis/Programs/Flappy_Bird/Assets";
     ImGuiStyle& style = ImGui::GetStyle();
 
     InitWindow("Preferences", false);

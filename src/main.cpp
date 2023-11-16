@@ -14,10 +14,16 @@ int main(void)
     {
         // A project manager to select the project you want to work on
         ProjectManager Pm;
-
+        Pm.Run();
         //The engine
-        Engine::Get().Init(Pm.Run()); //Pm.Run() will return the Main Path for the Engine.
+        // Engine::Get().Init(Pm.Run()); //Pm.Run() will return the Main Path for the Engine.
     }
-    Engine::Get().Run();
+    Engine::Get().Init();
+    Engine::Get().Update();
+
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+    glfwTerminate();
     return 0;
 }

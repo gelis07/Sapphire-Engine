@@ -36,7 +36,7 @@ void Scene::Save(const std::string FilePath)
 void Scene::Load(const std::string FilePath)
 {
     this->SceneFile = FilePath;
-    std::ifstream stream(Engine::Get().GetMainPath() + FilePath);
+    std::ifstream stream(Engine::Get().GetMainPath() + "/"+FilePath);
     nlohmann::json Data;
     stream >> Data;
     stream.close();

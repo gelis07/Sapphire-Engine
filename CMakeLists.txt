@@ -9,6 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Add the executable target
 add_executable(Sapphire-Engine
     src/main.cpp
+    src/Application/Application.cpp
     src/Graphics/Shapes.cpp
     src/Graphics/Renderer.cpp
     src/Graphics/Renderer/FrameBuffer.cpp

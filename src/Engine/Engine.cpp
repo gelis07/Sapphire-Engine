@@ -3,11 +3,11 @@
 #include "RunTime/RunTime.h"
 Engine Engine::Instance;
 
-void ResizeIO(GLFWwindow* window, int width, int height)
+void Engine::OnResize(GLFWwindow* window, int width, int height)
 {
     Engine::Get().GetWindows().GetWindowIO()->DisplaySize = ImVec2(width,height); // Setting ImGUI to acccess the whole window's place
 }
-void window_focus_callback(GLFWwindow* window, int focused)
+void Engine::OnWindowFocus(GLFWwindow* window, int focused)
 {
     if (focused)
     {
@@ -21,33 +21,14 @@ void window_focus_callback(GLFWwindow* window, int focused)
     }
 }
 
-void Engine::Init(std::string Path)
+void Engine::OnStart()
 {
-    glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-    glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-    glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
-    glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
-
-    //The window is gonna be maximized from the glfw hint above so the width and height are useless
-    m_Window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
-    glfwMakeContextCurrent(m_Window);
-    glfwSwapInterval(1);
-    if(glewInit() != GLEW_OK)
-        std::cout << "Error!" << std::endl;
-    GLCall(glEnable(GL_BLEND));
-    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    
-    int bufferWidth, bufferHeight;
-	glfwGetFramebufferSize(m_Window, &bufferWidth, &bufferHeight);
-	glfwMakeContextCurrent(m_Window);
-	glewExperimental = GL_TRUE;
-
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::CircleShader.GetID()), "Shaders/Circle.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::BasicShader.GetID()), "Shaders/Basic.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::TextureShader.GetID()), "Shaders/Texture.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::AnimationShader.GetID()), "Shaders/Animation.glsl");
 
-    m_Windows.Init(std::move(Path));
+    m_Windows.Init("C:/Gelis/Programs/Flappy_Bird/Assets");
     m_Viewport.Init(&m_ActiveScene);
     m_PlayMode.Init(&m_ActiveScene);
     std::ifstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
@@ -58,49 +39,28 @@ void Engine::Init(std::string Path)
         m_Windows.SettingsVariables[setting.key()]->Load(setting.value());
     }
     stream.close();
-    ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
-    ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
-    glfwSetWindowSizeCallback(m_Window, ResizeIO);
-    glfwSetWindowFocusCallback(m_Window, window_focus_callback);
     FileExplorer::Init();
 }
 
-void Engine::Run()
+void Engine::OnUpdate(const float DeltaTime)
 {
-    //The main loop.
-    while (!glfwWindowShouldClose(m_Window))
-    {
-        
-        ImGui::SetCurrentContext(m_Windows.GetContext());
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui::NewFrame();
+    SapphireEngine::Log(m_Windows.MainPath, SapphireEngine::Info);
+    m_Windows.DockSpace();
+    m_Windows.Toolbar();
+    m_Windows.ThemeMaker();
+    m_Windows.TestWindow();
+    this->DeltaTime = DeltaTime;
+    FileExplorer::Open(m_Windows.CurrentPath);
+    if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
+    m_Windows.LogWindow();
+    m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
+    //* The m_Viewport is the actual game scene
+    m_PlayMode.Render(m_Windows.MainPath);
+    m_Viewport.Render();
+}
 
-        GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
-        float currentTime = glfwGetTime();
-        DeltaTime = currentTime - LastTime;
-        LastTime = currentTime;
-
-        m_Windows.DockSpace();
-        m_Windows.Toolbar();
-        m_Windows.ThemeMaker();
-        m_Windows.TestWindow();
-
-        FileExplorer::Open(m_Windows.CurrentPath);
-        if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
-        m_Windows.LogWindow();
-        m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
-        //* The m_Viewport is the actual game scene
-        m_PlayMode.Render(m_Windows.MainPath);
-        m_Viewport.Render();
-
-        ImGui::SetCurrentContext(m_Windows.GetContext());
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        GLCall(glfwSwapBuffers(m_Window));
-        GLCall(glfwPollEvents());
-    }
+void Engine::OnExit()
+{
     {
         nlohmann::json ProjectSettingsJSON;
         std::ofstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
@@ -121,11 +81,113 @@ void Engine::Run()
         stream << UserPrefrencesJSON.dump(2);
         stream.close();
     }
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-    glfwTerminate();
 }
+
+// void Engine::Init(std::string Path)
+// {
+//     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+//     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
+//     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
+//     glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
+
+//     //The window is gonna be maximized from the glfw hint above so the width and height are useless
+//     m_Window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
+//     glfwMakeContextCurrent(m_Window);
+//     glfwSwapInterval(1);
+//     if(glewInit() != GLEW_OK)
+//         std::cout << "Error!" << std::endl;
+//     GLCall(glEnable(GL_BLEND));
+//     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    
+//     int bufferWidth, bufferHeight;
+// 	glfwGetFramebufferSize(m_Window, &bufferWidth, &bufferHeight);
+// 	glfwMakeContextCurrent(m_Window);
+// 	glewExperimental = GL_TRUE;
+
+//     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::CircleShader.GetID()), "Shaders/Circle.glsl");
+//     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::BasicShader.GetID()), "Shaders/Basic.glsl");
+//     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::TextureShader.GetID()), "Shaders/Texture.glsl");
+//     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::AnimationShader.GetID()), "Shaders/Animation.glsl");
+
+//     m_Windows.Init(std::move(Path));
+//     m_Viewport.Init(&m_ActiveScene);
+//     m_PlayMode.Init(&m_ActiveScene);
+//     std::ifstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
+//     nlohmann::json Data;
+//     stream >> Data;
+//     for (auto &&setting : Data.items())
+//     {
+//         m_Windows.SettingsVariables[setting.key()]->Load(setting.value());
+//     }
+//     stream.close();
+//     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
+//     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
+//     glfwSetWindowSizeCallback(m_Window, ResizeIO);
+//     glfwSetWindowFocusCallback(m_Window, window_focus_callback);
+//     FileExplorer::Init();
+// }
+
+// void Engine::Run()
+// {
+//     //The main loop.
+//     while (!glfwWindowShouldClose(m_Window))
+//     {
+        
+//         ImGui::SetCurrentContext(m_Windows.GetContext());
+//         ImGui_ImplOpenGL3_NewFrame();
+//         ImGui::NewFrame();
+
+//         GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+//         GLCall(glClear(GL_COLOR_BUFFER_BIT));
+
+//         float currentTime = glfwGetTime();
+//         DeltaTime = currentTime - LastTime;
+//         LastTime = currentTime;
+
+//         m_Windows.DockSpace();
+//         m_Windows.Toolbar();
+//         m_Windows.ThemeMaker();
+//         m_Windows.TestWindow();
+
+//         FileExplorer::Open(m_Windows.CurrentPath);
+//         if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
+//         m_Windows.LogWindow();
+//         m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
+//         //* The m_Viewport is the actual game scene
+//         m_PlayMode.Render(m_Windows.MainPath);
+//         m_Viewport.Render();
+
+//         ImGui::SetCurrentContext(m_Windows.GetContext());
+//         ImGui::Render();
+//         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+//         GLCall(glfwSwapBuffers(m_Window));
+//         GLCall(glfwPollEvents());
+//     }
+//     {
+//         nlohmann::json ProjectSettingsJSON;
+//         std::ofstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
+//         for (auto &&setting : m_Windows.SettingsVariables)
+//         {
+//             setting.second->Save(ProjectSettingsJSON);
+//         }
+//         stream << ProjectSettingsJSON.dump(2);
+//         stream.close();
+//     }
+//     {
+//         nlohmann::json UserPrefrencesJSON;
+//         std::ofstream stream("Assets/Preferences.json");
+//         for (auto &&setting : Windows::UserPreferences)
+//         {
+//             setting.second->Save(UserPrefrencesJSON);
+//         }
+//         stream << UserPrefrencesJSON.dump(2);
+//         stream.close();
+//     }
+//     ImGui_ImplOpenGL3_Shutdown();
+//     ImGui_ImplGlfw_Shutdown();
+//     ImGui::DestroyContext();
+//     glfwTerminate();
+// }
 
 void Engine::Export()
 {

@@ -138,7 +138,7 @@ void Object::Inspect()
                 AddComponent<Component>(NewComponent);
         }else if(File->get()->Extension == ".png"){
             GetRenderer()->TexturePath.Get() = (*File)->Path;
-            GetRenderer()->shape->Load(Engine::Get().GetMainPath() + (*File)->Path, true);
+            GetRenderer()->shape->Load(Engine::Get().GetMainPath() + "/" + (*File)->Path, true);
         }else if(File->get()->Extension == ".anim"){
             // std::vector<SapphireRenderer::KeyFramePair> KeyFrames;
             // SapphireRenderer::KeyFramePair test;

@@ -29,7 +29,7 @@ namespace SapphireEngine
         std::uniform_real_distribution<float> dist(0.0, 1.0);
         return glm::vec4(dist(gen), dist(gen), dist(gen), 1);
     }
-    static void Log(std::string&& log, SapphireEngine::LogType&& type){
+    static void Log(const std::string& log, SapphireEngine::LogType&& type){
         std::pair<std::string, SapphireEngine::LogType> NewLog;
         NewLog.first = log;
         NewLog.second = type;
