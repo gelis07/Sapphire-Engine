@@ -10,30 +10,28 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 add_executable(Sapphire-Engine
     src/main.cpp
     src/Application/Application.cpp
-    src/Graphics/Shapes.cpp
-    src/Graphics/Renderer.cpp
-    src/Graphics/Renderer/FrameBuffer.cpp
-    src/Graphics/Renderer/IndexBuffer.cpp
-    src/Graphics/Renderer/Shader.cpp
-    src/Graphics/Renderer/Texture.cpp
-    src/Graphics/Renderer/VertexArray.cpp
-    src/Graphics/Renderer/VertexBuffer.cpp
+    src/Engine/Graphics/Shapes.cpp
+    src/Engine/Graphics/Renderer.cpp
+    src/Engine/Graphics/Renderer/FrameBuffer.cpp
+    src/Engine/Graphics/Renderer/IndexBuffer.cpp
+    src/Engine/Graphics/Renderer/Shader.cpp
+    src/Engine/Graphics/Renderer/Texture.cpp
+    src/Engine/Graphics/Renderer/VertexArray.cpp
+    src/Engine/Graphics/Renderer/VertexBuffer.cpp
     src/Engine/Scenes.cpp
     src/Engine/Engine.cpp
-    src/Engine/Views/PlayMode.cpp
-    src/RunTime/RunTime.cpp
-    src/Engine/Views/SceneEditor.cpp
-    src/Graphics/Grid.cpp
-    src/Scripting/Scripting.cpp
-    src/Scripting/Variables.cpp
-    src/Objects/Objects.cpp
-    src/Objects/Transform.cpp
-    src/Scripting/LuaUtilities.cpp
-    src/Scripting/Components.cpp
-    src/UI/FileExplorer/File.cpp
-    src/UI/Windows.cpp
-    src/UI/FileExplorer/FileExplorer.cpp
-    src/UI/ProjectManager.cpp
+    src/Engine/Graphics/Grid.cpp
+    src/Engine/Scripting/Scripting.cpp
+    src/Editor/Variables.cpp
+    src/Editor/ImGuiWindows.cpp
+    src/Engine/Objects/Objects.cpp
+    src/Engine/Objects/Transform.cpp
+    src/Engine/Scripting/LuaUtilities.cpp
+    src/Engine/Scripting/Components.cpp
+    src/Editor/UI/FileExplorer/File.cpp
+    src/Editor/UI/FileExplorer/FileExplorer.cpp
+    src/Editor/UI/ProjectManager.cpp
+    src/Editor/Editor.cpp
     src/stb_image.cpp
     include/imgui/imgui_draw.cpp
     include/imgui/imgui_impl_glfw.cpp
@@ -52,6 +50,8 @@ add_executable(Sapphire-Engine
 target_include_directories(Sapphire-Engine PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/include/
     ${CMAKE_CURRENT_SOURCE_DIR}/src/
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Engine
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/Editor
 )
 
 # Add library directories

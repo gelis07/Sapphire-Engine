@@ -1,7 +1,18 @@
 #include "Application.h"
 
-void Application::Init()
+Application::Application(const std::string& Path)
 {
+
+    if(Path == ""){
+        AppMainPath = std::filesystem::current_path().string();
+    }else{
+        if(std::filesystem::exists(Path)){
+            AppMainPath = Path;
+        }else{
+            std::cout << "Path not found" << '\n';
+        }
+    }
+
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
@@ -48,11 +59,11 @@ void Application::Init()
     glfwSetWindowUserPointer(window, this);
     // glfwSetWindowSizeCallback(window, OnResizeCallBack);
     // glfwSetWindowFocusCallback(window, OnWindowFocusCallBack);
-    OnStart();
 }
 
 void Application::Update()
 {
+    OnStart();
     while (!glfwWindowShouldClose(window))
     {
         ImGui_ImplOpenGL3_NewFrame();
@@ -72,11 +83,14 @@ void Application::Update()
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
+    OnExit();
 }
 
 Application::~Application()
 {
-    OnExit();
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
     glfwDestroyWindow(window);
 }
 

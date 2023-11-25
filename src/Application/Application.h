@@ -14,29 +14,31 @@
 class Application
 {
     public:
-        void Init();
+        Application(const std::string& Path = "");
         void Update();
         const float& GetDeltaTime() const {return DeltaTime;}
+        const std::string& GetMainPath() const {return AppMainPath;}
         ~Application();
         void Exit();
         bool GetInput(int Key);
         bool GetMouseInput(int MouseButton);
         bool GetInputDown(int Key);
         bool GetMouseInputDown(int MouseButton);
-        void SetClearColor(const glm::vec4& clearColor) {ClearColor = clearColor;}
-    private:
+        void SetClearColor(const glm::vec4& clearColor) {ClearColor = clearColor;} 
+    protected:
         GLFWwindow* window;
         glm::vec4 ClearColor = glm::vec4(0);
         float DeltaTime;
         float LastTime;
         std::unordered_map<int, bool> Keys;
         std::unordered_map<int, bool> MouseButtons;
+        std::string AppMainPath;
         virtual void OnResize(GLFWwindow* window, int width, int height) {}
         virtual void OnWindowFocus(GLFWwindow* window, int focused) {}
         static void OnWindowFocusCallBack(GLFWwindow* window, int focused);
         static void OnResizeCallBack(GLFWwindow* window, int width, int height);
-        virtual void OnStart() {} 
-        virtual void OnUpdate(const float DeltaTime) {} 
-        virtual void OnExit() {} 
+        virtual void OnStart() {};
+        virtual void OnUpdate(const float DeltaTime) {}; 
+        virtual void OnExit() {};
 
 };

@@ -384,6 +384,150 @@ src/Application/Application.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Application/Application.cpp.s
 .PHONY : src/Application/Application.cpp.s
 
+src/Editor/Editor.obj: src/Editor/Editor.cpp.obj
+.PHONY : src/Editor/Editor.obj
+
+# target to build an object file
+src/Editor/Editor.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/Editor.cpp.obj
+.PHONY : src/Editor/Editor.cpp.obj
+
+src/Editor/Editor.i: src/Editor/Editor.cpp.i
+.PHONY : src/Editor/Editor.i
+
+# target to preprocess a source file
+src/Editor/Editor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/Editor.cpp.i
+.PHONY : src/Editor/Editor.cpp.i
+
+src/Editor/Editor.s: src/Editor/Editor.cpp.s
+.PHONY : src/Editor/Editor.s
+
+# target to generate assembly for a file
+src/Editor/Editor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/Editor.cpp.s
+.PHONY : src/Editor/Editor.cpp.s
+
+src/Editor/ImGuiWindows.obj: src/Editor/ImGuiWindows.cpp.obj
+.PHONY : src/Editor/ImGuiWindows.obj
+
+# target to build an object file
+src/Editor/ImGuiWindows.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/ImGuiWindows.cpp.obj
+.PHONY : src/Editor/ImGuiWindows.cpp.obj
+
+src/Editor/ImGuiWindows.i: src/Editor/ImGuiWindows.cpp.i
+.PHONY : src/Editor/ImGuiWindows.i
+
+# target to preprocess a source file
+src/Editor/ImGuiWindows.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/ImGuiWindows.cpp.i
+.PHONY : src/Editor/ImGuiWindows.cpp.i
+
+src/Editor/ImGuiWindows.s: src/Editor/ImGuiWindows.cpp.s
+.PHONY : src/Editor/ImGuiWindows.s
+
+# target to generate assembly for a file
+src/Editor/ImGuiWindows.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/ImGuiWindows.cpp.s
+.PHONY : src/Editor/ImGuiWindows.cpp.s
+
+src/Editor/UI/FileExplorer/File.obj: src/Editor/UI/FileExplorer/File.cpp.obj
+.PHONY : src/Editor/UI/FileExplorer/File.obj
+
+# target to build an object file
+src/Editor/UI/FileExplorer/File.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/FileExplorer/File.cpp.obj
+.PHONY : src/Editor/UI/FileExplorer/File.cpp.obj
+
+src/Editor/UI/FileExplorer/File.i: src/Editor/UI/FileExplorer/File.cpp.i
+.PHONY : src/Editor/UI/FileExplorer/File.i
+
+# target to preprocess a source file
+src/Editor/UI/FileExplorer/File.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/FileExplorer/File.cpp.i
+.PHONY : src/Editor/UI/FileExplorer/File.cpp.i
+
+src/Editor/UI/FileExplorer/File.s: src/Editor/UI/FileExplorer/File.cpp.s
+.PHONY : src/Editor/UI/FileExplorer/File.s
+
+# target to generate assembly for a file
+src/Editor/UI/FileExplorer/File.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/FileExplorer/File.cpp.s
+.PHONY : src/Editor/UI/FileExplorer/File.cpp.s
+
+src/Editor/UI/FileExplorer/FileExplorer.obj: src/Editor/UI/FileExplorer/FileExplorer.cpp.obj
+.PHONY : src/Editor/UI/FileExplorer/FileExplorer.obj
+
+# target to build an object file
+src/Editor/UI/FileExplorer/FileExplorer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/FileExplorer/FileExplorer.cpp.obj
+.PHONY : src/Editor/UI/FileExplorer/FileExplorer.cpp.obj
+
+src/Editor/UI/FileExplorer/FileExplorer.i: src/Editor/UI/FileExplorer/FileExplorer.cpp.i
+.PHONY : src/Editor/UI/FileExplorer/FileExplorer.i
+
+# target to preprocess a source file
+src/Editor/UI/FileExplorer/FileExplorer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/FileExplorer/FileExplorer.cpp.i
+.PHONY : src/Editor/UI/FileExplorer/FileExplorer.cpp.i
+
+src/Editor/UI/FileExplorer/FileExplorer.s: src/Editor/UI/FileExplorer/FileExplorer.cpp.s
+.PHONY : src/Editor/UI/FileExplorer/FileExplorer.s
+
+# target to generate assembly for a file
+src/Editor/UI/FileExplorer/FileExplorer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/FileExplorer/FileExplorer.cpp.s
+.PHONY : src/Editor/UI/FileExplorer/FileExplorer.cpp.s
+
+src/Editor/UI/ProjectManager.obj: src/Editor/UI/ProjectManager.cpp.obj
+.PHONY : src/Editor/UI/ProjectManager.obj
+
+# target to build an object file
+src/Editor/UI/ProjectManager.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/ProjectManager.cpp.obj
+.PHONY : src/Editor/UI/ProjectManager.cpp.obj
+
+src/Editor/UI/ProjectManager.i: src/Editor/UI/ProjectManager.cpp.i
+.PHONY : src/Editor/UI/ProjectManager.i
+
+# target to preprocess a source file
+src/Editor/UI/ProjectManager.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/ProjectManager.cpp.i
+.PHONY : src/Editor/UI/ProjectManager.cpp.i
+
+src/Editor/UI/ProjectManager.s: src/Editor/UI/ProjectManager.cpp.s
+.PHONY : src/Editor/UI/ProjectManager.s
+
+# target to generate assembly for a file
+src/Editor/UI/ProjectManager.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/ProjectManager.cpp.s
+.PHONY : src/Editor/UI/ProjectManager.cpp.s
+
+src/Editor/Variables.obj: src/Editor/Variables.cpp.obj
+.PHONY : src/Editor/Variables.obj
+
+# target to build an object file
+src/Editor/Variables.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/Variables.cpp.obj
+.PHONY : src/Editor/Variables.cpp.obj
+
+src/Editor/Variables.i: src/Editor/Variables.cpp.i
+.PHONY : src/Editor/Variables.i
+
+# target to preprocess a source file
+src/Editor/Variables.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/Variables.cpp.i
+.PHONY : src/Editor/Variables.cpp.i
+
+src/Editor/Variables.s: src/Editor/Variables.cpp.s
+.PHONY : src/Editor/Variables.s
+
+# target to generate assembly for a file
+src/Editor/Variables.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/Variables.cpp.s
+.PHONY : src/Editor/Variables.cpp.s
+
 src/Engine/Engine.obj: src/Engine/Engine.cpp.obj
 .PHONY : src/Engine/Engine.obj
 
@@ -407,6 +551,270 @@ src/Engine/Engine.s: src/Engine/Engine.cpp.s
 src/Engine/Engine.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.s
 .PHONY : src/Engine/Engine.cpp.s
+
+src/Engine/Graphics/Grid.obj: src/Engine/Graphics/Grid.cpp.obj
+.PHONY : src/Engine/Graphics/Grid.obj
+
+# target to build an object file
+src/Engine/Graphics/Grid.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Grid.cpp.obj
+.PHONY : src/Engine/Graphics/Grid.cpp.obj
+
+src/Engine/Graphics/Grid.i: src/Engine/Graphics/Grid.cpp.i
+.PHONY : src/Engine/Graphics/Grid.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Grid.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Grid.cpp.i
+.PHONY : src/Engine/Graphics/Grid.cpp.i
+
+src/Engine/Graphics/Grid.s: src/Engine/Graphics/Grid.cpp.s
+.PHONY : src/Engine/Graphics/Grid.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Grid.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Grid.cpp.s
+.PHONY : src/Engine/Graphics/Grid.cpp.s
+
+src/Engine/Graphics/Renderer.obj: src/Engine/Graphics/Renderer.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer.obj
+
+# target to build an object file
+src/Engine/Graphics/Renderer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer.cpp.obj
+
+src/Engine/Graphics/Renderer.i: src/Engine/Graphics/Renderer.cpp.i
+.PHONY : src/Engine/Graphics/Renderer.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Renderer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer.cpp.i
+.PHONY : src/Engine/Graphics/Renderer.cpp.i
+
+src/Engine/Graphics/Renderer.s: src/Engine/Graphics/Renderer.cpp.s
+.PHONY : src/Engine/Graphics/Renderer.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Renderer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer.cpp.s
+.PHONY : src/Engine/Graphics/Renderer.cpp.s
+
+src/Engine/Graphics/Renderer/FrameBuffer.obj: src/Engine/Graphics/Renderer/FrameBuffer.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/FrameBuffer.obj
+
+# target to build an object file
+src/Engine/Graphics/Renderer/FrameBuffer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/FrameBuffer.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/FrameBuffer.cpp.obj
+
+src/Engine/Graphics/Renderer/FrameBuffer.i: src/Engine/Graphics/Renderer/FrameBuffer.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/FrameBuffer.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Renderer/FrameBuffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/FrameBuffer.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/FrameBuffer.cpp.i
+
+src/Engine/Graphics/Renderer/FrameBuffer.s: src/Engine/Graphics/Renderer/FrameBuffer.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/FrameBuffer.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Renderer/FrameBuffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/FrameBuffer.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/FrameBuffer.cpp.s
+
+src/Engine/Graphics/Renderer/IndexBuffer.obj: src/Engine/Graphics/Renderer/IndexBuffer.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/IndexBuffer.obj
+
+# target to build an object file
+src/Engine/Graphics/Renderer/IndexBuffer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/IndexBuffer.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/IndexBuffer.cpp.obj
+
+src/Engine/Graphics/Renderer/IndexBuffer.i: src/Engine/Graphics/Renderer/IndexBuffer.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/IndexBuffer.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Renderer/IndexBuffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/IndexBuffer.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/IndexBuffer.cpp.i
+
+src/Engine/Graphics/Renderer/IndexBuffer.s: src/Engine/Graphics/Renderer/IndexBuffer.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/IndexBuffer.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Renderer/IndexBuffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/IndexBuffer.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/IndexBuffer.cpp.s
+
+src/Engine/Graphics/Renderer/Shader.obj: src/Engine/Graphics/Renderer/Shader.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/Shader.obj
+
+# target to build an object file
+src/Engine/Graphics/Renderer/Shader.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/Shader.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/Shader.cpp.obj
+
+src/Engine/Graphics/Renderer/Shader.i: src/Engine/Graphics/Renderer/Shader.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/Shader.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Renderer/Shader.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/Shader.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/Shader.cpp.i
+
+src/Engine/Graphics/Renderer/Shader.s: src/Engine/Graphics/Renderer/Shader.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/Shader.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Renderer/Shader.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/Shader.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/Shader.cpp.s
+
+src/Engine/Graphics/Renderer/Texture.obj: src/Engine/Graphics/Renderer/Texture.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/Texture.obj
+
+# target to build an object file
+src/Engine/Graphics/Renderer/Texture.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/Texture.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/Texture.cpp.obj
+
+src/Engine/Graphics/Renderer/Texture.i: src/Engine/Graphics/Renderer/Texture.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/Texture.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Renderer/Texture.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/Texture.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/Texture.cpp.i
+
+src/Engine/Graphics/Renderer/Texture.s: src/Engine/Graphics/Renderer/Texture.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/Texture.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Renderer/Texture.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/Texture.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/Texture.cpp.s
+
+src/Engine/Graphics/Renderer/VertexArray.obj: src/Engine/Graphics/Renderer/VertexArray.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/VertexArray.obj
+
+# target to build an object file
+src/Engine/Graphics/Renderer/VertexArray.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/VertexArray.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/VertexArray.cpp.obj
+
+src/Engine/Graphics/Renderer/VertexArray.i: src/Engine/Graphics/Renderer/VertexArray.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/VertexArray.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Renderer/VertexArray.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/VertexArray.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/VertexArray.cpp.i
+
+src/Engine/Graphics/Renderer/VertexArray.s: src/Engine/Graphics/Renderer/VertexArray.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/VertexArray.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Renderer/VertexArray.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/VertexArray.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/VertexArray.cpp.s
+
+src/Engine/Graphics/Renderer/VertexBuffer.obj: src/Engine/Graphics/Renderer/VertexBuffer.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/VertexBuffer.obj
+
+# target to build an object file
+src/Engine/Graphics/Renderer/VertexBuffer.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/VertexBuffer.cpp.obj
+.PHONY : src/Engine/Graphics/Renderer/VertexBuffer.cpp.obj
+
+src/Engine/Graphics/Renderer/VertexBuffer.i: src/Engine/Graphics/Renderer/VertexBuffer.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/VertexBuffer.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Renderer/VertexBuffer.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/VertexBuffer.cpp.i
+.PHONY : src/Engine/Graphics/Renderer/VertexBuffer.cpp.i
+
+src/Engine/Graphics/Renderer/VertexBuffer.s: src/Engine/Graphics/Renderer/VertexBuffer.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/VertexBuffer.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Renderer/VertexBuffer.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/VertexBuffer.cpp.s
+.PHONY : src/Engine/Graphics/Renderer/VertexBuffer.cpp.s
+
+src/Engine/Graphics/Shapes.obj: src/Engine/Graphics/Shapes.cpp.obj
+.PHONY : src/Engine/Graphics/Shapes.obj
+
+# target to build an object file
+src/Engine/Graphics/Shapes.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Shapes.cpp.obj
+.PHONY : src/Engine/Graphics/Shapes.cpp.obj
+
+src/Engine/Graphics/Shapes.i: src/Engine/Graphics/Shapes.cpp.i
+.PHONY : src/Engine/Graphics/Shapes.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Shapes.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Shapes.cpp.i
+.PHONY : src/Engine/Graphics/Shapes.cpp.i
+
+src/Engine/Graphics/Shapes.s: src/Engine/Graphics/Shapes.cpp.s
+.PHONY : src/Engine/Graphics/Shapes.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Shapes.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Shapes.cpp.s
+.PHONY : src/Engine/Graphics/Shapes.cpp.s
+
+src/Engine/Objects/Objects.obj: src/Engine/Objects/Objects.cpp.obj
+.PHONY : src/Engine/Objects/Objects.obj
+
+# target to build an object file
+src/Engine/Objects/Objects.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Objects/Objects.cpp.obj
+.PHONY : src/Engine/Objects/Objects.cpp.obj
+
+src/Engine/Objects/Objects.i: src/Engine/Objects/Objects.cpp.i
+.PHONY : src/Engine/Objects/Objects.i
+
+# target to preprocess a source file
+src/Engine/Objects/Objects.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Objects/Objects.cpp.i
+.PHONY : src/Engine/Objects/Objects.cpp.i
+
+src/Engine/Objects/Objects.s: src/Engine/Objects/Objects.cpp.s
+.PHONY : src/Engine/Objects/Objects.s
+
+# target to generate assembly for a file
+src/Engine/Objects/Objects.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Objects/Objects.cpp.s
+.PHONY : src/Engine/Objects/Objects.cpp.s
+
+src/Engine/Objects/Transform.obj: src/Engine/Objects/Transform.cpp.obj
+.PHONY : src/Engine/Objects/Transform.obj
+
+# target to build an object file
+src/Engine/Objects/Transform.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Objects/Transform.cpp.obj
+.PHONY : src/Engine/Objects/Transform.cpp.obj
+
+src/Engine/Objects/Transform.i: src/Engine/Objects/Transform.cpp.i
+.PHONY : src/Engine/Objects/Transform.i
+
+# target to preprocess a source file
+src/Engine/Objects/Transform.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Objects/Transform.cpp.i
+.PHONY : src/Engine/Objects/Transform.cpp.i
+
+src/Engine/Objects/Transform.s: src/Engine/Objects/Transform.cpp.s
+.PHONY : src/Engine/Objects/Transform.s
+
+# target to generate assembly for a file
+src/Engine/Objects/Transform.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Objects/Transform.cpp.s
+.PHONY : src/Engine/Objects/Transform.cpp.s
 
 src/Engine/Scenes.obj: src/Engine/Scenes.cpp.obj
 .PHONY : src/Engine/Scenes.obj
@@ -432,317 +840,77 @@ src/Engine/Scenes.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scenes.cpp.s
 .PHONY : src/Engine/Scenes.cpp.s
 
-src/Engine/Views/PlayMode.obj: src/Engine/Views/PlayMode.cpp.obj
-.PHONY : src/Engine/Views/PlayMode.obj
+src/Engine/Scripting/Components.obj: src/Engine/Scripting/Components.cpp.obj
+.PHONY : src/Engine/Scripting/Components.obj
 
 # target to build an object file
-src/Engine/Views/PlayMode.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.obj
-.PHONY : src/Engine/Views/PlayMode.cpp.obj
+src/Engine/Scripting/Components.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/Components.cpp.obj
+.PHONY : src/Engine/Scripting/Components.cpp.obj
 
-src/Engine/Views/PlayMode.i: src/Engine/Views/PlayMode.cpp.i
-.PHONY : src/Engine/Views/PlayMode.i
+src/Engine/Scripting/Components.i: src/Engine/Scripting/Components.cpp.i
+.PHONY : src/Engine/Scripting/Components.i
 
 # target to preprocess a source file
-src/Engine/Views/PlayMode.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.i
-.PHONY : src/Engine/Views/PlayMode.cpp.i
+src/Engine/Scripting/Components.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/Components.cpp.i
+.PHONY : src/Engine/Scripting/Components.cpp.i
 
-src/Engine/Views/PlayMode.s: src/Engine/Views/PlayMode.cpp.s
-.PHONY : src/Engine/Views/PlayMode.s
+src/Engine/Scripting/Components.s: src/Engine/Scripting/Components.cpp.s
+.PHONY : src/Engine/Scripting/Components.s
 
 # target to generate assembly for a file
-src/Engine/Views/PlayMode.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/PlayMode.cpp.s
-.PHONY : src/Engine/Views/PlayMode.cpp.s
+src/Engine/Scripting/Components.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/Components.cpp.s
+.PHONY : src/Engine/Scripting/Components.cpp.s
 
-src/Engine/Views/SceneEditor.obj: src/Engine/Views/SceneEditor.cpp.obj
-.PHONY : src/Engine/Views/SceneEditor.obj
+src/Engine/Scripting/LuaUtilities.obj: src/Engine/Scripting/LuaUtilities.cpp.obj
+.PHONY : src/Engine/Scripting/LuaUtilities.obj
 
 # target to build an object file
-src/Engine/Views/SceneEditor.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.obj
-.PHONY : src/Engine/Views/SceneEditor.cpp.obj
+src/Engine/Scripting/LuaUtilities.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/LuaUtilities.cpp.obj
+.PHONY : src/Engine/Scripting/LuaUtilities.cpp.obj
 
-src/Engine/Views/SceneEditor.i: src/Engine/Views/SceneEditor.cpp.i
-.PHONY : src/Engine/Views/SceneEditor.i
+src/Engine/Scripting/LuaUtilities.i: src/Engine/Scripting/LuaUtilities.cpp.i
+.PHONY : src/Engine/Scripting/LuaUtilities.i
 
 # target to preprocess a source file
-src/Engine/Views/SceneEditor.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.i
-.PHONY : src/Engine/Views/SceneEditor.cpp.i
+src/Engine/Scripting/LuaUtilities.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/LuaUtilities.cpp.i
+.PHONY : src/Engine/Scripting/LuaUtilities.cpp.i
 
-src/Engine/Views/SceneEditor.s: src/Engine/Views/SceneEditor.cpp.s
-.PHONY : src/Engine/Views/SceneEditor.s
+src/Engine/Scripting/LuaUtilities.s: src/Engine/Scripting/LuaUtilities.cpp.s
+.PHONY : src/Engine/Scripting/LuaUtilities.s
 
 # target to generate assembly for a file
-src/Engine/Views/SceneEditor.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Views/SceneEditor.cpp.s
-.PHONY : src/Engine/Views/SceneEditor.cpp.s
+src/Engine/Scripting/LuaUtilities.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/LuaUtilities.cpp.s
+.PHONY : src/Engine/Scripting/LuaUtilities.cpp.s
 
-src/Graphics/Grid.obj: src/Graphics/Grid.cpp.obj
-.PHONY : src/Graphics/Grid.obj
+src/Engine/Scripting/Scripting.obj: src/Engine/Scripting/Scripting.cpp.obj
+.PHONY : src/Engine/Scripting/Scripting.obj
 
 # target to build an object file
-src/Graphics/Grid.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.obj
-.PHONY : src/Graphics/Grid.cpp.obj
+src/Engine/Scripting/Scripting.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/Scripting.cpp.obj
+.PHONY : src/Engine/Scripting/Scripting.cpp.obj
 
-src/Graphics/Grid.i: src/Graphics/Grid.cpp.i
-.PHONY : src/Graphics/Grid.i
-
-# target to preprocess a source file
-src/Graphics/Grid.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.i
-.PHONY : src/Graphics/Grid.cpp.i
-
-src/Graphics/Grid.s: src/Graphics/Grid.cpp.s
-.PHONY : src/Graphics/Grid.s
-
-# target to generate assembly for a file
-src/Graphics/Grid.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Grid.cpp.s
-.PHONY : src/Graphics/Grid.cpp.s
-
-src/Graphics/Renderer.obj: src/Graphics/Renderer.cpp.obj
-.PHONY : src/Graphics/Renderer.obj
-
-# target to build an object file
-src/Graphics/Renderer.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer.cpp.obj
-.PHONY : src/Graphics/Renderer.cpp.obj
-
-src/Graphics/Renderer.i: src/Graphics/Renderer.cpp.i
-.PHONY : src/Graphics/Renderer.i
+src/Engine/Scripting/Scripting.i: src/Engine/Scripting/Scripting.cpp.i
+.PHONY : src/Engine/Scripting/Scripting.i
 
 # target to preprocess a source file
-src/Graphics/Renderer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer.cpp.i
-.PHONY : src/Graphics/Renderer.cpp.i
+src/Engine/Scripting/Scripting.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/Scripting.cpp.i
+.PHONY : src/Engine/Scripting/Scripting.cpp.i
 
-src/Graphics/Renderer.s: src/Graphics/Renderer.cpp.s
-.PHONY : src/Graphics/Renderer.s
-
-# target to generate assembly for a file
-src/Graphics/Renderer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer.cpp.s
-.PHONY : src/Graphics/Renderer.cpp.s
-
-src/Graphics/Renderer/FrameBuffer.obj: src/Graphics/Renderer/FrameBuffer.cpp.obj
-.PHONY : src/Graphics/Renderer/FrameBuffer.obj
-
-# target to build an object file
-src/Graphics/Renderer/FrameBuffer.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/FrameBuffer.cpp.obj
-.PHONY : src/Graphics/Renderer/FrameBuffer.cpp.obj
-
-src/Graphics/Renderer/FrameBuffer.i: src/Graphics/Renderer/FrameBuffer.cpp.i
-.PHONY : src/Graphics/Renderer/FrameBuffer.i
-
-# target to preprocess a source file
-src/Graphics/Renderer/FrameBuffer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/FrameBuffer.cpp.i
-.PHONY : src/Graphics/Renderer/FrameBuffer.cpp.i
-
-src/Graphics/Renderer/FrameBuffer.s: src/Graphics/Renderer/FrameBuffer.cpp.s
-.PHONY : src/Graphics/Renderer/FrameBuffer.s
+src/Engine/Scripting/Scripting.s: src/Engine/Scripting/Scripting.cpp.s
+.PHONY : src/Engine/Scripting/Scripting.s
 
 # target to generate assembly for a file
-src/Graphics/Renderer/FrameBuffer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/FrameBuffer.cpp.s
-.PHONY : src/Graphics/Renderer/FrameBuffer.cpp.s
-
-src/Graphics/Renderer/IndexBuffer.obj: src/Graphics/Renderer/IndexBuffer.cpp.obj
-.PHONY : src/Graphics/Renderer/IndexBuffer.obj
-
-# target to build an object file
-src/Graphics/Renderer/IndexBuffer.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/IndexBuffer.cpp.obj
-.PHONY : src/Graphics/Renderer/IndexBuffer.cpp.obj
-
-src/Graphics/Renderer/IndexBuffer.i: src/Graphics/Renderer/IndexBuffer.cpp.i
-.PHONY : src/Graphics/Renderer/IndexBuffer.i
-
-# target to preprocess a source file
-src/Graphics/Renderer/IndexBuffer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/IndexBuffer.cpp.i
-.PHONY : src/Graphics/Renderer/IndexBuffer.cpp.i
-
-src/Graphics/Renderer/IndexBuffer.s: src/Graphics/Renderer/IndexBuffer.cpp.s
-.PHONY : src/Graphics/Renderer/IndexBuffer.s
-
-# target to generate assembly for a file
-src/Graphics/Renderer/IndexBuffer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/IndexBuffer.cpp.s
-.PHONY : src/Graphics/Renderer/IndexBuffer.cpp.s
-
-src/Graphics/Renderer/Shader.obj: src/Graphics/Renderer/Shader.cpp.obj
-.PHONY : src/Graphics/Renderer/Shader.obj
-
-# target to build an object file
-src/Graphics/Renderer/Shader.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Shader.cpp.obj
-.PHONY : src/Graphics/Renderer/Shader.cpp.obj
-
-src/Graphics/Renderer/Shader.i: src/Graphics/Renderer/Shader.cpp.i
-.PHONY : src/Graphics/Renderer/Shader.i
-
-# target to preprocess a source file
-src/Graphics/Renderer/Shader.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Shader.cpp.i
-.PHONY : src/Graphics/Renderer/Shader.cpp.i
-
-src/Graphics/Renderer/Shader.s: src/Graphics/Renderer/Shader.cpp.s
-.PHONY : src/Graphics/Renderer/Shader.s
-
-# target to generate assembly for a file
-src/Graphics/Renderer/Shader.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Shader.cpp.s
-.PHONY : src/Graphics/Renderer/Shader.cpp.s
-
-src/Graphics/Renderer/Texture.obj: src/Graphics/Renderer/Texture.cpp.obj
-.PHONY : src/Graphics/Renderer/Texture.obj
-
-# target to build an object file
-src/Graphics/Renderer/Texture.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Texture.cpp.obj
-.PHONY : src/Graphics/Renderer/Texture.cpp.obj
-
-src/Graphics/Renderer/Texture.i: src/Graphics/Renderer/Texture.cpp.i
-.PHONY : src/Graphics/Renderer/Texture.i
-
-# target to preprocess a source file
-src/Graphics/Renderer/Texture.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Texture.cpp.i
-.PHONY : src/Graphics/Renderer/Texture.cpp.i
-
-src/Graphics/Renderer/Texture.s: src/Graphics/Renderer/Texture.cpp.s
-.PHONY : src/Graphics/Renderer/Texture.s
-
-# target to generate assembly for a file
-src/Graphics/Renderer/Texture.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/Texture.cpp.s
-.PHONY : src/Graphics/Renderer/Texture.cpp.s
-
-src/Graphics/Renderer/VertexArray.obj: src/Graphics/Renderer/VertexArray.cpp.obj
-.PHONY : src/Graphics/Renderer/VertexArray.obj
-
-# target to build an object file
-src/Graphics/Renderer/VertexArray.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexArray.cpp.obj
-.PHONY : src/Graphics/Renderer/VertexArray.cpp.obj
-
-src/Graphics/Renderer/VertexArray.i: src/Graphics/Renderer/VertexArray.cpp.i
-.PHONY : src/Graphics/Renderer/VertexArray.i
-
-# target to preprocess a source file
-src/Graphics/Renderer/VertexArray.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexArray.cpp.i
-.PHONY : src/Graphics/Renderer/VertexArray.cpp.i
-
-src/Graphics/Renderer/VertexArray.s: src/Graphics/Renderer/VertexArray.cpp.s
-.PHONY : src/Graphics/Renderer/VertexArray.s
-
-# target to generate assembly for a file
-src/Graphics/Renderer/VertexArray.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexArray.cpp.s
-.PHONY : src/Graphics/Renderer/VertexArray.cpp.s
-
-src/Graphics/Renderer/VertexBuffer.obj: src/Graphics/Renderer/VertexBuffer.cpp.obj
-.PHONY : src/Graphics/Renderer/VertexBuffer.obj
-
-# target to build an object file
-src/Graphics/Renderer/VertexBuffer.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexBuffer.cpp.obj
-.PHONY : src/Graphics/Renderer/VertexBuffer.cpp.obj
-
-src/Graphics/Renderer/VertexBuffer.i: src/Graphics/Renderer/VertexBuffer.cpp.i
-.PHONY : src/Graphics/Renderer/VertexBuffer.i
-
-# target to preprocess a source file
-src/Graphics/Renderer/VertexBuffer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexBuffer.cpp.i
-.PHONY : src/Graphics/Renderer/VertexBuffer.cpp.i
-
-src/Graphics/Renderer/VertexBuffer.s: src/Graphics/Renderer/VertexBuffer.cpp.s
-.PHONY : src/Graphics/Renderer/VertexBuffer.s
-
-# target to generate assembly for a file
-src/Graphics/Renderer/VertexBuffer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Renderer/VertexBuffer.cpp.s
-.PHONY : src/Graphics/Renderer/VertexBuffer.cpp.s
-
-src/Graphics/Shapes.obj: src/Graphics/Shapes.cpp.obj
-.PHONY : src/Graphics/Shapes.obj
-
-# target to build an object file
-src/Graphics/Shapes.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.obj
-.PHONY : src/Graphics/Shapes.cpp.obj
-
-src/Graphics/Shapes.i: src/Graphics/Shapes.cpp.i
-.PHONY : src/Graphics/Shapes.i
-
-# target to preprocess a source file
-src/Graphics/Shapes.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.i
-.PHONY : src/Graphics/Shapes.cpp.i
-
-src/Graphics/Shapes.s: src/Graphics/Shapes.cpp.s
-.PHONY : src/Graphics/Shapes.s
-
-# target to generate assembly for a file
-src/Graphics/Shapes.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Graphics/Shapes.cpp.s
-.PHONY : src/Graphics/Shapes.cpp.s
-
-src/Objects/Objects.obj: src/Objects/Objects.cpp.obj
-.PHONY : src/Objects/Objects.obj
-
-# target to build an object file
-src/Objects/Objects.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.obj
-.PHONY : src/Objects/Objects.cpp.obj
-
-src/Objects/Objects.i: src/Objects/Objects.cpp.i
-.PHONY : src/Objects/Objects.i
-
-# target to preprocess a source file
-src/Objects/Objects.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.i
-.PHONY : src/Objects/Objects.cpp.i
-
-src/Objects/Objects.s: src/Objects/Objects.cpp.s
-.PHONY : src/Objects/Objects.s
-
-# target to generate assembly for a file
-src/Objects/Objects.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Objects.cpp.s
-.PHONY : src/Objects/Objects.cpp.s
-
-src/Objects/Transform.obj: src/Objects/Transform.cpp.obj
-.PHONY : src/Objects/Transform.obj
-
-# target to build an object file
-src/Objects/Transform.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Transform.cpp.obj
-.PHONY : src/Objects/Transform.cpp.obj
-
-src/Objects/Transform.i: src/Objects/Transform.cpp.i
-.PHONY : src/Objects/Transform.i
-
-# target to preprocess a source file
-src/Objects/Transform.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Transform.cpp.i
-.PHONY : src/Objects/Transform.cpp.i
-
-src/Objects/Transform.s: src/Objects/Transform.cpp.s
-.PHONY : src/Objects/Transform.s
-
-# target to generate assembly for a file
-src/Objects/Transform.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Objects/Transform.cpp.s
-.PHONY : src/Objects/Transform.cpp.s
+src/Engine/Scripting/Scripting.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Scripting/Scripting.cpp.s
+.PHONY : src/Engine/Scripting/Scripting.cpp.s
 
 src/PhysicsEngine/CollisionDetection.obj: src/PhysicsEngine/CollisionDetection.cpp.obj
 .PHONY : src/PhysicsEngine/CollisionDetection.obj
@@ -791,222 +959,6 @@ src/PhysicsEngine/RigidBody.s: src/PhysicsEngine/RigidBody.cpp.s
 src/PhysicsEngine/RigidBody.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/RigidBody.cpp.s
 .PHONY : src/PhysicsEngine/RigidBody.cpp.s
-
-src/RunTime/RunTime.obj: src/RunTime/RunTime.cpp.obj
-.PHONY : src/RunTime/RunTime.obj
-
-# target to build an object file
-src/RunTime/RunTime.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/RunTime/RunTime.cpp.obj
-.PHONY : src/RunTime/RunTime.cpp.obj
-
-src/RunTime/RunTime.i: src/RunTime/RunTime.cpp.i
-.PHONY : src/RunTime/RunTime.i
-
-# target to preprocess a source file
-src/RunTime/RunTime.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/RunTime/RunTime.cpp.i
-.PHONY : src/RunTime/RunTime.cpp.i
-
-src/RunTime/RunTime.s: src/RunTime/RunTime.cpp.s
-.PHONY : src/RunTime/RunTime.s
-
-# target to generate assembly for a file
-src/RunTime/RunTime.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/RunTime/RunTime.cpp.s
-.PHONY : src/RunTime/RunTime.cpp.s
-
-src/Scripting/Components.obj: src/Scripting/Components.cpp.obj
-.PHONY : src/Scripting/Components.obj
-
-# target to build an object file
-src/Scripting/Components.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.obj
-.PHONY : src/Scripting/Components.cpp.obj
-
-src/Scripting/Components.i: src/Scripting/Components.cpp.i
-.PHONY : src/Scripting/Components.i
-
-# target to preprocess a source file
-src/Scripting/Components.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.i
-.PHONY : src/Scripting/Components.cpp.i
-
-src/Scripting/Components.s: src/Scripting/Components.cpp.s
-.PHONY : src/Scripting/Components.s
-
-# target to generate assembly for a file
-src/Scripting/Components.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Components.cpp.s
-.PHONY : src/Scripting/Components.cpp.s
-
-src/Scripting/LuaUtilities.obj: src/Scripting/LuaUtilities.cpp.obj
-.PHONY : src/Scripting/LuaUtilities.obj
-
-# target to build an object file
-src/Scripting/LuaUtilities.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.obj
-.PHONY : src/Scripting/LuaUtilities.cpp.obj
-
-src/Scripting/LuaUtilities.i: src/Scripting/LuaUtilities.cpp.i
-.PHONY : src/Scripting/LuaUtilities.i
-
-# target to preprocess a source file
-src/Scripting/LuaUtilities.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.i
-.PHONY : src/Scripting/LuaUtilities.cpp.i
-
-src/Scripting/LuaUtilities.s: src/Scripting/LuaUtilities.cpp.s
-.PHONY : src/Scripting/LuaUtilities.s
-
-# target to generate assembly for a file
-src/Scripting/LuaUtilities.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/LuaUtilities.cpp.s
-.PHONY : src/Scripting/LuaUtilities.cpp.s
-
-src/Scripting/Scripting.obj: src/Scripting/Scripting.cpp.obj
-.PHONY : src/Scripting/Scripting.obj
-
-# target to build an object file
-src/Scripting/Scripting.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.obj
-.PHONY : src/Scripting/Scripting.cpp.obj
-
-src/Scripting/Scripting.i: src/Scripting/Scripting.cpp.i
-.PHONY : src/Scripting/Scripting.i
-
-# target to preprocess a source file
-src/Scripting/Scripting.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.i
-.PHONY : src/Scripting/Scripting.cpp.i
-
-src/Scripting/Scripting.s: src/Scripting/Scripting.cpp.s
-.PHONY : src/Scripting/Scripting.s
-
-# target to generate assembly for a file
-src/Scripting/Scripting.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Scripting.cpp.s
-.PHONY : src/Scripting/Scripting.cpp.s
-
-src/Scripting/Variables.obj: src/Scripting/Variables.cpp.obj
-.PHONY : src/Scripting/Variables.obj
-
-# target to build an object file
-src/Scripting/Variables.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.obj
-.PHONY : src/Scripting/Variables.cpp.obj
-
-src/Scripting/Variables.i: src/Scripting/Variables.cpp.i
-.PHONY : src/Scripting/Variables.i
-
-# target to preprocess a source file
-src/Scripting/Variables.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.i
-.PHONY : src/Scripting/Variables.cpp.i
-
-src/Scripting/Variables.s: src/Scripting/Variables.cpp.s
-.PHONY : src/Scripting/Variables.s
-
-# target to generate assembly for a file
-src/Scripting/Variables.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Scripting/Variables.cpp.s
-.PHONY : src/Scripting/Variables.cpp.s
-
-src/UI/FileExplorer/File.obj: src/UI/FileExplorer/File.cpp.obj
-.PHONY : src/UI/FileExplorer/File.obj
-
-# target to build an object file
-src/UI/FileExplorer/File.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.obj
-.PHONY : src/UI/FileExplorer/File.cpp.obj
-
-src/UI/FileExplorer/File.i: src/UI/FileExplorer/File.cpp.i
-.PHONY : src/UI/FileExplorer/File.i
-
-# target to preprocess a source file
-src/UI/FileExplorer/File.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.i
-.PHONY : src/UI/FileExplorer/File.cpp.i
-
-src/UI/FileExplorer/File.s: src/UI/FileExplorer/File.cpp.s
-.PHONY : src/UI/FileExplorer/File.s
-
-# target to generate assembly for a file
-src/UI/FileExplorer/File.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/File.cpp.s
-.PHONY : src/UI/FileExplorer/File.cpp.s
-
-src/UI/FileExplorer/FileExplorer.obj: src/UI/FileExplorer/FileExplorer.cpp.obj
-.PHONY : src/UI/FileExplorer/FileExplorer.obj
-
-# target to build an object file
-src/UI/FileExplorer/FileExplorer.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.obj
-.PHONY : src/UI/FileExplorer/FileExplorer.cpp.obj
-
-src/UI/FileExplorer/FileExplorer.i: src/UI/FileExplorer/FileExplorer.cpp.i
-.PHONY : src/UI/FileExplorer/FileExplorer.i
-
-# target to preprocess a source file
-src/UI/FileExplorer/FileExplorer.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.i
-.PHONY : src/UI/FileExplorer/FileExplorer.cpp.i
-
-src/UI/FileExplorer/FileExplorer.s: src/UI/FileExplorer/FileExplorer.cpp.s
-.PHONY : src/UI/FileExplorer/FileExplorer.s
-
-# target to generate assembly for a file
-src/UI/FileExplorer/FileExplorer.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/FileExplorer/FileExplorer.cpp.s
-.PHONY : src/UI/FileExplorer/FileExplorer.cpp.s
-
-src/UI/ProjectManager.obj: src/UI/ProjectManager.cpp.obj
-.PHONY : src/UI/ProjectManager.obj
-
-# target to build an object file
-src/UI/ProjectManager.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.obj
-.PHONY : src/UI/ProjectManager.cpp.obj
-
-src/UI/ProjectManager.i: src/UI/ProjectManager.cpp.i
-.PHONY : src/UI/ProjectManager.i
-
-# target to preprocess a source file
-src/UI/ProjectManager.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.i
-.PHONY : src/UI/ProjectManager.cpp.i
-
-src/UI/ProjectManager.s: src/UI/ProjectManager.cpp.s
-.PHONY : src/UI/ProjectManager.s
-
-# target to generate assembly for a file
-src/UI/ProjectManager.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/ProjectManager.cpp.s
-.PHONY : src/UI/ProjectManager.cpp.s
-
-src/UI/Windows.obj: src/UI/Windows.cpp.obj
-.PHONY : src/UI/Windows.obj
-
-# target to build an object file
-src/UI/Windows.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.obj
-.PHONY : src/UI/Windows.cpp.obj
-
-src/UI/Windows.i: src/UI/Windows.cpp.i
-.PHONY : src/UI/Windows.i
-
-# target to preprocess a source file
-src/UI/Windows.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.i
-.PHONY : src/UI/Windows.cpp.i
-
-src/UI/Windows.s: src/UI/Windows.cpp.s
-.PHONY : src/UI/Windows.s
-
-# target to generate assembly for a file
-src/UI/Windows.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/UI/Windows.cpp.s
-.PHONY : src/UI/Windows.cpp.s
 
 src/main.obj: src/main.cpp.obj
 .PHONY : src/main.obj
@@ -1098,84 +1050,78 @@ help:
 	@echo "... src/Application/Application.obj"
 	@echo "... src/Application/Application.i"
 	@echo "... src/Application/Application.s"
+	@echo "... src/Editor/Editor.obj"
+	@echo "... src/Editor/Editor.i"
+	@echo "... src/Editor/Editor.s"
+	@echo "... src/Editor/ImGuiWindows.obj"
+	@echo "... src/Editor/ImGuiWindows.i"
+	@echo "... src/Editor/ImGuiWindows.s"
+	@echo "... src/Editor/UI/FileExplorer/File.obj"
+	@echo "... src/Editor/UI/FileExplorer/File.i"
+	@echo "... src/Editor/UI/FileExplorer/File.s"
+	@echo "... src/Editor/UI/FileExplorer/FileExplorer.obj"
+	@echo "... src/Editor/UI/FileExplorer/FileExplorer.i"
+	@echo "... src/Editor/UI/FileExplorer/FileExplorer.s"
+	@echo "... src/Editor/UI/ProjectManager.obj"
+	@echo "... src/Editor/UI/ProjectManager.i"
+	@echo "... src/Editor/UI/ProjectManager.s"
+	@echo "... src/Editor/Variables.obj"
+	@echo "... src/Editor/Variables.i"
+	@echo "... src/Editor/Variables.s"
 	@echo "... src/Engine/Engine.obj"
 	@echo "... src/Engine/Engine.i"
 	@echo "... src/Engine/Engine.s"
+	@echo "... src/Engine/Graphics/Grid.obj"
+	@echo "... src/Engine/Graphics/Grid.i"
+	@echo "... src/Engine/Graphics/Grid.s"
+	@echo "... src/Engine/Graphics/Renderer.obj"
+	@echo "... src/Engine/Graphics/Renderer.i"
+	@echo "... src/Engine/Graphics/Renderer.s"
+	@echo "... src/Engine/Graphics/Renderer/FrameBuffer.obj"
+	@echo "... src/Engine/Graphics/Renderer/FrameBuffer.i"
+	@echo "... src/Engine/Graphics/Renderer/FrameBuffer.s"
+	@echo "... src/Engine/Graphics/Renderer/IndexBuffer.obj"
+	@echo "... src/Engine/Graphics/Renderer/IndexBuffer.i"
+	@echo "... src/Engine/Graphics/Renderer/IndexBuffer.s"
+	@echo "... src/Engine/Graphics/Renderer/Shader.obj"
+	@echo "... src/Engine/Graphics/Renderer/Shader.i"
+	@echo "... src/Engine/Graphics/Renderer/Shader.s"
+	@echo "... src/Engine/Graphics/Renderer/Texture.obj"
+	@echo "... src/Engine/Graphics/Renderer/Texture.i"
+	@echo "... src/Engine/Graphics/Renderer/Texture.s"
+	@echo "... src/Engine/Graphics/Renderer/VertexArray.obj"
+	@echo "... src/Engine/Graphics/Renderer/VertexArray.i"
+	@echo "... src/Engine/Graphics/Renderer/VertexArray.s"
+	@echo "... src/Engine/Graphics/Renderer/VertexBuffer.obj"
+	@echo "... src/Engine/Graphics/Renderer/VertexBuffer.i"
+	@echo "... src/Engine/Graphics/Renderer/VertexBuffer.s"
+	@echo "... src/Engine/Graphics/Shapes.obj"
+	@echo "... src/Engine/Graphics/Shapes.i"
+	@echo "... src/Engine/Graphics/Shapes.s"
+	@echo "... src/Engine/Objects/Objects.obj"
+	@echo "... src/Engine/Objects/Objects.i"
+	@echo "... src/Engine/Objects/Objects.s"
+	@echo "... src/Engine/Objects/Transform.obj"
+	@echo "... src/Engine/Objects/Transform.i"
+	@echo "... src/Engine/Objects/Transform.s"
 	@echo "... src/Engine/Scenes.obj"
 	@echo "... src/Engine/Scenes.i"
 	@echo "... src/Engine/Scenes.s"
-	@echo "... src/Engine/Views/PlayMode.obj"
-	@echo "... src/Engine/Views/PlayMode.i"
-	@echo "... src/Engine/Views/PlayMode.s"
-	@echo "... src/Engine/Views/SceneEditor.obj"
-	@echo "... src/Engine/Views/SceneEditor.i"
-	@echo "... src/Engine/Views/SceneEditor.s"
-	@echo "... src/Graphics/Grid.obj"
-	@echo "... src/Graphics/Grid.i"
-	@echo "... src/Graphics/Grid.s"
-	@echo "... src/Graphics/Renderer.obj"
-	@echo "... src/Graphics/Renderer.i"
-	@echo "... src/Graphics/Renderer.s"
-	@echo "... src/Graphics/Renderer/FrameBuffer.obj"
-	@echo "... src/Graphics/Renderer/FrameBuffer.i"
-	@echo "... src/Graphics/Renderer/FrameBuffer.s"
-	@echo "... src/Graphics/Renderer/IndexBuffer.obj"
-	@echo "... src/Graphics/Renderer/IndexBuffer.i"
-	@echo "... src/Graphics/Renderer/IndexBuffer.s"
-	@echo "... src/Graphics/Renderer/Shader.obj"
-	@echo "... src/Graphics/Renderer/Shader.i"
-	@echo "... src/Graphics/Renderer/Shader.s"
-	@echo "... src/Graphics/Renderer/Texture.obj"
-	@echo "... src/Graphics/Renderer/Texture.i"
-	@echo "... src/Graphics/Renderer/Texture.s"
-	@echo "... src/Graphics/Renderer/VertexArray.obj"
-	@echo "... src/Graphics/Renderer/VertexArray.i"
-	@echo "... src/Graphics/Renderer/VertexArray.s"
-	@echo "... src/Graphics/Renderer/VertexBuffer.obj"
-	@echo "... src/Graphics/Renderer/VertexBuffer.i"
-	@echo "... src/Graphics/Renderer/VertexBuffer.s"
-	@echo "... src/Graphics/Shapes.obj"
-	@echo "... src/Graphics/Shapes.i"
-	@echo "... src/Graphics/Shapes.s"
-	@echo "... src/Objects/Objects.obj"
-	@echo "... src/Objects/Objects.i"
-	@echo "... src/Objects/Objects.s"
-	@echo "... src/Objects/Transform.obj"
-	@echo "... src/Objects/Transform.i"
-	@echo "... src/Objects/Transform.s"
+	@echo "... src/Engine/Scripting/Components.obj"
+	@echo "... src/Engine/Scripting/Components.i"
+	@echo "... src/Engine/Scripting/Components.s"
+	@echo "... src/Engine/Scripting/LuaUtilities.obj"
+	@echo "... src/Engine/Scripting/LuaUtilities.i"
+	@echo "... src/Engine/Scripting/LuaUtilities.s"
+	@echo "... src/Engine/Scripting/Scripting.obj"
+	@echo "... src/Engine/Scripting/Scripting.i"
+	@echo "... src/Engine/Scripting/Scripting.s"
 	@echo "... src/PhysicsEngine/CollisionDetection.obj"
 	@echo "... src/PhysicsEngine/CollisionDetection.i"
 	@echo "... src/PhysicsEngine/CollisionDetection.s"
 	@echo "... src/PhysicsEngine/RigidBody.obj"
 	@echo "... src/PhysicsEngine/RigidBody.i"
 	@echo "... src/PhysicsEngine/RigidBody.s"
-	@echo "... src/RunTime/RunTime.obj"
-	@echo "... src/RunTime/RunTime.i"
-	@echo "... src/RunTime/RunTime.s"
-	@echo "... src/Scripting/Components.obj"
-	@echo "... src/Scripting/Components.i"
-	@echo "... src/Scripting/Components.s"
-	@echo "... src/Scripting/LuaUtilities.obj"
-	@echo "... src/Scripting/LuaUtilities.i"
-	@echo "... src/Scripting/LuaUtilities.s"
-	@echo "... src/Scripting/Scripting.obj"
-	@echo "... src/Scripting/Scripting.i"
-	@echo "... src/Scripting/Scripting.s"
-	@echo "... src/Scripting/Variables.obj"
-	@echo "... src/Scripting/Variables.i"
-	@echo "... src/Scripting/Variables.s"
-	@echo "... src/UI/FileExplorer/File.obj"
-	@echo "... src/UI/FileExplorer/File.i"
-	@echo "... src/UI/FileExplorer/File.s"
-	@echo "... src/UI/FileExplorer/FileExplorer.obj"
-	@echo "... src/UI/FileExplorer/FileExplorer.i"
-	@echo "... src/UI/FileExplorer/FileExplorer.s"
-	@echo "... src/UI/ProjectManager.obj"
-	@echo "... src/UI/ProjectManager.i"
-	@echo "... src/UI/ProjectManager.s"
-	@echo "... src/UI/Windows.obj"
-	@echo "... src/UI/Windows.i"
-	@echo "... src/UI/Windows.s"
 	@echo "... src/main.obj"
 	@echo "... src/main.i"
 	@echo "... src/main.s"

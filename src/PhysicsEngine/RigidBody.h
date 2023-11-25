@@ -9,7 +9,7 @@ namespace SapphirePhysics{
         public:
             Transform* transform;
             int ShapeType;
-            RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp = false);
+            RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false);
             void Update(const float& DeltaTime);
             bool CollisionDetection(Object* current);
             void OnCollision(Object* current, Object* obj, CollisionData&& CD);

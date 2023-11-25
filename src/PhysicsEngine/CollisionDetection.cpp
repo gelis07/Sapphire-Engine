@@ -1,10 +1,8 @@
 #include "CollisionDetection.h"
 #include "Objects/Objects.h"
 #include "Engine/Engine.h"
-#include "UI/Windows.h" 
-#include "RunTime/RunTime.h"
-
-SapphireEngine::Float SapphirePhysics::CollisionDetection::g("g", Windows::SettingsVariables);
+#include "Editor.h"
+SapphireEngine::Float SapphirePhysics::CollisionDetection::g("g", Editor::SettingsVariables);
 
 
 bool SapphirePhysics::CollisionDetection::CirclexRectangle(Object* obj, Object* current,CollisionData& CD)
@@ -78,7 +76,7 @@ bool SapphirePhysics::CollisionDetection::CirclexRectangle(Object* obj, Object* 
 }
 
 //Thanks to the video by https://www.youtube.com/watch?v=5gDC1GU3Ivg&list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs&index=22
-void SapphirePhysics::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<Object> obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
+void SapphirePhysics::CollisionDetection::FindPolygonContactPoint(Object* obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
 {
     ContactPoint1 = glm::vec2(0);
     ContactPoint2 = glm::vec2(0);
@@ -245,9 +243,9 @@ void SapphirePhysics::CollisionDetection::PointSegmentDistance(glm::vec2 p, glm:
 }
 
 // Would like to thank Javidx9 for the amazing video on implementing SAT (Seperated Axis Theorem) with c++! https://www.youtube.com/watch?v=7Ik2vowGcU0
-bool SapphirePhysics::CollisionDetection::RectanglexRectangle(std::shared_ptr<Object> obj, Object *current, CollisionData& CD)
+bool SapphirePhysics::CollisionDetection::RectanglexRectangle(Object* obj, Object *current, CollisionData& CD)
 {
-    Object* Obj1 = obj.get();
+    Object* Obj1 = obj;
     Object* Obj2 = current;
 
     CD.Normal = glm::vec2(0);
@@ -263,7 +261,7 @@ bool SapphirePhysics::CollisionDetection::RectanglexRectangle(std::shared_ptr<Ob
         //"Inverting" the shapes so both objects are tested on eachother.
         if(shape == 1){
             Obj1 = current;
-            Obj2 = obj.get();
+            Obj2 = obj;
 
             Obj1Points = {Obj1->GetTransform()->GetPoints()[0], Obj1->GetTransform()->GetPoints()[1],
             Obj1->GetTransform()->GetPoints()[2], Obj1->GetTransform()->GetPoints()[3]};
@@ -314,7 +312,7 @@ bool SapphirePhysics::CollisionDetection::RectanglexRectangle(std::shared_ptr<Ob
     FindPolygonContactPoint(obj, current, CD.ContactPoint1, CD.ContactPoint2, CD.ContactPointCount);
     return true;
 }
-bool SapphirePhysics::CollisionDetection::CirclexCircle(std::shared_ptr<Object> obj, Object* current, CollisionData& CD)
+bool SapphirePhysics::CollisionDetection::CirclexCircle(Object* obj, Object* current, CollisionData& CD)
 {
     //! Comments here
     // Checking if the length of the vector with points the circles points is less than the sum of the radiuses

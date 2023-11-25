@@ -3,10 +3,10 @@
 #include "Engine/Engine.h"
 
 
-SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, Object* obj,bool LuaComp) : Trigger("Trigger", Variables), 
+SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp) : Trigger("Trigger", Variables), 
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
 StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),
-    Component(std::move(File), std::move(ArgName), ArgId,obj,LuaComp)
+    Component(std::move(File), std::move(ArgName), ArgId,LuaComp)
 {
     Trigger.Get() = false;
     Static.Get() = false;
@@ -44,33 +44,33 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
     float Depth;
     CollisionData CD;
     if(ShapeType == SapphireRenderer::RectangleT){
-        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-            if(object->Name == "MainCamera" || object.get() == current) continue;
-            if(object->GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
-                if(SapphirePhysics::CollisionDetection::RectanglexRectangle(object, current,CD)){
-                    OnCollisionRotation(current, object.get(), std::move(CD));
+        for (auto&& object: Engine::GetActiveScene().Objects) {
+            if(object.Name == "MainCamera" || &object == current) continue;
+            if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
+                if(SapphirePhysics::CollisionDetection::RectanglexRectangle(&object, current,CD)){
+                    OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }
             }
             else{
-                if(SapphirePhysics::CollisionDetection::CirclexRectangle(object.get(), current,CD)){
-                    OnCollisionRotation(object.get(), current, std::move(CD));
+                if(SapphirePhysics::CollisionDetection::CirclexRectangle(&object, current,CD)){
+                    OnCollisionRotation(&object, current, std::move(CD));
                     break;
                 }
             }
         }
     }
     else{
-        for (auto&& object: Engine::Get().GetActiveScene()->Objects) {
-            if(object->Name == "MainCamera" || object.get() == current) continue;
-            if(object->GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
-                if(SapphirePhysics::CollisionDetection::CirclexRectangle(current, object.get(),CD)){
-                    OnCollisionRotation(current, object.get(), std::move(CD));
+        for (auto&& object: Engine::GetActiveScene().Objects) {
+            if(object.Name == "MainCamera" || &object == current) continue;
+            if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
+                if(SapphirePhysics::CollisionDetection::CirclexRectangle(current, &object,CD)){
+                    OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }
             }else{
-                if(SapphirePhysics::CollisionDetection::CirclexCircle(object, current, CD)){
-                    OnCollisionRotation(current, object.get(), std::move(CD));
+                if(SapphirePhysics::CollisionDetection::CirclexCircle(&object, current, CD)){
+                    OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }
             }

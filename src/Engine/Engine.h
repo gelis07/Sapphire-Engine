@@ -1,34 +1,24 @@
 #pragma once
 #include <iostream>
-#include "Views/SceneEditor.h"
-#include "Views/PlayMode.h"
-#include "Application/Application.h"
+#include "Engine/Scenes.h"
 #include <array>
+#include "Application/Application.h"
 
-class Engine : public Application{
+
+class Engine{
     public:
         Engine(const Engine&) = delete;
-        static Engine& Get() {return Instance;}
-        void OnStart() override;
-        void OnUpdate(const float DeltaTime) override;
-        void OnExit() override;
-        void OnResize(GLFWwindow* window, int width, int height) override;
-        void OnWindowFocus(GLFWwindow* window, int focused) override;
+        Engine(const std::string& mainPath = "");
         void Export();
-        Scene* GetActiveScene();
-        const std::string& GetMainPath();
-        SceneEditor& GetViewport() {return m_Viewport;}
-        PlayMode& GetPlay() {return m_PlayMode;}
-        Windows& GetWindows() {return m_Windows;}
-        const float& GetDeltaTime() {return DeltaTime;}
+        static Scene& GetActiveScene();
+        inline static const float& GetDeltaTime() {return app->GetDeltaTime();}
+        void Run();
+        void Render(Object* object);
+        inline static const std::string& GetMainPath() {return app->GetMainPath();}
+        inline static void SetApp(Application* App) {app = App;}
+        inline static Object* GetCameraObject() {return &m_ActiveScene.Objects[CameraObjectID];}
+        inline static int CameraObjectID = -1;
     private:
-        Engine() { }
-        float DeltaTime;
-        glm::vec4 BackgroundColor;
-        Scene m_ActiveScene;
-        GLFWwindow* m_Window;
-        Windows m_Windows;
-        SceneEditor m_Viewport;
-        PlayMode m_PlayMode;
-        static Engine Instance;
+        inline static Application* app;
+        inline static Scene m_ActiveScene;
 };

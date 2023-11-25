@@ -4,7 +4,7 @@
 class Scene{
     public:
         std::string SceneFile = "";
-        std::vector<std::shared_ptr<Object>> Objects = {};
+        std::vector<Object> Objects = {};
 
         // Write the json representation of the object to a stream
         void Save(const std::string FilePath);
@@ -12,6 +12,6 @@ class Scene{
         // Read a json representation of the object from a stream
         void Load(const std::string FilePath);
 
-        void Hierechy(std::shared_ptr<Object> &SelectedObj);
-        void CreateMenu(std::shared_ptr<Object> &SelectedObj);
+        void Hierechy(Object* SelectedObj,int& SelectedObjID);
+        void CreateMenu(Object* SelectedObj);
 };

@@ -1,8 +1,7 @@
 #define GLEW_STATIC
-#include "Engine/Engine.h"
-#include "Engine/StartUp.hpp"
+#include "Editor/Editor.h"
+#include "Editor/StartUp.hpp"
 #include "UI/ProjectManager.h"
-#include "RunTime/RunTime.h"
 
 // Download geogebra at https://www.geogebra.org/download?lang=en
 int main(void)
@@ -11,15 +10,17 @@ int main(void)
         return -1; 
     // A little cool start up animation :)
     StartUp();
+    std::string MainPath = "";
     {
         // A project manager to select the project you want to work on
         ProjectManager Pm;
-        Pm.Run();
+        Pm.Update();
+        MainPath = Pm.Path;
         //The engine
-        // Engine::Get().Init(Pm.Run()); //Pm.Run() will return the Main Path for the Engine.
+        // Engine::Init(Pm.Run()); //Pm.Run() will return the Main Path for the Engine.
     }
-    Engine::Get().Init();
-    Engine::Get().Update();
+    Editor editor(MainPath);
+    editor.Update();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

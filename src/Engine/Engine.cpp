@@ -1,234 +1,99 @@
 #include "Engine.h"
-#include "UI/FileExplorer/FileExplorer.h"
-#include "RunTime/RunTime.h"
-Engine Engine::Instance;
 
-void Engine::OnResize(GLFWwindow* window, int width, int height)
-{
-    Engine::Get().GetWindows().GetWindowIO()->DisplaySize = ImVec2(width,height); // Setting ImGUI to acccess the whole window's place
-}
-void Engine::OnWindowFocus(GLFWwindow* window, int focused)
-{
-    if (focused)
-    {
-        for (auto&& object : Engine::Get().GetActiveScene()->Objects)
-        {
-            for(auto&& component : object->GetComponents())
-            {
-                component->GetLuaVariables(object.get());
-            }
-        }
-    }
-}
-
-void Engine::OnStart()
+Engine::Engine(const std::string& mainPath)
 {
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::CircleShader.GetID()), "Shaders/Circle.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::BasicShader.GetID()), "Shaders/Basic.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::TextureShader.GetID()), "Shaders/Texture.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::AnimationShader.GetID()), "Shaders/Animation.glsl");
 
-    m_Windows.Init("C:/Gelis/Programs/Flappy_Bird/Assets");
-    m_Viewport.Init(&m_ActiveScene);
-    m_PlayMode.Init(&m_ActiveScene);
-    std::ifstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
-    nlohmann::json Data;
-    stream >> Data;
-    for (auto &&setting : Data.items())
-    {
-        m_Windows.SettingsVariables[setting.key()]->Load(setting.value());
-    }
-    stream.close();
-    FileExplorer::Init();
-}
+    Object Camera("MainCamera");
+    std::vector<glm::vec3> points;
+    points.push_back(glm::vec3(-1,-1,0));
+    points.push_back(glm::vec3(1,-1,0));
+    points.push_back(glm::vec3(1,1,0));
+    points.push_back(glm::vec3(-1,1,0));
+    Camera.AddComponent<Transform>(new Transform("", "Transform", 1, std::move(points),false));
+    Camera.AddComponent<LuaCamera>(new LuaCamera("", "Camera", 2,  false));
+    Camera.AddComponent<Renderer>(new Renderer("", "Renderer", 3, false));
 
-void Engine::OnUpdate(const float DeltaTime)
-{
-    SapphireEngine::Log(m_Windows.MainPath, SapphireEngine::Info);
-    m_Windows.DockSpace();
-    m_Windows.Toolbar();
-    m_Windows.ThemeMaker();
-    m_Windows.TestWindow();
-    this->DeltaTime = DeltaTime;
-    FileExplorer::Open(m_Windows.CurrentPath);
-    if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
-    m_Windows.LogWindow();
-    m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
-    //* The m_Viewport is the actual game scene
-    m_PlayMode.Render(m_Windows.MainPath);
-    m_Viewport.Render();
-}
-
-void Engine::OnExit()
-{
-    {
-        nlohmann::json ProjectSettingsJSON;
-        std::ofstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
-        for (auto &&setting : m_Windows.SettingsVariables)
-        {
-            setting.second->Save(ProjectSettingsJSON);
-        }
-        stream << ProjectSettingsJSON.dump(2);
-        stream.close();
-    }
-    {
-        nlohmann::json UserPrefrencesJSON;
-        std::ofstream stream("Assets/Preferences.json");
-        for (auto &&setting : Windows::UserPreferences)
-        {
-            setting.second->Save(UserPrefrencesJSON);
-        }
-        stream << UserPrefrencesJSON.dump(2);
-        stream.close();
-    }
-}
-
-// void Engine::Init(std::string Path)
-// {
-//     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-//     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
-//     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
-//     glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
-
-//     //The window is gonna be maximized from the glfw hint above so the width and height are useless
-//     m_Window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
-//     glfwMakeContextCurrent(m_Window);
-//     glfwSwapInterval(1);
-//     if(glewInit() != GLEW_OK)
-//         std::cout << "Error!" << std::endl;
-//     GLCall(glEnable(GL_BLEND));
-//     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+    Camera.GetTransform() = Camera.GetComponent<Transform>();
+    Camera.GetRenderer() = Camera.GetComponent<Renderer>();
     
-//     int bufferWidth, bufferHeight;
-// 	glfwGetFramebufferSize(m_Window, &bufferWidth, &bufferHeight);
-// 	glfwMakeContextCurrent(m_Window);
-// 	glewExperimental = GL_TRUE;
+    Camera.GetRenderer()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+    Camera.GetRenderer()->shape->ShapeType = SapphireRenderer::RectangleT;
 
-//     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::CircleShader.GetID()), "Shaders/Circle.glsl");
-//     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::BasicShader.GetID()), "Shaders/Basic.glsl");
-//     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::TextureShader.GetID()), "Shaders/Texture.glsl");
-//     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::AnimationShader.GetID()), "Shaders/Animation.glsl");
+    Camera.GetRenderer()->shape->Wireframe() = true;
+    m_ActiveScene.Objects.push_back(Camera);
+    CameraObjectID = m_ActiveScene.Objects.size()-1;
+;}
 
-//     m_Windows.Init(std::move(Path));
-//     m_Viewport.Init(&m_ActiveScene);
-//     m_PlayMode.Init(&m_ActiveScene);
-//     std::ifstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
-//     nlohmann::json Data;
-//     stream >> Data;
-//     for (auto &&setting : Data.items())
-//     {
-//         m_Windows.SettingsVariables[setting.key()]->Load(setting.value());
-//     }
-//     stream.close();
-//     ImGui_ImplGlfw_InitForOpenGL(m_Window, true);
-//     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
-//     glfwSetWindowSizeCallback(m_Window, ResizeIO);
-//     glfwSetWindowFocusCallback(m_Window, window_focus_callback);
-//     FileExplorer::Init();
-// }
+void Engine::Run()
+{
+    for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
+    {
+        Render(&m_ActiveScene.Objects[i]);
+        m_ActiveScene.Objects[i].OnStart();
+        m_ActiveScene.Objects[i].OnUpdate();
+        if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
+            rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
+            //Currently collision checks for object's twice but I'm planning on adding multithreading where all of these things will happen at the same time.
+            //So I'm leaving this for now, and I'm gonna fix this when I get more into optimizing this engine.
+            // CheckForSkip(rb->CheckForCollisions(Scene->Objects[i].get()));
+        }
+    }
+}
 
-// void Engine::Run()
-// {
-//     //The main loop.
-//     while (!glfwWindowShouldClose(m_Window))
-//     {
-        
-//         ImGui::SetCurrentContext(m_Windows.GetContext());
-//         ImGui_ImplOpenGL3_NewFrame();
-//         ImGui::NewFrame();
-
-//         GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-//         GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
-//         float currentTime = glfwGetTime();
-//         DeltaTime = currentTime - LastTime;
-//         LastTime = currentTime;
-
-//         m_Windows.DockSpace();
-//         m_Windows.Toolbar();
-//         m_Windows.ThemeMaker();
-//         m_Windows.TestWindow();
-
-//         FileExplorer::Open(m_Windows.CurrentPath);
-//         if(m_Viewport.SelectedObj != nullptr) m_Viewport.SelectedObj->Inspect();
-//         m_Windows.LogWindow();
-//         m_ActiveScene.Hierechy(m_Viewport.SelectedObj);
-//         //* The m_Viewport is the actual game scene
-//         m_PlayMode.Render(m_Windows.MainPath);
-//         m_Viewport.Render();
-
-//         ImGui::SetCurrentContext(m_Windows.GetContext());
-//         ImGui::Render();
-//         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-//         GLCall(glfwSwapBuffers(m_Window));
-//         GLCall(glfwPollEvents());
-//     }
-//     {
-//         nlohmann::json ProjectSettingsJSON;
-//         std::ofstream stream(m_Windows.MainPath + "/../ProjectSettings.json");
-//         for (auto &&setting : m_Windows.SettingsVariables)
-//         {
-//             setting.second->Save(ProjectSettingsJSON);
-//         }
-//         stream << ProjectSettingsJSON.dump(2);
-//         stream.close();
-//     }
-//     {
-//         nlohmann::json UserPrefrencesJSON;
-//         std::ofstream stream("Assets/Preferences.json");
-//         for (auto &&setting : Windows::UserPreferences)
-//         {
-//             setting.second->Save(UserPrefrencesJSON);
-//         }
-//         stream << UserPrefrencesJSON.dump(2);
-//         stream.close();
-//     }
-//     ImGui_ImplOpenGL3_Shutdown();
-//     ImGui_ImplGlfw_Shutdown();
-//     ImGui::DestroyContext();
-//     glfwTerminate();
-// }
+void Engine::Render(Object* object)
+{
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), -Engine::GetCameraObject()->GetTransform()->GetPosition() + Engine::GetCameraObject()->GetTransform()->GetSize() / 2.0f);
+    if(std::shared_ptr<Renderer> renderer = object->GetRenderer()) {
+        if(object != Engine::GetCameraObject())
+            renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition(), 1.0f);
+    }
+    else
+        if(object->GetRenderer() = object->GetComponent<Renderer>()) 
+            renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition(), 1.0f);
+        else
+            SapphireEngine::Log(object->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
+}
 
 void Engine::Export()
 {
-    if(!std::filesystem::exists(m_Windows.MainPath + "/../" + "Build")){
-        std::filesystem::create_directories(m_Windows.MainPath + "/../" + "Build/Data");
-    }
-    //Copy pasting all the necessary dll files.
-    FileExplorer::CopyAndOverwrite("glew32.dll", m_Windows.MainPath + "/../" + "Build/glew32.dll");
-    FileExplorer::CopyAndOverwrite("glfw3.dll", m_Windows.MainPath + "/../" + "Build/glfw3.dll");
-    FileExplorer::CopyAndOverwrite("lua54.dll", m_Windows.MainPath + "/../" + "Build/lua54.dll");
-    if(!std::filesystem::exists(m_Windows.MainPath + "/../" + "Build/Shaders")){
-        std::filesystem::copy("Shaders", m_Windows.MainPath + "/../" + "Build/Shaders");
-    }
-    /*
-    I know that this solution feels kinda cheap but I'm not really interested in making the most optimized builds
-    And all of that stuff, so I found a quick solution that works for the current state of the engine and allows me to
-    focus on the other stuff of the engine.
-    */
-    FileExplorer::CopyAndOverwrite("Sapphire-Engine-Runtime.exe", m_Windows.MainPath + "/../" + "Build/Game.exe");
-    for (auto &&object : m_ActiveScene.Objects)
-    {
-        for (auto &&component : object->GetComponents())
-        {
-            if(component->GetState() != nullptr){
-                system(("C:/Users/bagge/Downloads/lua-5.4.2_Win64_bin/luac54.exe -o " + m_Windows.MainPath + "/../" + "/Build/Data/"+ component->GetFile() + " " + m_Windows.MainPath + component->GetFile()).c_str());
-            }
-        }
-    }
-    for(const auto &file : FileExplorer::GetFiles()){
-        if(file.second->Name.erase(0, file.second->Name.size() - 5) != "scene") continue;
-        FileExplorer::CopyAndOverwrite(m_Windows.MainPath + file.second->Path,m_Windows.MainPath + "/../" + "Build/Data/" + file.second->Path);
-    }
+    // if(!std::filesystem::exists(MainPath + "/../" + "Build")){
+    //     std::filesystem::create_directories(MainPath + "/../" + "Build/Data");
+    // }
+    // //Copy pasting all the necessary dll files.
+    // FileExplorer::CopyAndOverwrite("glew32.dll", MainPath + "/../" + "Build/glew32.dll");
+    // FileExplorer::CopyAndOverwrite("glfw3.dll", MainPath + "/../" + "Build/glfw3.dll");
+    // FileExplorer::CopyAndOverwrite("lua54.dll", MainPath + "/../" + "Build/lua54.dll");
+    // if(!std::filesystem::exists(MainPath + "/../" + "Build/Shaders")){
+    //     std::filesystem::copy("Shaders", MainPath + "/../" + "Build/Shaders");
+    // }
+    // /*
+    // I know that this solution feels kinda cheap but I'm not really interested in making the most optimized builds
+    // And all of that stuff, so I found a quick solution that works for the current state of the engine and allows me to
+    // focus on the other stuff of the engine.
+    // */
+    // FileExplorer::CopyAndOverwrite("Sapphire-Engine-Runtime.exe", MainPath + "/../" + "Build/Game.exe");
+    // for (auto &&object : m_ActiveScene.Objects)
+    // {
+    //     for (auto &&component : object->GetComponents())
+    //     {
+    //         if(component->GetState() != nullptr){
+    //             system(("C:/Users/bagge/Downloads/lua-5.4.2_Win64_bin/luac54.exe -o " + MainPath + "/../" + "/Build/Data/"+ component->GetFile() + " " + MainPath + component->GetFile()).c_str());
+    //         }
+    //     }
+    // }
+    // for(const auto &file : FileExplorer::GetFiles()){
+    //     if(file.second->Name.erase(0, file.second->Name.size() - 5) != "scene") continue;
+    //     FileExplorer::CopyAndOverwrite(MainPath + file.second->Path,MainPath + "/../" + "Build/Data/" + file.second->Path);
+    // }
     
 }
 
-Scene* Engine::GetActiveScene()
+Scene& Engine::GetActiveScene()
 {
-    return &m_ActiveScene;
+    return m_ActiveScene;
 }
 
-const std::string &Engine::GetMainPath()
-{
-    return m_Windows.MainPath;
-}
