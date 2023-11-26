@@ -32,5 +32,5 @@ void SapphireRenderer::IndexBuffer::AssignData(size_t Size, GLbyte* Data, int Us
 
 SapphireRenderer::IndexBuffer::~IndexBuffer()
 {
-    // GLCall(glDeleteBuffers(1, &ID));
+    GLCall(glDeleteBuffers(1, &ID));
 }

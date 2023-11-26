@@ -18,7 +18,7 @@ class Engine{
         inline static void SetApp(Application* App) {app = App;}
         inline static Object* GetCameraObject() {return &m_ActiveScene.Objects[CameraObjectID];}
         inline static int CameraObjectID = -1;
-    private:
         inline static Application* app;
+    private:
         inline static Scene m_ActiveScene;
 };

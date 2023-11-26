@@ -10,7 +10,8 @@ void Scene::Save(const std::string FilePath)
     nlohmann::json Data;
     unsigned int i = 0;
     nlohmann::json JsonObj;
-    for(auto& obj : Objects){
+    for (auto &obj : Objects)
+    {
         nlohmann::json JsonComponents;
         JsonObj["Name"] = obj.Name;
         for (auto &component : obj.GetComponents())
@@ -24,18 +25,17 @@ void Scene::Save(const std::string FilePath)
         std::stringstream ss;
         ss << "Object: " << i;
         JsonObj["shape"] = obj.GetComponent<Renderer>()->shape->ShapeType;
-        Data[ss.str().c_str()] = JsonObj; 
+        Data[ss.str().c_str()] = JsonObj;
         i++;
     }
     stream << Data.dump(2);
     stream.close();
 }
 
-
 void Scene::Load(const std::string FilePath)
 {
     this->SceneFile = FilePath;
-    std::ifstream stream(Engine::GetMainPath() +FilePath);
+    std::ifstream stream(Engine::GetMainPath() + FilePath);
     nlohmann::json Data;
     stream >> Data;
     stream.close();
@@ -48,35 +48,39 @@ void Scene::Load(const std::string FilePath)
 
         std::shared_ptr<SapphireRenderer::Shape> shape;
         Object obj(JsonObj["Name"]);
-        nlohmann::json& JsonComp = JsonObj["Components"];
-        for (auto& element : JsonObj["Components"].items()) {
+        nlohmann::json &JsonComp = JsonObj["Components"];
+        for (auto &element : JsonObj["Components"].items())
+        {
             //! Got to find a better way to handle this!
-            if(element.key() == "Renderer")
+            if (element.key() == "Renderer")
             {
                 obj.GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>(element.value()["path"], element.key(), obj.GetComponents().size(), element.value()["path"] != "")));
                 obj.GetComponents().back()->Load(element.value()["Variables"]);
             }
-            else if(element.key() == "Transform")
+            else if (element.key() == "Transform")
             {
                 std::vector<glm::vec3> points;
-                points.push_back(glm::vec3(-0.5f,-0.5f,0));
-                points.push_back(glm::vec3(0.5f,-0.5f,0));
-                points.push_back(glm::vec3(0.5f,0.5f,0));
-                points.push_back(glm::vec3(-0.5f,0.5f,0));
-                obj.GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>(element.value()["path"], element.key(), obj.GetComponents().size(),std::move(points),element.value()["path"] != "")));
+                points.push_back(glm::vec3(-0.5f, -0.5f, 0));
+                points.push_back(glm::vec3(0.5f, -0.5f, 0));
+                points.push_back(glm::vec3(0.5f, 0.5f, 0));
+                points.push_back(glm::vec3(-0.5f, 0.5f, 0));
+                obj.GetComponents().push_back(std::make_shared<Transform>(element.value()["path"], element.key(), obj.GetComponents().size(), std::move(points), element.value()["path"] != ""));
                 obj.GetComponents().back()->Load(element.value()["Variables"]);
-            }else if(element.key() == "Camera") {
-                obj.GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<LuaCamera>(element.value()["path"], element.key(), obj.GetComponents().size(), element.value()["path"] != "")));
-                obj.GetComponents().back()->Load(element.value()["Variables"]);
-                Engine::CameraObjectID = i+1;
             }
-            else if(element.key() == "Rigidbody") {
-                obj.GetComponents().push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>(element.value()["path"], element.key(), obj.GetComponents().size(), element.value()["path"] != "")));
+            else if (element.key() == "Camera")
+            {
+                obj.GetComponents().push_back(std::make_shared<LuaCamera>(element.value()["path"], element.key(), obj.GetComponents().size(), element.value()["path"] != ""));
+                obj.GetComponents().back()->Load(element.value()["Variables"]);
+                Engine::CameraObjectID = i;
+            }
+            else if (element.key() == "Rigidbody")
+            {
+                obj.GetComponents().push_back(std::make_shared<SapphirePhysics::RigidBody>(element.value()["path"], element.key(), obj.GetComponents().size(), element.value()["path"] != ""));
                 obj.GetComponents().back()->Load(element.value()["Variables"]);
             }
             else
             {
-                Component* comp = new Component(element.value()["path"], element.key(), obj.GetComponents().size(), element.value()["path"] != "");
+                std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), obj.GetComponents().size(), element.value()["path"] != "");
                 comp->Load(element.value()["Variables"]);
                 obj.AddComponent<Component>(comp);
             }
@@ -88,30 +92,34 @@ void Scene::Load(const std::string FilePath)
         obj.GetRenderer() = obj.GetComponent<Renderer>();
         switch (JsonObj["shape"].get<int>())
         {
-            case SapphireRenderer::CircleT:{
-                shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
-                shape->ShapeType = SapphireRenderer::CircleT;
-                break;
-            }
-            case SapphireRenderer::RectangleT:{
-                shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::TextureShader,SapphireRenderer::RectangleVertices,obj.GetComponent<Renderer>()->TexturePath.Get());
-                shape->ShapeType = SapphireRenderer::RectangleT;
-                break;
-            }
-            default:
-                shape = nullptr;
+        case SapphireRenderer::CircleT:
+        {
+            shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
+            shape->ShapeType = SapphireRenderer::CircleT;
+            break;
         }
-        if(obj.GetComponent<Renderer>()->TexturePath.Get() != ""){
+        case SapphireRenderer::RectangleT:
+        {
+            shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::TextureShader, SapphireRenderer::RectangleVertices, obj.GetComponent<Renderer>()->TexturePath.Get());
+            shape->ShapeType = SapphireRenderer::RectangleT;
+            break;
+        }
+        default:
+            shape = nullptr;
+        }
+        if (obj.GetComponent<Renderer>()->TexturePath.Get() != "")
+        {
             shape->Load(Engine::GetMainPath() + obj.GetComponent<Renderer>()->TexturePath.Get(), true);
         }
-        if(&obj == Engine::GetCameraObject()){
+        if (i == Engine::CameraObjectID)
+        {
             obj.GetComponent<Transform>()->SetSize(glm::vec3(Editor::GetWindowSize().x, Editor::GetWindowSize().y, 0));
             shape->Wireframe() = true;
         }
 
-
         obj.GetComponent<Renderer>()->shape = shape;
-        if(std::shared_ptr<SapphirePhysics::RigidBody> RbComp = obj.GetComponent<SapphirePhysics::RigidBody>()){
+        if (std::shared_ptr<SapphirePhysics::RigidBody> RbComp = obj.GetComponent<SapphirePhysics::RigidBody>())
+        {
             RbComp->transform = obj.GetTransform().get();
             RbComp->ShapeType = static_cast<int>(obj.GetRenderer()->shape->ShapeType);
         }
@@ -121,9 +129,10 @@ void Scene::Load(const std::string FilePath)
     // Editor::SelectedObj = nullptr;
 }
 
-void Scene::Hierechy(Object* SelectedObj, int& SelectedObjID)
+void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)
 {
-    if(!(*Editor::GetWindowState("Hierachy"))) return;
+    if (!(*Editor::GetWindowState("Hierachy")))
+        return;
     ImGui::Begin("Hierachy", Editor::GetWindowState("Hierachy"));
     for (size_t i = 0; i < Objects.size(); i++)
     {
@@ -133,22 +142,22 @@ void Scene::Hierechy(Object* SelectedObj, int& SelectedObjID)
         {
             Name = "##";
         }
-        if(ImGui::Selectable((Name + "##" + std::to_string(Objects[i].id)).c_str(), &Objects[i] == SelectedObj)){
+        if (ImGui::Selectable((Name + "##" + std::to_string(Objects[i].id)).c_str(), &Objects[i] == SelectedObj))
+        {
             // SelectedObj = &Objects[i];
             SelectedObjID = i;
         }
     }
     glfwSetInputMode(glfwGetCurrentContext(), GLFW_STICKY_KEYS, GLFW_TRUE);
-    if(glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_DELETE) == GLFW_PRESS && ImGui::IsWindowFocused())
+    if (Engine::app->GetInputDown(GLFW_KEY_DELETE) && ImGui::IsWindowFocused())
     {
-        for (size_t i = 0; i < Objects.size(); i++)
+       for (size_t i = 0; i < Objects.size(); i++)
         {
-            if(Objects[i].Name == SelectedObj->Name)
+            if (Objects[i].Name == SelectedObj->Name)
             {
                 Object::Delete(i);
             }
         }
-        
     }
     if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
     {
@@ -158,7 +167,8 @@ void Scene::Hierechy(Object* SelectedObj, int& SelectedObjID)
     ImGui::End();
 }
 
-void Scene::CreateMenu(Object* SelectedObj){
+void Scene::CreateMenu(Object *SelectedObj)
+{
     if (ImGui::BeginPopup("Context Menu"))
     {
         if (ImGui::MenuItem("Create Empty"))
@@ -171,7 +181,7 @@ void Scene::CreateMenu(Object* SelectedObj){
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            Object* Obj = Object::CreateObject(ss.str());
+            Object *Obj = Object::CreateObject(ss.str());
             Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
             Obj->GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::CircleT;
             Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
@@ -180,8 +190,8 @@ void Scene::CreateMenu(Object* SelectedObj){
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            Object* Obj = Object::CreateObject(ss.str());
-            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader,SapphireRenderer::RectangleVertices);
+            Object *Obj = Object::CreateObject(ss.str());
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
             Obj->GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::RectangleT;
             Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }
@@ -189,8 +199,8 @@ void Scene::CreateMenu(Object* SelectedObj){
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
-            Object* Obj = Object::CreateObject(ss.str());
-            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::TextureShader,SapphireRenderer::RectangleVertices,"");
+            Object *Obj = Object::CreateObject(ss.str());
+            Obj->GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::TextureShader, SapphireRenderer::RectangleVertices, "");
             Obj->GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::RectangleT;
             Obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj->GetRenderer()->shape->ShapeType);
         }

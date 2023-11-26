@@ -69,15 +69,15 @@ namespace SapphireRenderer
             virtual void Render(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, float CameraZoom, bool OutLine, const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms);
             void Load(const std::string& path, bool flip = false);
             void SetShader(const SapphireRenderer::Shader& shader, const std::function<void(SapphireRenderer::Shader& shader)>& SetUpUniforms) {Shader = shader;}
-            void DeleteTexture() {Texture = std::nullopt;}
-            // Here is a virtual Render() function for every sub class to do it's own calculations before passing in the data on RenderShape()
+            // void DeleteTexture() {Texture = std::nullopt;}
             const glm::vec2 GetTextureDimensions() const;
             SapphireRenderer::VertexBuffer VertexBuffer;
         protected:
+            bool HasTexture = false;
             SapphireRenderer::Shader Shader;
             SapphireRenderer::VertexArray VertexArray;
             SapphireRenderer::IndexBuffer IndexBuffer;
-            std::optional<SapphireRenderer::Texture> Texture;
+            SapphireRenderer::Texture Texture;
             glm::mat4 m_Projection;
             bool m_Wireframe = false;
     };

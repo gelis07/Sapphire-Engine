@@ -47,9 +47,12 @@ void Renderer::CustomRendering()
         ss << "width: " << shape->GetTextureDimensions().x << ", height: " << shape->GetTextureDimensions().y;
         ImGui::Text(ss.str().c_str());
         if(ImGui::Button("Remove")){
-            shape->DeleteTexture();
-            TexturePath.Get() = "";
-            shape->SetShader(SapphireRenderer::BasicShader, [](SapphireRenderer::Shader& shader) {  });
+            // shape->DeleteTexture();
+            // TexturePath.Get() = "";
+            // shape->SetShader(SapphireRenderer::BasicShader, [](SapphireRenderer::Shader& shader) {  });
         }
     }
+}
+Renderer::~Renderer(){
+    shape.reset();
 }

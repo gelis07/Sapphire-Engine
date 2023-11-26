@@ -7,7 +7,7 @@ SapphireRenderer::VertexArray::VertexArray()
 
 SapphireRenderer::VertexArray::~VertexArray()
 {
-    // GLCall(glDeleteVertexArrays(1, &ID));
+    GLCall(glDeleteVertexArrays(1, &ID));
 }
 
 void SapphireRenderer::VertexArray::AddBuffer(const VertexBuffer &VBO, const VertexBufferLayout &layout)

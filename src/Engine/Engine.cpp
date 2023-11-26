@@ -13,9 +13,9 @@ Engine::Engine(const std::string& mainPath)
     points.push_back(glm::vec3(1,-1,0));
     points.push_back(glm::vec3(1,1,0));
     points.push_back(glm::vec3(-1,1,0));
-    Camera.AddComponent<Transform>(new Transform("", "Transform", 1, std::move(points),false));
-    Camera.AddComponent<LuaCamera>(new LuaCamera("", "Camera", 2,  false));
-    Camera.AddComponent<Renderer>(new Renderer("", "Renderer", 3, false));
+    Camera.AddComponent<Transform>(std::make_shared<Transform>("", "Transform", 1, std::move(points),false));
+    Camera.AddComponent<LuaCamera>(std::make_shared<LuaCamera>("", "Camera", 2,  false));
+    Camera.AddComponent<Renderer>(std::make_shared<Renderer>("", "Renderer", 3, false));
 
     Camera.GetTransform() = Camera.GetComponent<Transform>();
     Camera.GetRenderer() = Camera.GetComponent<Renderer>();

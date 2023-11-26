@@ -111,11 +111,15 @@ bool Application::GetMouseInput(int MouseButton)
 
 bool Application::GetInputDown(int Key)
 {
-    Keys[Key] = true;
+    if(glfwGetKey(window, Key) == GLFW_PRESS && Keys.find(Key) == Keys.end()){
+        Keys[Key] = true;
+        return true;
+    }
     if(glfwGetKey(window, Key) == GLFW_RELEASE && Keys.find(Key) != Keys.end()){
         Keys.erase(Key);
+        return false;
     }
-    return glfwGetKey(window, Key) == GLFW_PRESS && Keys.find(Key) == Keys.end();
+    return false;
 }
 
 bool Application::GetMouseInputDown(int MouseButton)

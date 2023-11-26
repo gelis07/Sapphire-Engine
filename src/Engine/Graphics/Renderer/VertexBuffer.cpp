@@ -35,7 +35,7 @@ void SapphireRenderer::VertexBuffer::SubData(size_t Size, GLbyte* Data)
 
 SapphireRenderer::VertexBuffer::~VertexBuffer()
 {
-    // GLCall(glDeleteBuffers(1, &ID));
+    GLCall(glDeleteBuffers(1, &ID));
 }
 
 void SapphireRenderer::VertexBufferLayout::Push(unsigned int type, unsigned int count)

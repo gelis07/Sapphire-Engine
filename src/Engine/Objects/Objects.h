@@ -21,7 +21,7 @@ class Object
         template<typename T>
         std::shared_ptr<T> GetComponent();
         template<typename Derived>
-        std::enable_if_t<std::is_base_of_v<Component, Derived>, void> AddComponent(Derived* Comp);
+        std::enable_if_t<std::is_base_of_v<Component, Derived>, void> AddComponent(const std::shared_ptr<Derived>& Comp);
         std::vector<std::shared_ptr<Component>>& GetComponents() {return Components;}
         
         static Object* CreateObject(std::string &&ObjName);
@@ -72,7 +72,7 @@ static int GetComponentFromObject(lua_State* L) {
     return 0;
 }
 template<typename Derived>
-std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddComponent(Derived* Comp) 
+std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddComponent(const std::shared_ptr<Derived>& Comp) 
 {
-    Components.push_back(std::shared_ptr<Derived>(Comp));
+    Components.push_back(std::move(Comp));
 }

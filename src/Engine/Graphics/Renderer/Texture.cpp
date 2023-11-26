@@ -55,21 +55,12 @@ SapphireRenderer::Texture::Texture(const std::string &Path, bool flip)
     GLCall(glBindTexture(GL_TEXTURE_2D, 0));
     stbi_image_free(Data);
 }
-// SapphireRenderer::Texture::Texture()
-// {
-//     GLCall(glGenTextures(1, &ID));
-//     Bind();
-//     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, 1920, 1080, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL));
-//     Unbind();
-// }
-
 SapphireRenderer::Texture::~Texture()
 {
     FreeSlot(Slot);
-    // if(Data != nullptr) stbi_image_free(Data);
-    // GLCall(glDeleteTextures(1, &ID));
+    Unbind();
+    if(ID != 0) GLCall(glDeleteTextures(1, &ID));
 }
-
 void SapphireRenderer::Texture::SetImage(int aWidth, int aHeight, unsigned char* aData)
 {
     width = aWidth;
@@ -100,7 +91,7 @@ void SapphireRenderer::Texture::Load(const std::string &Path, bool flip)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data));
-    // GLCall(glGenerateMipmap(GL_TEXTURE_2D));
+    GLCall(glGenerateMipmap(GL_TEXTURE_2D));
     Unbind();
     stbi_image_free(Data);
 }

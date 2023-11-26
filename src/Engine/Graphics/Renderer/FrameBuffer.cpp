@@ -11,7 +11,7 @@ void SapphireRenderer::FrameBuffer::Init()
 
 SapphireRenderer::FrameBuffer::~FrameBuffer()
 {
-    // GLCall(glDeleteFramebuffers(1, &ID));
+    GLCall(glDeleteFramebuffers(1, &ID));
 }
 
 void SapphireRenderer::FrameBuffer::Bind() const

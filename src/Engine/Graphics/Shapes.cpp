@@ -7,7 +7,7 @@ static glm::vec4 LineColor(1.0f, 0.0f, 0.0f, 1.0f);
 float lineWidth = 5.0f;
 //This is a complicated name but its just the shape constructor
 SapphireRenderer::Shape::Shape(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices, const std::string& path)
-: Shader(shader), VertexArray(), VertexBuffer(), IndexBuffer(), Texture(std::make_optional<SapphireRenderer::Texture>(path, true))
+: Shader(shader), VertexArray(), VertexBuffer(), IndexBuffer()
 {
     Shader = shader;
     VertexArray.Bind();
@@ -28,7 +28,6 @@ SapphireRenderer::Shape::Shape(const SapphireRenderer::Shader& shader, const std
 
     IndexBuffer.AssignData(6 * sizeof(unsigned int), (GLbyte*)Indices, GL_STATIC_DRAW);
     Shader = SapphireRenderer::BasicShader;
-    Texture = std::nullopt;
 
     VertexArray.Unbind();
     VertexBuffer.Unbind();
@@ -50,10 +49,10 @@ float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shade
     const glm::vec3& Pos = transform.GetPosition();
     glm::mat4 mvp = m_Projection * view * transform.GetModel();
     Shader.SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
-    if(Texture){
-        Texture.value().SetAsActive();
-        Texture.value().Bind();
-        Shader.SetUniform("u_Texture", (int)Texture.value().GetSlot());
+    if(HasTexture){
+        Texture.SetAsActive();
+        Texture.Bind();
+        Shader.SetUniform("u_Texture", (int)Texture.GetSlot());
     }
     SetUpUniforms(Shader);
 
@@ -68,7 +67,7 @@ float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shade
         GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     }
     GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-    if(Texture) Texture.value().Unbind(); 
+    if(HasTexture) Texture.Unbind(); 
     Shader.Unbind();
     VertexArray.Unbind();
     IndexBuffer.Unbind();
@@ -77,19 +76,12 @@ float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shade
 void SapphireRenderer::Shape::Load(const std::string &path, bool flip)
 {
     Shader = SapphireRenderer::TextureShader;
-    if(Texture)
-    {
-        Texture.value().Load(path, true);
-    }else{
-        Texture = SapphireRenderer::Texture(path, true);
-    }
+    HasTexture = true;
+    Texture.Load(path, true);
 }
 const glm::vec2 SapphireRenderer::Shape::GetTextureDimensions() const
 {
-    if(!Texture)
-        return glm::vec2(0);
-    else
-        return Texture.value().GetDimensions();
+    return Texture.GetDimensions();
 }
 
 SapphireRenderer::Animation::Animation(const std::string& AnimationFile,const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::string& path)
@@ -303,10 +295,10 @@ void SapphireRenderer::Animation::Render(const Transform &transform, const glm::
     const glm::vec3& Pos = transform.GetPosition();
     glm::mat4 mvp = m_Projection * view * transform.GetModel();
     Shader.SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
-    if(Texture){
-        Texture.value().SetAsActive();
-        Texture.value().Bind();
-        Shader.SetUniform("u_Texture", (int)Texture.value().GetSlot());
+    if(HasTexture){
+        Texture.SetAsActive();
+        Texture.Bind();
+        Shader.SetUniform("u_Texture", (int)Texture.GetSlot());
     }
     SetUpUniforms(Shader);
 
@@ -321,7 +313,7 @@ void SapphireRenderer::Animation::Render(const Transform &transform, const glm::
         GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     }
     GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-    if(Texture) Texture.value().Unbind(); 
+    if(HasTexture) Texture.Unbind(); 
     Shader.Unbind();
     VertexArray.Unbind();
     IndexBuffer.Unbind();

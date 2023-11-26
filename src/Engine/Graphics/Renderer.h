@@ -17,6 +17,7 @@ class Renderer : public Component
                 TexturePath.SetOnChangeFunc(OnChange);
             }
         };
+        ~Renderer();
         std::shared_ptr<SapphireRenderer::Shape> shape;
         SapphireRenderer::Type Type;
         SapphireEngine::Color Color;

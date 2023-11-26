@@ -199,8 +199,7 @@ Object* Object::LoadPrefab(std::string FilePath)
         //! Got to find a better way to handle object!
         if(element.key() == "Renderer")
         {
-            Renderer* comp = new Renderer(element.value()["path"], element.key(), object.GetComponents().size(),element.value()["path"] != "");
-            object.GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Renderer>(dynamic_cast<Renderer*>(comp))));
+            object.GetComponents().push_back(std::make_shared<Renderer>(element.value()["path"], element.key(), object.GetComponents().size(),element.value()["path"] != ""));
             object.GetComponents().back()->Load(element.value()["Variables"]);
         }
         else if(element.key() == "Transform")
@@ -210,12 +209,11 @@ Object* Object::LoadPrefab(std::string FilePath)
             points.push_back(glm::vec3(0.5f,-0.5f,0));
             points.push_back(glm::vec3(0.5f,0.5f,0));
             points.push_back(glm::vec3(-0.5f,0.5f,0));
-            Transform* comp = new Transform(element.value()["path"], element.key(), object.GetComponents().size(), std::move(points),element.value()["path"] != "");
-            object.GetComponents().push_back(std::static_pointer_cast<Component>(std::shared_ptr<Transform>(dynamic_cast<Transform*>(comp))));
+            object.GetComponents().push_back(std::make_shared<Transform>(element.value()["path"], element.key(), object.GetComponents().size(), std::move(points),element.value()["path"] != ""));
             object.GetComponents().back()->Load(element.value()["Variables"]);
         }else
         {
-            Component* comp = new Component(element.value()["path"], element.key(), object.GetComponents().size(), element.value()["path"] != "");
+            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), object.GetComponents().size(), element.value()["path"] != "");
             comp->Load(element.value()["Variables"]);
             object.AddComponent<Component>(comp);
         }

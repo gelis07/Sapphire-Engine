@@ -11,7 +11,7 @@ namespace SapphireRenderer{
             static const int& OccupyFreeSlot();
             static void FreeSlot(const int& SlotID);
             Texture(const std::string& Path, bool flip = false);
-            Texture() {}
+            Texture() {GLCall(glGenTextures(1, &ID));}
             ~Texture();
             void SetImage(int width, int height, unsigned char* Data);
             void Load(const std::string& Path, bool flip = false);
