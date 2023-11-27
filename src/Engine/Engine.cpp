@@ -26,7 +26,7 @@ Engine::Engine(const std::string& mainPath)
     Camera.GetRenderer()->shape->Wireframe() = true;
     m_ActiveScene.Objects.push_back(Camera);
     CameraObjectID = m_ActiveScene.Objects.size()-1;
-;}
+}
 
 void Engine::Run()
 {

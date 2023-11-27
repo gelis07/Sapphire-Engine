@@ -37,6 +37,8 @@ class Object
         //Please use these functions because it doesn't have to search for these objects!
         std::shared_ptr<Transform>& GetTransform() {return transform;}
         std::shared_ptr<Renderer>& GetRenderer() {return renderer;} 
+        const std::shared_ptr<Transform>& GetTransform() const {return transform;}
+        const std::shared_ptr<Renderer>& GetRenderer() const {return renderer;} 
         std::vector<std::shared_ptr<Component>> Components;
     private:
         std::shared_ptr<Transform> transform;

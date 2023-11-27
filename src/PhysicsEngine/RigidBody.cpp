@@ -37,7 +37,11 @@ void SapphirePhysics::RigidBody::Update(const float &DeltaTime)
     transform->Move(Velocity * DeltaTime);
     transform->Rotate(AngularVelocity.z * DeltaTime);
 }
-
+struct StackObjectDeleter {
+    void operator()(Object* /* object */) const {
+        // Custom deleter, no need to delete stack-allocated objects
+    }
+};
 bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
 {
     glm::vec2 Normal;
@@ -46,8 +50,10 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
     if(ShapeType == SapphireRenderer::RectangleT){
         for (auto&& object: Engine::GetActiveScene().Objects) {
             if(object.Name == "MainCamera" || &object == current) continue;
+            //! FOR SOME REASON IT WORKS WITH SHARED POITNERS ONLY I HAVE NO IDEA WHY.
+            std::shared_ptr<Object> sharedObject(&object,StackObjectDeleter{});
             if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
-                if(SapphirePhysics::CollisionDetection::RectanglexRectangle(&object, current,CD)){
+                if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, current,CD)){
                     OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }
@@ -63,13 +69,14 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
     else{
         for (auto&& object: Engine::GetActiveScene().Objects) {
             if(object.Name == "MainCamera" || &object == current) continue;
+            std::shared_ptr<Object> sharedObject(&object);
             if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
                 if(SapphirePhysics::CollisionDetection::CirclexRectangle(current, &object,CD)){
                     OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }
             }else{
-                if(SapphirePhysics::CollisionDetection::CirclexCircle(&object, current, CD)){
+                if(SapphirePhysics::CollisionDetection::CirclexCircle(sharedObject, current, CD)){
                     OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }
@@ -297,4 +304,3 @@ int SapphirePhysics::RigidBody::Impulse(lua_State *L) {
     rb->Velocity = glm::vec3(Fnet * DeltaTime) / mass;
     return 0;
 }
-
