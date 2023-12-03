@@ -2,7 +2,7 @@
 #include "Editor/Editor.h"
 #include "Editor/StartUp.hpp"
 #include "UI/ProjectManager.h"
-
+#include "Game/Game.h"
 // Download geogebra at https://www.geogebra.org/download?lang=en
 int main(void)
 {
@@ -16,11 +16,11 @@ int main(void)
         ProjectManager Pm;
         Pm.Update();
         MainPath = Pm.Path;
-        //The engine
-        // Engine::Init(Pm.Run()); //Pm.Run() will return the Main Path for the Engine.
     }
     Editor editor(MainPath);
     editor.Update();
+    // Game game;
+    // game.Update();
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

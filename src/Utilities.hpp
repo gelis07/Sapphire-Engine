@@ -17,7 +17,7 @@ namespace SapphireEngine
     };
     inline std::vector<std::pair<std::string, SapphireEngine::LogType>> Logs;
 
-    static float ClampFunc(const float min, const float max, float &value){
+    static float Clamp(const float min, const float max, float &value){
         // value = std::min(std::max(min,value) , max);
         return std::min(std::max(min,value) , max);
     }

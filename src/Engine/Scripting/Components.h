@@ -12,7 +12,7 @@ class Component
         virtual void CustomRendering() {};
         void ExecuteFunction(std::string Name);
         void UpdateLuaVariables();
-        // bool GetLuaVariables(Object* obj);
+        bool GetLuaVariables();
         void SetLuaComponent(lua_State* ComponentsState);
         void Render();
         SapphireEngine::Variable* Get(std::string Name);
@@ -26,7 +26,7 @@ class Component
         std::unordered_map<std::string, lua_CFunction> Functions;
     protected:
         TableVariable VariablesToUpdate;
-        // void Reload(Object* obj);
+        void Reload();
         lua_State* L = nullptr;
         int m_ID;
         std::string m_LuaFile;

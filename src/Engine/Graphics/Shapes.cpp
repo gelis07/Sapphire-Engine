@@ -40,7 +40,8 @@ float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shade
     const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetSize());
     // m_Projection = glm::ortho( -WindowSize.x/2.0f / CameraZoom, WindowSize.x/2.0f / CameraZoom, -WindowSize.y / 2.0f / CameraZoom, WindowSize.y / 2.0f / CameraZoom, -1.0f, 1.0f);
     m_Projection = glm::ortho( 0.0f, WindowSize.x / CameraZoom, 0.0f, WindowSize.y / CameraZoom, -1.0f, 1.0f);
-     
+    
+    if(CurrentAnimation) CurrentAnimation.value().SelectKeyFrame(VertexBuffer);
 
     Shader.Bind();
     VertexArray.Bind();
@@ -67,7 +68,9 @@ float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shade
         GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
     }
     GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-    if(HasTexture) Texture.Unbind(); 
+
+    if(HasTexture) Texture.Unbind();
+
     Shader.Unbind();
     VertexArray.Unbind();
     IndexBuffer.Unbind();
@@ -84,12 +87,25 @@ const glm::vec2 SapphireRenderer::Shape::GetTextureDimensions() const
     return Texture.GetDimensions();
 }
 
-SapphireRenderer::Animation::Animation(const std::string& AnimationFile,const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::string& path)
-: Shape(shader, Vertices, path)
+void SapphireRenderer::Shape::SelectAnimation(const std::string &name)
+{
+    if(Animations.find(name) != Animations.end())
+    {
+        Load(Animations.at(name).GetTexturePath(), true);
+        // Texture = Animations.at(name).GetTexture();
+        Shader = SapphireRenderer::TextureShader;
+        // HasTexture = true;
+        // Texture = Animations.at(name).texture;
+        Animations.at(name).SetSelectedAnimation(CurrentAnimation);
+    }else
+        SapphireEngine::Log("Animation with name: " + name + " was not found.", SapphireEngine::Error);
+}
+
+SapphireRenderer::Animation::Animation(const std::string& AnimationFile, const std::string& texturePath) : TexturePath(texturePath)
 {
     KeyFramesData = readKeyFramePairsFromBinaryFile(AnimationFile);
 }
-void SapphireRenderer::Animation::SelectKeyFrame()
+void SapphireRenderer::Animation::SelectKeyFrame(VertexBuffer& VBO)
 {
     if(glfwGetTime() >= LastRecoredTime + KeyFramesData[CurrentKeyFrameIdx].TimeStamp){
         CurrentKeyFrameIdx++;
@@ -97,13 +113,9 @@ void SapphireRenderer::Animation::SelectKeyFrame()
             CurrentKeyFrameIdx = 0;
             LastRecoredTime = glfwGetTime();
         }
-        VertexBuffer.Bind();
-        VertexBuffer.SubData(KeyFramesData[CurrentKeyFrameIdx].vertices.size() * sizeof(glm::vec2) * 2.0f, (GLbyte*)KeyFramesData[CurrentKeyFrameIdx].vertices.data());
-        // VertexBuffer.AssignData(sizeof(KeyFramesData[CurrentKeyFrameIdx].vertices), (GLbyte*)KeyFramesData[CurrentKeyFrameIdx].vertices.data(), GL_DYNAMIC_DRAW);
-        VertexBuffer.Unbind();
-        // GLCall(glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer.GetID()));
-        // GLCall(glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(KeyFramesData[CurrentKeyFrameIdx].vertices), KeyFramesData[CurrentKeyFrameIdx].vertices.data()));
-        // GLCall(glBindBuffer(GL_ARRAY_BUFFER, 0));
+        VBO.Bind();
+        VBO.SubData(KeyFramesData[CurrentKeyFrameIdx].vertices.size() * sizeof(glm::vec2) * 2.0f, (GLbyte*)KeyFramesData[CurrentKeyFrameIdx].vertices.data());
+        VBO.Unbind();
     }
 }
 std::vector<SapphireRenderer::KeyFramePair> SapphireRenderer::Animation::readKeyFramePairsFromBinaryFile(const std::string& filename){
@@ -280,41 +292,7 @@ void SapphireRenderer::Animation::Export(const std::vector<KeyFrame*>& MainKeyfr
     writeKeyFramePairsToBinaryFile(KeyFramesData, Engine::GetMainPath() + name + ".anim");
 }
 
-void SapphireRenderer::Animation::Render(const Transform &transform, const glm::vec4 &Color, const glm::vec3 &CamPos, const glm::mat4 &view, float CameraZoom, bool OutLine, const std::function<void(SapphireRenderer::Shader &shader)> &SetUpUniforms)
+void SapphireRenderer::Animation::SetSelectedAnimation(std::optional<Animation>& CurrentAnimation)
 {
-    SelectKeyFrame();
-    const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetSize());
-    // m_Projection = glm::ortho( -WindowSize.x/2.0f / CameraZoom, WindowSize.x/2.0f / CameraZoom, -WindowSize.y / 2.0f / CameraZoom, WindowSize.y / 2.0f / CameraZoom, -1.0f, 1.0f);
-    m_Projection = glm::ortho( 0.0f, WindowSize.x / CameraZoom, 0.0f, WindowSize.y / CameraZoom, -1.0f, 1.0f);
-     
-
-    Shader.Bind();
-    VertexArray.Bind();
-    IndexBuffer.Bind();
-    //Here is the standard model view projection matrix
-    const glm::vec3& Pos = transform.GetPosition();
-    glm::mat4 mvp = m_Projection * view * transform.GetModel();
-    Shader.SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
-    if(HasTexture){
-        Texture.SetAsActive();
-        Texture.Bind();
-        Shader.SetUniform("u_Texture", (int)Texture.GetSlot());
-    }
-    SetUpUniforms(Shader);
-
-    if(OutLine){
-        Shader.SetUniform("u_Color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    }else{
-        Shader.SetUniform("u_Color", Color);
-    }
-    if(!m_Wireframe){
-        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
-    }else{
-        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
-    }
-    GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-    if(HasTexture) Texture.Unbind(); 
-    Shader.Unbind();
-    VertexArray.Unbind();
-    IndexBuffer.Unbind();
+    CurrentAnimation = *this;
 }

@@ -12,7 +12,7 @@ Application::Application(const std::string& Path)
             std::cout << "Path not found" << '\n';
         }
     }
-
+    glfwWindowHint(GLFW_SAMPLES, 4);
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
@@ -26,7 +26,7 @@ Application::Application(const std::string& Path)
     //     std::cout << "Error!" << std::endl;
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
-    
+    GLCall(glEnable(GL_MULTISAMPLE));
     int bufferWidth, bufferHeight;
 	glfwGetFramebufferSize(window, &bufferWidth, &bufferHeight);
 	glfwMakeContextCurrent(window);

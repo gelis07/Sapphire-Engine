@@ -19,6 +19,7 @@ add_executable(Sapphire-Engine
     src/Engine/Graphics/Renderer/VertexArray.cpp
     src/Engine/Graphics/Renderer/VertexBuffer.cpp
     src/Engine/Scenes.cpp
+    src/Game/Game.cpp
     src/Engine/Engine.cpp
     src/Engine/Graphics/Grid.cpp
     src/Engine/Scripting/Scripting.cpp

@@ -16,6 +16,7 @@ class Renderer : public Component
                 };
                 TexturePath.SetOnChangeFunc(OnChange);
             }
+            Functions["Play"] = LoadTexture;
         };
         ~Renderer();
         std::shared_ptr<SapphireRenderer::Shape> shape;
@@ -24,4 +25,5 @@ class Renderer : public Component
         SapphireEngine::String TexturePath;
         void Render(const Transform& transform, const glm::mat4& view,bool&& IsSelected,glm::vec3 CameraPos,float CameraZoom);
         void CustomRendering() override;
+        static int LoadTexture(lua_State* L);
 };

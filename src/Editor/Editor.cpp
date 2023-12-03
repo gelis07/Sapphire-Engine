@@ -15,7 +15,7 @@ Editor::Editor(const std::string &mainPath) : Application(mainPath) , engine()
     stream >> Data;
     for (auto &&setting : Data.items())
     {
-        SettingsVariables[setting.key()]->Load(setting.value());
+        Engine::SettingsVariables[setting.key()]->Load(setting.value());
     }
     stream.close();
     FileExplorer::Init();
@@ -81,7 +81,7 @@ void Editor::OnExit()
     {
         nlohmann::json ProjectSettingsJSON;
         std::ofstream stream(MainPath + "/../ProjectSettings.json");
-        for (auto &&setting : SettingsVariables)
+        for (auto &&setting : Engine::SettingsVariables)
         {
             setting.second->Save(ProjectSettingsJSON);
         }
@@ -351,6 +351,11 @@ void Editor::RenderPlayMode()
                     SapphireEngine::Log("Can't run program with an active lua script with an error!", SapphireEngine::Error);
             }
         }
+        ImGui::SetCursorPos(ImVec2(20, 20));
+        std::stringstream ss;
+        ss << (int)(1.0 / Engine::GetDeltaTime());
+        std::cout << 1.0 / Engine::GetDeltaTime() << '\n';
+        ImGui::Text(ss.str().c_str());
         if(GameRunning)
         {
             ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - 100, 20));
@@ -369,9 +374,6 @@ void Editor::RenderPlayMode()
                     Engine::GetActiveScene().Save(std::string(SceneFileName) + ".scene");
                     GameRunning = !GameRunning;
                 }
-                else
-                    SapphireEngine::Log("Can't run program with an active lua script with an error!", SapphireEngine::Error);
-                    
                 ImGui::CloseCurrentPopup();
             }
             ImGui::EndPopup();

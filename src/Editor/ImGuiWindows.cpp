@@ -277,9 +277,9 @@ void ProjectSettings()
 {
     if(!(*Editor::GetWindowState("Project Settings"))) return;
     ImGui::Begin("Project Settings", Editor::GetWindowState("Project Settings"));
-    for (auto &&setting : Editor::SettingsVariables)
+    for (auto &&setting : Engine::SettingsVariables)
     {
-        setting.second->RenderGUI(Editor::SettingsVariables);
+        setting.second->RenderGUI(Engine::SettingsVariables);
     }
     
     ImGui::Text("More options coming soon.");
@@ -409,7 +409,7 @@ void AnimationTimeline()
             SelectedKeyframe = nullptr;
         }
         if(ImGui::Button("Export")){
-            SapphireRenderer::Animation::Export(Keyframes, "NewAnimation");
+            SapphireRenderer::Animation::Export(Keyframes, "hehe");
         }
         ImGui::End();
     }

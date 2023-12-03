@@ -19,7 +19,6 @@ class Editor : public Application{
         static void SetWindowState(std::string&& WindowName, bool state);
         static bool* GetWindowState(std::string&& WindowName);
         inline static std::string CurrentPath;
-        inline static std::unordered_map<std::string, SapphireEngine::Variable*> SettingsVariables;
         inline static std::unordered_map<std::string, SapphireEngine::Variable*> UserPreferences;
         void OnUpdate(const float DeltaTime) override;
         void OnStart() override;

@@ -61,10 +61,15 @@ std::shared_ptr<T> Object::GetComponent()
 static int GetComponentFromObject(lua_State* L) {
     Object* obj = static_cast<Object*>(lua_touserdata(L, 1));
 
-    const char* VariableName = lua_tostring(L, 2);
+    const char* VariableNameC = lua_tostring(L, 2);
+    std::string VariableName = std::string(VariableNameC);
 
+    if(VariableName == "Name"){
+        lua_pushstring(L, obj->Name.c_str());
+        return 1;
+    }
     for(auto &comp : obj->GetComponents()){
-        if(comp->Name == std::string(VariableName))
+        if(comp->Name == VariableName)
         {
             comp->SetLuaComponent(L);
             return 1;

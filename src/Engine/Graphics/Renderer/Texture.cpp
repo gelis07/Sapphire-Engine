@@ -37,8 +37,8 @@ SapphireRenderer::Texture::Texture(const std::string &Path, bool flip)
     GLCall(glGenTextures(1, &ID));
     Slot = OccupyFreeSlot();
     GLCall(glActiveTexture(GL_TEXTURE0 + Slot));
-    GLCall(glBindTexture(GL_TEXTURE_2D, ID));
     stbi_set_flip_vertically_on_load(flip);
+    Bind();
     Data = stbi_load(Path.c_str(), &width, &height, &nrChannels, 0);
     if (Data == nullptr) {
         width = 1;
@@ -50,9 +50,13 @@ SapphireRenderer::Texture::Texture(const std::string &Path, bool flip)
         Data[2] = 255;
         Data[3] = 255;
     }
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, Data));
     GLCall(glGenerateMipmap(GL_TEXTURE_2D));
-    GLCall(glBindTexture(GL_TEXTURE_2D, 0));
+    Unbind();
     stbi_image_free(Data);
 }
 SapphireRenderer::Texture::~Texture()

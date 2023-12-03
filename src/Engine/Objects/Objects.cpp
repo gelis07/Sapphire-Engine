@@ -36,6 +36,7 @@ void Object::OnCollision(Object *other)
         lua_State *L = Components[i]->GetState();
         SetUpObject(other, L, "obj");
         Components[i]->ExecuteFunction("OnCollision");
+        Components[i]->GetLuaVariables();
     }
 }
 
@@ -55,6 +56,17 @@ void Object::OnStart()
             Log(ss.str(), SapphireEngine::Error);
             lua_pop(L, 1);
         }
+        lua_pushlightuserdata(L, this);
+        luaL_newmetatable(L, "ObjectMetaTable");
+
+        lua_pushstring(L, "__index");
+        lua_pushcfunction(L, GetComponentFromObject);
+        lua_settable(L, -3);
+
+        
+
+        lua_setmetatable(L, -2);
+        lua_setglobal(L, "this");
         Components[i]->ExecuteFunction("OnStart");
         m_CalledStart = true;
     }
@@ -66,7 +78,20 @@ void Object::OnUpdate()
     {
         if (!Components[i]->Active || Components[i]->GetFile().empty())
             continue;
+        lua_State *L = Components[i]->GetState();
+        lua_pushlightuserdata(L, this);
+        luaL_newmetatable(L, "ObjectMetaTable");
+
+        lua_pushstring(L, "__index");
+        lua_pushcfunction(L, GetComponentFromObject);
+        lua_settable(L, -3);
+
+        
+
+        lua_setmetatable(L, -2);
+        lua_setglobal(L, "this");
         Components[i]->ExecuteFunction("OnUpdate");
+        Components[i]->GetLuaVariables();
     }
 }
 
@@ -126,23 +151,40 @@ void Object::Inspect()
     }
 
     RenderGUI();
-
+    // for (auto const& animation : renderer->shape->Animations)
+    // {
+    //     if(ImGui::Button(animation.first.c_str()))
+    //     {
+    //         renderer->shape->SelectAnimation(animation.first);
+    //     }
+    // }
+    
     std::shared_ptr<File>* File = FileExplorerDrop.ReceiveDrop(ImGui::GetCurrentWindow());
     if (File != NULL)
     {
         if(File->get()->Extension == ".lua"){
-            Component *NewComponent = new Component((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size(),true);
-            // if (NewComponent->GetLuaVariables(this))
-            //     AddComponent<Component>(NewComponent);
+            std::shared_ptr<Component> NewComponent = std::make_shared<Component>((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size(),true);
+            lua_State* L = NewComponent->GetState();
+            bool failed = false;
+            if (!ScriptingEngine::CheckLua(L, luaL_loadfile(L,(Engine::GetMainPath() +  NewComponent->GetFile()).c_str())) || lua_pcall(L, 0, 0, 0)) {
+                std::stringstream ss;
+                ss<< "Error loading script: " << lua_tostring(L, -1) << std::endl;
+                SapphireEngine::Log(ss.str(), SapphireEngine::Error);
+                lua_pop(L, 1);
+                failed = true;
+            }
+            if (NewComponent->GetLuaVariables() && !failed)
+                AddComponent<Component>(NewComponent);
         }else if(File->get()->Extension == ".png"){
             GetRenderer()->TexturePath.Get() = (*File)->Path;
             GetRenderer()->shape->Load(Engine::GetMainPath() +(*File)->Path, true);
         }else if(File->get()->Extension == ".anim"){
             std::string FullPath = Engine::GetMainPath() + (*File)->Path;
-            GetRenderer()->shape = std::make_shared<SapphireRenderer::Animation>(FullPath, SapphireRenderer::TextureShader
-            , SapphireRenderer::RectangleVertices, "hi.png");
-            GetRenderer()->shape->ShapeType = SapphireRenderer::RectangleT;
-            GetRenderer()->shape->Load(FullPath.substr(0, FullPath.length() - 4) + "png", true);
+            SapphireRenderer::Animation anim(FullPath,FullPath.substr(0, FullPath.length() - 4) + "png");
+            // SapphireRenderer::Texture texture(FullPath.substr(0, FullPath.length() - 4) + "png", true);
+            GetRenderer()->shape->Animations.emplace(File->get()->Name.substr(0, File->get()->Name.length() - 5), anim);
+            // GetRenderer()->shape->Textures.emplace(FullPath.substr(0, FullPath.length() - 4) + "png", texture);
+            GetRenderer()->shape->SelectAnimation(File->get()->Name.substr(0, File->get()->Name.length() - 5));
         }
     }
     ImGui::End();

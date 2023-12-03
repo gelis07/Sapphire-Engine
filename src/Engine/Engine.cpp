@@ -32,15 +32,20 @@ void Engine::Run()
 {
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
-        Render(&m_ActiveScene.Objects[i]);
         m_ActiveScene.Objects[i].OnStart();
+    }
+    
+    for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
+    {
+        Render(&m_ActiveScene.Objects[i]);
         m_ActiveScene.Objects[i].OnUpdate();
         if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
             rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
-            //Currently collision checks for object's twice but I'm planning on adding multithreading where all of these things will happen at the same time.
-            //So I'm leaving this for now, and I'm gonna fix this when I get more into optimizing this engine.
-            // CheckForSkip(rb->CheckForCollisions(Scene->Objects[i].get()));
         }
+    }
+    if(ShouldLoadScene != ""){
+        GetActiveScene().Load(ShouldLoadScene);
+        ShouldLoadScene = "";
     }
 }
 

@@ -123,6 +123,7 @@ void Scene::Load(const std::string FilePath)
             RbComp->transform = obj.GetTransform().get();
             RbComp->ShapeType = static_cast<int>(obj.GetRenderer()->shape->ShapeType);
         }
+        
 
         Objects.push_back(obj);
     }

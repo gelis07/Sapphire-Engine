@@ -39,7 +39,7 @@ void SapphirePhysics::RigidBody::Update(const float &DeltaTime)
 }
 struct StackObjectDeleter {
     void operator()(Object* /* object */) const {
-        // Custom deleter, no need to delete stack-allocated objects
+        // Custom deleter, no need to delete stack-allocated objects7
     }
 };
 bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
@@ -54,12 +54,18 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
             std::shared_ptr<Object> sharedObject(&object,StackObjectDeleter{});
             if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
                 if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, current,CD)){
+                    current->OnCollision(&object);
+                    if(Engine::SkipFrame) break;
+                    object.OnCollision(current);
+                    if(Engine::SkipFrame) break;
                     OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }
             }
             else{
                 if(SapphirePhysics::CollisionDetection::CirclexRectangle(&object, current,CD)){
+                    current->OnCollision(&object);
+                    object.OnCollision(current);
                     OnCollisionRotation(&object, current, std::move(CD));
                     break;
                 }
@@ -72,11 +78,15 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
             std::shared_ptr<Object> sharedObject(&object);
             if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
                 if(SapphirePhysics::CollisionDetection::CirclexRectangle(current, &object,CD)){
+                    current->OnCollision(&object);
+                    object.OnCollision(current);
                     OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }
             }else{
                 if(SapphirePhysics::CollisionDetection::CirclexCircle(sharedObject, current, CD)){
+                    current->OnCollision(&object);
+                    object.OnCollision(current);
                     OnCollisionRotation(current, &object, std::move(CD));
                     break;
                 }

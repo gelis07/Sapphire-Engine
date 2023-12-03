@@ -60,6 +60,20 @@ namespace SapphireRenderer
     enum Type{
         RectangleT=1,CircleT=2,Null=-1
     };
+    class Animation{
+        public:
+            Animation(const std::string& AnimationFile, const std::string& texturePath);
+            void SelectKeyFrame(VertexBuffer& VBO);
+            static void Export(const std::vector<KeyFrame*>& MainKeyframes, const std::string& name);
+            void SetSelectedAnimation(std::optional<Animation>& CurrentAnimation);
+            const std::string& GetTexturePath() const { return TexturePath; }
+        private:
+            std::string TexturePath = "";
+            double LastRecoredTime = 0.0;
+            unsigned int CurrentKeyFrameIdx = 0;
+            std::vector<KeyFramePair> KeyFramesData;
+            std::vector<KeyFramePair> readKeyFramePairsFromBinaryFile(const std::string& filename);
+    };
     class Shape{
         public:
             SapphireRenderer::Type ShapeType = SapphireRenderer::Null;
@@ -69,10 +83,13 @@ namespace SapphireRenderer
             virtual void Render(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, float CameraZoom, bool OutLine, const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms);
             void Load(const std::string& path, bool flip = false);
             void SetShader(const SapphireRenderer::Shader& shader, const std::function<void(SapphireRenderer::Shader& shader)>& SetUpUniforms) {Shader = shader;}
-            // void DeleteTexture() {Texture = std::nullopt;}
             const glm::vec2 GetTextureDimensions() const;
             SapphireRenderer::VertexBuffer VertexBuffer;
+            void SelectAnimation(const std::string& name);
+            std::unordered_map<std::string,Animation> Animations;
+            std::unordered_map<std::string,SapphireRenderer::Texture> Textures;
         protected:
+            std::optional<Animation> CurrentAnimation = std::nullopt;
             bool HasTexture = false;
             SapphireRenderer::Shader Shader;
             SapphireRenderer::VertexArray VertexArray;
@@ -81,17 +98,6 @@ namespace SapphireRenderer
             glm::mat4 m_Projection;
             bool m_Wireframe = false;
     };
-    class Animation : public Shape{
-        public:
-            Animation(const std::string& AnimationFile,const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::string& path);
-            void SelectKeyFrame();
-            static void Export(const std::vector<KeyFrame*>& MainKeyframes, const std::string& name);
-            void Render(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, float CameraZoom, bool OutLine, const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms) override;
-        private:
-            double LastRecoredTime = 0.0;
-            unsigned int CurrentKeyFrameIdx = 0;
-            std::vector<KeyFramePair> KeyFramesData;
-            std::vector<KeyFramePair> readKeyFramePairsFromBinaryFile(const std::string& filename);
-    };
+
 }
 

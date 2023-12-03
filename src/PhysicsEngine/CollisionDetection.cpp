@@ -2,7 +2,7 @@
 #include "Objects/Objects.h"
 #include "Engine/Engine.h"
 #include "Editor.h"
-SapphireEngine::Float SapphirePhysics::CollisionDetection::g("g", Editor::SettingsVariables);
+SapphireEngine::Float SapphirePhysics::CollisionDetection::g("g", Engine::SettingsVariables);
 
 
 bool SapphirePhysics::CollisionDetection::CirclexRectangle(Object* obj, Object* current,CollisionData& CD)

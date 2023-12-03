@@ -53,6 +53,17 @@ void Renderer::CustomRendering()
         }
     }
 }
-Renderer::~Renderer(){
+int Renderer::LoadTexture(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    Renderer* renderer = static_cast<Renderer*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    const char* name = luaL_checkstring(L, 2);
+    renderer->shape->SelectAnimation(name);
+    return 0;
+}
+Renderer::~Renderer()
+{
     shape.reset();
 }

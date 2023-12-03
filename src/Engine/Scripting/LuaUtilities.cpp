@@ -78,7 +78,8 @@ int LuaUtilities::LoadScene(lua_State* L) {
 
     const char* Scene = luaL_checkstring(L, 1);
 
-    Engine::GetActiveScene().Load(std::string(Scene) + ".scene");    
+    // Engine::GetActiveScene().Load(std::string(Scene) + ".scene");    
+    Engine::ShouldLoadScene = std::string(Scene) + ".scene";
     return 0;
 }
 int LuaUtilities::GetObject(lua_State * L)
@@ -113,7 +114,7 @@ int LuaUtilities::GetCurrentScene(lua_State *L)
         SapphireEngine::Log(std::string("Expected 0 argument, got %d", n), SapphireEngine::Error);
         return luaL_error(L, "Expected 0 argument, got %d", n);
     }
-    lua_pushstring(L, Engine::GetActiveScene().SceneFile.c_str());
+    lua_pushstring(L, (Engine::GetActiveScene().SceneFile.substr(0, Engine::GetActiveScene().SceneFile.length() - 6)).c_str());
     return 1;
 }
 int LuaUtilities::GetCameraPos(lua_State *L)
@@ -186,10 +187,16 @@ int LuaUtilities::CreateObject(lua_State *L)
     std::shared_ptr<SapphireRenderer::Shape> shape;
     if(std::string(ObjShape) == "Rectangle"){
         shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader,SapphireRenderer::RectangleVertices);
+        //? why are there so many shape types???
         shape->ShapeType = SapphireRenderer::RectangleT;
+        obj->GetComponent<Renderer>()->Type = SapphireRenderer::RectangleT;
+        obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::RectangleT;
     }else{
         shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
+        //? why are there so many shape types???
         shape->ShapeType = SapphireRenderer::CircleT;
+        obj->GetComponent<Renderer>()->Type = SapphireRenderer::CircleT;
+        obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::CircleT;
     }
     obj->GetComponent<Renderer>()->shape = shape;
     lua_pushlightuserdata(L, obj);

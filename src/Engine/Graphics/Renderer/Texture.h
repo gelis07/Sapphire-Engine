@@ -22,6 +22,7 @@ namespace SapphireRenderer{
             const int& GetSlot() const {return Slot;} 
             const GLuint& GetID() const {return ID;}
             const glm::vec2 GetDimensions() const {return glm::vec2(width, height);}
+            void SetDimensions(glm::vec2 dimensions) {width = dimensions.x; height = dimensions.y;}
         private:
             int Slot = -1;
             GLuint ID = 0;

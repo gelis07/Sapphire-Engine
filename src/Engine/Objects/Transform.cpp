@@ -28,6 +28,8 @@ Transform::Transform(std::string File, std::string ArgName, unsigned int ArgId, 
     Rotation.SetOnChangeFunc(OnChange);
     Size.SetOnChangeFunc(OnChange);
     Rotation.SliderSpeed = 0.05f;
+    Functions["Move"] = MoveLua;
+    Functions["Rotate"] = RotateLua;
 }
 
 void Transform::Move(const glm::vec3 &translation)
@@ -63,6 +65,29 @@ void Transform::SetSize(const glm::vec3& NewSize)
     Size.Get() = NewSize;
     UpdateModel();
     UpdatePoints();
+}
+
+int Transform::MoveLua(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    Transform* transform = static_cast<Transform*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    transform->Move(glm::vec3(x,y,0));
+    return 0;
+}
+
+int Transform::RotateLua(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    Transform* transform = static_cast<Transform*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float amount = (float)luaL_checknumber(L, 2);
+    transform->Rotate(amount);
+    return 0;
 }
 
 void Transform::UpdateModel()
