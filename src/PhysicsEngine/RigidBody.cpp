@@ -2,7 +2,6 @@
 #include "CollisionDetection.h"
 #include "Engine/Engine.h"
 
-
 SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp) : Trigger("Trigger", Variables), 
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
 StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),
@@ -42,18 +41,26 @@ struct StackObjectDeleter {
         // Custom deleter, no need to delete stack-allocated objects7
     }
 };
+
 bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
 {
     glm::vec2 Normal;
     float Depth;
     CollisionData CD;
     if(ShapeType == SapphireRenderer::RectangleT){
-        for (auto&& object: Engine::GetActiveScene().Objects) {
+        for (size_t i = current->id; i < Engine::GetActiveScene().Objects.size(); i++)
+        {
+            Object& object = Engine::GetActiveScene().Objects[i];
             if(object.Name == "MainCamera" || &object == current) continue;
+            if(!IntersectAABBs(object.GetRb()->GetAABB(), current->GetRb()->GetAABB())) {
+                // std::cout << "\033[1;31m Collision Blocked \033[0m" << std::endl;
+                continue;
+            };
+            if(object.GetRb()->Static.Get() && current->GetRb()->Static.Get()) continue;
             //! FOR SOME REASON IT WORKS WITH SHARED POITNERS ONLY I HAVE NO IDEA WHY.
-            std::shared_ptr<Object> sharedObject(&object,StackObjectDeleter{});
+            // std::shared_ptr<Object> sharedObject(&object,StackObjectDeleter{});
             if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
-                if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, current,CD)){
+                if(SapphirePhysics::CollisionDetection::RectanglexRectangle(&object, current,CD)){
                     current->OnCollision(&object);
                     if(Engine::SkipFrame) break;
                     object.OnCollision(current);
@@ -84,7 +91,7 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
                     break;
                 }
             }else{
-                if(SapphirePhysics::CollisionDetection::CirclexCircle(sharedObject, current, CD)){
+                if(SapphirePhysics::CollisionDetection::CirclexCircle(&object, current, CD)){
                     current->OnCollision(&object);
                     object.OnCollision(current);
                     OnCollisionRotation(current, &object, std::move(CD));
@@ -96,6 +103,33 @@ bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
     return false;
 }
 
+bool SapphirePhysics::RigidBody::IntersectAABBs(AABB a, AABB b)
+{
+    return !(a.Max.x <= b.Min.x || b.Max.x <= a.Min.x
+        || a.Max.y <= b.Min.y || b.Max.y <= a.Min.y);
+}
+
+SapphirePhysics::AABB SapphirePhysics::RigidBody::GetAABB()
+{
+    glm::vec3 min,max;
+    if(ShapeType == SapphireRenderer::RectangleT)
+    {
+        for (auto &&point : transform->GetPoints())
+        {
+            if(point.x < min.x) min.x = point.x;    
+            if(point.x > max.x) max.x = point.x;    
+            if(point.y < min.y) min.y = point.y;    
+            if(point.y > max.y) max.y = point.y;    
+        }
+        
+    }else if(ShapeType == SapphireRenderer::CircleT){
+        min.x = transform->GetPosition().x - transform->GetSize().x;
+        min.y = transform->GetPosition().y - transform->GetSize().y;
+        max.x = transform->GetPosition().x + transform->GetSize().x;
+        max.y = transform->GetPosition().y + transform->GetSize().y;
+    }
+    return AABB(min,max);
+}
 
 float CrossProduct(glm::vec2 v1, glm::vec2 v2){
     return v1.x * v2.y - v1.y * v2.x;

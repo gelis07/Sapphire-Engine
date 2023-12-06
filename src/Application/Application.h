@@ -14,7 +14,7 @@
 class Application
 {
     public:
-        Application(const std::string& Path = "");
+        Application(const glm::vec2& WindowDim, bool fullscreen,const std::string& Path = "");
         void Update();
         const float& GetDeltaTime() const {return DeltaTime;}
         const std::string& GetMainPath() const {return AppMainPath;}

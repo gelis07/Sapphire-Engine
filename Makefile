@@ -936,6 +936,30 @@ src/Game/Game.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Game/Game.cpp.s
 .PHONY : src/Game/Game.cpp.s
 
+src/PhysicsEngine/AABB.obj: src/PhysicsEngine/AABB.cpp.obj
+.PHONY : src/PhysicsEngine/AABB.obj
+
+# target to build an object file
+src/PhysicsEngine/AABB.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/AABB.cpp.obj
+.PHONY : src/PhysicsEngine/AABB.cpp.obj
+
+src/PhysicsEngine/AABB.i: src/PhysicsEngine/AABB.cpp.i
+.PHONY : src/PhysicsEngine/AABB.i
+
+# target to preprocess a source file
+src/PhysicsEngine/AABB.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/AABB.cpp.i
+.PHONY : src/PhysicsEngine/AABB.cpp.i
+
+src/PhysicsEngine/AABB.s: src/PhysicsEngine/AABB.cpp.s
+.PHONY : src/PhysicsEngine/AABB.s
+
+# target to generate assembly for a file
+src/PhysicsEngine/AABB.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/PhysicsEngine/AABB.cpp.s
+.PHONY : src/PhysicsEngine/AABB.cpp.s
+
 src/PhysicsEngine/CollisionDetection.obj: src/PhysicsEngine/CollisionDetection.cpp.obj
 .PHONY : src/PhysicsEngine/CollisionDetection.obj
 
@@ -1143,6 +1167,9 @@ help:
 	@echo "... src/Game/Game.obj"
 	@echo "... src/Game/Game.i"
 	@echo "... src/Game/Game.s"
+	@echo "... src/PhysicsEngine/AABB.obj"
+	@echo "... src/PhysicsEngine/AABB.i"
+	@echo "... src/PhysicsEngine/AABB.s"
 	@echo "... src/PhysicsEngine/CollisionDetection.obj"
 	@echo "... src/PhysicsEngine/CollisionDetection.i"
 	@echo "... src/PhysicsEngine/CollisionDetection.s"

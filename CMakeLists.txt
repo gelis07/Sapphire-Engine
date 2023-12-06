@@ -5,7 +5,7 @@ project(Sapphire-Engine)
 # Set the C++ standard (change as needed)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
+set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 # Add the executable target
 add_executable(Sapphire-Engine
     src/main.cpp
@@ -45,6 +45,7 @@ add_executable(Sapphire-Engine
     include/imgui/ImGuizmo.cpp
     src/PhysicsEngine/RigidBody.cpp
     src/PhysicsEngine/CollisionDetection.cpp
+    src/PhysicsEngine/AABB.cpp
 )
 
 # Add include directories

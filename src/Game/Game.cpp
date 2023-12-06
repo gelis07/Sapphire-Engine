@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : Application("C:/Gelis/Programs/Flappy_Bird/Assets/"), engine()
+Game::Game() : Application(glm::vec2(960,540), false, "C:/Gelis/Programs/Flappy_Bird/Assets/"), engine()
 {
     engine.SetApp(this);
     std::ifstream stream(AppMainPath + "/../ProjectSettings.json");

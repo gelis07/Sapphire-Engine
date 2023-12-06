@@ -22,9 +22,10 @@ in vec2 v_TexCoord;
 
 uniform vec4 u_Color;
 uniform sampler2D u_Texture;
+uniform vec2 Offset;
 
 void main()
 {
-  vec4 TexColor = texture(u_Texture, v_TexCoord);
+  vec4 TexColor = texture(u_Texture, v_TexCoord + Offset);
   color = TexColor * u_Color;
 };

@@ -10,6 +10,13 @@
         } \
     }  
 
+#define Stopwatch(x) \
+    {\
+        float StartingTime = glfwGetTime(); \
+        x; \
+        std::cout << "(" << __FILE__ << ":" << __LINE__ << "): " << glfwGetTime() - StartingTime << 's' << '\n'; \
+    }
+
 namespace SapphireEngine
 { 
     enum LogType{

@@ -90,6 +90,7 @@ void Scene::Load(const std::string FilePath)
         obj.GetTransform()->UpdateModel();
         obj.GetTransform()->UpdatePoints();
         obj.GetRenderer() = obj.GetComponent<Renderer>();
+        obj.GetRb() = obj.GetComponent<SapphirePhysics::RigidBody>();
         switch (JsonObj["shape"].get<int>())
         {
         case SapphireRenderer::CircleT:

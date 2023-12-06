@@ -1,6 +1,6 @@
 #include "Application.h"
 
-Application::Application(const std::string& Path)
+Application::Application(const glm::vec2& WindowDim, bool fullscreen,const std::string& Path)
 {
 
     if(Path == ""){
@@ -16,12 +16,11 @@ Application::Application(const std::string& Path)
     glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
     glfwWindowHint(GLFW_TRANSPARENT_FRAMEBUFFER, GLFW_FALSE);
-    glfwWindowHint(GLFW_MAXIMIZED, GL_TRUE);
+    glfwWindowHint(GLFW_MAXIMIZED, fullscreen);
 
     //The window is gonna be maximized from the glfw hint above so the width and height are useless
-    window = glfwCreateWindow(960, 540, "Sapphire Engine", NULL, NULL);
+    window = glfwCreateWindow(WindowDim.x, WindowDim.y, "Sapphire Engine", NULL, NULL);
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(1);
     // if(glewInit() != GLEW_OK)
     //     std::cout << "Error!" << std::endl;
     GLCall(glEnable(GL_BLEND));
@@ -32,10 +31,12 @@ Application::Application(const std::string& Path)
 	glfwMakeContextCurrent(window);
 	glewExperimental = GL_TRUE;
 
+    glfwSwapInterval(1);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO();
+    io.MouseDoubleClickTime = 0.5;
     IMGUI_CHECKVERSION();
     io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     {
@@ -60,7 +61,6 @@ Application::Application(const std::string& Path)
     // glfwSetWindowSizeCallback(window, OnResizeCallBack);
     // glfwSetWindowFocusCallback(window, OnWindowFocusCallBack);
 }
-
 void Application::Update()
 {
     OnStart();
@@ -75,13 +75,16 @@ void Application::Update()
         float currentTime = glfwGetTime();
         DeltaTime = currentTime - LastTime;
         LastTime = currentTime;
-
+        if((int)(1.0 / DeltaTime) < 30){
+            std::cout << "\033[1;31m "<< (1.0 / DeltaTime) << " \033[0m" << '\n';
+        }
+        
         OnUpdate(DeltaTime);
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwSwapBuffers(window);
         glfwPollEvents();
+        glfwSwapBuffers(window);
     }
     OnExit();
 }

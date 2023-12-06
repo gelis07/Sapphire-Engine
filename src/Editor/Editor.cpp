@@ -2,7 +2,7 @@
 #include "UI/FileExplorer/FileExplorer.h"
 SapphireEngine::String Editor::ThemeName("ThemeName", Editor::UserPreferences);
 
-Editor::Editor(const std::string &mainPath) : Application(mainPath) , engine()
+Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),true,mainPath) , engine()
 {
     engine.SetApp(this);
     PlayModeFBO.Init();
@@ -73,7 +73,6 @@ void Editor::OnUpdate(const float DeltaTime)
 
 void Editor::OnStart()
 {
-    // std::cout << "hi" << '\n';
 }
 
 void Editor::OnExit()
@@ -179,8 +178,8 @@ void Editor::RenderViewport()
 {
     if(!(*Editor::GetWindowState("Viewport"))) return;
     if(!ImGui::Begin("Viewport", Editor::GetWindowState("Viewport"))){
-        // ImGui::End();
-        // return;
+        ImGui::End();
+        return;
     }
 
     WindowWidth = ImGui::GetContentRegionAvail().x;
@@ -314,8 +313,8 @@ void Editor::RenderPlayMode()
 {
     if((*Editor::GetWindowState("Play"))){
         if(!ImGui::Begin("Play", Editor::GetWindowState("Play"))){
-            // ImGui::End();
-            // return;
+            ImGui::End();
+            return;
         }
 
         // glfwGetWindowSize(glfwGetCurrentContext(), &WindowWidth, &WindowHeight);
@@ -354,7 +353,6 @@ void Editor::RenderPlayMode()
         ImGui::SetCursorPos(ImVec2(20, 20));
         std::stringstream ss;
         ss << (int)(1.0 / Engine::GetDeltaTime());
-        std::cout << 1.0 / Engine::GetDeltaTime() << '\n';
         ImGui::Text(ss.str().c_str());
         if(GameRunning)
         {

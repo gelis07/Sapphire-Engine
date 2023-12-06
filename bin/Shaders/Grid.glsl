@@ -2,11 +2,10 @@
 #version 330 core
 
 layout(location=0) in vec4 position;
-uniform mat4 u_MVP;
 
 void main()
 {
-  gl_Position = u_MVP * position;
+  gl_Position = position;
 };
 
 #shader fragment
@@ -15,10 +14,8 @@ void main()
 layout(location=0) out vec4 color;
 
 uniform vec4 u_Color;
-uniform float GridSpacing;
 uniform float CameraZoom;
 uniform vec2 CenterPoint;
-uniform vec2 CameraSize;
 
 void main()
 {

@@ -109,6 +109,7 @@ Object* Object::CreateObject(std::string &&ObjName)
 
     NewObj.renderer = NewObj.GetComponent<Renderer>(); 
     NewObj.transform = NewObj.GetComponent<Transform>();
+    NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
     
     NewObj.renderer->Color.Get() = glm::vec4(1);
     NewObj.transform->SetSize(glm::vec3(0));

@@ -4,7 +4,7 @@
 
 
 constexpr int ICON_SIZE = 32;
-ProjectManager::ProjectManager() : Application()
+ProjectManager::ProjectManager() : Application(glm::vec2(900,600), false)
 {
     stbi_set_flip_vertically_on_load(false);
     m_IconAtlas.AtlasID.Init();

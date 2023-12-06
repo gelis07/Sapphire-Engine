@@ -1,7 +1,7 @@
 #pragma once
 #include "CollisionDetection.h"
 #include "Objects/Transform.h"
-
+#include "AABB.h"
 class Object;
 
 namespace SapphirePhysics{
@@ -12,6 +12,8 @@ namespace SapphirePhysics{
             RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false);
             void Update(const float& DeltaTime);
             bool CollisionDetection(Object* current);
+            static bool IntersectAABBs(AABB a, AABB b);
+            AABB GetAABB();
             void OnCollision(Object* current, Object* obj, CollisionData&& CD);
             void OnCollisionRotation(Object* current, Object* obj, CollisionData&& CD);
             void Simulate(Object *current, const float& DeltaTime);
