@@ -24,6 +24,7 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
     InitWindow("Viewport");
     InitWindow("Logs");
     InitWindow("Play");
+    InitWindow("FrameRate", false);
     InitWindow("Preferences", false);
     InitWindow("Performance", false);
     InitWindow("Settings", false);
@@ -63,6 +64,7 @@ void Editor::OnUpdate(const float DeltaTime)
     RenderPlayMode();
     RenderViewport();
     AnimationTimeline();
+    FrameRate();
     LogWindow();
     
     this->DeltaTime = DeltaTime;
@@ -178,8 +180,8 @@ void Editor::RenderViewport()
 {
     if(!(*Editor::GetWindowState("Viewport"))) return;
     if(!ImGui::Begin("Viewport", Editor::GetWindowState("Viewport"))){
-        ImGui::End();
-        return;
+        // ImGui::End();
+        // return;
     }
 
     WindowWidth = ImGui::GetContentRegionAvail().x;
@@ -309,19 +311,21 @@ bool CheckForErrors()
     }
     return true;
 }
+float TimeStep = 0;
 void Editor::RenderPlayMode()
 {
     if((*Editor::GetWindowState("Play"))){
         if(!ImGui::Begin("Play", Editor::GetWindowState("Play"))){
-            ImGui::End();
-            return;
+            // ImGui::End();
+            // return;
         }
 
         // glfwGetWindowSize(glfwGetCurrentContext(), &WindowWidth, &WindowHeight);
         // WindowWidth = ImGui::GetContentRegionAvail().x;
         // WindowHeight = ImGui::GetContentRegionAvail().y;
         Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0));
-        
+        WindowPos = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+        WindowSize = glm::vec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
         ImVec2 pos = ImGui::GetCursorScreenPos();
         
         ImGui::GetWindowDrawList()->AddImage(
@@ -344,16 +348,22 @@ void Editor::RenderPlayMode()
             }else{
                 if(!GameRunning) Engine::GetActiveScene().Save(Engine::GetActiveScene().SceneFile);
 
-                if(CheckForErrors())
+                if(CheckForErrors()){
                     GameRunning = !GameRunning;
+                    loggingFile.open("hello.txt", std::ios::out);
+                }
                 else
                     SapphireEngine::Log("Can't run program with an active lua script with an error!", SapphireEngine::Error);
             }
         }
         ImGui::SetCursorPos(ImVec2(20, 20));
         std::stringstream ss;
-        ss << (int)(1.0 / Engine::GetDeltaTime());
+        ss << (TimeStep) << ", Objects: " << Engine::GetActiveScene().Objects.size();
         ImGui::Text(ss.str().c_str());
+
+        if(loggingFile.is_open()){
+            loggingFile << ss.str() << '\n';
+        }
         if(GameRunning)
         {
             ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - 100, 20));
@@ -395,6 +405,7 @@ void Editor::RenderPlayMode()
         Engine::GetActiveScene().Load(Engine::GetActiveScene().SceneFile);
         Start = true;
         Paused = false;
+        loggingFile.close();
     } 
     if(!GameRunning){
         for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)
@@ -402,8 +413,10 @@ void Editor::RenderPlayMode()
             engine.Render(&Engine::GetActiveScene().Objects[i]);
         }
     }
-    if(GameRunning){
+    if(GameRunning && !Paused){
+        float time = glfwGetTime();
         engine.Run();
+        TimeStep = (glfwGetTime() - time)*1000.0f;
     }
 
     //Changing the start bool to false here so all the start functions get executed

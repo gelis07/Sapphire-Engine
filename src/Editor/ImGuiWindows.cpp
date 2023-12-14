@@ -1,6 +1,7 @@
 #include "UI/FileExplorer/FileExplorer.h"
 #include "Editor.h"
 #include "ImGuiWindows.h"
+#include "Imgui/implot.h"
 
 constexpr int MIN_ICON_SIZE = 32;
 
@@ -184,6 +185,30 @@ void EditMenu()
     PreferencesWindow();
     ProjectSettings();
     Settings();
+}
+std::vector<float> FrameTimes = {0.f};
+void FrameRate()
+{
+    if(!(*Editor::GetWindowState("FrameRate"))) return;
+    if(FrameTimes.size() > 200) FrameTimes.erase(FrameTimes.begin());
+    FrameTimes.push_back(1.0f / Engine::GetDeltaTime());
+    ImGui::Begin("Frame rate", Editor::GetWindowState("FrameRate"));
+    if(ImPlot::BeginSubplots("", 1,1, ImVec2(ImGui::GetWindowSize().x,ImGui::GetWindowSize().y)))
+    {
+        if(ImPlot::BeginPlot(""))
+        {
+            ImPlot::SetupAxis(ImAxis_X1, "Frame Number", ImPlotAxisFlags_AutoFit);
+            ImPlot::SetupAxis(ImAxis_Y1, "Frame Rate");
+            ImPlot::SetupAxisLimits(ImAxis_Y1, 0, 100);
+
+            std::vector<float> LocalSamples(FrameTimes.size());
+            std::generate(LocalSamples.begin(), LocalSamples.end(), [n=0]() mutable {return 1.0 * n++;});
+            ImPlot::PlotLine("Frame Rate", LocalSamples.data(), FrameTimes.data(), FrameTimes.size());
+            ImPlot::EndPlot();
+        }
+        ImPlot::EndSubplots();
+    }
+    ImGui::End();
 }
 
 void HelpMenu()

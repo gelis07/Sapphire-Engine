@@ -27,6 +27,7 @@ class Transform : public Component
         const glm::mat4& GetModel() const {return Model;}
         glm::mat4 Model;
         static int MoveLua(lua_State* L);
+        static int SetPositionLua(lua_State* L);
         static int RotateLua(lua_State* L);
     private:
         std::vector<glm::vec3> OriginalPoints;

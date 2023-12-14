@@ -1,6 +1,11 @@
 #include "RigidBody.h"
 #include "CollisionDetection.h"
 #include "Engine/Engine.h"
+#include <thread>
+#include <execution>
+#include <glm/gtx/norm.hpp>
+#define ITERATIONS 30
+#define VECTOR_THRESHOLD 1e-12
 
 SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp) : Trigger("Trigger", Variables), 
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
@@ -29,8 +34,6 @@ void SapphirePhysics::RigidBody::Update(const float &DeltaTime)
     if(Static.Get()) return;
     Force = glm::vec3(0, SapphirePhysics::CollisionDetection::g.Get(), 0) * Mass.Get();
     Accelaration = (Force/Mass.Get());
-    if(std::isnan(Accelaration.x) || std::isnan(Accelaration.y) || std::isnan(Accelaration.z))
-        Accelaration = glm::vec3(0);
     Velocity += Accelaration * DeltaTime;
 
     transform->Move(Velocity * DeltaTime);
@@ -44,62 +47,6 @@ struct StackObjectDeleter {
 
 bool SapphirePhysics::RigidBody::CollisionDetection(Object* current)
 {
-    glm::vec2 Normal;
-    float Depth;
-    CollisionData CD;
-    if(ShapeType == SapphireRenderer::RectangleT){
-        for (size_t i = current->id; i < Engine::GetActiveScene().Objects.size(); i++)
-        {
-            Object& object = Engine::GetActiveScene().Objects[i];
-            if(object.Name == "MainCamera" || &object == current) continue;
-            if(!IntersectAABBs(object.GetRb()->GetAABB(), current->GetRb()->GetAABB())) {
-                // std::cout << "\033[1;31m Collision Blocked \033[0m" << std::endl;
-                continue;
-            };
-            if(object.GetRb()->Static.Get() && current->GetRb()->Static.Get()) continue;
-            //! FOR SOME REASON IT WORKS WITH SHARED POITNERS ONLY I HAVE NO IDEA WHY.
-            // std::shared_ptr<Object> sharedObject(&object,StackObjectDeleter{});
-            if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
-                if(SapphirePhysics::CollisionDetection::RectanglexRectangle(&object, current,CD)){
-                    current->OnCollision(&object);
-                    if(Engine::SkipFrame) break;
-                    object.OnCollision(current);
-                    if(Engine::SkipFrame) break;
-                    OnCollisionRotation(current, &object, std::move(CD));
-                    break;
-                }
-            }
-            else{
-                if(SapphirePhysics::CollisionDetection::CirclexRectangle(&object, current,CD)){
-                    current->OnCollision(&object);
-                    object.OnCollision(current);
-                    OnCollisionRotation(&object, current, std::move(CD));
-                    break;
-                }
-            }
-        }
-    }
-    else{
-        for (auto&& object: Engine::GetActiveScene().Objects) {
-            if(object.Name == "MainCamera" || &object == current) continue;
-            std::shared_ptr<Object> sharedObject(&object);
-            if(object.GetComponent<Renderer>()->shape->ShapeType == SapphireRenderer::RectangleT){
-                if(SapphirePhysics::CollisionDetection::CirclexRectangle(current, &object,CD)){
-                    current->OnCollision(&object);
-                    object.OnCollision(current);
-                    OnCollisionRotation(current, &object, std::move(CD));
-                    break;
-                }
-            }else{
-                if(SapphirePhysics::CollisionDetection::CirclexCircle(&object, current, CD)){
-                    current->OnCollision(&object);
-                    object.OnCollision(current);
-                    OnCollisionRotation(current, &object, std::move(CD));
-                    break;
-                }
-            }
-        }
-    }
     return false;
 }
 
@@ -107,6 +54,51 @@ bool SapphirePhysics::RigidBody::IntersectAABBs(AABB a, AABB b)
 {
     return !(a.Max.x <= b.Min.x || b.Max.x <= a.Min.x
         || a.Max.y <= b.Min.y || b.Max.y <= a.Min.y);
+}
+
+void SapphirePhysics::RigidBody::BroadPhase(Object* current)
+{
+    if(current->GetRb()->ShapeType == SapphireRenderer::RectangleT){
+        std::for_each(std::execution::par,Engine::GetActiveScene().Objects.begin(), Engine::GetActiveScene().Objects.end(), [current](auto&& object) {
+            if(object.Name == "MainCamera" || &object == current) return;
+            if(!IntersectAABBs(object.GetRb()->GetAABB(), current->GetRb()->GetAABB())) {
+                // std::cout << "\033[1;31m Collision Blocked \033[0m" << std::endl;
+                return;
+            };
+            if(object.GetRb()->Static.Get() && current->GetRb()->Static.Get()) return;
+            ContactPairs.push_back(std::pair<Object*, Object*>(current, &object));
+        });
+    }
+}
+
+void SapphirePhysics::RigidBody::NarrowPhase()
+{
+    //! FOR SOME REASON IT WORKS WITH SHARED POITNERS ONLY I HAVE NO IDEA WHY.
+
+    std::for_each(std::execution::par,ContactPairs.begin(), ContactPairs.end(), [](auto&& pair) {
+        CollisionData CD;
+        std::shared_ptr<Object> sharedObject(pair.second,StackObjectDeleter{});
+        if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, pair.first,CD)){
+            pair.first->OnCollision(pair.second);
+            pair.second->OnCollision(pair.first);
+            OnCollisionRotation(pair.first, pair.second, std::move(CD));
+        }
+    });
+
+
+    // for (auto &&pair : ContactPairs)
+    // {
+    //     std::shared_ptr<Object> sharedObject(pair.second,StackObjectDeleter{});
+    //     if(std::isnan(pair.first->GetRb()->AngularVelocity.z) || std::isnan(pair.first->GetRb()->Velocity.x)){
+    //         std::cout << "what" << '\n';
+    //     }
+    //     if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, pair.first,CD)){
+    //         pair.first->OnCollision(pair.second);
+    //         pair.second->OnCollision(pair.first);
+    //         OnCollisionRotation(pair.first, pair.second, std::move(CD));
+    //     }
+    // }
+    
 }
 
 SapphirePhysics::AABB SapphirePhysics::RigidBody::GetAABB()
@@ -130,15 +122,14 @@ SapphirePhysics::AABB SapphirePhysics::RigidBody::GetAABB()
     }
     return AABB(min,max);
 }
-
 float CrossProduct(glm::vec2 v1, glm::vec2 v2){
     return v1.x * v2.y - v1.y * v2.x;
 }
 void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
 {
+    
     RigidBody* bodyA = current->GetComponent<RigidBody>().get();
     RigidBody* bodyB = obj->GetComponent<RigidBody>().get();
-
     const glm::vec3& bodyAPos = current->GetTransform()->GetPosition();
     const glm::vec3& bodyASize = current->GetTransform()->GetSize();
     const glm::vec3& bodyBPos = obj->GetTransform()->GetPosition();
@@ -207,9 +198,12 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *ob
             (rbPerpDotN * rbPerpDotN) * bodyBInvInertia;
 
         float j = -(1.0f + e) * contactVelocityMag;
-        j /= denom;
-        j /= (float)contactCount;
+        if(denom != 0) j /= denom;
+        if(contactCount != 0) j /= (float)contactCount;
         JList[i] = j;
+        if(std::isnan(j)){
+            std::cout << "what" << '\n';
+        }
         glm::vec2 impulse = j * normal;
         impulseList[i] = impulse;
     }
@@ -224,7 +218,6 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *ob
         bodyB->Velocity += glm::vec3(impulse * bodyBInvMass,0);
         bodyB->AngularVelocity.z += CrossProduct(rb, impulse) * bodyBInvInertia;
     }
-
 
     for (int i = 0; i < contactCount; i++)
     {
@@ -249,7 +242,19 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *ob
         if(tangent == glm::vec2(0)){
             continue;
         }else{
-            tangent = glm::normalize(tangent);
+            float squaredLength = glm::length2(tangent);
+            float length = 1;
+            if (squaredLength > VECTOR_THRESHOLD) {
+                length = glm::sqrt(squaredLength);
+                tangent = glm::vec2(tangent.x/length, tangent.y/length);
+            } else {
+                //Vector is very close to 0, consider it as 0.
+                continue;
+            }
+            if(std::isnan(tangent.x) || std::isnan(tangent.y)){
+                //Vector was close to 0 and the length came out as 0 and then normalized which caused the tangent to be NaN.
+                continue;
+            }
         }
         float raPerpDotT = glm::dot(raPerp, tangent);
         float rbPerpDotT = glm::dot(rbPerp, tangent);
@@ -259,15 +264,21 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *ob
             (rbPerpDotT * rbPerpDotT) * bodyBInvInertia;
 
         float jt = -glm::dot(relativeVelocity, tangent);
-        jt /= denom;
-        jt /= (float)contactCount;
+        if(denom != 0) jt /= denom;
+        if(contactCount != 0) jt /= (float)contactCount;
         glm::vec2 FrictionImpulse;
         if(abs(jt) <= JList[i] * StaticFriction){
             FrictionImpulse = jt * tangent;
         }else{
             FrictionImpulse = -JList[i] * tangent * DynamicFriction;
         }
+        if(std::isnan(FrictionImpulse.x) || std::isnan(FrictionImpulse.y)){
+            std::cout << "what" << '\n';
+        }
         FrictionImpulseList[i] = FrictionImpulse;
+    }
+    if(std::isnan(bodyA->AngularVelocity.z) || std::isnan(bodyA->Velocity.x)){
+        std::cout << "what" << '\n';
     }
     for(int i = 0; i < contactCount; i++)
     {
@@ -328,8 +339,14 @@ void SapphirePhysics::RigidBody::OnCollision(Object* current, Object* obj, Colli
 
 
 void SapphirePhysics::RigidBody::Simulate(Object *current, const float& DeltaTime) {
-    Update(DeltaTime);
-    CollisionDetection(current);
+    for (size_t i = 0; i < ITERATIONS; i++)
+    {
+        ContactPairs.clear();
+        Update(DeltaTime / ITERATIONS);
+        BroadPhase(current);
+        NarrowPhase();
+    }
+    
 }
 
 int SapphirePhysics::RigidBody::Impulse(lua_State *L) {

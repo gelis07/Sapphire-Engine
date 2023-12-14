@@ -4,6 +4,7 @@
 #include <math.h>
 #include <iostream>
 #include <filesystem>
+#include <cstring>
 #include <string>
 #include <cstring>
 #include <iostream>

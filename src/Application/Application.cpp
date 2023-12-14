@@ -1,5 +1,5 @@
 #include "Application.h"
-
+#include "Imgui/implot.h"
 Application::Application(const glm::vec2& WindowDim, bool fullscreen,const std::string& Path)
 {
 
@@ -38,7 +38,6 @@ Application::Application(const glm::vec2& WindowDim, bool fullscreen,const std::
     ImGuiIO& io = ImGui::GetIO();
     io.MouseDoubleClickTime = 0.5;
     IMGUI_CHECKVERSION();
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
     {
         int width, height;
         glfwGetWindowSize(glfwGetCurrentContext(),&width, &height);
@@ -51,12 +50,15 @@ Application::Application(const glm::vec2& WindowDim, bool fullscreen,const std::
     io.Fonts->AddFontFromFileTTF("Assets/font.ttf", 16.0f, &config);
     io.FontDefault = io.Fonts->Fonts.back();
     io.ConfigWindowsMoveFromTitleBarOnly = true;
+    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
     bool dockspaceOpen = true;
 
     ImGuiWindowFlags dockspaceFlags = ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
+    ImPlot::CreateContext();
     glfwSetWindowUserPointer(window, this);
     // glfwSetWindowSizeCallback(window, OnResizeCallBack);
     // glfwSetWindowFocusCallback(window, OnWindowFocusCallBack);
@@ -64,13 +66,13 @@ Application::Application(const glm::vec2& WindowDim, bool fullscreen,const std::
 void Application::Update()
 {
     OnStart();
+    ImGuiIO& io = ImGui::GetIO();
     while (!glfwWindowShouldClose(window))
     {
         ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-        GLCall(glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a));
-        GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
         float currentTime = glfwGetTime();
         DeltaTime = currentTime - LastTime;
@@ -82,9 +84,13 @@ void Application::Update()
         OnUpdate(DeltaTime);
 
         ImGui::Render();
+        glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
+        glClearColor(0.45f, 0.55f, 0.60f, 1.00f);
+        glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        glfwPollEvents();
+
         glfwSwapBuffers(window);
+        glfwPollEvents();
     }
     OnExit();
 }
@@ -94,6 +100,7 @@ Application::~Application()
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+    ImPlot::DestroyContext();
     glfwDestroyWindow(window);
 }
 
@@ -127,11 +134,15 @@ bool Application::GetInputDown(int Key)
 
 bool Application::GetMouseInputDown(int MouseButton)
 {
-    MouseButtons[MouseButton] = true;
+    if(glfwGetMouseButton(window, MouseButton) == GLFW_PRESS && MouseButtons.find(MouseButton) == MouseButtons.end()){
+        MouseButtons[MouseButton] = true;
+        return true;
+    }
     if(glfwGetMouseButton(window, MouseButton) == GLFW_RELEASE && MouseButtons.find(MouseButton) != MouseButtons.end()){
         MouseButtons.erase(MouseButton);
+        return false;
     }
-    return glfwGetMouseButton(window, MouseButton) == GLFW_PRESS && MouseButtons.find(MouseButton) == MouseButtons.end();
+    return false;
 }
 
 void Application::OnWindowFocusCallBack(GLFWwindow *window, int focused)

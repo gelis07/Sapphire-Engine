@@ -9,6 +9,7 @@ void FileMenu();
 void Save(std::string name);
 void Load(std::string name);
 void EditMenu();
+void FrameRate();
 void HelpMenu();
 void ViewMenu();
 void OnThemeChange();

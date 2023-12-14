@@ -66,7 +66,7 @@ void FileExplorer::Open(std::string& path)
         }
         //Adjusting file's position so everything is spaced out.
         Position.x += ImGui::GetItemRectSize().x + 20.0f;
-        if (ImGui::GetWindowSize().x < Position.x)
+        if (ImGui::GetWindowSize().x - ImGui::GetItemRectSize().x / 1.5f < Position.x)
         {
             Position = ImVec2(0, (30 + ImGui::GetItemRectSize().y + 20.0f) * rows);
             rows++;

@@ -62,13 +62,13 @@ namespace SapphireRenderer
     };
     class Animation{
         public:
-            Animation(const std::string& AnimationFile, const std::string& texturePath);
+            Animation(const std::string& AnimationFile, const std::string& TexturePath);
             void SelectKeyFrame(VertexBuffer& VBO);
             static void Export(const std::vector<KeyFrame*>& MainKeyframes, const std::string& name);
             void SetSelectedAnimation(std::optional<Animation>& CurrentAnimation);
-            const std::string& GetTexturePath() const { return TexturePath; }
+            const SapphireRenderer::Texture& GetTexture() const { return Texture; }
         private:
-            std::string TexturePath = "";
+            SapphireRenderer::Texture Texture;
             double LastRecoredTime = 0.0;
             unsigned int CurrentKeyFrameIdx = 0;
             std::vector<KeyFramePair> KeyFramesData;
@@ -79,6 +79,7 @@ namespace SapphireRenderer
             SapphireRenderer::Type ShapeType = SapphireRenderer::Null;
             bool& Wireframe() {return m_Wireframe;}
             Shape(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::string& path = "");
+            ~Shape();
             // That's the function that actually render's a shape
             virtual void Render(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, float CameraZoom, bool OutLine, const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms);
             void Load(const std::string& path, bool flip = false);
@@ -86,7 +87,7 @@ namespace SapphireRenderer
             const glm::vec2 GetTextureDimensions() const;
             SapphireRenderer::VertexBuffer VertexBuffer;
             void SelectAnimation(const std::string& name);
-            std::unordered_map<std::string,Animation> Animations;
+            std::unordered_map<std::string,Animation*> Animations;
             std::unordered_map<std::string,SapphireRenderer::Texture> Textures;
         protected:
             std::optional<Animation> CurrentAnimation = std::nullopt;

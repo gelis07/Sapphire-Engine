@@ -14,6 +14,8 @@ class Engine{
         inline static const float& GetDeltaTime() {return app->GetDeltaTime();}
         void Run();
         void Render(Object* object);
+        void PhysicsSim();
+        void ExecuteLua();
         inline static std::unordered_map<std::string, SapphireEngine::Variable*> SettingsVariables;
         inline static const std::string& GetMainPath() {return app->GetMainPath();}
         inline static void SetApp(Application* App) {app = App;}

@@ -43,6 +43,8 @@ add_executable(Sapphire-Engine
     include/imgui/ImGuiFileDialog.cpp
     include/imgui/imgui_widgets.cpp
     include/imgui/ImGuizmo.cpp
+    include/imgui/implot.cpp
+    include/imgui/implot_items.cpp
     src/PhysicsEngine/RigidBody.cpp
     src/PhysicsEngine/CollisionDetection.cpp
     src/PhysicsEngine/AABB.cpp

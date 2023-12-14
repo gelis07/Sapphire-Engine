@@ -360,6 +360,54 @@ include/Imgui/imgui_widgets.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/imgui_widgets.cpp.s
 .PHONY : include/Imgui/imgui_widgets.cpp.s
 
+include/Imgui/implot.obj: include/Imgui/implot.cpp.obj
+.PHONY : include/Imgui/implot.obj
+
+# target to build an object file
+include/Imgui/implot.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/implot.cpp.obj
+.PHONY : include/Imgui/implot.cpp.obj
+
+include/Imgui/implot.i: include/Imgui/implot.cpp.i
+.PHONY : include/Imgui/implot.i
+
+# target to preprocess a source file
+include/Imgui/implot.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/implot.cpp.i
+.PHONY : include/Imgui/implot.cpp.i
+
+include/Imgui/implot.s: include/Imgui/implot.cpp.s
+.PHONY : include/Imgui/implot.s
+
+# target to generate assembly for a file
+include/Imgui/implot.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/implot.cpp.s
+.PHONY : include/Imgui/implot.cpp.s
+
+include/Imgui/implot_items.obj: include/Imgui/implot_items.cpp.obj
+.PHONY : include/Imgui/implot_items.obj
+
+# target to build an object file
+include/Imgui/implot_items.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/implot_items.cpp.obj
+.PHONY : include/Imgui/implot_items.cpp.obj
+
+include/Imgui/implot_items.i: include/Imgui/implot_items.cpp.i
+.PHONY : include/Imgui/implot_items.i
+
+# target to preprocess a source file
+include/Imgui/implot_items.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/implot_items.cpp.i
+.PHONY : include/Imgui/implot_items.cpp.i
+
+include/Imgui/implot_items.s: include/Imgui/implot_items.cpp.s
+.PHONY : include/Imgui/implot_items.s
+
+# target to generate assembly for a file
+include/Imgui/implot_items.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/include/Imgui/implot_items.cpp.s
+.PHONY : include/Imgui/implot_items.cpp.s
+
 src/Application/Application.obj: src/Application/Application.cpp.obj
 .PHONY : src/Application/Application.obj
 
@@ -1095,6 +1143,12 @@ help:
 	@echo "... include/Imgui/imgui_widgets.obj"
 	@echo "... include/Imgui/imgui_widgets.i"
 	@echo "... include/Imgui/imgui_widgets.s"
+	@echo "... include/Imgui/implot.obj"
+	@echo "... include/Imgui/implot.i"
+	@echo "... include/Imgui/implot.s"
+	@echo "... include/Imgui/implot_items.obj"
+	@echo "... include/Imgui/implot_items.i"
+	@echo "... include/Imgui/implot_items.s"
 	@echo "... src/Application/Application.obj"
 	@echo "... src/Application/Application.i"
 	@echo "... src/Application/Application.s"

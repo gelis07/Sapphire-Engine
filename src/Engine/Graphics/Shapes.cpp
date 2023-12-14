@@ -34,6 +34,14 @@ SapphireRenderer::Shape::Shape(const SapphireRenderer::Shader& shader, const std
     IndexBuffer.Unbind();
 }
 
+SapphireRenderer::Shape::~Shape()
+{
+    for (auto& animation : Animations)
+    {
+        delete animation.second;
+    }
+}
+
 void SapphireRenderer::Shape::Render(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, 
 float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shader& shader)>& SetUpUniforms)
 {
@@ -91,18 +99,19 @@ void SapphireRenderer::Shape::SelectAnimation(const std::string &name)
 {
     if(Animations.find(name) != Animations.end())
     {
-        Load(Animations.at(name).GetTexturePath(), true);
-        // Texture = Animations.at(name).GetTexture();
+        // Load(Animations.at(name).GetTexturePath(), true);
+        Texture = Animations.at(name)->GetTexture();
         Shader = SapphireRenderer::TextureShader;
-        // HasTexture = true;
+        HasTexture = true;
         // Texture = Animations.at(name).texture;
-        Animations.at(name).SetSelectedAnimation(CurrentAnimation);
+        Animations.at(name)->SetSelectedAnimation(CurrentAnimation);
     }else
         SapphireEngine::Log("Animation with name: " + name + " was not found.", SapphireEngine::Error);
 }
 
-SapphireRenderer::Animation::Animation(const std::string& AnimationFile, const std::string& texturePath) : TexturePath(texturePath)
+SapphireRenderer::Animation::Animation(const std::string& AnimationFile, const std::string& TexturePath)
 {
+    Texture.Load(TexturePath, true);
     KeyFramesData = readKeyFramePairsFromBinaryFile(AnimationFile);
 }
 void SapphireRenderer::Animation::SelectKeyFrame(VertexBuffer& VBO)

@@ -18,6 +18,7 @@ class Application
         void Update();
         const float& GetDeltaTime() const {return DeltaTime;}
         const std::string& GetMainPath() const {return AppMainPath;}
+        GLFWwindow* GetWindow() { return window;}
         ~Application();
         void Exit();
         bool GetInput(int Key);

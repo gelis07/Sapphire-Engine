@@ -14,8 +14,9 @@
     {\
         float StartingTime = glfwGetTime(); \
         x; \
-        std::cout << "(" << __FILE__ << ":" << __LINE__ << "): " << glfwGetTime() - StartingTime << 's' << '\n'; \
+        std::cout << "(" << __FILE__ << ":" << __LINE__ << "): " << (glfwGetTime() - StartingTime) * 1000.0f << "s" << '\n'; \
     }
+
 
 namespace SapphireEngine
 { 

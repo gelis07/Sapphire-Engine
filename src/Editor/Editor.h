@@ -24,6 +24,8 @@ class Editor : public Application{
         void OnStart() override;
         void OnExit() override;
         inline static int SelectedObjID = -1;
+        inline static glm::vec2 WindowPos;
+        inline static glm::vec2 WindowSize;
         inline static bool GameRunning = false;
         inline static bool Paused = false;
         inline static glm::vec2 GetWindowSize() {return glm::vec2(WindowWidth, WindowHeight);}
@@ -32,6 +34,7 @@ class Editor : public Application{
             {"Settings", false},
             {"Project Settings", false}};
         static SapphireEngine::String ThemeName;
+        std::fstream loggingFile;
     private:
         Engine engine;
         inline static float DeltaTime;

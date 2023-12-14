@@ -91,7 +91,7 @@ void Object::OnUpdate()
         lua_setmetatable(L, -2);
         lua_setglobal(L, "this");
         Components[i]->ExecuteFunction("OnUpdate");
-        Components[i]->GetLuaVariables();
+        // Components[i]->GetLuaVariables();
     }
 }
 
@@ -152,13 +152,13 @@ void Object::Inspect()
     }
 
     RenderGUI();
-    // for (auto const& animation : renderer->shape->Animations)
-    // {
-    //     if(ImGui::Button(animation.first.c_str()))
-    //     {
-    //         renderer->shape->SelectAnimation(animation.first);
-    //     }
-    // }
+    for (auto const& animation : renderer->shape->Animations)
+    {
+        if(ImGui::Button(animation.first.c_str()))
+        {
+            renderer->shape->SelectAnimation(animation.first);
+        }
+    }
     
     std::shared_ptr<File>* File = FileExplorerDrop.ReceiveDrop(ImGui::GetCurrentWindow());
     if (File != NULL)
@@ -181,9 +181,7 @@ void Object::Inspect()
             GetRenderer()->shape->Load(Engine::GetMainPath() +(*File)->Path, true);
         }else if(File->get()->Extension == ".anim"){
             std::string FullPath = Engine::GetMainPath() + (*File)->Path;
-            SapphireRenderer::Animation anim(FullPath,FullPath.substr(0, FullPath.length() - 4) + "png");
-            // SapphireRenderer::Texture texture(FullPath.substr(0, FullPath.length() - 4) + "png", true);
-            GetRenderer()->shape->Animations.emplace(File->get()->Name.substr(0, File->get()->Name.length() - 5), anim);
+            GetRenderer()->shape->Animations.emplace(File->get()->Name.substr(0, File->get()->Name.length() - 5), new SapphireRenderer::Animation(FullPath,FullPath.substr(0, FullPath.length() - 4) + "png"));
             // GetRenderer()->shape->Textures.emplace(FullPath.substr(0, FullPath.length() - 4) + "png", texture);
             GetRenderer()->shape->SelectAnimation(File->get()->Name.substr(0, File->get()->Name.length() - 5));
         }

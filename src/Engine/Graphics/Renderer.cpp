@@ -63,6 +63,34 @@ int Renderer::LoadTexture(lua_State *L)
     renderer->shape->SelectAnimation(name);
     return 0;
 }
+int Renderer::SetColor(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    Renderer* renderer = static_cast<Renderer*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float r = (float)luaL_checknumber(L, 2);
+    float g = (float)luaL_checknumber(L, 3);
+    float b = (float)luaL_checknumber(L, 4);
+    renderer->Color.Get() = glm::vec4(r,g,b,1);
+    return 0;
+}
+Renderer::Renderer(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp)
+: Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Color("Color", Variables), TexturePath("Path", Variables) 
+{
+    Color.Get() = glm::vec4(1);
+    TexturePath.Get() = "";
+    TexturePath.ShowOnInspector(false);
+    {
+        std::function<void()> OnChange = [this]() {
+            shape->Load(TexturePath.Get(), true);
+        };
+        TexturePath.SetOnChangeFunc(OnChange);
+    }
+    Functions["Play"] = LoadTexture;
+    Functions["SetColor"] = SetColor;
+};
+
 Renderer::~Renderer()
 {
     shape.reset();

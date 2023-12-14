@@ -1,4 +1,6 @@
 #include "Engine.h"
+#include <future>
+#include <thread>
 
 Engine::Engine(const std::string& mainPath)
 {
@@ -34,19 +36,18 @@ void Engine::Run()
     {
         m_ActiveScene.Objects[i].OnStart();
     }
-    
+    ExecuteLua();
+    PhysicsSim();
+    // std::future<void> physicsFuture = std::async(std::launch::async, &Engine::PhysicsSim, this);
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
         Render(&m_ActiveScene.Objects[i]);
-        m_ActiveScene.Objects[i].OnUpdate();
-        if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
-            rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
-        }
     }
     if(ShouldLoadScene != ""){
         GetActiveScene().Load(ShouldLoadScene);
         ShouldLoadScene = "";
     }
+    // physicsFuture.wait();
 }
 
 void Engine::Render(Object* object)
@@ -61,6 +62,25 @@ void Engine::Render(Object* object)
             renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition(), 1.0f);
         else
             SapphireEngine::Log(object->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
+}
+
+void Engine::PhysicsSim()
+{
+    for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
+    {
+        if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
+            rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
+            // std::async(std::launch::async, &SapphirePhysics::RigidBody::Simulate, rb.get(), &m_ActiveScene.Objects[i], app->GetDeltaTime());
+        }
+    }
+}
+
+void Engine::ExecuteLua()
+{
+    for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
+    {
+        m_ActiveScene.Objects[i].OnUpdate();
+    }
 }
 
 void Engine::Export()

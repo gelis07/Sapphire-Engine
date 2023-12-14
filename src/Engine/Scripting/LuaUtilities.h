@@ -9,10 +9,12 @@ namespace LuaUtilities{
     static int log(lua_State *L);
     static int Clamp(lua_State *L);
     static int KeyPress(lua_State *L);
+    static int Click(lua_State *L);
     static int LoadScene(lua_State *L);
     static int GetObject(lua_State *L);
     static int GetCurrentScene(lua_State* L);
     static int GetCameraPos(lua_State* L);
+    static int GetMouseCoord(lua_State* L);
     static int SetCameraPos(lua_State* L);
     static int GetCameraSize(lua_State* L);
     static int SetCameraSize(lua_State* L);

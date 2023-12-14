@@ -1,5 +1,6 @@
 #include "LuaUtilities.h"
 #include "Engine/Engine.h"
+#include "Editor/Editor.h"
 //* I tried my best at trying to find a more clean way of making these functions but this is the solution I ended up with.
 
 static std::unordered_map<std::string, int> Keys;
@@ -60,7 +61,7 @@ int LuaUtilities::KeyPress(lua_State* L) {
 
     const char* message = luaL_checkstring(L, 1);
     if (Keys.find(std::string(message)) != Keys.end()) {
-        bool test = glfwGetKey(glfwGetCurrentContext(), Keys[std::string(message)]);
+        bool test = Engine::app->GetInputDown(Keys[std::string(message)]);
         lua_pushboolean(L, test);
     }
     else {
@@ -70,7 +71,18 @@ int LuaUtilities::KeyPress(lua_State* L) {
     }
     return 1;
 }
-int LuaUtilities::LoadScene(lua_State* L) {
+int LuaUtilities::Click(lua_State *L)
+{
+    int n = lua_gettop(L);
+    if (n != 0) {
+        return luaL_error(L, "Expected 1 argument, got %d", n);
+    }
+    bool test = Engine::app->GetMouseInputDown(GLFW_MOUSE_BUTTON_1);
+    lua_pushboolean(L, test);
+    return 1;
+}
+int LuaUtilities::LoadScene(lua_State *L)
+{
     int n = lua_gettop(L);
     if (n != 1) {
         return luaL_error(L, "Expected 1 argument, got %d", n);
@@ -132,6 +144,26 @@ int LuaUtilities::GetCameraPos(lua_State *L)
     lua_pushnumber(L, CameraPos.y);
     lua_setfield(L, -2, "y");
 
+    return 1;
+}
+int LuaUtilities::GetMouseCoord(lua_State *L)
+{
+    int n = lua_gettop(L);
+    if (n != 0) {
+        return luaL_error(L, "Expected 0 argument, got %d", n);
+    }
+    lua_newtable(L);
+    double x,y;
+    glfwGetCursorPos(Engine::app->GetWindow(), &x, &y);
+    glm::vec2 FinalCoords = (Editor::WindowPos + Editor::WindowSize / 2.0f) - glm::vec2(x,y);
+    FinalCoords.x *= -1;
+    std::cout << FinalCoords.x << ", " << FinalCoords.y << '\n'; 
+    FinalCoords += glm::vec2(Engine::GetCameraObject()->GetTransform()->GetPosition());
+    lua_pushnumber(L, FinalCoords.x);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, FinalCoords.y);
+    lua_setfield(L, -2, "y");
     return 1;
 }
 int LuaUtilities::SetCameraPos(lua_State *L)
@@ -352,6 +384,10 @@ int LuaUtilities::luaopen_SapphireEngine(lua_State *L)
     lua_setfield(L, -2, "Log");
     lua_pushcfunction(L, KeyPress);
     lua_setfield(L, -2, "KeyPress");
+    lua_pushcfunction(L, Click);
+    lua_setfield(L, -2, "Click");
+    lua_pushcfunction(L, GetMouseCoord);
+    lua_setfield(L, -2, "GetMousePos");
     lua_pushcfunction(L, GetObject);
     lua_setfield(L, -2, "GetObject");
     lua_pushcfunction(L, GetCurrentScene);
