@@ -13,18 +13,60 @@
 #define Stopwatch(x) \
     {\
         float StartingTime = glfwGetTime(); \
-        x; \
-        std::cout << "(" << __FILE__ << ":" << __LINE__ << "): " << (glfwGetTime() - StartingTime) * 1000.0f << "s" << '\n'; \
+        x;\
+        std::stringstream ss; \
+        ss << "(" << __FILE__ << ":" << __LINE__ << ")"; \
+        if(SapphireEngine::stats.find(ss.str()) == SapphireEngine::stats.end()){ \
+            SapphireEngine::stats[ss.str()] = glfwGetTime() - StartingTime; \
+        } else{ \
+            SapphireEngine::stats[ss.str()] = (SapphireEngine::stats[ss.str()] + (glfwGetTime() - StartingTime)) / SapphireEngine::FrameCount; \
+        }\
     }
 
+
+
+class ImGuiLogger {
+public:
+    ImGuiLogger() {}
+
+    const std::ostringstream& GetContent() {return logBuffer;}
+    const uint32_t& Size() {return LogCount;}
+    // Log a message
+    template <typename T>
+    ImGuiLogger& operator<<(const T& value) {
+        logBuffer << value;
+        coutStream << value; // Optionally, you can still send the message to std::cout
+        LogCount++;
+        return *this;
+    }
+
+    // Log manipulators (e.g., std::endl)
+    ImGuiLogger& operator<<(std::ostream& (*manipulator)(std::ostream&)) {
+        logBuffer << manipulator;
+        coutStream << manipulator;
+        return *this;
+    }
+    void Clear(){
+        logBuffer.str(std::string());
+        LogCount = 0;
+    }
+
+private:
+    uint32_t LogCount = 0;
+    std::ostringstream logBuffer; // Buffer for ImGui output
+    std::ostream coutStream{nullptr}; // Original std::cout stream (optional)
+};
 
 namespace SapphireEngine
 { 
     enum LogType{
         Info=0,Warning=1,Error=2
     };
-    inline std::vector<std::pair<std::string, SapphireEngine::LogType>> Logs;
-
+    // inline std::vector<std::pair<std::string, SapphireEngine::LogType>> Logs;
+    inline std::unordered_map<std::string, double> stats;
+    inline int FrameCount = 0;
+    inline double FrameRate = 0;
+    inline ImGuiLogger Logs;
     static float Clamp(const float min, const float max, float &value){
         // value = std::min(std::max(min,value) , max);
         return std::min(std::max(min,value) , max);
@@ -37,11 +79,7 @@ namespace SapphireEngine
         return glm::vec4(dist(gen), dist(gen), dist(gen), 1);
     }
     static void Log(const std::string& log, SapphireEngine::LogType&& type){
-        std::pair<std::string, SapphireEngine::LogType> NewLog;
-        NewLog.first = log;
-        std::cout << log << '\n';
-        NewLog.second = type;
-        SapphireEngine::Logs.push_back(NewLog);
+        Logs << log << '\n';
     }
     static float LengthVec(glm::vec2 vec){
         return sqrt(pow((vec.x), 2) + pow((vec.y), 2));

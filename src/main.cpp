@@ -8,16 +8,17 @@ int main(void)
 {
     if (!glfwInit())
         return -1; 
+    
     // A little cool start up animation :)
     StartUp();
-    // std::string MainPath = "";
-    // {
-    //     // A project manager to select the project you want to work on
-    //     ProjectManager Pm;
-    //     Pm.Update();
-    //     MainPath = Pm.Path;
-    // }
-    Editor editor("C:/Gelis/Programs/Flappy_Bird/Assets/");
+    std::string MainPath = "";
+    {
+        // A project manager to select the project you want to work on
+        ProjectManager Pm;
+        Pm.Update();
+        MainPath = Pm.Path;
+    }
+    Editor editor(MainPath);
     editor.Update();
     // Game game;
     // game.Update();

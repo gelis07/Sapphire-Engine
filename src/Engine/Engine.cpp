@@ -36,17 +36,23 @@ void Engine::Run()
     {
         m_ActiveScene.Objects[i].OnStart();
     }
-    ExecuteLua();
-    PhysicsSim();
+    Stopwatch(ExecuteLua());
+    Stopwatch(PhysicsSim());
     // std::future<void> physicsFuture = std::async(std::launch::async, &Engine::PhysicsSim, this);
-    for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
+    Stopwatch(for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
         Render(&m_ActiveScene.Objects[i]);
-    }
+    })
     if(ShouldLoadScene != ""){
         GetActiveScene().Load(ShouldLoadScene);
         ShouldLoadScene = "";
     }
+    for (size_t i = 0; i < m_ActiveScene.ObjectsToAdd.size(); i++)
+    {
+        m_ActiveScene.Objects.push_back(std::move(m_ActiveScene.ObjectsToAdd[i]));
+    }
+    if(m_ActiveScene.ObjectsToAdd.size() != 0) m_ActiveScene.ObjectsToAdd.clear();
+    
     // physicsFuture.wait();
 }
 

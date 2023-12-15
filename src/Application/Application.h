@@ -25,7 +25,7 @@ class Application
         bool GetMouseInput(int MouseButton);
         bool GetInputDown(int Key);
         bool GetMouseInputDown(int MouseButton);
-        void SetClearColor(const glm::vec4& clearColor) {ClearColor = clearColor;} 
+        void SetClearColor(const glm::vec4& clearColor) {ClearColor = clearColor;}
     protected:
         GLFWwindow* window;
         glm::vec4 ClearColor = glm::vec4(0);

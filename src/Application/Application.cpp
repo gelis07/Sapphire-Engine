@@ -59,9 +59,7 @@ Application::Application(const glm::vec2& WindowDim, bool fullscreen,const std::
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init((char*)glGetString(GL_NUM_SHADING_LANGUAGE_VERSIONS));
     ImPlot::CreateContext();
-    glfwSetWindowUserPointer(window, this);
     // glfwSetWindowSizeCallback(window, OnResizeCallBack);
-    // glfwSetWindowFocusCallback(window, OnWindowFocusCallBack);
 }
 void Application::Update()
 {
@@ -77,10 +75,6 @@ void Application::Update()
         float currentTime = glfwGetTime();
         DeltaTime = currentTime - LastTime;
         LastTime = currentTime;
-        if((int)(1.0 / DeltaTime) < 30){
-            std::cout << "\033[1;31m "<< (1.0 / DeltaTime) << " \033[0m" << '\n';
-        }
-        
         OnUpdate(DeltaTime);
 
         ImGui::Render();

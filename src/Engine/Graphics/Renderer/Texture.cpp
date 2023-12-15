@@ -114,7 +114,6 @@ void SapphireRenderer::Texture::Init()
 void SapphireRenderer::Texture::Bind() const
 {
     GLCall(glBindTexture(GL_TEXTURE_2D, ID));
-    // std::cout << Data << '\n';
 }
 
 void SapphireRenderer::Texture::Unbind() const

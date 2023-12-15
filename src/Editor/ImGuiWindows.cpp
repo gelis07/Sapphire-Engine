@@ -19,75 +19,14 @@ void LogWindow()
 {
     if(!(*Editor::GetWindowState("Logs"))) return;
     std::string windowName = "Logs";
-    if (SapphireEngine::Logs.size() <= 50) {
-        windowName += " (" + std::to_string(SapphireEngine::Logs.size()) + ")";
+    if (SapphireEngine::Logs.Size() <= 999) {
+        windowName += " (" + std::to_string(SapphireEngine::Logs.Size()) + ")";
     } else {
-        windowName += " (50+)";
-        // SapphireEngine::Logs.erase(SapphireEngine::Logs.begin(), SapphireEngine::Logs.begin() + (50 - SapphireEngine::Logs.size()));
+        windowName += " (999+)";
     }
     windowName += "###LogWindow";
     ImGui::Begin(windowName.c_str(), Editor::GetWindowState("Logs"));
-
-    ImGui::SetCursorPos(ImVec2(5, 30));
-    for (size_t i = 0; i < SapphireEngine::Logs.size(); i++)
-    {
-
-        ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10);
-        ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0.5f));
-        ImGui::BeginChild(std::to_string(i).c_str(), ImVec2(ImGui::GetWindowSize().x, 50), false,ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
-
-        // Calculate the position to center the text within the child window
-        ImVec2 childSize = ImGui::GetWindowSize();
-        ImVec2 textSize = ImGui::CalcTextSize(SapphireEngine::Logs[i].first.c_str());
-        float PosY = (childSize.y - textSize.y) * 0.5f;
-        float IconPosY = (childSize.y - 512/14) * 0.5f;
-        switch (SapphireEngine::Logs[i].second)
-        {
-            case SapphireEngine::Info:
-            {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(MIN_ICON_SIZE*2, 0), glm::vec2(MIN_ICON_SIZE, MIN_ICON_SIZE), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
-                ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(MIN_ICON_SIZE, MIN_ICON_SIZE), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
-
-                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 1.0f, 1.0f));
-                ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
-                ImGui::TextUnformatted(SapphireEngine::Logs[i].first.c_str());
-                ImGui::PopStyleColor();
-                break;
-            }
-            case SapphireEngine::Warning:
-            {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(0, 0), glm::vec2(MIN_ICON_SIZE, MIN_ICON_SIZE), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
-                ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(MIN_ICON_SIZE, MIN_ICON_SIZE), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
-
-                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
-                ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
-                ImGui::TextUnformatted(SapphireEngine::Logs[i].first.c_str());
-                ImGui::PopStyleColor();
-                break;
-            }
-            case SapphireEngine::Error:
-            {
-                glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(MIN_ICON_SIZE, 0), glm::vec2(MIN_ICON_SIZE, MIN_ICON_SIZE), FileExplorer::GetAtlas().AtlasID.GetDimensions()); 
-                ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
-                ImGui::Image(reinterpret_cast<ImTextureID>(FileExplorer::GetAtlas().AtlasID.GetID()), ImVec2(MIN_ICON_SIZE, MIN_ICON_SIZE), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
-
-
-                ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 0.0f, 0.0f, 1.0f));
-                ImGui::SetCursorPos(ImVec2(50, PosY)); // Set the cursor position to center the text
-                ImGui::TextUnformatted(SapphireEngine::Logs[i].first.c_str());
-                ImGui::PopStyleColor();
-                break;
-            }
-            default:
-                break;
-        }
-
-        ImGui::EndChild();
-        ImGui::PopStyleVar();
-        ImGui::PopStyleColor();
-    }
+    ImGui::TextUnformatted(SapphireEngine::Logs.GetContent().str().c_str());
     if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
     {
         ImGui::SetScrollHereY(1.0f);
@@ -96,16 +35,12 @@ void LogWindow()
 
     //Here I'm tryign to keep the button always visible even on scroll
     ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - 100.0f, ImGui::GetScrollY() + 20.0f));
-    ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0));
     //I need to use a child window because otherwise ImGui will render the other child windows (the logs above) and that will cause the button to be clickable only 
     //under the logs and makes it hard to click.
-    ImGui::BeginChild("test", ImVec2(ImGui::GetWindowSize().x, 50), false,ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
     if (ImGui::Button("Clear"))
     {
-        SapphireEngine::Logs.clear();
+        SapphireEngine::Logs.Clear();
     }
-    ImGui::EndChild();
-    ImGui::PopStyleColor();
 
     ImGui::End();
 }

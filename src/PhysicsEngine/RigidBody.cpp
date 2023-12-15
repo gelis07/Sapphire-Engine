@@ -4,7 +4,7 @@
 #include <thread>
 #include <execution>
 #include <glm/gtx/norm.hpp>
-#define ITERATIONS 30
+#define ITERATIONS 1
 #define VECTOR_THRESHOLD 1e-12
 
 SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp) : Trigger("Trigger", Variables), 
@@ -62,7 +62,6 @@ void SapphirePhysics::RigidBody::BroadPhase(Object* current)
         std::for_each(std::execution::par,Engine::GetActiveScene().Objects.begin(), Engine::GetActiveScene().Objects.end(), [current](auto&& object) {
             if(object.Name == "MainCamera" || &object == current) return;
             if(!IntersectAABBs(object.GetRb()->GetAABB(), current->GetRb()->GetAABB())) {
-                // std::cout << "\033[1;31m Collision Blocked \033[0m" << std::endl;
                 return;
             };
             if(object.GetRb()->Static.Get() && current->GetRb()->Static.Get()) return;
@@ -84,21 +83,6 @@ void SapphirePhysics::RigidBody::NarrowPhase()
             OnCollisionRotation(pair.first, pair.second, std::move(CD));
         }
     });
-
-
-    // for (auto &&pair : ContactPairs)
-    // {
-    //     std::shared_ptr<Object> sharedObject(pair.second,StackObjectDeleter{});
-    //     if(std::isnan(pair.first->GetRb()->AngularVelocity.z) || std::isnan(pair.first->GetRb()->Velocity.x)){
-    //         std::cout << "what" << '\n';
-    //     }
-    //     if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, pair.first,CD)){
-    //         pair.first->OnCollision(pair.second);
-    //         pair.second->OnCollision(pair.first);
-    //         OnCollisionRotation(pair.first, pair.second, std::move(CD));
-    //     }
-    // }
-    
 }
 
 SapphirePhysics::AABB SapphirePhysics::RigidBody::GetAABB()
@@ -201,9 +185,6 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *ob
         if(denom != 0) j /= denom;
         if(contactCount != 0) j /= (float)contactCount;
         JList[i] = j;
-        if(std::isnan(j)){
-            std::cout << "what" << '\n';
-        }
         glm::vec2 impulse = j * normal;
         impulseList[i] = impulse;
     }
@@ -272,13 +253,7 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *ob
         }else{
             FrictionImpulse = -JList[i] * tangent * DynamicFriction;
         }
-        if(std::isnan(FrictionImpulse.x) || std::isnan(FrictionImpulse.y)){
-            std::cout << "what" << '\n';
-        }
         FrictionImpulseList[i] = FrictionImpulse;
-    }
-    if(std::isnan(bodyA->AngularVelocity.z) || std::isnan(bodyA->Velocity.x)){
-        std::cout << "what" << '\n';
     }
     for(int i = 0; i < contactCount; i++)
     {
@@ -339,13 +314,18 @@ void SapphirePhysics::RigidBody::OnCollision(Object* current, Object* obj, Colli
 
 
 void SapphirePhysics::RigidBody::Simulate(Object *current, const float& DeltaTime) {
-    for (size_t i = 0; i < ITERATIONS; i++)
-    {
-        ContactPairs.clear();
-        Update(DeltaTime / ITERATIONS);
-        BroadPhase(current);
-        NarrowPhase();
-    }
+    // for (size_t i = 0; i < ITERATIONS; i++)
+    // {
+    //     ContactPairs.clear();
+    //     Update(DeltaTime / ITERATIONS);
+    //     BroadPhase(current);
+    //     NarrowPhase();
+    // }
+
+    ContactPairs.clear();
+    Update(DeltaTime);
+    BroadPhase(current);
+    NarrowPhase();
     
 }
 

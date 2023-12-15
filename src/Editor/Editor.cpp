@@ -2,6 +2,30 @@
 #include "UI/FileExplorer/FileExplorer.h"
 SapphireEngine::String Editor::ThemeName("ThemeName", Editor::UserPreferences);
 
+
+
+void window_focus_callback(GLFWwindow* window, int focused)
+{
+    if (focused)
+    {
+        for (auto&& object : Engine::GetActiveScene().Objects)
+        {
+            for(auto&& component : object.GetComponents())
+            {
+                lua_State* L = component->GetState();
+                if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, (Engine::GetMainPath() + component->GetFile()).c_str())))
+                {
+                    std::stringstream ss;
+                    ss << "Error loading script: " << lua_tostring(L, -1) << std::endl;
+                    Log(ss.str(), SapphireEngine::Error);
+                    lua_pop(L, 1);
+                }
+                component->GetLuaVariables();
+            }
+        }
+    }
+}
+
 Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),true,mainPath) , engine()
 {
     engine.SetApp(this);
@@ -66,6 +90,13 @@ void Editor::OnUpdate(const float DeltaTime)
     AnimationTimeline();
     FrameRate();
     LogWindow();
+
+    // ImGui::Begin("test");
+    // std::stringstream ss;
+    // ss << "hello" << '\n' << "Pls be shown in a new line";
+    // ImGui::Text(ss.str().c_str());
+    // ImGui::End();
+
     
     this->DeltaTime = DeltaTime;
     FileExplorer::Open(CurrentPath);
@@ -75,6 +106,7 @@ void Editor::OnUpdate(const float DeltaTime)
 
 void Editor::OnStart()
 {
+    // glfwSetWindowFocusCallback(window, window_focus_callback);
 }
 
 void Editor::OnExit()
@@ -405,6 +437,13 @@ void Editor::RenderPlayMode()
         Engine::GetActiveScene().Load(Engine::GetActiveScene().SceneFile);
         Start = true;
         Paused = false;
+        for (auto const& stat : SapphireEngine::stats)
+        {
+            std::cout << stat.first << ": " << stat.second << '\n';
+        }
+        std::cout << "Avg frame delta time: " << SapphireEngine::FrameRate << ", Frame count: " << SapphireEngine::FrameCount << '\n';
+        SapphireEngine::FrameCount = 0;
+        
         loggingFile.close();
     } 
     if(!GameRunning){
@@ -417,6 +456,8 @@ void Editor::RenderPlayMode()
         float time = glfwGetTime();
         engine.Run();
         TimeStep = (glfwGetTime() - time)*1000.0f;
+        SapphireEngine::FrameCount++;
+        SapphireEngine::FrameRate = (SapphireEngine::FrameRate + (glfwGetTime() - time))/SapphireEngine::FrameCount;
     }
 
     //Changing the start bool to false here so all the start functions get executed
@@ -426,6 +467,16 @@ void Editor::RenderPlayMode()
 
 void Editor::OnWindowFocus(GLFWwindow *window, int focused)
 {
+    if (focused)
+    {
+        for (auto&& object : Engine::GetActiveScene().Objects)
+        {
+            for(auto&& component : object.GetComponents())
+            {
+                component->GetLuaVariables();
+            }
+        }
+    }
 }
 
 const std::string &Editor::GetMainPath()

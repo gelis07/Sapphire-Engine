@@ -49,7 +49,7 @@ void Object::OnStart()
         if (!Components[i]->Active || Components[i]->GetFile().empty())
             continue;
         lua_State *L = Components[i]->GetState();
-        if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, ("C:/Gelis/Programs/Flappy_Bird/Assets/" + GetComponents()[i]->GetFile()).c_str())))
+        if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, (Engine::GetMainPath() + GetComponents()[i]->GetFile()).c_str())))
         {
             std::stringstream ss;
             ss << "Error loading script: " << lua_tostring(L, -1) << std::endl;
@@ -117,10 +117,10 @@ Object* Object::CreateObject(std::string &&ObjName)
 
     NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
 
-    Engine::GetActiveScene().Objects.push_back(NewObj);
+    Engine::GetActiveScene().ObjectsToAdd.push_back(NewObj);
 
 
-    return &Engine::GetActiveScene().Objects.back();
+    return &Engine::GetActiveScene().ObjectsToAdd.back();
 }
 
 void Object::Delete(int id)
@@ -152,13 +152,13 @@ void Object::Inspect()
     }
 
     RenderGUI();
-    for (auto const& animation : renderer->shape->Animations)
-    {
-        if(ImGui::Button(animation.first.c_str()))
-        {
-            renderer->shape->SelectAnimation(animation.first);
-        }
-    }
+    // for (auto const& animation : renderer->shape->Animations)
+    // {
+    //     if(ImGui::Button(animation.first.c_str()))
+    //     {
+    //         renderer->shape->SelectAnimation(animation.first);
+    //     }
+    // }
     
     std::shared_ptr<File>* File = FileExplorerDrop.ReceiveDrop(ImGui::GetCurrentWindow());
     if (File != NULL)

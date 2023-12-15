@@ -247,7 +247,6 @@ bool SapphirePhysics::CollisionDetection::RectanglexRectangle(std::shared_ptr<Ob
 {
     Object* Obj1 = obj.get();
     Object* Obj2 = current;
-    // std::cout << "Doing full on collision check on: " << current->Name << ", " << obj->Name << '\n';
     CD.Normal = glm::vec2(0);
     CD.Depth = INFINITY;
     std::array<glm::vec3, 4> Obj1Points = {Obj1->GetTransform()->GetPoints()[0], Obj1->GetTransform()->GetPoints()[1],
@@ -309,13 +308,7 @@ bool SapphirePhysics::CollisionDetection::RectanglexRectangle(std::shared_ptr<Ob
     {
         CD.Normal = -CD.Normal;
     }
-    if(std::isnan(Obj1->GetRb()->AngularVelocity.z) || std::isnan(Obj2->GetRb()->Velocity.x)){
-        std::cout << "what" << '\n';
-    }
     FindPolygonContactPoint(obj, current, CD.ContactPoint1, CD.ContactPoint2, CD.ContactPointCount);
-    if(std::isnan(Obj1->GetRb()->AngularVelocity.z) || std::isnan(Obj2->GetRb()->Velocity.x)){
-        std::cout << "what" << '\n';
-    }
     return true;
 }
 bool SapphirePhysics::CollisionDetection::CirclexCircle(Object* obj, Object* current, CollisionData& CD)

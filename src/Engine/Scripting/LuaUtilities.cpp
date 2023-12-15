@@ -157,7 +157,6 @@ int LuaUtilities::GetMouseCoord(lua_State *L)
     glfwGetCursorPos(Engine::app->GetWindow(), &x, &y);
     glm::vec2 FinalCoords = (Editor::WindowPos + Editor::WindowSize / 2.0f) - glm::vec2(x,y);
     FinalCoords.x *= -1;
-    std::cout << FinalCoords.x << ", " << FinalCoords.y << '\n'; 
     FinalCoords += glm::vec2(Engine::GetCameraObject()->GetTransform()->GetPosition());
     lua_pushnumber(L, FinalCoords.x);
     lua_setfield(L, -2, "x");
