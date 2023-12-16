@@ -432,6 +432,30 @@ src/Application/Application.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Application/Application.cpp.s
 .PHONY : src/Application/Application.cpp.s
 
+src/Editor/DebugDraw.obj: src/Editor/DebugDraw.cpp.obj
+.PHONY : src/Editor/DebugDraw.obj
+
+# target to build an object file
+src/Editor/DebugDraw.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/DebugDraw.cpp.obj
+.PHONY : src/Editor/DebugDraw.cpp.obj
+
+src/Editor/DebugDraw.i: src/Editor/DebugDraw.cpp.i
+.PHONY : src/Editor/DebugDraw.i
+
+# target to preprocess a source file
+src/Editor/DebugDraw.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/DebugDraw.cpp.i
+.PHONY : src/Editor/DebugDraw.cpp.i
+
+src/Editor/DebugDraw.s: src/Editor/DebugDraw.cpp.s
+.PHONY : src/Editor/DebugDraw.s
+
+# target to generate assembly for a file
+src/Editor/DebugDraw.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/DebugDraw.cpp.s
+.PHONY : src/Editor/DebugDraw.cpp.s
+
 src/Editor/Editor.obj: src/Editor/Editor.cpp.obj
 .PHONY : src/Editor/Editor.obj
 
@@ -1152,6 +1176,9 @@ help:
 	@echo "... src/Application/Application.obj"
 	@echo "... src/Application/Application.i"
 	@echo "... src/Application/Application.s"
+	@echo "... src/Editor/DebugDraw.obj"
+	@echo "... src/Editor/DebugDraw.i"
+	@echo "... src/Editor/DebugDraw.s"
 	@echo "... src/Editor/Editor.obj"
 	@echo "... src/Editor/Editor.i"
 	@echo "... src/Editor/Editor.s"

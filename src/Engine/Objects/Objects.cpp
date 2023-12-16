@@ -36,7 +36,7 @@ void Object::OnCollision(Object *other)
         lua_State *L = Components[i]->GetState();
         SetUpObject(other, L, "obj");
         Components[i]->ExecuteFunction("OnCollision");
-        Components[i]->GetLuaVariables();
+        // Components[i]->GetLuaVariables();
     }
 }
 
@@ -96,6 +96,34 @@ void Object::OnUpdate()
 }
 
 Object* Object::CreateObject(std::string &&ObjName)
+{
+    Object NewObj(std::move(ObjName));
+    std::vector<glm::vec3> points;
+    points.push_back(glm::vec3(-0.5f,-0.5f,0));
+    points.push_back(glm::vec3(0.5f,-0.5f,0));
+    points.push_back(glm::vec3(0.5f,0.5f,0));
+    points.push_back(glm::vec3(-0.5f,0.5f,0));
+    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0,std::move(points), false)));
+    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
+    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
+
+    NewObj.renderer = NewObj.GetComponent<Renderer>(); 
+    NewObj.transform = NewObj.GetComponent<Transform>();
+    NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
+    
+    NewObj.renderer->Color.Get() = glm::vec4(1);
+    NewObj.transform->SetSize(glm::vec3(0));
+    NewObj.transform->SetSize(glm::vec3(20.0f, 20.0f, 0.0f));
+
+    NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
+
+    Engine::GetActiveScene().Objects.push_back(NewObj);
+
+
+    return &Engine::GetActiveScene().Objects.back();
+}
+
+Object *Object::CreateObjectRuntime(std::string &&ObjName)
 {
     Object NewObj(std::move(ObjName));
     std::vector<glm::vec3> points;

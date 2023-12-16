@@ -4,7 +4,8 @@
 #include <thread>
 #include <execution>
 #include <glm/gtx/norm.hpp>
-#define ITERATIONS 1
+#include "Editor/DebugDraw.h"
+#define ITERATIONS 12
 #define VECTOR_THRESHOLD 1e-12
 
 SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp) : Trigger("Trigger", Variables), 
@@ -14,7 +15,7 @@ StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction",
 {
     Trigger.Get() = false;
     Static.Get() = false;
-    Restitution.Get() = 0.6f;
+    Restitution.Get() = 0.0f;
     StaticFriction.Get() = 0.6f;
     DynamicFriction.Get() = 0.4f;
     Restitution.Min = 0.0f;
@@ -109,6 +110,7 @@ SapphirePhysics::AABB SapphirePhysics::RigidBody::GetAABB()
 float CrossProduct(glm::vec2 v1, glm::vec2 v2){
     return v1.x * v2.y - v1.y * v2.x;
 }
+const float ImpulseThreshold = 10.0f;
 void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *obj, CollisionData &&CD)
 {
     
@@ -193,11 +195,12 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *ob
         glm::vec2 impulse = impulseList[i];
         glm::vec2 ra = raList[i];
         glm::vec2 rb = rbList[i];
-
         bodyA->Velocity += glm::vec3(-impulse * bodyAInvMass,0);
         bodyA->AngularVelocity.z += -CrossProduct(ra, impulse) * bodyAInvInertia;
+        SapphireEngine::AddLine(glm::vec2(bodyAPos), glm::vec2(bodyAPos) + glm::vec2(-impulse * bodyAInvMass), glm::vec4(0.2f, 0.5f, 0.1f, 1.0f), 5.0f);
         bodyB->Velocity += glm::vec3(impulse * bodyBInvMass,0);
         bodyB->AngularVelocity.z += CrossProduct(rb, impulse) * bodyBInvInertia;
+        SapphireEngine::AddLine(glm::vec2(bodyBPos), glm::vec2(bodyBPos)+glm::vec2(impulse * bodyAInvMass), glm::vec4(0.2f, 0.5f, 0.1f, 1.0f), 5.0f);
     }
 
     for (int i = 0; i < contactCount; i++)
@@ -263,8 +266,10 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object *current, Object *ob
 
         bodyA->Velocity += glm::vec3(-impulse * bodyAInvMass,0);
         bodyA->AngularVelocity.z += -CrossProduct(glm::normalize(ra), impulse) * bodyAInvInertia;
+        SapphireEngine::AddLine(glm::vec2(bodyAPos), glm::vec2(bodyAPos) + glm::vec2(-impulse * bodyAInvMass), glm::vec4(0.7f, 0.3f, 0.8f, 1.0f), 5.0f);
         bodyB->Velocity += glm::vec3(impulse * bodyBInvMass,0);
         bodyB->AngularVelocity.z += CrossProduct(glm::normalize(rb), impulse) * bodyBInvInertia;
+        SapphireEngine::AddLine(glm::vec2(bodyBPos), glm::vec2(bodyBPos)+glm::vec2(impulse * bodyAInvMass), glm::vec4(0.7f, 0.3f, 0.8f, 1.0f), 5.0f);
     }
     if(bodyB->Static.Get())
         current->GetTransform()->Move(glm::vec3(-CD.Normal * CD.Depth,0));

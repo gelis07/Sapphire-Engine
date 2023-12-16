@@ -1,5 +1,6 @@
 #include "Editor.h"
 #include "UI/FileExplorer/FileExplorer.h"
+#include "DebugDraw.h"
 SapphireEngine::String Editor::ThemeName("ThemeName", Editor::UserPreferences);
 
 
@@ -69,6 +70,7 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
         }
         Load(ThemeName.Get());
     }
+    SapphireEngine::Init();
 }
 
 void Editor::OnResize(GLFWwindow *window, int width, int height)
@@ -91,13 +93,6 @@ void Editor::OnUpdate(const float DeltaTime)
     FrameRate();
     LogWindow();
 
-    // ImGui::Begin("test");
-    // std::stringstream ss;
-    // ss << "hello" << '\n' << "Pls be shown in a new line";
-    // ImGui::Text(ss.str().c_str());
-    // ImGui::End();
-
-    
     this->DeltaTime = DeltaTime;
     FileExplorer::Open(CurrentPath);
     if(SelectedObjID != -1) Engine::GetActiveScene().Objects[SelectedObjID].Inspect();
@@ -207,6 +202,25 @@ static void Default(GLFWwindow* window, double xoffset, double yoffset){
     io.MouseWheelH += static_cast<float>(xoffset);
     io.MouseWheel += static_cast<float>(yoffset);
 }
+void RenderArrow(ImDrawList* draw_list, glm::vec2 start, glm::vec2 end, ImU32 color, float thickness)
+{
+    // Draw a line from start to end
+    draw_list->AddLine(ImVec2(start.x, start.y), ImVec2(end.x, end.y), color, thickness);
+
+    // Calculate the direction vector
+    glm::vec2 dir = end - start;
+    dir = dir / glm::length2(dir);
+
+    // Calculate arrowhead points
+    const float arrow_size = 8.0f;
+    const glm::vec2 p0 = end - dir * arrow_size + glm::vec2(dir.y, -dir.x) * 0.5f * arrow_size;
+    const glm::vec2 p1 = end - dir * arrow_size - glm::vec2(dir.y, -dir.x) * 0.5f * arrow_size;
+
+    // Draw the arrowhead
+    draw_list->AddLine(ImVec2(end.x, end.y), ImVec2(p0.x, p0.y), color, thickness);
+    draw_list->AddLine(ImVec2(end.x, end.y), ImVec2(p1.x, p1.y), color, thickness);
+}
+
 constexpr glm::vec2 offset = glm::vec2(8, -6);
 void Editor::RenderViewport()
 {
@@ -232,7 +246,6 @@ void Editor::RenderViewport()
         ImVec2(0, 1), 
         ImVec2(1, 0)
     );
-
     // Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
     ImGuizmo::SetOrthographic(true);
     ImGuizmo::SetDrawlist();
@@ -289,6 +302,7 @@ void Editor::RenderViewport()
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
     grid.Render(ViewCamera.position, ViewCamera.Zoom);
+    SapphireEngine::DrawLines(view);
     for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)
     {
         if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].GetRenderer())
@@ -382,7 +396,6 @@ void Editor::RenderPlayMode()
 
                 if(CheckForErrors()){
                     GameRunning = !GameRunning;
-                    loggingFile.open("hello.txt", std::ios::out);
                 }
                 else
                     SapphireEngine::Log("Can't run program with an active lua script with an error!", SapphireEngine::Error);
@@ -392,10 +405,6 @@ void Editor::RenderPlayMode()
         std::stringstream ss;
         ss << (TimeStep) << ", Objects: " << Engine::GetActiveScene().Objects.size();
         ImGui::Text(ss.str().c_str());
-
-        if(loggingFile.is_open()){
-            loggingFile << ss.str() << '\n';
-        }
         if(GameRunning)
         {
             ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - 100, 20));
@@ -443,8 +452,6 @@ void Editor::RenderPlayMode()
         }
         std::cout << "Avg frame delta time: " << SapphireEngine::FrameRate << ", Frame count: " << SapphireEngine::FrameCount << '\n';
         SapphireEngine::FrameCount = 0;
-        
-        loggingFile.close();
     } 
     if(!GameRunning){
         for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)

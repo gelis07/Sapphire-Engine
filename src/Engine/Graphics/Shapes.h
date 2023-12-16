@@ -48,6 +48,7 @@ namespace SapphireRenderer
         float width, height, channels;
     };
     inline SapphireRenderer::Shader BasicShader;
+    inline SapphireRenderer::Shader LineShader;
     inline SapphireRenderer::Shader CircleShader;
     inline SapphireRenderer::Shader AnimationShader;
     inline SapphireRenderer::Shader TextureShader;

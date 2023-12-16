@@ -24,6 +24,7 @@ add_executable(Sapphire-Engine
     src/Engine/Graphics/Grid.cpp
     src/Engine/Scripting/Scripting.cpp
     src/Editor/Variables.cpp
+    src/Editor/DebugDraw.cpp
     src/Editor/ImGuiWindows.cpp
     src/Engine/Objects/Objects.cpp
     src/Engine/Objects/Transform.cpp

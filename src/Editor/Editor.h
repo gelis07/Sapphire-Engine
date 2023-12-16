@@ -34,7 +34,6 @@ class Editor : public Application{
             {"Settings", false},
             {"Project Settings", false}};
         static SapphireEngine::String ThemeName;
-        std::fstream loggingFile;
     private:
         Engine engine;
         inline static float DeltaTime;

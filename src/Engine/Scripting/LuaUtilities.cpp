@@ -214,7 +214,7 @@ int LuaUtilities::CreateObject(lua_State *L)
     }
     const char* ObjName = lua_tostring(L, -2);
     const char* ObjShape = lua_tostring(L, -1);
-    Object* obj = Object::CreateObject(std::string(ObjName));
+    Object* obj = Object::CreateObjectRuntime(std::string(ObjName));
     std::shared_ptr<SapphireRenderer::Shape> shape;
     if(std::string(ObjShape) == "Rectangle"){
         shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader,SapphireRenderer::RectangleVertices);

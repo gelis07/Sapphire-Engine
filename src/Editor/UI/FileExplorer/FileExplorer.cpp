@@ -52,6 +52,8 @@ void FileExplorer::Open(std::string& path)
             // MouseInput(entry.path());
             m_Files[FileName]->OnRightClick(entry);
             m_RightClicked = true;
+            m_SelectedFile = entry.path().string(); // Getting the selected file so we can highlight it and modify it (delete it, rename, etc..)
+            ImGui::OpenPopup("Context Menu");
         }
         if (ImGui::IsItemClicked(ImGuiMouseButton_Left))
         {
@@ -73,12 +75,16 @@ void FileExplorer::Open(std::string& path)
         }
     }
     Renaming = !ShouldStopRenaming;
-    MouseInput(m_SelectedFile);
+    if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
+    {
+        ImGui::OpenPopup("Context Menu");
+    }
+    RightClickPopUp(m_SelectedFile);
     if(m_CopiedFilePath.string() != "") SapphireEngine::Log(m_CopiedFilePath.string(), SapphireEngine::Info);
     ImGui::End();
 }
 
-void FileExplorer::RightClickPopUp(std::filesystem::path& path)
+void FileExplorer::RightClickPopUp(const std::filesystem::path& path)
 {
     if (ImGui::BeginPopup("Context Menu"))
     {
@@ -100,6 +106,82 @@ function OnCollision()
 
 end)";
         stream.close();
+        }
+        if(ImGui::MenuItem("Create Empty Scene")){
+            std::ofstream stream(Engine::GetMainPath() + "NewScene.scene", std::ofstream::trunc);
+            stream << R"({
+  "Object: 0": {
+    "Components": {
+      "Camera": {
+        "Variables": {
+          "BgColor": [
+            16809261544032701581,
+            {
+              "a": 0.0,
+              "b": 0.0,
+              "g": 0.0,
+              "r": 0.0
+            }
+          ],
+          "Zoom": [
+            17647767250183121875,
+            1.0
+          ]
+        },
+        "path": ""
+      },
+      "Renderer": {
+        "Variables": {
+          "Color": [
+            16809261544032701581,
+            {
+              "a": 1.0,
+              "b": 1.0,
+              "g": 1.0,
+              "r": 1.0
+            }
+          ],
+          "Path": [
+            1055573096244375537,
+            ""
+          ]
+        },
+        "path": ""
+      },
+      "Transform": {
+        "Variables": {
+          "Position": [
+            5690004131215169010,
+            {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            }
+          ],
+          "Rotation": [
+            5690004131215169010,
+            {
+              "x": 0.0,
+              "y": 0.0,
+              "z": 0.0
+            }
+          ],
+          "Size": [
+            5690004131215169010,
+            {
+              "x": 1657.0,
+              "y": 600.0,
+              "z": 0.0
+            }
+          ]
+        },
+        "path": ""
+      }
+    },
+    "Name": "MainCamera",
+    "shape": 1
+  }
+})";
         }
         if (ImGui::MenuItem("Create Directory"))
         {
@@ -133,14 +215,4 @@ end)";
         }
         ImGui::EndPopup();
     }
-}
-
-
-void FileExplorer::MouseInput(std::filesystem::path path)
-{
-    if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
-    {
-        ImGui::OpenPopup("Context Menu");
-    }
-    RightClickPopUp(path);
 }
