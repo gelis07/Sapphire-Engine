@@ -6,6 +6,7 @@ class Renderer : public Component
 {
     public:
         Renderer(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false);
+        Renderer(const Renderer& renderer);
         ~Renderer();
         std::shared_ptr<SapphireRenderer::Shape> shape;
         SapphireRenderer::Type Type;

@@ -19,5 +19,6 @@ inline static float SatAmount;
 void PreferencesWindow();
 void ProjectSettings();
 void Settings();
+void AnimationPreview();
 void AnimationTimeline();
 inline static std::map<ImGuiCol_, ImVec4> LoadedTheme;

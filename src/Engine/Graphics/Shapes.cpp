@@ -298,7 +298,7 @@ void SapphireRenderer::Animation::Export(const std::vector<KeyFrame*>& MainKeyfr
         test.vertices.push_back({glm::vec2(-0.5f,  0.5f), glm::vec2(lastKeyFrameWidth1, currentKeyFrameHeight)});
         KeyFramesData.push_back(test);
     }
-    writeKeyFramePairsToBinaryFile(KeyFramesData, Engine::GetMainPath() + name + ".anim");
+    writeKeyFramePairsToBinaryFile(KeyFramesData, Engine::GetMainPath() + name);
 }
 
 void SapphireRenderer::Animation::SetSelectedAnimation(std::optional<Animation>& CurrentAnimation)

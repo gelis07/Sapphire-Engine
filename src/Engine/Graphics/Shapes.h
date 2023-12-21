@@ -68,12 +68,12 @@ namespace SapphireRenderer
             static void Export(const std::vector<KeyFrame*>& MainKeyframes, const std::string& name);
             void SetSelectedAnimation(std::optional<Animation>& CurrentAnimation);
             const SapphireRenderer::Texture& GetTexture() const { return Texture; }
+            static std::vector<KeyFramePair> readKeyFramePairsFromBinaryFile(const std::string& filename);
         private:
             SapphireRenderer::Texture Texture;
             double LastRecoredTime = 0.0;
             unsigned int CurrentKeyFrameIdx = 0;
             std::vector<KeyFramePair> KeyFramesData;
-            std::vector<KeyFramePair> readKeyFramePairsFromBinaryFile(const std::string& filename);
     };
     class Shape{
         public:

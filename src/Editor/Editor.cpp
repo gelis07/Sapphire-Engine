@@ -14,6 +14,7 @@ void window_focus_callback(GLFWwindow* window, int focused)
             for(auto&& component : object.GetComponents())
             {
                 lua_State* L = component->GetState();
+                if(L == nullptr) continue;
                 if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, (Engine::GetMainPath() + component->GetFile()).c_str())))
                 {
                     std::stringstream ss;
@@ -93,6 +94,34 @@ void Editor::OnUpdate(const float DeltaTime)
     FrameRate();
     LogWindow();
 
+    if(GetInput(GLFW_KEY_LEFT_CONTROL) && GetInputDown(GLFW_KEY_D)){
+        Object* selectedObj = &Engine::GetActiveScene().Objects[SelectedObjID];
+        Object NewObj(selectedObj->Name + " Copy");
+        if(selectedObj->GetRenderer() != nullptr){
+            NewObj.Components.push_back(std::shared_ptr<Renderer>(new Renderer(*selectedObj->GetRenderer())));
+            NewObj.GetRenderer() = NewObj.GetComponent<Renderer>();
+        }
+        if(selectedObj->GetRb() != nullptr){
+            NewObj.Components.push_back(std::shared_ptr<SapphirePhysics::RigidBody>(new SapphirePhysics::RigidBody(*selectedObj->GetRb())));
+            NewObj.GetRb() = NewObj.GetComponent<SapphirePhysics::RigidBody>();
+        }
+        if(selectedObj->GetTransform() != nullptr){
+            NewObj.Components.push_back(std::shared_ptr<Transform>(new Transform(*selectedObj->GetTransform())));
+            NewObj.GetTransform() = NewObj.GetComponent<Transform>();
+        }
+        NewObj.GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+        NewObj.GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::RectangleT;
+        NewObj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(NewObj.GetRenderer()->shape->ShapeType);
+        for (auto &&component : selectedObj->Components)
+        {
+            if(component->GetState() == nullptr) continue;
+            NewObj.Components.push_back(std::shared_ptr<Component>(new Component(*component)));
+        }
+        NewObj.GetTransform()->Move(glm::vec3(20,20,0));
+        Engine::GetActiveScene().Objects.push_back(NewObj);
+        SelectedObjID = Engine::GetActiveScene().Objects.size() - 1;
+    }
+
     this->DeltaTime = DeltaTime;
     FileExplorer::Open(CurrentPath);
     if(SelectedObjID != -1) Engine::GetActiveScene().Objects[SelectedObjID].Inspect();
@@ -101,7 +130,7 @@ void Editor::OnUpdate(const float DeltaTime)
 
 void Editor::OnStart()
 {
-    // glfwSetWindowFocusCallback(window, window_focus_callback);
+    glfwSetWindowFocusCallback(window, window_focus_callback);
 }
 
 void Editor::OnExit()
@@ -202,25 +231,6 @@ static void Default(GLFWwindow* window, double xoffset, double yoffset){
     io.MouseWheelH += static_cast<float>(xoffset);
     io.MouseWheel += static_cast<float>(yoffset);
 }
-void RenderArrow(ImDrawList* draw_list, glm::vec2 start, glm::vec2 end, ImU32 color, float thickness)
-{
-    // Draw a line from start to end
-    draw_list->AddLine(ImVec2(start.x, start.y), ImVec2(end.x, end.y), color, thickness);
-
-    // Calculate the direction vector
-    glm::vec2 dir = end - start;
-    dir = dir / glm::length2(dir);
-
-    // Calculate arrowhead points
-    const float arrow_size = 8.0f;
-    const glm::vec2 p0 = end - dir * arrow_size + glm::vec2(dir.y, -dir.x) * 0.5f * arrow_size;
-    const glm::vec2 p1 = end - dir * arrow_size - glm::vec2(dir.y, -dir.x) * 0.5f * arrow_size;
-
-    // Draw the arrowhead
-    draw_list->AddLine(ImVec2(end.x, end.y), ImVec2(p0.x, p0.y), color, thickness);
-    draw_list->AddLine(ImVec2(end.x, end.y), ImVec2(p1.x, p1.y), color, thickness);
-}
-
 constexpr glm::vec2 offset = glm::vec2(8, -6);
 void Editor::RenderViewport()
 {
@@ -307,13 +317,6 @@ void Editor::RenderViewport()
     {
         if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].GetRenderer())
             renderer->Render(*(Engine::GetActiveScene().Objects[i].GetTransform()), view, &Engine::GetActiveScene().Objects[i] == &Engine::GetActiveScene().Objects[SelectedObjID], ViewCamera.position, ViewCamera.Zoom);
-        else{
-            //Check if it does indeed exist and is not set to the renderer variable on the object set it,
-            if(Engine::GetActiveScene().Objects[i].GetRenderer() = Engine::GetActiveScene().Objects[i].GetComponent<Renderer>()) 
-                Engine::GetActiveScene().Objects[i].GetRenderer()->Render(*(Engine::GetActiveScene().Objects[i].GetTransform()), view, &Engine::GetActiveScene().Objects[i] == &Engine::GetActiveScene().Objects[SelectedObjID], ViewCamera.position, ViewCamera.Zoom);
-            else
-                SapphireEngine::Log(Engine::GetActiveScene().Objects[i].Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
-        }
         Engine::GetActiveScene().Objects[i].id = i;
     }
 
@@ -365,10 +368,6 @@ void Editor::RenderPlayMode()
             // ImGui::End();
             // return;
         }
-
-        // glfwGetWindowSize(glfwGetCurrentContext(), &WindowWidth, &WindowHeight);
-        // WindowWidth = ImGui::GetContentRegionAvail().x;
-        // WindowHeight = ImGui::GetContentRegionAvail().y;
         Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0));
         WindowPos = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
         WindowSize = glm::vec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
@@ -436,13 +435,12 @@ void Editor::RenderPlayMode()
 
     PlayModeFBO.RescaleFrameBuffer(WindowWidth, WindowHeight);
     GLCall(glViewport(0, 0, WindowWidth, WindowHeight));
-
-    GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+    const glm::vec4& ClearColor = Engine::GetCameraObject()->GetComponent<LuaCamera>()->BgColor.Get();
+    GLCall(glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
     if(!GameRunning && !Start){
         //This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
-        //The start functions get called
         Engine::GetActiveScene().Load(Engine::GetActiveScene().SceneFile);
         Start = true;
         Paused = false;

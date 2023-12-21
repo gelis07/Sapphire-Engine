@@ -61,7 +61,7 @@ int LuaUtilities::KeyPress(lua_State* L) {
 
     const char* message = luaL_checkstring(L, 1);
     if (Keys.find(std::string(message)) != Keys.end()) {
-        bool test = Engine::app->GetInputDown(Keys[std::string(message)]);
+        bool test = Engine::app->GetInput(Keys[std::string(message)]);
         lua_pushboolean(L, test);
     }
     else {

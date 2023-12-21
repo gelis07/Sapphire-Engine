@@ -50,7 +50,7 @@ void Toolbar()
     if (ImGui::BeginMainMenuBar())
     {
         FileMenu();
-        EditMenu(); //& Got to save these features on a JSON file!
+        EditMenu();
         ViewMenu();
         HelpMenu();
         if(Engine::GetActiveScene().SceneFile == ""){
@@ -264,14 +264,21 @@ static glm::vec2 LastPos;
 constexpr float Offset = 100.0f;
 constexpr float TimeBetweenOffset = 0.1f;
 float MainPoint = 0.0f;
-SapphireRenderer::KeyFrame* SelectedKeyframe = nullptr;
-SapphireRenderer::KeyFrame* ViewingKeyFrame = nullptr;
-std::vector<SapphireRenderer::KeyFrame*> Keyframes;
-float Time = 0.0f;
-float Pointer = 0.0f;
+float Pointer = 0.0f; // The currently active time stamp.
+float Time = 0.0f; // the time stamp the pointer is at
+bool AnimationPlaying = false;
 void AnimationTimeline()
 {
     bool IsShowing = ImGui::Begin("Animation Window");
+    ImGui::Text(AnimationFile::AnimationSelectedFile.filename().string().c_str());
+    ImGui::SameLine();
+    if(ImGui::Button("Export")){
+        SapphireRenderer::Animation::Export(AnimationFile::Keyframes, AnimationFile::AnimationSelectedFile.filename().string());
+    }
+    if(ImGui::Button("Play")){
+        AnimationPlaying = !AnimationPlaying;
+    }
+    if(AnimationPlaying) Time += Engine::GetDeltaTime();
     float WindowPosX = ImGui::GetWindowPos().x;
     float Point = WindowPosX + MainPoint + 30;
     int i = 0;
@@ -286,7 +293,8 @@ void AnimationTimeline()
         i++;
     }
     float TimeStamp1 = ((Time * Offset) / TimeBetweenOffset) + 30.0f;
-    ImGui::GetWindowDrawList()->AddLine(ImVec2(MainPoint + WindowPosX + TimeStamp1, ImGui::GetWindowPos().y + 50.0f), ImVec2(MainPoint + WindowPosX + TimeStamp1, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y), IM_COL32(200, 200, 200, 255), 1.0f);
+    ImGui::GetWindowDrawList()->AddLine(ImVec2(MainPoint + WindowPosX + TimeStamp1, ImGui::GetWindowPos().y + 50.0f), ImVec2(MainPoint + WindowPosX + TimeStamp1, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y), IM_COL32(0, 255, 0, 255), 1.0f);
+    Pointer = (Time * Offset + 30 * TimeBetweenOffset) / TimeBetweenOffset;
     if(ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0))
     {
         double xpos, ypos;
@@ -294,22 +302,22 @@ void AnimationTimeline()
         Pointer = (xpos - ImGui::GetWindowPos().x) - MainPoint;
         Time = (TimeBetweenOffset * (Pointer - 30.0f)) / Offset;
     }
-    for (size_t i = 0; i < Keyframes.size(); i++)
+    for (size_t i = 0; i < AnimationFile::Keyframes.size(); i++)
     {
         std::stringstream ss;
-        float TimeStamp = ((Keyframes[i]->TimeStamp * Offset) / TimeBetweenOffset) + 30.0f;
-        ss << Keyframes[i]->TimeStamp;
-        ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(MainPoint + WindowPosX + TimeStamp, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y / 2.0f), 5.0f, IM_COL32(255,255,255,255), 12);
+        float TimeStamp = ((AnimationFile::Keyframes[i]->TimeStamp * Offset) / TimeBetweenOffset) + 30.0f;
+        ss << AnimationFile::Keyframes[i]->TimeStamp;
+        ImGui::GetWindowDrawList()->AddCircleFilled(ImVec2(MainPoint + WindowPosX + TimeStamp, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y / 2.0f), 5.0f, IM_COL32(255,0,0,255), 12);
         ImGui::GetWindowDrawList()->AddLine(ImVec2(MainPoint + WindowPosX + TimeStamp, ImGui::GetWindowPos().y + 50.0f), ImVec2(MainPoint + WindowPosX + TimeStamp, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y), IM_COL32(200, 200, 200, 255), 1.0f);
         double CursorPosX,CursorPosY; 
         glfwGetCursorPos(glfwGetCurrentContext(), &CursorPosX,&CursorPosY);
         if(glm::length(glm::vec2(CursorPosX, CursorPosY) - glm::vec2(MainPoint + WindowPosX + TimeStamp, ImGui::GetWindowPos().y + ImGui::GetWindowSize().y / 2.0f)) <= 5.0f && ImGui::IsMouseClicked(0)){
-            SelectedKeyframe = Keyframes[i];
+            AnimationFile::SelectedKeyframe = AnimationFile::Keyframes[i];
         }
         if(glfwGetKey(glfwGetCurrentContext(), GLFW_KEY_DELETE) == GLFW_PRESS){
-            if(Keyframes[i] == SelectedKeyframe){
-                Keyframes.erase(Keyframes.begin() + i);
-                SelectedKeyframe = nullptr;
+            if(AnimationFile::Keyframes[i] == AnimationFile::SelectedKeyframe){
+                AnimationFile::Keyframes.erase(AnimationFile::Keyframes.begin() + i);
+                AnimationFile::SelectedKeyframe = nullptr;
             }
         }
     }
@@ -323,7 +331,7 @@ void AnimationTimeline()
         keyframe->TimeStamp = (xpos - ImGui::GetWindowPos().x) - MainPoint;
         keyframe->TimeStamp = (TimeBetweenOffset * (keyframe->TimeStamp - 30.0f)) / Offset;
         keyframe->path = "";
-        Keyframes.push_back(keyframe);
+        AnimationFile::Keyframes.push_back(keyframe);
     }
     if(ImGui::IsWindowHovered()){
         double xpos, ypos;
@@ -352,27 +360,91 @@ void AnimationTimeline()
             keyframe->TimeStamp = (xpos - ImGui::GetWindowPos().x) - MainPoint;
             keyframe->TimeStamp = (TimeBetweenOffset * (keyframe->TimeStamp - 30.0f)) / Offset;
             keyframe->path = Engine::GetMainPath() + (*File)->Path;
-            Keyframes.push_back(keyframe);
+            AnimationFile::Keyframes.push_back(keyframe);
         }
     }
     ImGui::End();
 
 
 
-    if(SelectedKeyframe != nullptr)
+    if(AnimationFile::SelectedKeyframe != nullptr)
     {
         ImGui::Begin("Keyframe inspector");
-        ImGui::DragFloat("Timestamp", &SelectedKeyframe->TimeStamp, TimeBetweenOffset, 0.0f, INFINITY, "%.2f");
-        ImGui::InputText("Path",&SelectedKeyframe->path);
+        ImGui::DragFloat("Timestamp", &AnimationFile::SelectedKeyframe->TimeStamp, TimeBetweenOffset, 0.0f, INFINITY, "%.2f");
+        ImGui::InputText("Path",&AnimationFile::SelectedKeyframe->path);
         if(ImGui::Button("Delete")){
-            Keyframes.erase(Keyframes.begin() + i);
-            SelectedKeyframe = nullptr;
-        }
-        if(ImGui::Button("Export")){
-            SapphireRenderer::Animation::Export(Keyframes, "hehe");
+            AnimationFile::Keyframes.erase(AnimationFile::Keyframes.begin() + i);
+            AnimationFile::SelectedKeyframe = nullptr;
         }
         ImGui::End();
     }
+    AnimationPreview();
+}
+
+SapphireRenderer::Texture ActiveTexture;
+SapphireRenderer::KeyFrame* ViewingKeyFrame = nullptr;
+
+void AnimationPreview(){
+    if(ViewingKeyFrame == nullptr && AnimationFile::Keyframes.size() != 0){
+        ViewingKeyFrame = AnimationFile::Keyframes[0];
+    }else if(ViewingKeyFrame == nullptr && AnimationFile::Keyframes.size() == 0)
+        return;
+    
+    bool FoundImage = false;
+    bool End = false;
+    // for (auto &&keyframe : AnimationFile::Keyframes)
+    // {
+    //     if(Time > keyframe->TimeStamp){
+    //         ViewingKeyFrame = keyframe;
+    //         ActiveTexture.Load(ViewingKeyFrame->path, true);
+    //         FoundImage = true;
+    //         break;
+    //     }
+    // }
+    for (size_t i = 0; i < AnimationFile::Keyframes.size(); i++)
+    {
+        SapphireRenderer::KeyFrame* keyframe = AnimationFile::Keyframes[i];
+        SapphireRenderer::KeyFrame* NextKeyframe = AnimationFile::Keyframes[(i + 1) % AnimationFile::Keyframes.size()];
+        if(Time >= keyframe->TimeStamp && Time < NextKeyframe->TimeStamp){
+            ViewingKeyFrame = keyframe;
+            ActiveTexture.Load(ViewingKeyFrame->path, true);
+            FoundImage = true;
+            break;
+        }
+        if(i == AnimationFile::Keyframes.size() - 1 && Time >= keyframe->TimeStamp){
+            ViewingKeyFrame = keyframe;
+            ActiveTexture.Load(ViewingKeyFrame->path, true);
+            FoundImage = true;
+            End = true;
+            break;
+        }
+    }
+    
+    if(AnimationPlaying && End){
+        Time = 0.0f;
+    }else if(!AnimationPlaying && !FoundImage){
+        // Image dimensions
+        int width = 512;
+        int height = 512;
+        int channels = 3;  // Assuming RGB format
+
+        // Create a black texture
+        unsigned char* imageData = new unsigned char[width * height * channels];
+        memset(imageData, 0, width * height * channels);
+        ActiveTexture.SetImage(width, height, imageData);
+    }
+    ImGui::Begin("Animation Preview");
+    float WindowWidth = ImGui::GetContentRegionAvail().x;
+    float WindowHeight = ImGui::GetContentRegionAvail().y;
+    ImVec2 pos = ImGui::GetCursorScreenPos();
+    ImGui::GetWindowDrawList()->AddImage(
+        reinterpret_cast<ImTextureID*>(ActiveTexture.GetID()), 
+        ImVec2(pos.x, pos.y), 
+        ImVec2(pos.x + WindowWidth, pos.y + WindowHeight), 
+        ImVec2(0, 1), 
+        ImVec2(1, 0)
+    );
+    ImGui::End();
 }
 
 void Save(std::string name){

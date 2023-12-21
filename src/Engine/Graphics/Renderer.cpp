@@ -89,7 +89,22 @@ Renderer::Renderer(std::string File, std::string ArgName, unsigned int ArgId, bo
     }
     Functions["Play"] = LoadTexture;
     Functions["SetColor"] = SetColor;
-};
+}
+Renderer::Renderer(const Renderer &renderer)
+: Component(std::move(""), std::move("Renderer"), 0, false), Color("Color", Variables), TexturePath("Path", Variables) 
+{
+    Color.Get() = renderer.Color.Get();
+    TexturePath.Get() = "";
+    TexturePath.ShowOnInspector(false);
+    {
+        std::function<void()> OnChange = [this]() {
+            shape->Load(TexturePath.Get(), true);
+        };
+        TexturePath.SetOnChangeFunc(OnChange);
+    }
+    Functions["Play"] = LoadTexture;
+    Functions["SetColor"] = SetColor;
+}
 
 Renderer::~Renderer()
 {

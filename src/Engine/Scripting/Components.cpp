@@ -62,6 +62,62 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
     lua_settable(L, -3);
 }
 
+Component::Component(const Component &comp)
+{
+    L = luaL_newstate();
+    luaL_openlibs(L);
+    luaL_requiref(L, "SapphireEngine", LuaUtilities::luaopen_SapphireEngine, 0);
+
+    //Setting up the component to access from lua.
+    auto ComponentIndex = [](lua_State* L) -> int
+    {
+        // Get the component table from the Lua stack
+        luaL_checktype(L, 1, LUA_TTABLE);
+
+        // Check if the component table has the '__userdata' field (the component pointer)
+        lua_getfield(L, 1, "__userdata");
+        Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        const char* index = luaL_checkstring(L, 2);
+
+        if(comp->Variables.find(index) != comp->Variables.end()){
+            comp->Variables.at(index)->SendToLua(L);
+            return 1;
+        }
+        return 0;
+    };
+    auto ComponentNewIndex = [](lua_State* L) -> int
+    {
+        // Get the component table from the Lua stack
+        luaL_checktype(L, 1, LUA_TTABLE);
+
+        // Check if the component table has the '__userdata' field (the component pointer)
+        lua_getfield(L, 1, "__userdata");
+        Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        const char* index = luaL_checkstring(L, 2);
+
+        if(comp->Variables.find(index) != comp->Variables.end()){
+            comp->Variables.at(index)->GetFromLua(L);
+        }
+        return 0;
+    };
+
+    luaL_newmetatable(L, "Component");
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, ComponentIndex);
+    lua_settable(L, -3);
+    lua_pushstring(L, "__newindex");
+    lua_pushcfunction(L, ComponentNewIndex);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, GetComponentFromObject);
+    lua_settable(L, -3);
+    Name = comp.Name;
+    m_LuaFile = comp.GetFile();
+}
+
 Component::~Component()
 {
     if(L == nullptr) return; // This means the component is a native c++ component so the variables are stored on the stack.
@@ -161,6 +217,15 @@ bool Component::GetLuaVariables()
     Variables = std::move(NewVariables);
     
     return true;
+}
+
+void Component::UpdateExistingVars()
+{
+    for (auto const& variable : Variables)
+    {
+        lua_getglobal(L, variable.first.c_str());
+        variable.second->GetFromLua(L);
+    }
 }
 
 void Component::SetLuaComponent(lua_State* ComponentsState)

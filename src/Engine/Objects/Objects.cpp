@@ -36,7 +36,7 @@ void Object::OnCollision(Object *other)
         lua_State *L = Components[i]->GetState();
         SetUpObject(other, L, "obj");
         Components[i]->ExecuteFunction("OnCollision");
-        // Components[i]->GetLuaVariables();
+        Components[i]->UpdateExistingVars();
     }
 }
 
@@ -91,7 +91,7 @@ void Object::OnUpdate()
         lua_setmetatable(L, -2);
         lua_setglobal(L, "this");
         Components[i]->ExecuteFunction("OnUpdate");
-        // Components[i]->GetLuaVariables();
+        Components[i]->UpdateExistingVars();
     }
 }
 
@@ -161,11 +161,26 @@ void Object::RenderGUI()
     for (size_t i = 0; i < Components.size(); i++)
     {
         Components[i]->Render();
-        if(Components[i]->GetState() != nullptr && ImGui::Button(("Remove Component##" + std::to_string(i)).c_str()))
+        if(ImGui::Button(("Remove Component##" + std::to_string(i)).c_str()))
         {
             Components.erase(Components.begin() + i);
+            if(GetComponent<SapphirePhysics::RigidBody>() == nullptr)
+                rb = nullptr;
+            else if(GetComponent<Renderer>() == nullptr)
+                renderer = nullptr;
         }
         ImGui::Separator();
+    }
+    if(ImGui::Button("Add Component")){
+        ImGui::OpenPopup("Components");
+    }
+    if(ImGui::BeginPopup("Components")){
+        if(ImGui::Button("RigidBody") && rb == nullptr){
+            Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
+            rb = GetComponent<SapphirePhysics::RigidBody>();
+            GetComponent<SapphirePhysics::RigidBody>()->transform = GetTransform().get();
+        }
+        ImGui::EndPopup();
     }
 }
 void Object::Inspect()

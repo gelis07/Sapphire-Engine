@@ -67,8 +67,6 @@ void Engine::Render(Object* object)
     else
         if(object->GetRenderer() = object->GetComponent<Renderer>()) 
             renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition(), 1.0f);
-        else
-            SapphireEngine::Log(object->Name + " (Object) doesn't have a renderer component attached!", SapphireEngine::Error);
 }
 
 void Engine::PhysicsSim()

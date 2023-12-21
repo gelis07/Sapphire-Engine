@@ -111,6 +111,9 @@ class ImageFile : public File
 class AnimationFile : public File
 {
     public:
+        inline static std::filesystem::path AnimationSelectedFile = "";
+        inline static SapphireRenderer::KeyFrame* SelectedKeyframe = nullptr;
+        inline static std::vector<SapphireRenderer::KeyFrame*> Keyframes;
         void SetIconPos() override{
             m_IconPos = glm::vec2(ICON_SIZE,0);
             m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
@@ -121,6 +124,25 @@ class AnimationFile : public File
         }
         void OnDoubleClick(std::filesystem::directory_entry entry) override
         {
-            
+            AnimationSelectedFile = entry.path();
+            std::ifstream fileStream(AnimationSelectedFile.string());
+            for (auto &&keyframe : Keyframes)
+            {
+                delete keyframe;
+            }
+            Keyframes.clear();
+            if(fileStream.is_open()){
+                fileStream.seekg(0, std::ios::end);
+                if(fileStream.tellg() == 0){
+                    //The file is empty (so probably a new animation) so don't load anything.
+                    return;
+                }
+            }
+            //loading the new animation keyframes to be showed in the animation timeline.
+            std::vector<SapphireRenderer::KeyFramePair> newKeyFrames = SapphireRenderer::Animation::readKeyFramePairsFromBinaryFile(AnimationSelectedFile.string());
+            for (auto &&keyframe : newKeyFrames)
+            {
+                Keyframes.push_back(new SapphireRenderer::KeyFrame({keyframe.TimeStamp, *keyframe.path}));
+            }
         }
 };

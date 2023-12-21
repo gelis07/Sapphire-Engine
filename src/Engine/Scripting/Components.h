@@ -8,19 +8,21 @@ class Component
     using TableVariable = std::unordered_map<std::string, SapphireEngine::Variable*>;
     public:
         Component(std::string File, std::string ArgName , unsigned int ArgId, bool LuaComp=false);
+        Component(const Component& comp);
         ~Component();
         virtual void CustomRendering() {};
         void ExecuteFunction(std::string Name);
         void UpdateLuaVariables();
         bool GetLuaVariables();
+        void UpdateExistingVars();
         void SetLuaComponent(lua_State* ComponentsState);
         void Render();
         SapphireEngine::Variable* Get(std::string Name);
         nlohmann::json Save();
         void Load(nlohmann::json JSON);
         bool Active = true;
-        lua_State* GetState() {return L;}
-        std::string GetFile() {return m_LuaFile;}
+        lua_State* GetState() const {return L;}
+        std::string GetFile() const {return m_LuaFile;}
         std::string Name;
         TableVariable Variables;
         std::unordered_map<std::string, lua_CFunction> Functions;
@@ -42,7 +44,7 @@ class LuaCamera : public Component
     public:
         LuaCamera(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false)
         : Component(std::move(File), std::move(ArgName), ArgId,LuaComp), BgColor("BgColor", Variables), Zoom("Zoom", Variables){
-            BgColor.Get() = glm::vec4(0);
+            BgColor.Get() = glm::vec4(0,0,0,1);
             Zoom.Get() = 1.0f;
         };
         SapphireEngine::Color BgColor;

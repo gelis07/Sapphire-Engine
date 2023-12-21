@@ -7,6 +7,7 @@ class Transform : public Component
 {
     public:
         Transform(std::string File, std::string ArgName, unsigned int ArgId, std::vector<glm::vec3> aPoints, bool LuaComp = false);
+        Transform(const Transform& transform);
         void Move(const glm::vec3& translation);
         void Rotate(const float& amount);
         void UpdateModel();
@@ -27,6 +28,7 @@ class Transform : public Component
         const glm::mat4& GetModel() const {return Model;}
         glm::mat4 Model;
         static int MoveLua(lua_State* L);
+        static int LookAt(lua_State* L);
         static int SetPositionLua(lua_State* L);
         static int RotateLua(lua_State* L);
     private:
