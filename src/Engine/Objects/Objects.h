@@ -31,10 +31,11 @@ class Object
         void OnCollision(Object* other);
         void OnUpdate();
         void OnStart();
-
+        static int SetActive(lua_State* L);
         unsigned int id;
         std::string Name;
-
+        std::vector<Object> Children = {};
+        bool Active = true;
         //Please use these functions because it doesn't have to search for these objects!
         std::shared_ptr<Transform>& GetTransform() {return transform;}
         std::shared_ptr<Renderer>& GetRenderer() {return renderer;} 
@@ -70,6 +71,10 @@ static int GetComponentFromObject(lua_State* L) {
 
     if(VariableName == "Name"){
         lua_pushstring(L, obj->Name.c_str());
+        return 1;
+    }
+    if(VariableName == "SetActive"){
+        lua_pushcfunction(L, Object::SetActive);
         return 1;
     }
     for(auto &comp : obj->GetComponents()){

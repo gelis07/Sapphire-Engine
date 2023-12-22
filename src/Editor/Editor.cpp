@@ -124,7 +124,18 @@ void Editor::OnUpdate(const float DeltaTime)
 
     this->DeltaTime = DeltaTime;
     FileExplorer::Open(CurrentPath);
-    if(SelectedObjID != -1) Engine::GetActiveScene().Objects[SelectedObjID].Inspect();
+    if(SelectedObjID != -1){
+        if(SelectedObjChildID == -1){
+            Engine::GetActiveScene().Objects[SelectedObjID].Inspect();
+        }else{
+            if(SelectedObjChildID >= Engine::GetActiveScene().Objects[SelectedObjID].Children.size()){
+                SelectedObjChildID = -1;
+                Engine::GetActiveScene().Objects[SelectedObjID].Inspect();
+            }else{
+                Engine::GetActiveScene().Objects[SelectedObjID].Children[SelectedObjChildID].Inspect();
+            }
+        }
+    }
     Engine::GetActiveScene().Hierechy(&Engine::GetActiveScene().Objects[SelectedObjID], SelectedObjID);
 }
 
@@ -317,6 +328,13 @@ void Editor::RenderViewport()
     {
         if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].GetRenderer())
             renderer->Render(*(Engine::GetActiveScene().Objects[i].GetTransform()), view, &Engine::GetActiveScene().Objects[i] == &Engine::GetActiveScene().Objects[SelectedObjID], ViewCamera.position, ViewCamera.Zoom);
+
+        
+        for (size_t j = 0; j < Engine::GetActiveScene().Objects[i].Children.size(); j++)
+        {
+            if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].Children[j].GetRenderer())
+                renderer->Render(*(Engine::GetActiveScene().Objects[i].Children[j].GetTransform()), view, &Engine::GetActiveScene().Objects[i] == &Engine::GetActiveScene().Objects[SelectedObjID], ViewCamera.position, ViewCamera.Zoom);
+        }
         Engine::GetActiveScene().Objects[i].id = i;
     }
 
@@ -455,6 +473,10 @@ void Editor::RenderPlayMode()
         for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)
         {
             engine.Render(&Engine::GetActiveScene().Objects[i]);
+            for (size_t j = 0; j < Engine::GetActiveScene().Objects[i].Children.size(); j++)
+            {
+                engine.Render(&Engine::GetActiveScene().Objects[i].Children[j]);
+            }
         }
     }
     if(GameRunning && !Paused){

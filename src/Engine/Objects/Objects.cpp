@@ -63,13 +63,24 @@ void Object::OnStart()
         lua_pushcfunction(L, GetComponentFromObject);
         lua_settable(L, -3);
 
-        
+        lua_newtable(L);
+        int componentTableIdx = lua_gettop(L);
 
-        lua_setmetatable(L, -2);
+        lua_pushlightuserdata(L, this);
+        lua_setfield(L, componentTableIdx, "__userdata");
+
+        lua_setmetatable(L, componentTableIdx);
         lua_setglobal(L, "this");
         Components[i]->ExecuteFunction("OnStart");
         m_CalledStart = true;
     }
+}
+
+int Object::SetActive(lua_State *L)
+{
+    Object* obj = static_cast<Object*>(lua_touserdata(L, 1));
+    obj->Active = (bool)lua_toboolean(L, 2);
+    return 0;
 }
 
 void Object::OnUpdate()
@@ -116,7 +127,6 @@ Object* Object::CreateObject(std::string &&ObjName)
     NewObj.transform->SetSize(glm::vec3(20.0f, 20.0f, 0.0f));
 
     NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
-
     Engine::GetActiveScene().Objects.push_back(NewObj);
 
 
@@ -174,6 +184,33 @@ void Object::RenderGUI()
     if(ImGui::Button("Add Component")){
         ImGui::OpenPopup("Components");
     }
+    if(ImGui::Button("Add Child")){
+        Object NewObj("Child");
+        std::vector<glm::vec3> points;
+        points.push_back(glm::vec3(-0.5f,-0.5f,0));
+        points.push_back(glm::vec3(0.5f,-0.5f,0));
+        points.push_back(glm::vec3(0.5f,0.5f,0));
+        points.push_back(glm::vec3(-0.5f,0.5f,0));
+        NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0,std::move(points), false)));
+        NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
+        NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
+
+        NewObj.renderer = NewObj.GetComponent<Renderer>(); 
+        NewObj.transform = NewObj.GetComponent<Transform>();
+        NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
+        
+        NewObj.renderer->Color.Get() = glm::vec4(1);
+        NewObj.transform->SetSize(glm::vec3(0));
+        NewObj.transform->SetSize(glm::vec3(20.0f, 20.0f, 0.0f));
+
+        NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
+        NewObj.GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+        NewObj.GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::RectangleT;
+        NewObj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(NewObj.GetRenderer()->shape->ShapeType);
+        NewObj.GetTransform()->Parent = transform.get();
+        Children.push_back(NewObj);
+        transform->childrenTransforms.push_back(Children.back().GetTransform().get());
+    }
     if(ImGui::BeginPopup("Components")){
         if(ImGui::Button("RigidBody") && rb == nullptr){
             Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
@@ -188,8 +225,10 @@ void Object::Inspect()
     if(!(*Editor::GetWindowState("Inspector"))) return;
 
     ImGui::Begin("Inspect", Editor::GetWindowState("Inspector"));
-
+    ImGui::Checkbox("##Active", &Active);
+    ImGui::SameLine();
     ImGui::InputText("Object Name", &Name);
+    ImGui::SameLine();
     if(ImGui::Button("Create Prefab")){
         SavePrefab();
     }

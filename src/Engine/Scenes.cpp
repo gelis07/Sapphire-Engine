@@ -150,9 +150,26 @@ void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)
         {
             Name = "##";
         }
-        if (ImGui::Selectable((Name + "##" + std::to_string(Objects[i].id)).c_str(), &Objects[i] == SelectedObj))
-        {
-            SelectedObjID = i;
+        if(Objects[i].Children.size() == 0){
+            if (ImGui::Selectable((Name + "##" + std::to_string(Objects[i].id)).c_str(), &Objects[i] == SelectedObj))
+            {
+                SelectedObjID = i;
+            }
+        }else{
+            if(ImGui::TreeNode((Name + "##" + std::to_string(Objects[i].id)).c_str())){
+                if(ImGui::IsItemClicked(0)){
+                    SelectedObjID = i;
+                }
+                for (size_t j = 0; j < Objects[i].Children.size(); j++)
+                {
+                    if (ImGui::Selectable((Objects[i].Children[j].Name + "##" + std::to_string(Objects[i].Children[j].id)).c_str(), &Objects[i] == SelectedObj))
+                    {
+                        SelectedObjID = i;
+                        Editor::SelectedObjChildID = j;
+                    }
+                }
+                ImGui::TreePop();
+            }
         }
     }
     if (Engine::app->GetInputDown(GLFW_KEY_DELETE) && ImGui::IsWindowFocused())

@@ -31,6 +31,8 @@ class Transform : public Component
         static int LookAt(lua_State* L);
         static int SetPositionLua(lua_State* L);
         static int RotateLua(lua_State* L);
+        std::vector<Transform*> childrenTransforms;
+        Transform* Parent = nullptr;
     private:
         std::vector<glm::vec3> OriginalPoints;
         std::vector<glm::vec3> Points;

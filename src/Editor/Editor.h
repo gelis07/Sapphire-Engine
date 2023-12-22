@@ -24,6 +24,7 @@ class Editor : public Application{
         void OnStart() override;
         void OnExit() override;
         inline static int SelectedObjID = -1;
+        inline static int SelectedObjChildID = -1;
         inline static glm::vec2 WindowPos;
         inline static glm::vec2 WindowSize;
         inline static bool GameRunning = false;

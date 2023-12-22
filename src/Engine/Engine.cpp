@@ -35,15 +35,21 @@ void Engine::Run()
 {
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
+        if(!m_ActiveScene.Objects[i].Active) continue;
         m_ActiveScene.Objects[i].OnStart();
     }
-    Stopwatch(ExecuteLua());
-    Stopwatch(PhysicsSim());
+    ExecuteLua();
+    PhysicsSim();
     // std::future<void> physicsFuture = std::async(std::launch::async, &Engine::PhysicsSim, this);
-    Stopwatch(for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
+    for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
+        if(!m_ActiveScene.Objects[i].Active) continue;
         Render(&m_ActiveScene.Objects[i]);
-    })
+        for (size_t j = 0; j < m_ActiveScene.Objects[i].Children.size(); j++)
+        {
+            Render(&m_ActiveScene.Objects[i].Children[j]);
+        }
+    }
     if(ShouldLoadScene != ""){
         GetActiveScene().Load(ShouldLoadScene);
         ShouldLoadScene = "";
@@ -73,6 +79,7 @@ void Engine::PhysicsSim()
 {
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
+        if(!m_ActiveScene.Objects[i].Active) continue;
         if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
             rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
             // std::async(std::launch::async, &SapphirePhysics::RigidBody::Simulate, rb.get(), &m_ActiveScene.Objects[i], app->GetDeltaTime());
@@ -84,6 +91,7 @@ void Engine::ExecuteLua()
 {
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
+        if(!m_ActiveScene.Objects[i].Active) continue;
         m_ActiveScene.Objects[i].OnUpdate();
     }
 }
