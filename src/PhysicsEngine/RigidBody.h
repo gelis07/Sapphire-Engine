@@ -21,6 +21,7 @@ namespace SapphirePhysics{
             static void OnCollisionRotation(Object* current, Object* obj, CollisionData&& CD);
             void Simulate(Object* current, const float& DeltaTime);
             static int Impulse(lua_State* L);
+            static int RayCast(lua_State* L);
             static int SetVelocity(lua_State* L);
             SapphireEngine::Bool Trigger;
             SapphireEngine::Bool Static;

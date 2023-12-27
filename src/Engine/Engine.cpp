@@ -27,7 +27,7 @@ Engine::Engine(const std::string& mainPath)
     Camera.GetRenderer()->shape->ShapeType = SapphireRenderer::RectangleT;
 
     Camera.GetRenderer()->shape->Wireframe() = true;
-    m_ActiveScene.Objects.push_back(Camera);
+    m_ActiveScene.Add(std::move(Camera));
     CameraObjectID = m_ActiveScene.Objects.size()-1;
 }
 
@@ -47,7 +47,7 @@ void Engine::Run()
         Render(&m_ActiveScene.Objects[i]);
         for (size_t j = 0; j < m_ActiveScene.Objects[i].Children.size(); j++)
         {
-            Render(&m_ActiveScene.Objects[i].Children[j]);
+            Render(m_ActiveScene.Objects[i].Children[j].Get());
         }
     }
     if(ShouldLoadScene != ""){
@@ -56,9 +56,14 @@ void Engine::Run()
     }
     for (size_t i = 0; i < m_ActiveScene.ObjectsToAdd.size(); i++)
     {
-        m_ActiveScene.Objects.push_back(std::move(m_ActiveScene.ObjectsToAdd[i]));
+        m_ActiveScene.Add(std::move(m_ActiveScene.ObjectsToAdd[i]));
+    }
+    for (size_t i = 0; i < m_ActiveScene.ObjectsToDelete.size(); i++)
+    {
+        m_ActiveScene.Delete(m_ActiveScene.ObjectsToDelete[i]);
     }
     if(m_ActiveScene.ObjectsToAdd.size() != 0) m_ActiveScene.ObjectsToAdd.clear();
+    if(m_ActiveScene.ObjectsToDelete.size() != 0) m_ActiveScene.ObjectsToDelete.clear();
     
     // physicsFuture.wait();
 }
@@ -82,7 +87,6 @@ void Engine::PhysicsSim()
         if(!m_ActiveScene.Objects[i].Active) continue;
         if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
             rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
-            // std::async(std::launch::async, &SapphirePhysics::RigidBody::Simulate, rb.get(), &m_ActiveScene.Objects[i], app->GetDeltaTime());
         }
     }
 }

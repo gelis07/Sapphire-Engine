@@ -21,8 +21,10 @@ void Object::RemoveComponent(unsigned int id)
 
 void Object::SetUpObject(Object *obj, lua_State *L, const std::string& Name)
 {
-    lua_pushlightuserdata(L, obj);
+    ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+    *ud = obj->GetRef();
     luaL_getmetatable(L, "ObjectMetaTable");
+
     lua_istable(L, -1);
     lua_setmetatable(L, -2);
     lua_setglobal(L, Name.c_str());
@@ -56,20 +58,15 @@ void Object::OnStart()
             Log(ss.str(), SapphireEngine::Error);
             lua_pop(L, 1);
         }
-        lua_pushlightuserdata(L, this);
+        ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+        *ud = GetRef();
         luaL_newmetatable(L, "ObjectMetaTable");
 
         lua_pushstring(L, "__index");
         lua_pushcfunction(L, GetComponentFromObject);
         lua_settable(L, -3);
 
-        lua_newtable(L);
-        int componentTableIdx = lua_gettop(L);
-
-        lua_pushlightuserdata(L, this);
-        lua_setfield(L, componentTableIdx, "__userdata");
-
-        lua_setmetatable(L, componentTableIdx);
+        lua_setmetatable(L, -2);
         lua_setglobal(L, "this");
         Components[i]->ExecuteFunction("OnStart");
         m_CalledStart = true;
@@ -78,8 +75,8 @@ void Object::OnStart()
 
 int Object::SetActive(lua_State *L)
 {
-    Object* obj = static_cast<Object*>(lua_touserdata(L, 1));
-    obj->Active = (bool)lua_toboolean(L, 2);
+    ObjectRef* obj = static_cast<ObjectRef*>(lua_touserdata(L, 1));
+    (*obj)->Active = (bool)lua_toboolean(L, 2);
     return 0;
 }
 
@@ -89,18 +86,6 @@ void Object::OnUpdate()
     {
         if (!Components[i]->Active || Components[i]->GetFile().empty())
             continue;
-        lua_State *L = Components[i]->GetState();
-        lua_pushlightuserdata(L, this);
-        luaL_newmetatable(L, "ObjectMetaTable");
-
-        lua_pushstring(L, "__index");
-        lua_pushcfunction(L, GetComponentFromObject);
-        lua_settable(L, -3);
-
-        
-
-        lua_setmetatable(L, -2);
-        lua_setglobal(L, "this");
         Components[i]->ExecuteFunction("OnUpdate");
         Components[i]->UpdateExistingVars();
     }
@@ -127,7 +112,7 @@ Object* Object::CreateObject(std::string &&ObjName)
     NewObj.transform->SetSize(glm::vec3(20.0f, 20.0f, 0.0f));
 
     NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
-    Engine::GetActiveScene().Objects.push_back(NewObj);
+    Engine::GetActiveScene().Add(std::move(NewObj));
 
 
     return &Engine::GetActiveScene().Objects.back();
@@ -163,7 +148,7 @@ Object *Object::CreateObjectRuntime(std::string &&ObjName)
 
 void Object::Delete(int id)
 {
-    Engine::GetActiveScene().Objects.erase(Engine::GetActiveScene().Objects.begin() + id);
+    Engine::GetActiveScene().Delete(id);
 }
 
 void Object::RenderGUI()
@@ -208,8 +193,12 @@ void Object::RenderGUI()
         NewObj.GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::RectangleT;
         NewObj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(NewObj.GetRenderer()->shape->ShapeType);
         NewObj.GetTransform()->Parent = transform.get();
-        Children.push_back(NewObj);
-        transform->childrenTransforms.push_back(Children.back().GetTransform().get());
+        //I need this reference because even this-> can become a dangling pointer after adding to the objects vector
+        ObjectRef thisObj = this->GetRef();
+        NewObj.Parent = thisObj;
+        ObjectRef obj = Engine::GetActiveScene().Add(std::move(NewObj));
+        thisObj->Children.push_back(obj);
+        thisObj->transform->childrenTransforms.push_back(thisObj->Children.back()->GetTransform().get());
     }
     if(ImGui::BeginPopup("Components")){
         if(ImGui::Button("RigidBody") && rb == nullptr){
@@ -343,6 +332,31 @@ Object* Object::LoadPrefab(std::string FilePath)
     }
 
     object.GetComponent<Renderer>()->shape = shape;
-    Engine::GetActiveScene().Objects.push_back(object);
+    Engine::GetActiveScene().Add(std::move(object));
     return &Engine::GetActiveScene().Objects.back();
+}
+
+
+Object *ObjectRef::operator->()
+{
+    if(ID != -1)
+        return &Engine::GetActiveScene().Objects[Engine::GetActiveScene().ObjectRefrences[ID]];
+    else{
+        std::runtime_error("The refrence is null!");
+    }
+    return nullptr;
+}
+
+bool ObjectRef::operator==(int other)
+{
+    return ID == other;
+}
+bool ObjectRef::operator!=(int other)
+{
+    return ID != other;
+}
+
+Object *ObjectRef::Get()
+{
+    return &Engine::GetActiveScene().Objects[Engine::GetActiveScene().ObjectRefrences[ID]];
 }

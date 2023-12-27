@@ -6,7 +6,16 @@ class Scene{
         std::string SceneFile = "";
         std::vector<Object> Objects = {};
         std::vector<Object> ObjectsToAdd = {};
+        std::vector<int> ObjectsToDelete = {};
+        std::unordered_map<int,int> ObjectRefrences;
 
+        ObjectRef Add(Object&& obj);
+        ObjectRef Add(Object&& obj, int refID);
+        void Delete(int ID);
+        void Delete(Object* obj);
+        void DeleteRuntime(Object* obj);
+
+        Object LoadObj(nlohmann::json& JsonObj, int i, std::vector<ObjectRef>& o_CreatedChildren);
         // Write the json representation of the object to a stream
         void Save(const std::string FilePath);
 

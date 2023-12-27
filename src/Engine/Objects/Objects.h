@@ -4,7 +4,19 @@
 #include "Transform.h"
 #include "PhysicsEngine/RigidBody.h"
 #include "Graphics/Renderer.h"
+#define null_ref -1
 
+class Object;
+class ObjectRef{
+    public:
+        ObjectRef(int id) : ID(id) {}
+        Object* operator->();
+        bool operator==(int other);
+        bool operator!=(int other);
+        Object* Get();
+    private:
+        int ID;
+};
 class Object
 {
     public:
@@ -34,7 +46,8 @@ class Object
         static int SetActive(lua_State* L);
         unsigned int id;
         std::string Name;
-        std::vector<Object> Children = {};
+        std::vector<ObjectRef> Children = {};
+        ObjectRef Parent = ObjectRef(null_ref);
         bool Active = true;
         //Please use these functions because it doesn't have to search for these objects!
         std::shared_ptr<Transform>& GetTransform() {return transform;}
@@ -44,11 +57,15 @@ class Object
         const std::shared_ptr<Renderer>& GetRenderer() const {return renderer;} 
         const std::shared_ptr<SapphirePhysics::RigidBody>& GetRb() const {return rb;} 
         std::vector<std::shared_ptr<Component>> Components;
+        void SetRefID(int refID) {RefID = refID;}
+        const int& GetRefID() {return RefID;}
+        ObjectRef GetRef() {return ObjectRef(RefID);}
     private:
         std::shared_ptr<Transform> transform;
         std::shared_ptr<Renderer> renderer;
         std::shared_ptr<SapphirePhysics::RigidBody> rb;
         bool m_CalledStart = false;
+        int RefID;
 };
 
 template <typename T>
@@ -64,20 +81,20 @@ std::shared_ptr<T> Object::GetComponent()
     return nullptr;
 }
 static int GetComponentFromObject(lua_State* L) {
-    Object* obj = static_cast<Object*>(lua_touserdata(L, 1));
+    ObjectRef* obj = static_cast<ObjectRef*>(lua_touserdata(L, 1));
 
     const char* VariableNameC = lua_tostring(L, 2);
     std::string VariableName = std::string(VariableNameC);
 
     if(VariableName == "Name"){
-        lua_pushstring(L, obj->Name.c_str());
+        lua_pushstring(L, (*obj)->Name.c_str());
         return 1;
     }
     if(VariableName == "SetActive"){
         lua_pushcfunction(L, Object::SetActive);
         return 1;
     }
-    for(auto &comp : obj->GetComponents()){
+    for(auto &comp : (*obj)->GetComponents()){
         if(comp->Name == VariableName)
         {
             comp->SetLuaComponent(L);

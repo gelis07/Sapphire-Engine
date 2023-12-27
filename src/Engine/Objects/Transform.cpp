@@ -38,6 +38,7 @@ Transform::Transform(std::string File, std::string ArgName, unsigned int ArgId, 
     Functions["Rotate"] = RotateLua;
     Functions["LookAt"] = LookAt;
     Functions["SetPosition"] = SetPositionLua;
+    Functions["SetRotation"] = SetRotationLua;
 }
 
 Transform::Transform(const Transform &transform)
@@ -90,7 +91,15 @@ void Transform::SetPosition(const glm::vec3& NewPosition)
     UpdatePoints();
 }
 
-void Transform::SetRotation(const float& NewRotation)
+glm::vec3 Transform::GetWorldPositon() const
+{
+    if(Parent != nullptr){
+        return Position.Get() + Parent->GetPosition();
+    }
+    return Position.Get();
+}
+
+void Transform::SetRotation(const float &NewRotation)
 {
     Rotation.Get() = glm::vec3(Rotation.Get().x, Rotation.Get().y,NewRotation);
     UpdateModel();
@@ -124,16 +133,17 @@ int Transform::LookAt(lua_State * L)
     lua_pop(L, 1);
     float x = (float)luaL_checknumber(L, 2);
     float y = (float)luaL_checknumber(L, 3);
-    glm::vec2 diffVec = glm::vec2(x,y) - glm::vec2(transform->GetPosition());
+    glm::vec2 diffVec = glm::vec2(x,y) - glm::vec2(transform->GetWorldPositon());
     float angle = glm::acos(diffVec.y/glm::length(diffVec));
-
+    SapphireEngine::AddLine(transform->GetWorldPositon(), glm::vec2(x,y), glm::vec4(1), 5.0f);
     if(diffVec.x > 0 && diffVec.y > 0)
         angle *= -1;
     else if(diffVec.x > 0 && diffVec.y < 0)
         angle *= -1;
 
-    transform->SetRotation(angle);
-    return 0;
+    // transform->SetRotation(angle);
+    lua_pushnumber(L, angle);
+    return 1;
 }
 int Transform::SetPositionLua(lua_State *L)
 {
@@ -144,6 +154,17 @@ int Transform::SetPositionLua(lua_State *L)
     float x = (float)luaL_checknumber(L, 2);
     float y = (float)luaL_checknumber(L, 3);
     transform->SetPosition(glm::vec3(x,y,0));
+    return 0;
+}
+
+int Transform::SetRotationLua(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    Transform* transform = static_cast<Transform*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float angle = (float)luaL_checknumber(L, 2);
+    transform->SetRotation(angle);
     return 0;
 }
 
@@ -175,7 +196,6 @@ void Transform::UpdateModel()
     }else{
         Parent->UpdateModel();
     }
-
 }
 
 void Transform::UpdatePoints()

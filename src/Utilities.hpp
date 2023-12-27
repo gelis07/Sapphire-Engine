@@ -36,7 +36,6 @@ public:
     ImGuiLogger& operator<<(const T& value) {
         logBuffer << value;
         coutStream << value; // Optionally, you can still send the message to std::cout
-        LogCount++;
         return *this;
     }
 
@@ -51,8 +50,8 @@ public:
         LogCount = 0;
     }
 
-private:
     uint32_t LogCount = 0;
+private:
     std::ostringstream logBuffer; // Buffer for ImGui output
     std::ostream coutStream{nullptr}; // Original std::cout stream (optional)
 };
@@ -80,12 +79,21 @@ namespace SapphireEngine
     }
     static void Log(const std::string& log, SapphireEngine::LogType&& type){
         Logs << log << '\n';
+        Logs.LogCount++;
     }
     static float LengthVec(glm::vec2 vec){
         return sqrt(pow((vec.x), 2) + pow((vec.y), 2));
     }
     static float LengthVec(glm::vec2 vec1, glm::vec2 vec2){
         return sqrt(pow((vec1.x - vec2.x), 2) + pow((vec1.y - vec2.y), 2));
+    }
+    static int RandomNumber(int start, int end){
+        std::random_device rd;
+        std::mt19937 rng(rd());
+
+        std::uniform_int_distribution<int> distribution(start, end);
+
+        return distribution(rng);
     }
     static std::string Replace(std::string s,char c1, char c2)
     {

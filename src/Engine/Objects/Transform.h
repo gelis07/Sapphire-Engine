@@ -15,7 +15,7 @@ class Transform : public Component
         //Getters and Setters.
         void SetPosition(const glm::vec3& NewPosition);
         const glm::vec3& GetPosition() const {return Position.Get();}
-
+        glm::vec3 GetWorldPositon() const;
         void SetRotation(const float& NewRotation);
         const glm::vec3& GetRotation() const {return Rotation.Get();}
 
@@ -30,6 +30,7 @@ class Transform : public Component
         static int MoveLua(lua_State* L);
         static int LookAt(lua_State* L);
         static int SetPositionLua(lua_State* L);
+        static int SetRotationLua(lua_State* L);
         static int RotateLua(lua_State* L);
         std::vector<Transform*> childrenTransforms;
         Transform* Parent = nullptr;

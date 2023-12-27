@@ -31,6 +31,7 @@ StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction",
     Mass.Min = 0.001f;
     Functions["Impulse"] = Impulse;
     Functions["SetVelocity"] = SetVelocity;
+    Functions["Raycast"] = RayCast;
 }
 
 SapphirePhysics::RigidBody::RigidBody(const RigidBody &rb): Trigger("Trigger", Variables), 
@@ -328,6 +329,105 @@ int SapphirePhysics::RigidBody::Impulse(lua_State *L) {
     float DeltaTime = 0.2f;
     rb->Velocity = glm::vec3(Fnet * DeltaTime) / mass;
     return 0;
+}
+
+int SapphirePhysics::RigidBody::RayCast(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    SapphirePhysics::RigidBody* rb = static_cast<SapphirePhysics::RigidBody*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    glm::vec2 A = rb->transform->GetPosition();
+    glm::vec2 B(x,y);
+    glm::vec2 AB = B - A;
+    float tangent = (B.y - A.y) / (B.x - A.x);
+    float offset = A.y - tangent * A.x;
+    SapphireEngine::AddLine(A,B,glm::vec4(0,0,1,1), 5.0f);
+    for (auto &object : Engine::GetActiveScene().Objects)
+    {
+        if(object.GetRb().get() == rb) continue;
+        for (size_t i = 0; i < object.GetTransform()->GetPoints().size(); i++)
+        {
+            glm::vec2 C = object.GetTransform()->GetPoints()[i];
+            glm::vec2 D = object.GetTransform()->GetPoints()[(i + 1) % object.GetTransform()->GetPoints().size()];
+            SapphireEngine::AddLine(C, D, glm::vec4(1,0,0,1), 5.0f);
+            glm::vec2 CD = D - C;
+            float tangent1 = (D.y - C.y) / (D.x - C.x);
+            float offset1 = C.y - tangent1 * C.x;
+            //The line is vertical so the function doesn't exist.
+            if(tangent1 == INFINITY || tangent1 == -INFINITY){
+
+                float Kx = C.x;
+                glm::vec2 CollisionPoint(C.x, tangent*C.x+offset);
+                glm::vec2 CCollisionPoint = CollisionPoint - C;
+                glm::vec2 ACollisionPoint = CollisionPoint - A;
+                bool Collision1 = glm::length(ACollisionPoint) <= glm::length(AB) && glm::dot(ACollisionPoint, AB) > 0;
+                bool Collision2 = glm::length(CCollisionPoint) <= glm::length(CD) && glm::dot(CCollisionPoint, CD) > 0;
+                //TODO: Abstact that
+                if(Collision1 && Collision2){
+                    lua_newtable(L);
+                    int MainTable = lua_gettop(L);
+                    lua_pushboolean(L, true);
+                    lua_setfield(L, MainTable, "Hit");
+
+                    ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+                    *ud = object.GetRef();
+                    luaL_getmetatable(L, "ObjectMetaTable");
+                    lua_istable(L, -1);
+                    lua_setmetatable(L, -2);
+                    lua_setfield(L, MainTable, "Object");
+
+                    lua_newtable(L);
+                    int ChildTable = lua_gettop(L);
+                    lua_pushnumber(L,CollisionPoint.x);
+                    lua_setfield(L, ChildTable, "x");
+                    lua_pushnumber(L, CollisionPoint.y);
+                    lua_setfield(L, ChildTable, "y");
+                    lua_setfield(L, MainTable, "Point");
+                    return 1;
+                }
+                continue;
+            }
+            float Kx = (offset - offset1)/(tangent1 - tangent);
+            glm::vec2 CollisionPoint(Kx, tangent1*Kx+offset1);
+            glm::vec2 CCollisionPoint = CollisionPoint - C;
+            glm::vec2 ACollisionPoint = CollisionPoint - A;
+            bool Collision1 = glm::length(ACollisionPoint) <= glm::length(AB) && glm::dot(ACollisionPoint, AB) > 0;
+            bool Collision2 = glm::length(CCollisionPoint) <= glm::length(CD) && glm::dot(CCollisionPoint, CD) > 0;
+            if(Collision1 && Collision2){
+                lua_newtable(L);
+                int MainTable = lua_gettop(L);
+                lua_pushboolean(L, true);
+                lua_setfield(L, MainTable, "Hit");
+
+                ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+                *ud = object.GetRef();
+                luaL_getmetatable(L, "ObjectMetaTable");
+                lua_istable(L, -1);
+                lua_setmetatable(L, -2);
+                lua_setfield(L, MainTable, "Object");
+
+                lua_newtable(L);
+                int ChildTable = lua_gettop(L);
+                lua_pushnumber(L,CollisionPoint.x);
+                lua_setfield(L, ChildTable, "x");
+                lua_pushnumber(L, CollisionPoint.y);
+                lua_setfield(L, ChildTable, "y");
+                lua_setfield(L, MainTable, "Point");
+
+                return 1;
+            }
+        }
+    }
+    lua_newtable(L);
+    int MainTable = lua_gettop(L);
+
+    lua_pushboolean(L, false);
+    lua_setfield(L, MainTable, "Hit");
+    
+    return 1;
 }
 
 int SapphirePhysics::RigidBody::SetVelocity(lua_State *L)

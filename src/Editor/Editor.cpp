@@ -7,7 +7,7 @@ SapphireEngine::String Editor::ThemeName("ThemeName", Editor::UserPreferences);
 
 void window_focus_callback(GLFWwindow* window, int focused)
 {
-    if (focused)
+    if (focused && !Editor::GameRunning)
     {
         for (auto&& object : Engine::GetActiveScene().Objects)
         {
@@ -118,8 +118,15 @@ void Editor::OnUpdate(const float DeltaTime)
             NewObj.Components.push_back(std::shared_ptr<Component>(new Component(*component)));
         }
         NewObj.GetTransform()->Move(glm::vec3(20,20,0));
-        Engine::GetActiveScene().Objects.push_back(NewObj);
+        Engine::GetActiveScene().Add(std::move(NewObj));
         SelectedObjID = Engine::GetActiveScene().Objects.size() - 1;
+    }
+    if(GetInput(GLFW_KEY_LEFT_CONTROL) && GetInput(GLFW_KEY_S)){
+        if(Engine::GetActiveScene().SceneFile != ""){
+            Engine::GetActiveScene().Save(Engine::GetActiveScene().SceneFile);
+        }else{
+            ImGui::OpenPopup("FileSaveMenu");
+        }
     }
 
     this->DeltaTime = DeltaTime;
@@ -132,7 +139,7 @@ void Editor::OnUpdate(const float DeltaTime)
                 SelectedObjChildID = -1;
                 Engine::GetActiveScene().Objects[SelectedObjID].Inspect();
             }else{
-                Engine::GetActiveScene().Objects[SelectedObjID].Children[SelectedObjChildID].Inspect();
+                Engine::GetActiveScene().Objects[SelectedObjID].Children[SelectedObjChildID]->Inspect();
             }
         }
     }
@@ -332,8 +339,8 @@ void Editor::RenderViewport()
         
         for (size_t j = 0; j < Engine::GetActiveScene().Objects[i].Children.size(); j++)
         {
-            if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].Children[j].GetRenderer())
-                renderer->Render(*(Engine::GetActiveScene().Objects[i].Children[j].GetTransform()), view, &Engine::GetActiveScene().Objects[i] == &Engine::GetActiveScene().Objects[SelectedObjID], ViewCamera.position, ViewCamera.Zoom);
+            if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].Children[j]->GetRenderer())
+                renderer->Render(*(Engine::GetActiveScene().Objects[i].Children[j]->GetTransform()), view, &Engine::GetActiveScene().Objects[i] == &Engine::GetActiveScene().Objects[SelectedObjID], ViewCamera.position, ViewCamera.Zoom);
         }
         Engine::GetActiveScene().Objects[i].id = i;
     }
@@ -475,7 +482,7 @@ void Editor::RenderPlayMode()
             engine.Render(&Engine::GetActiveScene().Objects[i]);
             for (size_t j = 0; j < Engine::GetActiveScene().Objects[i].Children.size(); j++)
             {
-                engine.Render(&Engine::GetActiveScene().Objects[i].Children[j]);
+                engine.Render(Engine::GetActiveScene().Objects[i].Children[j].Get());
             }
         }
     }

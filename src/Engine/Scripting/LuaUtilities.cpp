@@ -75,7 +75,7 @@ int LuaUtilities::Click(lua_State *L)
 {
     int n = lua_gettop(L);
     if (n != 0) {
-        return luaL_error(L, "Expected 1 argument, got %d", n);
+        return luaL_error(L, "Expected 0 argument, got %d", n);
     }
     bool test = Engine::app->GetMouseInputDown(GLFW_MOUSE_BUTTON_1);
     lua_pushboolean(L, test);
@@ -107,8 +107,8 @@ int LuaUtilities::GetObject(lua_State * L)
     for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)
     {
         if(ObjName == Engine::GetActiveScene().Objects[i].Name){
-            Object* obj = &Engine::GetActiveScene().Objects[i];
-            lua_pushlightuserdata(L, obj);
+            ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+            *ud = Engine::GetActiveScene().Objects[i].GetRef();
             luaL_getmetatable(L, "ObjectMetaTable");
             lua_istable(L, -1);
             lua_setmetatable(L, -2);
@@ -117,6 +117,18 @@ int LuaUtilities::GetObject(lua_State * L)
     }
     if(!foundObj)
         Log("The object with the name \"" + ObjName + "\" cannot be found", SapphireEngine::Error);
+    return 0;
+}
+int LuaUtilities::DeleteObject(lua_State *L)
+{
+    int n = lua_gettop(L);
+    if (n != 1) {
+        SapphireEngine::Log(std::string("Expected 1 argument, got %d", n), SapphireEngine::Error);
+        return luaL_error(L, "Expected 1 argument, got %d", n);
+    }
+    ObjectRef* object = (ObjectRef*)lua_touserdata(L, -1);
+    if((*object)->Name == "MainCamera") return 0;
+    Engine::GetActiveScene().DeleteRuntime(object->Get());
     return 0;
 }
 int LuaUtilities::GetCurrentScene(lua_State *L)
@@ -389,6 +401,8 @@ int LuaUtilities::luaopen_SapphireEngine(lua_State *L)
     lua_setfield(L, -2, "GetMousePos");
     lua_pushcfunction(L, GetObject);
     lua_setfield(L, -2, "GetObject");
+    lua_pushcfunction(L, DeleteObject);
+    lua_setfield(L, -2, "DeleteObject");
     lua_pushcfunction(L, GetCurrentScene);
     lua_setfield(L, -2, "GetCurrentScene");
     lua_pushcfunction(L, GetCameraPos);

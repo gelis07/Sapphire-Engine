@@ -122,7 +122,7 @@ std::optional<std::string> FileExplorer::InputFieldResult()
   ImGui::OpenPopup("Create File");
   if(ImGui::BeginPopup("Create File")){
     ImGui::InputText("Name", &name);
-    if(ImGui::Button("Done")){
+    if(ImGui::Button("Done") || Engine::app->GetInputDown(GLFW_KEY_ENTER)){
       ImGui::EndPopup();
       return name;
     }
