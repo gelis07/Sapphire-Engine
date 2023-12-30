@@ -3,8 +3,10 @@
 #include <unordered_map>
 #include "UI/DragAndDrop.hpp"
 
+
 inline DragAndDrop<std::shared_ptr<File>> FileExplorerDrop;
 inline DragAndDrop<std::shared_ptr<File>> AnimationDrop;
+inline DragAndDrop<std::shared_ptr<ObjectRef>> HierachyDrop;
 
 class FileExplorer
 {

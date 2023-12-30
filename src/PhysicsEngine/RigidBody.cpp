@@ -339,12 +339,14 @@ int SapphirePhysics::RigidBody::RayCast(lua_State *L)
     lua_pop(L, 1);
     float x = (float)luaL_checknumber(L, 2);
     float y = (float)luaL_checknumber(L, 3);
-    glm::vec2 A = rb->transform->GetPosition();
+    glm::vec2 A = rb->transform->GetWorldPositon();
     glm::vec2 B(x,y);
     glm::vec2 AB = B - A;
     float tangent = (B.y - A.y) / (B.x - A.x);
     float offset = A.y - tangent * A.x;
     SapphireEngine::AddLine(A,B,glm::vec4(0,0,1,1), 5.0f);
+    std::optional<glm::vec2> FinalPoint = std::nullopt;
+    ObjectRef obj(null_ref);
     for (auto &object : Engine::GetActiveScene().Objects)
     {
         if(object.GetRb().get() == rb) continue;
@@ -367,26 +369,17 @@ int SapphirePhysics::RigidBody::RayCast(lua_State *L)
                 bool Collision2 = glm::length(CCollisionPoint) <= glm::length(CD) && glm::dot(CCollisionPoint, CD) > 0;
                 //TODO: Abstact that
                 if(Collision1 && Collision2){
-                    lua_newtable(L);
-                    int MainTable = lua_gettop(L);
-                    lua_pushboolean(L, true);
-                    lua_setfield(L, MainTable, "Hit");
-
-                    ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
-                    *ud = object.GetRef();
-                    luaL_getmetatable(L, "ObjectMetaTable");
-                    lua_istable(L, -1);
-                    lua_setmetatable(L, -2);
-                    lua_setfield(L, MainTable, "Object");
-
-                    lua_newtable(L);
-                    int ChildTable = lua_gettop(L);
-                    lua_pushnumber(L,CollisionPoint.x);
-                    lua_setfield(L, ChildTable, "x");
-                    lua_pushnumber(L, CollisionPoint.y);
-                    lua_setfield(L, ChildTable, "y");
-                    lua_setfield(L, MainTable, "Point");
-                    return 1;
+                    if(FinalPoint == std::nullopt)
+                    {
+                        FinalPoint = CollisionPoint;
+                        obj = object.GetRef();
+                    }
+                    else{
+                        if(glm::length(A - FinalPoint.value()) > glm::length(A - CollisionPoint)){
+                            FinalPoint = CollisionPoint;
+                            obj = object.GetRef();
+                        }
+                    }
                 }
                 continue;
             }
@@ -397,35 +390,46 @@ int SapphirePhysics::RigidBody::RayCast(lua_State *L)
             bool Collision1 = glm::length(ACollisionPoint) <= glm::length(AB) && glm::dot(ACollisionPoint, AB) > 0;
             bool Collision2 = glm::length(CCollisionPoint) <= glm::length(CD) && glm::dot(CCollisionPoint, CD) > 0;
             if(Collision1 && Collision2){
-                lua_newtable(L);
-                int MainTable = lua_gettop(L);
-                lua_pushboolean(L, true);
-                lua_setfield(L, MainTable, "Hit");
-
-                ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
-                *ud = object.GetRef();
-                luaL_getmetatable(L, "ObjectMetaTable");
-                lua_istable(L, -1);
-                lua_setmetatable(L, -2);
-                lua_setfield(L, MainTable, "Object");
-
-                lua_newtable(L);
-                int ChildTable = lua_gettop(L);
-                lua_pushnumber(L,CollisionPoint.x);
-                lua_setfield(L, ChildTable, "x");
-                lua_pushnumber(L, CollisionPoint.y);
-                lua_setfield(L, ChildTable, "y");
-                lua_setfield(L, MainTable, "Point");
-
-                return 1;
+                if(FinalPoint == std::nullopt){
+                    FinalPoint = CollisionPoint;
+                    obj = object.GetRef();
+                }
+                else{
+                    if(glm::length(A - FinalPoint.value()) > glm::length(A - CollisionPoint)){
+                        FinalPoint = CollisionPoint;
+                        obj = object.GetRef();
+                    }
+                }
             }
         }
     }
-    lua_newtable(L);
-    int MainTable = lua_gettop(L);
+    if(FinalPoint == std::nullopt){
+        lua_newtable(L);
+        int MainTable = lua_gettop(L);
 
-    lua_pushboolean(L, false);
-    lua_setfield(L, MainTable, "Hit");
+        lua_pushboolean(L, false);
+        lua_setfield(L, MainTable, "Hit");
+    }else{
+        lua_newtable(L);
+        int MainTable = lua_gettop(L);
+        lua_pushboolean(L, true);
+        lua_setfield(L, MainTable, "Hit");
+
+        ObjectRef* ud = (ObjectRef*)lua_newuserdata(L, sizeof(ObjectRef));
+        *ud = obj;
+        luaL_getmetatable(L, "ObjectMetaTable");
+        lua_istable(L, -1);
+        lua_setmetatable(L, -2);
+        lua_setfield(L, MainTable, "Object");
+
+        lua_newtable(L);
+        int ChildTable = lua_gettop(L);
+        lua_pushnumber(L,FinalPoint.value().x);
+        lua_setfield(L, ChildTable, "x");
+        lua_pushnumber(L, FinalPoint.value().y);
+        lua_setfield(L, ChildTable, "y");
+        lua_setfield(L, MainTable, "Point");  
+    }
     
     return 1;
 }

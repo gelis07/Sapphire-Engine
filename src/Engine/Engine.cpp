@@ -56,7 +56,8 @@ void Engine::Run()
     }
     for (size_t i = 0; i < m_ActiveScene.ObjectsToAdd.size(); i++)
     {
-        m_ActiveScene.Add(std::move(m_ActiveScene.ObjectsToAdd[i]));
+        int refID = m_ActiveScene.ObjectsToAdd[i].GetRefID();
+        m_ActiveScene.Add(std::move(m_ActiveScene.ObjectsToAdd[i]), refID);
     }
     for (size_t i = 0; i < m_ActiveScene.ObjectsToDelete.size(); i++)
     {
@@ -64,8 +65,6 @@ void Engine::Run()
     }
     if(m_ActiveScene.ObjectsToAdd.size() != 0) m_ActiveScene.ObjectsToAdd.clear();
     if(m_ActiveScene.ObjectsToDelete.size() != 0) m_ActiveScene.ObjectsToDelete.clear();
-    
-    // physicsFuture.wait();
 }
 
 void Engine::Render(Object* object)

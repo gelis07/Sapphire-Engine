@@ -1,6 +1,7 @@
 #include "Editor.h"
 #include "UI/FileExplorer/FileExplorer.h"
 #include "DebugDraw.h"
+#include "Engine/Scripting/LuaUtilities.h"
 SapphireEngine::String Editor::ThemeName("ThemeName", Editor::UserPreferences);
 
 
@@ -15,13 +16,6 @@ void window_focus_callback(GLFWwindow* window, int focused)
             {
                 lua_State* L = component->GetState();
                 if(L == nullptr) continue;
-                if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, (Engine::GetMainPath() + component->GetFile()).c_str())))
-                {
-                    std::stringstream ss;
-                    ss << "Error loading script: " << lua_tostring(L, -1) << std::endl;
-                    Log(ss.str(), SapphireEngine::Error);
-                    lua_pop(L, 1);
-                }
                 component->GetLuaVariables();
             }
         }
@@ -37,7 +31,7 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
     MainPath = AppMainPath;
     CurrentPath = AppMainPath;
     std::ifstream stream(MainPath + "/../ProjectSettings.json");
-    nlohmann::json Data;
+    nlohmann::ordered_json Data;
     stream >> Data;
     for (auto &&setting : Data.items())
     {
@@ -57,7 +51,7 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
     InitWindow("Project Settings", false);
     {
         std::ifstream stream("Assets/Preferences.json");
-        nlohmann::json Data;
+        nlohmann::ordered_json Data;
         try{
             stream >> Data;
         }
@@ -154,7 +148,7 @@ void Editor::OnStart()
 void Editor::OnExit()
 {
     {
-        nlohmann::json ProjectSettingsJSON;
+        nlohmann::ordered_json ProjectSettingsJSON;
         std::ofstream stream(MainPath + "/../ProjectSettings.json");
         for (auto &&setting : Engine::SettingsVariables)
         {
@@ -164,7 +158,7 @@ void Editor::OnExit()
         stream.close();
     }
     {
-        nlohmann::json UserPrefrencesJSON;
+        nlohmann::ordered_json UserPrefrencesJSON;
         std::ofstream stream("Assets/Preferences.json");
         for (auto &&setting : UserPreferences)
         {

@@ -135,7 +135,6 @@ int Transform::LookAt(lua_State * L)
     float y = (float)luaL_checknumber(L, 3);
     glm::vec2 diffVec = glm::vec2(x,y) - glm::vec2(transform->GetWorldPositon());
     float angle = glm::acos(diffVec.y/glm::length(diffVec));
-    SapphireEngine::AddLine(transform->GetWorldPositon(), glm::vec2(x,y), glm::vec4(1), 5.0f);
     if(diffVec.x > 0 && diffVec.y > 0)
         angle *= -1;
     else if(diffVec.x > 0 && diffVec.y < 0)

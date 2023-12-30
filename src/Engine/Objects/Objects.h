@@ -6,17 +6,6 @@
 #include "Graphics/Renderer.h"
 #define null_ref -1
 
-class Object;
-class ObjectRef{
-    public:
-        ObjectRef(int id) : ID(id) {}
-        Object* operator->();
-        bool operator==(int other);
-        bool operator!=(int other);
-        Object* Get();
-    private:
-        int ID;
-};
 class Object
 {
     public:
@@ -25,6 +14,7 @@ class Object
         void RemoveComponent(unsigned int id);
         void RenderGUI(); // render the object on the ImGUI inspector
         void Inspect();
+        static int RemoveComponent(lua_State* L);
         static void SetUpObject(Object* obj,lua_State* L,const std::string& Name);
 
         void SavePrefab();
@@ -37,7 +27,7 @@ class Object
         std::vector<std::shared_ptr<Component>>& GetComponents() {return Components;}
         
         static Object* CreateObject(std::string &&ObjName);
-        static Object* CreateObjectRuntime(std::string &&ObjName);
+        static ObjectRef CreateObjectRuntime(std::string &&ObjName);
         static void Delete(int id);
 
         void OnCollision(Object* other);
@@ -82,7 +72,10 @@ std::shared_ptr<T> Object::GetComponent()
 }
 static int GetComponentFromObject(lua_State* L) {
     ObjectRef* obj = static_cast<ObjectRef*>(lua_touserdata(L, 1));
-
+    if((*obj).Get() == nullptr){
+        SapphireEngine::Log("The object is null!", SapphireEngine::Info);
+        return 0;
+    }
     const char* VariableNameC = lua_tostring(L, 2);
     std::string VariableName = std::string(VariableNameC);
 
@@ -92,6 +85,10 @@ static int GetComponentFromObject(lua_State* L) {
     }
     if(VariableName == "SetActive"){
         lua_pushcfunction(L, Object::SetActive);
+        return 1;
+    }
+    if(VariableName == "RemoveComponent"){
+        lua_pushcfunction(L, Object::RemoveComponent);
         return 1;
     }
     for(auto &comp : (*obj)->GetComponents()){

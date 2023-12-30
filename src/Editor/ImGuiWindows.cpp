@@ -449,7 +449,7 @@ void AnimationPreview(){
 
 void Save(std::string name){
     std::ofstream stream("Themes/" + name +".json", std::ofstream::trunc);
-    nlohmann::json Theme;
+    nlohmann::ordered_json Theme;
     Theme["ImGuiCol_WindowBg"] = {LoadedTheme[ImGuiCol_WindowBg].x, LoadedTheme[ImGuiCol_WindowBg].y, LoadedTheme[ImGuiCol_WindowBg].z,LoadedTheme[ImGuiCol_WindowBg].w};
     Theme["ImGuiCol_Tab"] = {LoadedTheme[ImGuiCol_Tab].x, LoadedTheme[ImGuiCol_Tab].y, LoadedTheme[ImGuiCol_Tab].z,LoadedTheme[ImGuiCol_Tab].w};
     Theme["ImGuiCol_TitleBg"] = {LoadedTheme[ImGuiCol_TitleBg].x, LoadedTheme[ImGuiCol_TitleBg].y, LoadedTheme[ImGuiCol_TitleBg].z,LoadedTheme[ImGuiCol_TitleBg].w};
@@ -461,7 +461,7 @@ void Save(std::string name){
 
 void Load(std::string name){
     std::ifstream stream("Themes/" + name + ".json");
-    nlohmann::json Theme;
+    nlohmann::ordered_json Theme;
     stream >> Theme;
     stream.close();
     

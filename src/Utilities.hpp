@@ -81,6 +81,10 @@ namespace SapphireEngine
         Logs << log << '\n';
         Logs.LogCount++;
     }
+    static void Log(const std::string& log){
+        Logs << log << '\n';
+        Logs.LogCount++;
+    }
     static float LengthVec(glm::vec2 vec){
         return sqrt(pow((vec.x), 2) + pow((vec.y), 2));
     }

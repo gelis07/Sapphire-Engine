@@ -3,7 +3,7 @@
 #include <vector>
 #include "Engine.h"
 #include "Editor.h"
-
+#include "Editor/UI/FileExplorer/FileExplorer.h"
 ObjectRef Scene::Add(Object &&obj)
 {
     Objects.push_back(obj);
@@ -47,20 +47,21 @@ void Scene::DeleteRuntime(Object *obj)
     const int& ID = ObjectRefrences[obj->GetRefID()];
     ObjectsToDelete.push_back(ID);
 }
-nlohmann::json SaveObject(Object &obj)
+nlohmann::ordered_json SaveObject(Object &obj)
 {
-    nlohmann::json JsonObj;
-    nlohmann::json JsonComponents;
+    nlohmann::ordered_json JsonObj;
+    nlohmann::ordered_json JsonComponents;
     JsonObj["Name"] = obj.Name;
+    JsonObj["ID"] = obj.GetRefID();
     
     for (auto &component : obj.GetComponents())
     {
-        nlohmann::json JsonComp;
+        nlohmann::ordered_json JsonComp;
         JsonComp["path"] = component->GetFile();
         JsonComp["Variables"] = component->Save(); // component->Save returns a json with all the variables
         JsonComponents[component->Name] = JsonComp;
     }
-    nlohmann::json JsonChildren;
+    nlohmann::ordered_json JsonChildren;
     for (size_t i = 0; i < obj.Children.size(); i++)
     {
         std::stringstream ss;
@@ -77,7 +78,7 @@ void Scene::Save(const std::string FilePath)
 {
     this->SceneFile = FilePath;
     std::ofstream stream(Engine::GetMainPath() + FilePath, std::ofstream::trunc);
-    nlohmann::json Data;
+    nlohmann::ordered_json Data;
     unsigned int i = 0;
     for (auto &obj : Objects)
     {
@@ -90,10 +91,10 @@ void Scene::Save(const std::string FilePath)
     stream << Data.dump(2);
     stream.close();
 }
-Object Scene::LoadObj(nlohmann::json& JsonObj, int i, std::vector<ObjectRef>& o_CreatedChildren){
+Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<ObjectRef>& o_CreatedChildren){
     Object obj(JsonObj["Name"]);
     std::shared_ptr<SapphireRenderer::Shape> shape = nullptr;
-    nlohmann::json &JsonComp = JsonObj["Components"];
+    nlohmann::ordered_json &JsonComp = JsonObj["Components"];
     for (auto &element : JsonObj["Components"].items())
     {
         //! Got to find a better way to handle this!
@@ -197,22 +198,21 @@ void Scene::Load(const std::string FilePath)
 {
     this->SceneFile = FilePath;
     std::ifstream stream(Engine::GetMainPath() + FilePath);
-    nlohmann::json Data;
+    nlohmann::ordered_json Data;
     stream >> Data;
     stream.close();
     for (size_t i = 0; i < Objects.size(); i++)
     {
         ObjectRefrences.erase(ObjectRefrences.find((Objects.begin() + i)->GetRefID()));
     }
-    
     Objects.clear();
     for (size_t i = 0; i < Data.size(); i++)
     {
         std::stringstream ss;
         ss << "Object: " << i;
-        nlohmann::json JsonObj = Data[ss.str().c_str()];
+        nlohmann::ordered_json JsonObj = Data[ss.str().c_str()];
         std::vector<ObjectRef> children;
-        ObjectRef NewObj = Add(std::move(LoadObj(JsonObj, i, children)));
+        ObjectRef NewObj = Add(std::move(LoadObj(JsonObj, i, children)), JsonObj["ID"]);
         //If the NewObj that was just loaded has any children, set their parent to be the new object.
         for (auto &child : children)
         {
@@ -239,6 +239,10 @@ void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)
             if (ImGui::Selectable((Name + "##" + std::to_string(Objects[i].id)).c_str(), &Objects[i] == SelectedObj))
             {
                 SelectedObjID = i;
+
+            }
+            if(ImGui::IsItemClicked(0)){
+                HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(Objects[i].GetRefID()));
             }
         }else{
             if(ImGui::TreeNode((Name + "##" + std::to_string(Objects[i].id)).c_str())){

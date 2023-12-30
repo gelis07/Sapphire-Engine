@@ -2,6 +2,7 @@
 #include <cstring>
 #include "Components.h"
 #include "LuaUtilities.h"
+#include "Editor/UI/FileExplorer/FileExplorer.h"
 #include <typeinfo>
 #include "Engine/Engine.h"
 
@@ -103,6 +104,13 @@ Component::Component(const Component &comp)
         return 0;
     };
 
+    luaL_newmetatable(L, "ObjectMetaTable");
+
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, GetComponentFromObject);
+    lua_settable(L, -3);
+
+
     luaL_newmetatable(L, "Component");
     lua_pushstring(L, "__index");
     lua_pushcfunction(L, ComponentIndex);
@@ -151,9 +159,16 @@ void Component::UpdateLuaVariables()
     }
     VariablesToUpdate.clear();
 }
+const std::vector<std::string> luaLibraries = {
+    "next", "assert", "table", "rawlen", "rawequal", "string", "load", "utf8",
+    "setmetatable", "ipairs", "tostring", "warn", "debug", "collectgarbage",
+    "error", "package", "_VERSION", "getmetatable", "select", "require",
+    "tonumber", "math", "xpcall", "loadfile", "print", "io", "os", "rawset",
+    "dofile", "rawget", "pcall", "_G", "pairs", "type", "coroutine"
+};
 bool isKnownModule(lua_State* L, std::string name) {
     // These are all the tables included by the lua_openlibs() function and yes that was the best way i found
-    return name != "_G" && name != "package" && name != "package.loaded" && name != "package.preload" && name != "coroutine" && name != "string" && name != "table" && name != "math" && name != "io" && name != "os" && name != "debug" && name != "utf8";
+    return !(std::find(luaLibraries.begin(), luaLibraries.end(), name) == luaLibraries.end());
 }
 
 struct LuaVariable{
@@ -164,57 +179,140 @@ struct LuaVariable{
 bool Component::GetLuaVariables()
 {
     if(L == nullptr) return true;
+    lua_close(L);
+    L = luaL_newstate();
+    luaL_openlibs(L);
+    luaL_requiref(L, "SapphireEngine", LuaUtilities::luaopen_SapphireEngine, 0);
+
+    //Setting up the component to access from lua.
+    auto ComponentIndex = [](lua_State* L) -> int
+    {
+        // Get the component table from the Lua stack
+        luaL_checktype(L, 1, LUA_TTABLE);
+
+        // Check if the component table has the '__userdata' field (the component pointer)
+        lua_getfield(L, 1, "__userdata");
+        Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        const char* index = luaL_checkstring(L, 2);
+
+        if(comp->Variables.find(index) != comp->Variables.end()){
+            comp->Variables.at(index)->SendToLua(L);
+            return 1;
+        }
+        return 0;
+    };
+    auto ComponentNewIndex = [](lua_State* L) -> int
+    {
+        // Get the component table from the Lua stack
+        luaL_checktype(L, 1, LUA_TTABLE);
+
+        // Check if the component table has the '__userdata' field (the component pointer)
+        lua_getfield(L, 1, "__userdata");
+        Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
+        lua_pop(L, 1);
+        const char* index = luaL_checkstring(L, 2);
+
+        if(comp->Variables.find(index) != comp->Variables.end()){
+            comp->Variables.at(index)->GetFromLua(L);
+        }
+        return 0;
+    };
+
+    luaL_newmetatable(L, "ObjectMetaTable");
+
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, GetComponentFromObject);
+    lua_settable(L, -3);
+
+
+    luaL_newmetatable(L, "Component");
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, ComponentIndex);
+    lua_settable(L, -3);
+    lua_pushstring(L, "__newindex");
+    lua_pushcfunction(L, ComponentNewIndex);
+    lua_settable(L, -3);
+
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, GetComponentFromObject);
+    lua_settable(L, -3);
+
+
+
+    if (!ScriptingEngine::CheckLua(L, luaL_dofile(L, (Engine::GetMainPath() + GetFile()).c_str())))
+    {
+        std::stringstream ss;
+        ss << "Error loading script: " << lua_tostring(L, -1) << std::endl;
+        Log(ss.str(), SapphireEngine::Error);
+        lua_pop(L, 1);
+    }
+
     lua_getglobal(L, "_G"); // All global variables inside the lua state
     lua_pushnil(L);
-    std::unordered_map<std::string, SapphireEngine::Variable*> NewVariables;
+    std::vector<std::string> VarsTested = {};
     while (lua_next(L, -2) != 0)
     {
+        //Check whether its a user defined variable or not.
+        if(isKnownModule(L, std::string(lua_tostring(L, -2)))) {
+            lua_pop(L ,1);
+            continue;
+        }
+
         LuaVariable var;
         var.Name = std::string(lua_tostring(L, -2));
         lua_getglobal(L, var.Name.c_str());
         int type = lua_type(L, -2);
         const char* typeName = lua_typename(L, type);
         lua_pop(L, 1);
-        if (var.Name.c_str() && !lua_isfunction(L, -1)) {
-            if(type == LUA_TTABLE && isKnownModule(L, var.Name.c_str())){
-                var.Value = new SapphireEngine::LuaTable(var.Name, NewVariables);
-                std::unordered_map<std::string, SapphireEngine::Variable*> test = ScriptingEngine::GetTable(L, std::string(var.Name), {});
-                ((SapphireEngine::LuaTable*)var.Value)->Get() = test;
-                lua_pop(L, 1);
-                continue;
-            }
-            const char* VarValue = lua_tostring(L, -1); // Here this variable helps me to decide whether the variable is from the user and not from lua's packages
-            //Checking up here because lua_tostring(L, -1) returns 0x0 for false and the if statement returns false and doesn't register the variable
-            if(type == LUA_TBOOLEAN){
-                var.Value = new SapphireEngine::Bool(var.Name, NewVariables);
-                ((SapphireEngine::Bool*)var.Value)->Get() = !(VarValue == nullptr);
-                lua_pop(L, 1);
-                continue;
-            }
 
-            //Also checking for if the name is == to "_VERSION" because the _G table also contains the lua version and its not necessary to be displayed.
-            if (VarValue && var.Name != "_VERSION") {
-                if(type == LUA_TSTRING){
-                    var.Value = new SapphireEngine::String(var.Name, NewVariables);
-                    ((SapphireEngine::String*)var.Value)->Get() = std::string(lua_tostring(L, -1));
-                }else if(type == LUA_TNUMBER){
-                    var.Value = new SapphireEngine::Float(var.Name, NewVariables);
-                    ((SapphireEngine::Float*)var.Value)->Get() = (float)lua_tonumber(L, -1);
-                }
-                lua_pop(L, 1);
-            }
-            else{
-                lua_pop(L, 1);
-                continue;
-            }
-            
-        }else{
-            lua_pop(L, 1);
+        //If its a function we dont want it.
+        if(lua_isfunction(L, -1)) {
+            lua_pop(L ,1);
             continue;
         }
 
+        VarsTested.push_back(var.Name);
+
+        if(Variables.find(var.Name) != Variables.end()){
+            lua_pop(L ,1);
+            continue;
+        }
+        if (type == LUA_TUSERDATA) {
+            if(ObjectRef* obj = (ObjectRef*)lua_touserdata(L, -1)){
+                var.Value = new SapphireEngine::ObjectVar(var.Name, Variables);
+                ((SapphireEngine::ObjectVar*)var.Value)->Get() = *obj;
+            }
+        }
+        else if(type == LUA_TTABLE){
+            var.Value = new SapphireEngine::LuaTable(var.Name, Variables);
+            std::unordered_map<std::string, SapphireEngine::Variable*> test = ScriptingEngine::GetTable(L, std::string(var.Name), {});
+            ((SapphireEngine::LuaTable*)var.Value)->Get() = test;
+        }
+        else if(type == LUA_TBOOLEAN){
+            var.Value = new SapphireEngine::Bool(var.Name, Variables);
+            ((SapphireEngine::Bool*)var.Value)->Get() = lua_toboolean(L, -1);
+        }
+        else if(type == LUA_TSTRING){
+            var.Value = new SapphireEngine::String(var.Name, Variables);
+            ((SapphireEngine::String*)var.Value)->Get() = std::string(lua_tostring(L, -1));
+        }else if(type == LUA_TNUMBER){
+            var.Value = new SapphireEngine::Float(var.Name, Variables);
+            ((SapphireEngine::Float*)var.Value)->Get() = (float)lua_tonumber(L, -1);
+        }
+        lua_pop(L, 1);
     }
-    Variables = std::move(NewVariables);
+    TableVariable NewVars = Variables;
+    for (auto &&vars : VarsTested)
+    {
+        if(NewVars.find(vars) != NewVars.end()){
+            NewVars.erase(vars);
+        }
+    }
+    for (auto &&vars : NewVars)
+    {
+        Variables.erase(vars.first);
+    }
     
     return true;
 }
@@ -288,8 +386,8 @@ void Component::SetLuaComponent(lua_State* ComponentsState)
     lua_setmetatable(ComponentsState, componentTableIdx);
 
 }
-nlohmann::json SaveTable(std::vector<LuaTableIt> &Var){
-    nlohmann::json Table;
+nlohmann::ordered_json SaveTable(std::vector<LuaTableIt> &Var){
+    nlohmann::ordered_json Table;
     for(auto& TableVariable : Var){
         std::string VarName;
         if(std::holds_alternative<int>(TableVariable.Key)){
@@ -312,8 +410,8 @@ nlohmann::json SaveTable(std::vector<LuaTableIt> &Var){
     return Table;
 }
 
-nlohmann::json Component::Save(){
-    nlohmann::json JSONVariables;
+nlohmann::ordered_json Component::Save(){
+    nlohmann::ordered_json JSONVariables;
     for(auto& Var : Variables)
     {
         Var.second->Save(JSONVariables);
@@ -327,69 +425,8 @@ void Component::Render()
     {
         Var.second->RenderGUI(VariablesToUpdate);
     }
+    HierachyDrop.CalcDragging();
     CustomRendering();
-}
-
-void Component::Reload()
-{
-    if(L != nullptr) 
-        lua_close(L);
-    L = luaL_newstate();
-    luaL_openlibs(L);
-    luaL_requiref(L, "SapphireEngine", LuaUtilities::luaopen_SapphireEngine, 0);
-
-    //Setting up the component to access from lua.
-    auto ComponentIndex = [](lua_State* L) -> int
-    {
-        // Get the component table from the Lua stack
-        luaL_checktype(L, 1, LUA_TTABLE);
-
-        // Check if the component table has the '__userdata' field (the component pointer)
-        lua_getfield(L, 1, "__userdata");
-        Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
-        lua_pop(L, 1);
-        const char* index = luaL_checkstring(L, 2);
-
-        if(comp->Variables.find(index) != comp->Variables.end()){
-            comp->Variables.at(index)->SendToLua(L);
-            return 1;
-        }
-        return 0;
-    };
-    auto ComponentNewIndex = [](lua_State* L) -> int
-    {
-        // Get the component table from the Lua stack
-        luaL_checktype(L, 1, LUA_TTABLE);
-
-        // Check if the component table has the '__userdata' field (the component pointer)
-        lua_getfield(L, 1, "__userdata");
-        Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
-        lua_pop(L, 1);
-        const char* index = luaL_checkstring(L, 2);
-
-        if(comp->Variables.find(index) != comp->Variables.end()){
-            comp->Variables.at(index)->GetFromLua(L);
-        }
-        return 0;
-    };
-
-    luaL_newmetatable(L, "Component");
-    lua_pushstring(L, "__index");
-    lua_pushcfunction(L, ComponentIndex);
-    lua_settable(L, -3);
-    lua_pushstring(L, "__newindex");
-    lua_pushcfunction(L, ComponentNewIndex);
-    lua_settable(L, -3);
-
-    // lua_pushlightuserdata(L, obj);
-    // luaL_newmetatable(L, "ObjectMetaTable");
-
-    // lua_pushstring(L, "__index");
-    // lua_pushcfunction(L, GetComponentFromObject);
-    // lua_settable(L, -3);
-
-    // lua_setmetatable(L, -2);
-    // lua_setglobal(L, "this");
 }
 
 SapphireEngine::Variable *Component::Get(std::string Name)
@@ -400,10 +437,14 @@ SapphireEngine::Variable *Component::Get(std::string Name)
     SapphireEngine::Log("Couldn't find component with name: " + Name, SapphireEngine::Error);
     return nullptr;
 }
-void Component::Load(nlohmann::json JSON)
+void Component::Load(nlohmann::ordered_json JSON)
 {
+    if(L != nullptr){
+        GetLuaVariables();
+    }
     for(auto& JSONVariable : JSON.items()){
-        nlohmann::json& JsonArray = JSONVariable.value();
+        if(L != nullptr && Variables.find(JSONVariable.key()) == Variables.end()) continue;
+        nlohmann::ordered_json& JsonArray = JSONVariable.value();
 
         SapphireEngine::Variable* CurrentlyEditedVariable = Variables[JSONVariable.key()];
 
@@ -440,7 +481,12 @@ void Component::Load(nlohmann::json JSON)
             if(CurrentlyEditedVariable == nullptr)
                 CurrentlyEditedVariable = new SapphireEngine::LuaTable(JSONVariable.key(), Variables);
             CurrentlyEditedVariable->Load(JsonArray);
+        }else if(JsonArray[0] == typeid(SapphireEngine::ObjectVar).hash_code()){
+            if(CurrentlyEditedVariable == nullptr)
+                CurrentlyEditedVariable = new SapphireEngine::ObjectVar(JSONVariable.key(), Variables);
+            CurrentlyEditedVariable->Load(JsonArray);
         }
+        VariablesToUpdate[CurrentlyEditedVariable->GetName()] = CurrentlyEditedVariable;
     }
 }
 

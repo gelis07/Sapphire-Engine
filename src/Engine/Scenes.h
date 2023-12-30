@@ -15,7 +15,7 @@ class Scene{
         void Delete(Object* obj);
         void DeleteRuntime(Object* obj);
 
-        Object LoadObj(nlohmann::json& JsonObj, int i, std::vector<ObjectRef>& o_CreatedChildren);
+        Object LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<ObjectRef>& o_CreatedChildren);
         // Write the json representation of the object to a stream
         void Save(const std::string FilePath);
 

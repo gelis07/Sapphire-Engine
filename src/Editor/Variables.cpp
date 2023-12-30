@@ -1,5 +1,6 @@
 #include "Variables.h"
-
+#include "Engine/Engine.h"
+#include "Editor/UI/FileExplorer/FileExplorer.h"
 void SapphireEngine::Float::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable*>& Variables){
     if(!m_ShowOnInspector) return;
     ImGui::DragFloat(Name.c_str(), &data, SliderSpeed,Min,Max,Format,Flags);
@@ -10,7 +11,7 @@ void SapphireEngine::Float::RenderGUI(std::unordered_map<std::string, SapphireEn
     }
 }
 
-void SapphireEngine::Float::Save(nlohmann::json &JSON)
+void SapphireEngine::Float::Save(nlohmann::ordered_json&JSON)
 {
     if(!m_SaveVariable) return;
     JSON[Name] = {typeid(SapphireEngine::Float).hash_code(), data};
@@ -28,7 +29,7 @@ void SapphireEngine::Float::GetFromLua(lua_State *L)
     data = (float)lua_tonumber(L, -1);
 }
 
-void SapphireEngine::Float::Load(const nlohmann::json &jsonArray)
+void SapphireEngine::Float::Load(const nlohmann::ordered_json&jsonArray)
 {
     if(!m_SaveVariable) return;
     data = jsonArray[1].get<float>();
@@ -44,7 +45,7 @@ void SapphireEngine::Bool::RenderGUI(std::unordered_map<std::string, SapphireEng
     }
 }
 
-void SapphireEngine::Bool::Save(nlohmann::json &JSON)
+void SapphireEngine::Bool::Save(nlohmann::ordered_json&JSON)
 {
     if(!m_SaveVariable) return;
     JSON[Name] = {typeid(SapphireEngine::Bool).hash_code(), data};
@@ -62,7 +63,7 @@ void SapphireEngine::Bool::GetFromLua(lua_State *L)
     data = lua_toboolean(L, -1) == true;
 }
 
-void SapphireEngine::Bool::Load(const nlohmann::json &jsonArray)
+void SapphireEngine::Bool::Load(const nlohmann::ordered_json&jsonArray)
 {
     if(!m_SaveVariable) return;
     data = jsonArray[1].get<bool>();
@@ -78,7 +79,7 @@ void SapphireEngine::String::RenderGUI(std::unordered_map<std::string, SapphireE
     }
 }
 
-void SapphireEngine::String::Save(nlohmann::json &JSON)
+void SapphireEngine::String::Save(nlohmann::ordered_json&JSON)
 {
     if(!m_SaveVariable) return;
     JSON[Name] = {typeid(SapphireEngine::String).hash_code(), data};
@@ -96,7 +97,7 @@ void SapphireEngine::String::GetFromLua(lua_State *L)
     data = std::string(lua_tostring(L, -1));
 }
 
-void SapphireEngine::String::Load(const nlohmann::json &jsonArray)
+void SapphireEngine::String::Load(const nlohmann::ordered_json&jsonArray)
 {
     if(!m_SaveVariable) return;
     data = jsonArray[1].get<std::string>();
@@ -112,10 +113,10 @@ void SapphireEngine::Vec2::RenderGUI(std::unordered_map<std::string, SapphireEng
     }
 }
 
-void SapphireEngine::Vec2::Save(nlohmann::json &JSON)
+void SapphireEngine::Vec2::Save(nlohmann::ordered_json& JSON)
 {
     if(!m_SaveVariable) return;
-    nlohmann::json Vector;
+    nlohmann::ordered_json Vector;
     glm::vec2& DataVector = data;
     Vector["x"] = DataVector.x;
     Vector["y"] = DataVector.y;
@@ -146,7 +147,7 @@ void SapphireEngine::Vec2::GetFromLua(lua_State *L)
     data = vecValue;
 }
 
-void SapphireEngine::Vec2::Load(const nlohmann::json &jsonArray)
+void SapphireEngine::Vec2::Load(const nlohmann::ordered_json&jsonArray)
 {
     if(!m_SaveVariable) return;
     glm::vec2 vector;
@@ -165,10 +166,10 @@ void SapphireEngine::Vec3::RenderGUI(std::unordered_map<std::string, SapphireEng
     }
 }
 
-void SapphireEngine::Vec3::Save(nlohmann::json &JSON)
+void SapphireEngine::Vec3::Save(nlohmann::ordered_json&JSON)
 {
     if(!m_SaveVariable) return;
-    nlohmann::json Vector;
+    nlohmann::ordered_json Vector;
     glm::vec3& DataVector = data;
     Vector["x"] = DataVector.x;
     Vector["y"] = DataVector.y;
@@ -205,7 +206,7 @@ void SapphireEngine::Vec3::GetFromLua(lua_State *L)
     data = vecValue;
 }
 
-void SapphireEngine::Vec3::Load(const nlohmann::json &jsonArray)
+void SapphireEngine::Vec3::Load(const nlohmann::ordered_json&jsonArray)
 {
     if(!m_SaveVariable) return;
     glm::vec3 Vector;
@@ -225,10 +226,10 @@ void SapphireEngine::Vec4::RenderGUI(std::unordered_map<std::string, SapphireEng
     }
 }
 
-void SapphireEngine::Vec4::Save(nlohmann::json &JSON)
+void SapphireEngine::Vec4::Save(nlohmann::ordered_json&JSON)
 {
     if(!m_SaveVariable) return;
-    nlohmann::json Vector;
+    nlohmann::ordered_json Vector;
     glm::vec4& DataVector = data;
     Vector["x"] = DataVector.x;
     Vector["y"] = DataVector.y;
@@ -271,7 +272,7 @@ void SapphireEngine::Vec4::GetFromLua(lua_State *L)
     data = vecValue;
 }
 
-void SapphireEngine::Vec4::Load(const nlohmann::json &jsonArray)
+void SapphireEngine::Vec4::Load(const nlohmann::ordered_json&jsonArray)
 {
     if(!m_SaveVariable) return;
     glm::vec4 vector;
@@ -293,10 +294,10 @@ void SapphireEngine::Color::RenderGUI(std::unordered_map<std::string, SapphireEn
     }
 }
 
-void SapphireEngine::Color::Save(nlohmann::json &JSON)
+void SapphireEngine::Color::Save(nlohmann::ordered_json&JSON)
 {
     if(!m_SaveVariable) return;
-    nlohmann::json Color;
+    nlohmann::ordered_json Color;
     glm::vec4& DataVector = data;
     Color["r"] = DataVector.r;
     Color["g"] = DataVector.g;
@@ -339,7 +340,7 @@ void SapphireEngine::Color::GetFromLua(lua_State *L)
     data = vecValue;
 }
 
-void SapphireEngine::Color::Load(const nlohmann::json &jsonArray)
+void SapphireEngine::Color::Load(const nlohmann::ordered_json&jsonArray)
 {
     if(!m_SaveVariable) return;
     glm::vec4 vector;
@@ -365,9 +366,9 @@ void SapphireEngine::LuaTable::RenderGUI(std::unordered_map<std::string, Sapphir
     }
 }
 
-void SapphireEngine::LuaTable::Save(nlohmann::json &JSON)
+void SapphireEngine::LuaTable::Save(nlohmann::ordered_json&JSON)
 {
-    nlohmann::json TableJSON;
+    nlohmann::ordered_json TableJSON;
     for(auto& TableVariable : data)
     {
         TableVariable.second->Save(TableJSON);
@@ -387,14 +388,15 @@ void SapphireEngine::LuaTable::SendToLua(lua_State *L)
 
 void SapphireEngine::LuaTable::GetFromLua(lua_State *L)
 {
+    
 }
 
-void SapphireEngine::LuaTable::Load(const nlohmann::json &jsonArray)
+void SapphireEngine::LuaTable::Load(const nlohmann::ordered_json&jsonArray)
 {
     std::unordered_map<std::string, SapphireEngine::Variable*> Table;
     for(auto& JSONVariable : jsonArray[1].items()){
 
-        nlohmann::json VariableArray = JSONVariable.value();
+        nlohmann::ordered_json VariableArray = JSONVariable.value();
 
         //At least at my knowledge of programming/c++, I couldn't find a way to remove this repetitive code.
         if(VariableArray[0] == typeid(SapphireEngine::Float).hash_code()){ 
@@ -409,4 +411,58 @@ void SapphireEngine::LuaTable::Load(const nlohmann::json &jsonArray)
         }
     }
     data = Table;
+}
+
+void SapphireEngine::ObjectVar::RenderGUI(std::unordered_map<std::string, SapphireEngine::Variable *> &Variables)
+{
+    if(!m_ShowOnInspector) return;
+    ImVec4 bgColor = ImGui::GetStyle().Colors[ImGuiCol_FrameBg]; // Background color (RGBA)
+    if(HierachyDrop.IsDragging()){
+       bgColor = ImVec4(1.0f, 0.0f, 0.0f, 1.0f); 
+    }
+    ImVec4 textColor = ImVec4(1.0f, 1.0f, 1.0f, 1.0f); // Text color (RGBA)
+    ImGui::Text(Name.c_str());
+    ImGui::SameLine();
+    std::string txt = "null";
+    if(data.Get() != nullptr){
+        txt = data->Name;
+    }
+    ImGui::TextColored(bgColor, "");
+    constexpr float offset = 15.0f;
+    ImVec2 textPos = ImVec2(ImGui::GetItemRectMin().x + offset, ImGui::GetItemRectMin().y);
+    ImVec2 textSize = ImVec2(ImGui::CalcTextSize(txt.c_str()).x, ImGui::CalcTextSize(txt.c_str()).y);
+
+    ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(textPos.x - offset/2, textPos.y), ImVec2(textPos.x + textSize.x + offset/2, textPos.y + textSize.y), IM_COL32(bgColor.x * 255, bgColor.y * 255, bgColor.z * 255, bgColor.w * 255));
+    ImGui::GetWindowDrawList()->AddText(textPos, IM_COL32(textColor.x * 255, textColor.y * 255, textColor.z * 255, textColor.w * 255), txt.c_str());
+    if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(textPos.x  - offset/2, textPos.y), glm::vec2(textSize.x + offset/2, textSize.y))){
+        data = **ref;
+        Variables[Name] = this;
+    }
+}
+
+void SapphireEngine::ObjectVar::Save(nlohmann::ordered_json&JSON)
+{
+    if(!m_SaveVariable) return;
+    if(data != null_ref)
+        JSON[Name] = {typeid(SapphireEngine::ObjectVar).hash_code(), data->GetRefID()};
+    else
+        JSON[Name] = {typeid(SapphireEngine::ObjectVar).hash_code(), -1};
+}
+void SapphireEngine::ObjectVar::SendToLua(lua_State *L)
+{
+    ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+    *ud = data;
+    luaL_getmetatable(L, "ObjectMetaTable");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+}
+
+void SapphireEngine::ObjectVar::GetFromLua(lua_State *L)
+{
+}
+
+void SapphireEngine::ObjectVar::Load(const nlohmann::ordered_json&jsonArray)
+{
+    if(!m_SaveVariable) return;
+    data = ObjectRef(jsonArray[1].get<int>());
 }

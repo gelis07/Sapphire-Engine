@@ -22,5 +22,5 @@ class ProjectManager : public Application{
         std::string m_SelectedProject;
         int ProjectsSize = 0;
         bool CloseApp = true; // If the user directly closes the app from the X button GLFW should be terminated. Thats the use of this boolean
-        nlohmann::json Projects;
+        nlohmann::ordered_json Projects;
 };

@@ -22,5 +22,6 @@ namespace LuaUtilities{
     static int CreateObject(lua_State* L);
     static int LoadObjectPrefab(lua_State* L);
     static int GetDeltaTime(lua_State* L);
+    static int SetObject(lua_State* L);
     int luaopen_SapphireEngine(lua_State* L);
 }

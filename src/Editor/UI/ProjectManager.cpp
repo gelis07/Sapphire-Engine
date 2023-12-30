@@ -174,11 +174,11 @@ void ProjectManager::OnExit()
 
 int ProjectsSize = 0;
 bool CloseApp = true; // If the user directly closes the app from the X button GLFW should be terminated. Thats the use of this boolean
-nlohmann::json Projects;
+nlohmann::ordered_json Projects;
 
 void ProjectManager::SaveJson(std::string Name){
     std::ofstream stream("Projects.sp");
-    nlohmann::json Settings;
+    nlohmann::ordered_json Settings;
     Settings["MainPath"] = Path;
     Settings["Name"] = Name;
     ProjectsSize++;

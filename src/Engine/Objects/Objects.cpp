@@ -118,7 +118,7 @@ Object* Object::CreateObject(std::string &&ObjName)
     return &Engine::GetActiveScene().Objects.back();
 }
 
-Object *Object::CreateObjectRuntime(std::string &&ObjName)
+ObjectRef Object::CreateObjectRuntime(std::string &&ObjName)
 {
     Object NewObj(std::move(ObjName));
     std::vector<glm::vec3> points;
@@ -140,10 +140,10 @@ Object *Object::CreateObjectRuntime(std::string &&ObjName)
 
     NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
 
-    Engine::GetActiveScene().ObjectsToAdd.push_back(NewObj);
-
-
-    return &Engine::GetActiveScene().ObjectsToAdd.back();
+    // int refID = SapphireEngine::RandomNumber(1,100000);
+    // NewObj.SetRefID(refID);
+    // Engine::GetActiveScene().ObjectsToAdd.push_back(NewObj);
+    return Engine::GetActiveScene().Add(std::move(NewObj));
 }
 
 void Object::Delete(int id)
@@ -237,15 +237,7 @@ void Object::Inspect()
         if(File->get()->Extension == ".lua"){
             std::shared_ptr<Component> NewComponent = std::make_shared<Component>((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size(),true);
             lua_State* L = NewComponent->GetState();
-            bool failed = false;
-            if (!ScriptingEngine::CheckLua(L, luaL_loadfile(L,(Engine::GetMainPath() +  NewComponent->GetFile()).c_str())) || lua_pcall(L, 0, 0, 0)) {
-                std::stringstream ss;
-                ss<< "Error loading script: " << lua_tostring(L, -1) << std::endl;
-                SapphireEngine::Log(ss.str(), SapphireEngine::Error);
-                lua_pop(L, 1);
-                failed = true;
-            }
-            if (NewComponent->GetLuaVariables() && !failed)
+            if (NewComponent->GetLuaVariables())
                 AddComponent<Component>(NewComponent);
         }else if(File->get()->Extension == ".png"){
             GetRenderer()->TexturePath.Get() = (*File)->Path;
@@ -260,17 +252,35 @@ void Object::Inspect()
     ImGui::End();
 }
 
+int Object::RemoveComponent(lua_State* L)
+{
+    ObjectRef* obj = static_cast<ObjectRef*>(lua_touserdata(L, 1));
+    const char* namec = lua_tostring(L, 2);
+    std::string name(namec);
+    for (size_t i = 0; i < (*obj)->GetComponents().size(); i++)
+    {
+        if((*obj)->GetComponents()[i]->Name == name){
+            (*obj)->GetComponents().erase((*obj)->GetComponents().begin() + i);
+            if((*obj)->GetComponent<SapphirePhysics::RigidBody>() == nullptr)
+                (*obj)->GetRb() = nullptr;
+            else if((*obj)->GetComponent<Renderer>() == nullptr)
+                (*obj)->GetRenderer() = nullptr;
+        }
+    }
+    return 0;
+}
+
 void Object::SavePrefab()
 {
     std::ofstream stream(Engine::GetMainPath() + SapphireEngine::Replace(this->Name, ' ', '_') + ".obj");
 
-    nlohmann::json JsonObj;
+    nlohmann::ordered_json JsonObj;
 
-    nlohmann::json JsonComponents;
+    nlohmann::ordered_json JsonComponents;
     JsonObj["Name"] = this->Name;
     for (auto &component : this->GetComponents())
     {
-        nlohmann::json JsonComp;
+        nlohmann::ordered_json JsonComp;
         JsonComp["path"] = component->GetFile();
         JsonComp["Variables"] = component->Save(); // component->Save returns a json with all the variables
         JsonComponents[component->Name] = JsonComp;
@@ -286,7 +296,7 @@ void Object::SavePrefab()
 Object* Object::LoadPrefab(std::string FilePath)
 {
     std::ifstream stream(Engine::GetMainPath() + FilePath, std::ios::binary);
-    nlohmann::json JsonObj;
+    nlohmann::ordered_json JsonObj;
     stream >> JsonObj;
     stream.close();
 
@@ -306,7 +316,7 @@ Object* Object::LoadPrefab(std::string FilePath)
         default:
             shape = nullptr;
     }
-    nlohmann::json& JsonComp = JsonObj["Components"];
+    nlohmann::ordered_json& JsonComp = JsonObj["Components"];
     for (auto& element : JsonObj["Components"].items()) {
         //! Got to find a better way to handle object!
         if(element.key() == "Renderer")
@@ -342,7 +352,7 @@ Object *ObjectRef::operator->()
     if(ID != -1)
         return &Engine::GetActiveScene().Objects[Engine::GetActiveScene().ObjectRefrences[ID]];
     else{
-        std::runtime_error("The refrence is null!");
+        return nullptr;
     }
     return nullptr;
 }
@@ -358,5 +368,10 @@ bool ObjectRef::operator!=(int other)
 
 Object *ObjectRef::Get()
 {
-    return &Engine::GetActiveScene().Objects[Engine::GetActiveScene().ObjectRefrences[ID]];
+    if(ID != -1)
+        return &Engine::GetActiveScene().Objects[Engine::GetActiveScene().ObjectRefrences[ID]];
+    else{
+        return nullptr;
+    }
+    return nullptr;
 }

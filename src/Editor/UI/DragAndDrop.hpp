@@ -1,5 +1,4 @@
 #pragma once
-#include "Windows.h"
 
 
 template <typename T>
@@ -8,7 +7,12 @@ class DragAndDrop
     public:
         void StartedDragging(T NewData);
         T* ReceiveDrop(ImGuiWindow *window);
+        T* ReceiveDrop(const glm::vec2& pos, const glm::vec2& size);
+        T* ReceiveDropLoop(const glm::vec2& pos, const glm::vec2& size);
+        void CalcDragging();
+        const bool& IsDragging() {return m_Dragging;}
     private:
+        bool FinishedDragging = false;
         T m_Data;
         bool m_Dragging;
 };
@@ -38,5 +42,55 @@ T *DragAndDrop<T>::ReceiveDrop(ImGuiWindow *window)
     }
     else{
         return nullptr;
+    }
+}
+template <typename T>
+T *DragAndDrop<T>::ReceiveDrop(const glm::vec2& pos,const glm::vec2& size)
+{
+    double xpos, ypos;
+    glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+    glm::vec2 CursorPos(xpos, ypos);
+    glm::vec2 D(pos.x, pos.y); // Bottom left corner of window
+    glm::vec2 A(pos.x + size.x, pos.y + size.y); // Top right corner
+    if(!ImGui::IsMouseDown(ImGuiMouseButton_Left) && m_Dragging &&(D.x < CursorPos.x && D.y < CursorPos.y && A.x > CursorPos.x && A.y > CursorPos.y))
+    {
+        m_Dragging = false;
+        return &m_Data; 
+    }else if(!ImGui::IsMouseDown(ImGuiMouseButton_Left) && m_Dragging && !(D.x < CursorPos.x && D.y < CursorPos.y && A.x > CursorPos.x && A.y > CursorPos.y)){
+        m_Dragging = false;
+        return nullptr;
+    }
+    else{
+        return nullptr;
+    }
+}
+
+template <typename T>
+inline T *DragAndDrop<T>::ReceiveDropLoop(const glm::vec2 &pos, const glm::vec2 &size)
+{
+    double xpos, ypos;
+    glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+    glm::vec2 CursorPos(xpos, ypos);
+    glm::vec2 D(pos.x, pos.y); // Bottom left corner of window
+    glm::vec2 A(pos.x + size.x, pos.y + size.y); // Top right corner
+    if(!ImGui::IsMouseDown(ImGuiMouseButton_Left) && m_Dragging &&(D.x < CursorPos.x && D.y < CursorPos.y && A.x > CursorPos.x && A.y > CursorPos.y))
+    {
+        m_Dragging = false;
+        return &m_Data; 
+    }else if(!ImGui::IsMouseDown(ImGuiMouseButton_Left) && m_Dragging && !(D.x < CursorPos.x && D.y < CursorPos.y && A.x > CursorPos.x && A.y > CursorPos.y)){
+        FinishedDragging = true;
+        return nullptr;
+    }
+    else{
+        return nullptr;
+    }
+}
+
+template <typename T>
+inline void DragAndDrop<T>::CalcDragging()
+{
+    if(FinishedDragging){
+        FinishedDragging = false;
+        m_Dragging = false;
     }
 }

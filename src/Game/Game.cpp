@@ -4,7 +4,7 @@ Game::Game() : Application(glm::vec2(960,540), false, "C:/Gelis/Programs/Flappy_
 {
     engine.SetApp(this);
     std::ifstream stream(AppMainPath + "/../ProjectSettings.json");
-    nlohmann::json Data;
+    nlohmann::ordered_json Data;
     stream >> Data;
     for (auto &&setting : Data.items())
     {

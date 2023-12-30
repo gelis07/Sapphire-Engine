@@ -18,8 +18,8 @@ class Component
         void SetLuaComponent(lua_State* ComponentsState);
         void Render();
         SapphireEngine::Variable* Get(std::string Name);
-        nlohmann::json Save();
-        void Load(nlohmann::json JSON);
+        nlohmann::ordered_json Save();
+        void Load(nlohmann::ordered_json JSON);
         bool Active = true;
         lua_State* GetState() const {return L;}
         std::string GetFile() const {return m_LuaFile;}
@@ -28,7 +28,6 @@ class Component
         std::unordered_map<std::string, lua_CFunction> Functions;
     protected:
         TableVariable VariablesToUpdate;
-        void Reload();
         lua_State* L = nullptr;
         int m_ID;
         std::string m_LuaFile;

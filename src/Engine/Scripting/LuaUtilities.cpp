@@ -53,7 +53,29 @@ int LuaUtilities::GetDeltaTime(lua_State* L) {
 
     return 1;
 }
-int LuaUtilities::KeyPress(lua_State* L) {
+int LuaUtilities::SetObject(lua_State *L)
+{
+    int n = lua_gettop(L);
+    if (n != 0) {
+        return luaL_error(L, "Expected 0 argument, got %d", n);
+    }
+
+    luaL_newmetatable(L, "ObjectMetaTable");
+
+    lua_pushstring(L, "__index");
+    lua_pushcfunction(L, GetComponentFromObject);
+    lua_settable(L, -3);
+
+    ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+    *ud = ObjectRef(-1);
+
+    luaL_getmetatable(L, "ObjectMetaTable");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+    return 1;
+}
+int LuaUtilities::KeyPress(lua_State *L)
+{
     int n = lua_gettop(L);
     if (n != 1) {
         return luaL_error(L, "Expected 1 argument, got %d", n);
@@ -226,7 +248,7 @@ int LuaUtilities::CreateObject(lua_State *L)
     }
     const char* ObjName = lua_tostring(L, -2);
     const char* ObjShape = lua_tostring(L, -1);
-    Object* obj = Object::CreateObjectRuntime(std::string(ObjName));
+    ObjectRef obj = Object::CreateObjectRuntime(std::string(ObjName));
     std::shared_ptr<SapphireRenderer::Shape> shape;
     if(std::string(ObjShape) == "Rectangle"){
         shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader,SapphireRenderer::RectangleVertices);
@@ -242,8 +264,11 @@ int LuaUtilities::CreateObject(lua_State *L)
         obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::CircleT;
     }
     obj->GetComponent<Renderer>()->shape = shape;
-    lua_pushlightuserdata(L, obj);
+
+    ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+    *ud = obj;
     luaL_getmetatable(L, "ObjectMetaTable");
+    lua_istable(L, -1);
     lua_setmetatable(L, -2);
 
     return 1;
@@ -426,6 +451,8 @@ int LuaUtilities::luaopen_SapphireEngine(lua_State *L)
     lua_setfield(L, -2, "LoadObjectPrefab");
     lua_pushcfunction(L, Clamp);
     lua_setfield(L, -2, "Clamp");
+    lua_pushcfunction(L, SetObject);
+    lua_setfield(L, -2, "SetObject");
 
     // Return the table
     return 1;
