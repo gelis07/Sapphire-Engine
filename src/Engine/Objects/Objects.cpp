@@ -209,6 +209,7 @@ void Object::RenderGUI()
         ImGui::EndPopup();
     }
 }
+std::string TagInput;
 void Object::Inspect()
 {
     if(!(*Editor::GetWindowState("Inspector"))) return;
@@ -221,7 +222,27 @@ void Object::Inspect()
     if(ImGui::Button("Create Prefab")){
         SavePrefab();
     }
-
+    if(ImGui::Button("Add")){
+        ImGui::OpenPopup("Create Tag");
+    }
+    if(ImGui::BeginCombo("Tag", Tag.c_str())){
+        for(const auto &tag : Engine::Tags){
+            if(ImGui::Selectable(tag.c_str()))
+            {
+                Tag = tag;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    if(ImGui::BeginPopup("Create Tag")){
+        ImGui::InputText("Tag Name", &TagInput);
+        if(ImGui::Button("Done") || Engine::app->GetInputDown(GLFW_KEY_ENTER)){
+            Engine::Tags.push_back(TagInput);
+            TagInput = "";
+            ImGui::CloseCurrentPopup();
+        }
+        ImGui::EndPopup();
+    }
     RenderGUI();
     // for (auto const& animation : renderer->shape->Animations)
     // {

@@ -52,6 +52,7 @@ nlohmann::ordered_json SaveObject(Object &obj)
     nlohmann::ordered_json JsonObj;
     nlohmann::ordered_json JsonComponents;
     JsonObj["Name"] = obj.Name;
+    JsonObj["Tag"] = obj.Tag;
     JsonObj["ID"] = obj.GetRefID();
     
     for (auto &component : obj.GetComponents())
@@ -93,6 +94,10 @@ void Scene::Save(const std::string FilePath)
 }
 Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<ObjectRef>& o_CreatedChildren){
     Object obj(JsonObj["Name"]);
+    obj.Tag = JsonObj["Tag"];
+    if(obj.Tag != "" && std::find(Engine::Tags.begin(), Engine::Tags.end(), obj.Tag) == Engine::Tags.end()){
+        Engine::Tags.push_back(obj.Tag);
+    }
     std::shared_ptr<SapphireRenderer::Shape> shape = nullptr;
     nlohmann::ordered_json &JsonComp = JsonObj["Components"];
     for (auto &element : JsonObj["Components"].items())

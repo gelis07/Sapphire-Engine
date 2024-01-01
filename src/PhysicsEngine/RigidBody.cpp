@@ -339,6 +339,12 @@ int SapphirePhysics::RigidBody::RayCast(lua_State *L)
     lua_pop(L, 1);
     float x = (float)luaL_checknumber(L, 2);
     float y = (float)luaL_checknumber(L, 3);
+    std::string tag;
+    if(lua_gettop(L) == 3){
+        tag = "";
+    }else{
+        tag = std::string(lua_tostring(L, 4));
+    }
     glm::vec2 A = rb->transform->GetWorldPositon();
     glm::vec2 B(x,y);
     glm::vec2 AB = B - A;
@@ -350,6 +356,7 @@ int SapphirePhysics::RigidBody::RayCast(lua_State *L)
     for (auto &object : Engine::GetActiveScene().Objects)
     {
         if(object.GetRb().get() == rb) continue;
+        if(tag != "" && object.Tag != tag) continue;
         for (size_t i = 0; i < object.GetTransform()->GetPoints().size(); i++)
         {
             glm::vec2 C = object.GetTransform()->GetPoints()[i];

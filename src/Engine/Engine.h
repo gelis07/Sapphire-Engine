@@ -24,6 +24,7 @@ class Engine{
         inline static Application* app;
         inline static bool SkipFrame = false;
         inline static std::string ShouldLoadScene = "";
+        inline static std::vector<std::string> Tags = {"Player", "Enemy", "Ground"};
     private:
         inline static Scene m_ActiveScene;
 };

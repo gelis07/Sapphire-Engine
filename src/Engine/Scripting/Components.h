@@ -3,6 +3,14 @@
 #include <variant>
 #include "Scripting.h"
 
+
+struct LuaFunction
+{
+    int Arugments = 0;
+    int Return = 0;
+    std::string Name;
+};
+
 class Component
 {
     using TableVariable = std::unordered_map<std::string, SapphireEngine::Variable*>;
@@ -25,7 +33,9 @@ class Component
         std::string GetFile() const {return m_LuaFile;}
         std::string Name;
         TableVariable Variables;
+        void UpdateVariable(const std::string& Name, SapphireEngine::Variable* var);
         std::unordered_map<std::string, lua_CFunction> Functions;
+        std::unordered_map<std::string, LuaFunction> LuaFunctions;
     protected:
         TableVariable VariablesToUpdate;
         lua_State* L = nullptr;

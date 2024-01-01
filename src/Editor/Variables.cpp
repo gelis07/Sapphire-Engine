@@ -459,6 +459,8 @@ void SapphireEngine::ObjectVar::SendToLua(lua_State *L)
 
 void SapphireEngine::ObjectVar::GetFromLua(lua_State *L)
 {
+    ObjectRef* ud = (ObjectRef*)lua_touserdata(L, -1);
+    data = *ud;
 }
 
 void SapphireEngine::ObjectVar::Load(const nlohmann::ordered_json&jsonArray)

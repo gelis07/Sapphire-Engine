@@ -36,6 +36,7 @@ class Object
         static int SetActive(lua_State* L);
         unsigned int id;
         std::string Name;
+        std::string Tag;
         std::vector<ObjectRef> Children = {};
         ObjectRef Parent = ObjectRef(null_ref);
         bool Active = true;
