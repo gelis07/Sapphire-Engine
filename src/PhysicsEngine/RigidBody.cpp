@@ -99,16 +99,35 @@ void SapphirePhysics::RigidBody::BroadPhase(Object* current)
 void SapphirePhysics::RigidBody::NarrowPhase()
 {
     //! FOR SOME REASON IT WORKS WITH SHARED POITNERS ONLY I HAVE NO IDEA WHY.
+    // std::for_each(std::execution::par,ContactPairs.begin(), ContactPairs.end(), [](auto&& pair) {
+    //     CollisionData CD;
+    //     std::shared_ptr<Object> sharedObject(pair.second,StackObjectDeleter{});
+    //     if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, pair.first,CD)){
+    //         pair.first->OnCollision(pair.second);
+    //         pair.second->OnCollision(pair.first);
+    //         OnCollisionRotation(pair.first, pair.second, std::move(CD));
+    //     }
+    // });
 
-    std::for_each(std::execution::par,ContactPairs.begin(), ContactPairs.end(), [](auto&& pair) {
+    for (auto &&pair : ContactPairs)
+    {
         CollisionData CD;
         std::shared_ptr<Object> sharedObject(pair.second,StackObjectDeleter{});
         if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, pair.first,CD)){
-            // pair.first->OnCollision(pair.second);
-            // pair.second->OnCollision(pair.first);
-            OnCollisionRotation(pair.first, pair.second, std::move(CD));
+            if(!(pair.first->CalledOnCollision)){
+                pair.first->OnCollision(pair.second);
+                std::cout << "called first" << '\n';
+                pair.first->CalledOnCollision = true;
+            }
+            if(!(pair.second->CalledOnCollision)){
+                pair.second->OnCollision(pair.first);
+                std::cout << "called second" << '\n';
+                pair.second->CalledOnCollision = true;
+            }
+            OnCollisionRotation(pair.first, pair.second, std::move(CD));  
         }
-    });
+
+    }
 }
 
 SapphirePhysics::AABB SapphirePhysics::RigidBody::GetAABB()
@@ -305,13 +324,17 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* Obo
     } 
 }
 void SapphirePhysics::RigidBody::Simulate(Object* current, const float& DeltaTime) {
+    for (auto &object : Engine::GetActiveScene().Objects)
+    {
+        object.CalledOnCollision = false;
+    }
     for (size_t i = 0; i < ITERATIONS; i++)
     {
         ContactPairs.clear();
         Update(DeltaTime / ITERATIONS);
         BroadPhase(current);
         NarrowPhase();
-    } 
+    }
 }
 
 int SapphirePhysics::RigidBody::Impulse(lua_State *L) {

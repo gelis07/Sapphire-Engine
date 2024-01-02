@@ -6,8 +6,8 @@
 #include <typeinfo>
 #include "Engine/Engine.h"
 
-
-static int test(lua_State* L){
+std::string FuncName = "";
+static int CallLuaFunc(lua_State* L){
     int n = lua_gettop(L);
     // Get the component table from the Lua stack
     luaL_checktype(L, 1, LUA_TTABLE);
@@ -15,38 +15,33 @@ static int test(lua_State* L){
     lua_getfield(L, 1, "__userdata");
     Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
     lua_pop(L, 1);
-    for (auto &&function : comp->LuaFunctions)
-    {
-        lua_getglobal(comp->GetState(), function.first.c_str());
-        if(lua_isfunction(comp->GetState(), -1)){
-            for (int i = 2; i <= n; ++i) {
-                // Get the type of the argument
-                int type = lua_type(L, i);
 
-                // Depending on the type, push the argument back onto the stack
-                switch (type) {
-                    case LUA_TNIL:
-                        lua_pushnil(comp->GetState());
-                        break;
-                    case LUA_TBOOLEAN:
-                        lua_pushboolean(comp->GetState(), lua_toboolean(L, i));
-                        break;
-                    case LUA_TNUMBER:
-                        lua_pushnumber(comp->GetState(), luaL_checknumber(L, i));
-                        break;
-                    case LUA_TSTRING:
-                        lua_pushstring(comp->GetState(), luaL_checkstring(L, i));
-                        break;
-                    default:
-                        lua_pushnil(comp->GetState());
-                        break;
-                }
-            }
-            lua_pcall(comp->GetState(), function.second.Arugments, 1, 0);
-            return 1;
+    lua_getglobal(comp->GetState(), FuncName.c_str());
+    for (int i = 2; i <= n; ++i) {
+        // Get the type of the argument
+        int type = lua_type(L, i);
+
+        // Depending on the type, push the argument back onto the stack
+        switch (type) {
+            case LUA_TNIL:
+                lua_pushnil(comp->GetState());
+                break;
+            case LUA_TBOOLEAN:
+                lua_pushboolean(comp->GetState(), lua_toboolean(L, i));
+                break;
+            case LUA_TNUMBER:
+                lua_pushnumber(comp->GetState(), luaL_checknumber(L, i));
+                break;
+            case LUA_TSTRING:
+                lua_pushstring(comp->GetState(), luaL_checkstring(L, i));
+                break;
+            default:
+                lua_pushnil(comp->GetState());
+                break;
         }
-    }   
-    return 0;
+    }
+    lua_pcall(comp->GetState(), n-1, 1, 0);
+    return 1;
 }
 static int ComponentIndex(lua_State* L)
 {
@@ -56,12 +51,13 @@ static int ComponentIndex(lua_State* L)
     // Check if the component table has the '__userdata' field (the component pointer)
     lua_getfield(L, 1, "__userdata");
     Component* comp = static_cast<Component*>(lua_touserdata(L, -1));
-    lua_pop(L, 1);
     const char* index = luaL_checkstring(L, 2);
+    lua_pop(L, 1);
 
-    for (auto &&function : comp->LuaFunctions)
-    {
-        lua_pushcfunction(L, test);
+    if(comp->LuaFunctions.find(index) != comp->LuaFunctions.end()){
+        FuncName = std::string(index); //Store the name so I can get the global on the other function.
+        //The reason for pushing the function and calling it right away is to get the arguemts that may be passed into the function.
+        lua_pushcfunction(L, CallLuaFunc);
         return 1;
     }
     if(comp->Variables.find(index) != comp->Variables.end()){

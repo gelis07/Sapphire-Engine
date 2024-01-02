@@ -37,6 +37,7 @@ class Object
         unsigned int id;
         std::string Name;
         std::string Tag;
+        bool CalledOnCollision = false;
         std::vector<ObjectRef> Children = {};
         ObjectRef Parent = ObjectRef(null_ref);
         bool Active = true;

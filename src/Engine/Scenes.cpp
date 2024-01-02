@@ -146,7 +146,7 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
     for(auto& child : JsonObj["Children"].items()){
         std::vector<ObjectRef> children; //This represents the children that may be inside the child
         Object childObj = LoadObj(child.value(), i, children);
-        ObjectRef NewChildObj = Add(std::move(childObj));
+        ObjectRef NewChildObj = Add(std::move(childObj), child.value()["ID"]);
         obj.Children.push_back(NewChildObj);
         o_CreatedChildren.push_back(NewChildObj);
         NewChildObj->GetTransform()->Parent = obj.GetTransform().get();
@@ -244,7 +244,7 @@ void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)
             if (ImGui::Selectable((Name + "##" + std::to_string(Objects[i].id)).c_str(), &Objects[i] == SelectedObj))
             {
                 SelectedObjID = i;
-
+                Editor::SelectedObjChildID = -1;
             }
             if(ImGui::IsItemClicked(0)){
                 HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(Objects[i].GetRefID()));
@@ -253,6 +253,8 @@ void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)
             if(ImGui::TreeNode((Name + "##" + std::to_string(Objects[i].id)).c_str())){
                 if(ImGui::IsItemClicked(0)){
                     SelectedObjID = i;
+                    Editor::SelectedObjChildID = -1;
+                    HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(Objects[i].GetRefID()));
                 }
                 for (size_t j = 0; j < Objects[i].Children.size(); j++)
                 {
@@ -260,6 +262,9 @@ void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)
                     {
                         SelectedObjID = i;
                         Editor::SelectedObjChildID = j;
+                    }
+                    if(ImGui::IsItemClicked(0)){
+                        HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(Objects[i].Children[j]));
                     }
                 }
                 ImGui::TreePop();
