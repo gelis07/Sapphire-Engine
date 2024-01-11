@@ -1,7 +1,8 @@
 #pragma once
 #include "Utilities.hpp"
 #include "Scripting/Components.h"
-
+#define TOPIXELS * 50.0f
+#define TOUNITS / 50.0f
 class Object;
 class Transform : public Component
 {

@@ -45,7 +45,7 @@ SapphireRenderer::Shape::~Shape()
 void SapphireRenderer::Shape::Render(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, 
 float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shader& shader)>& SetUpUniforms)
 {
-    const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetSize());
+    const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetSize() TOPIXELS);
     // m_Projection = glm::ortho( -WindowSize.x/2.0f / CameraZoom, WindowSize.x/2.0f / CameraZoom, -WindowSize.y / 2.0f / CameraZoom, WindowSize.y / 2.0f / CameraZoom, -1.0f, 1.0f);
     m_Projection = glm::ortho( 0.0f, WindowSize.x / CameraZoom, 0.0f, WindowSize.y / CameraZoom, -1.0f, 1.0f);
     

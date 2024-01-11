@@ -276,9 +276,9 @@ void Editor::RenderViewport()
     
     glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position + glm::vec3(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y, 0) / 2.0f);
     if(SelectedObjID != -1){
-        const glm::vec3& Position = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetPosition();
+        const glm::vec3& Position = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetPosition() TOPIXELS;
         const glm::vec3& Rotation = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetRotation();
-        const glm::vec3& Scale = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetSize();
+        const glm::vec3& Scale = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetSize() TOPIXELS;
         glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom, 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom, -1.0f, 1.0f);
         // glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
 
@@ -301,9 +301,9 @@ void Editor::RenderViewport()
             DecomposeTransform(Transform, translation, rotation, scale);
 
             if(m_Operation == ImGuizmo::OPERATION::TRANSLATE)
-                Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetPosition(translation);
+                Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetPosition(translation TOUNITS);
             else if(m_Operation == ImGuizmo::OPERATION::SCALE)
-                Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetSize(scale);
+                Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetSize(scale TOUNITS);
             else if(m_Operation == ImGuizmo::OPERATION::ROTATE){
                 glm::vec3 deltaRotation = rotation - Rotation;
                 Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->Rotate(deltaRotation.z);
@@ -324,7 +324,6 @@ void Editor::RenderViewport()
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
     grid.Render(ViewCamera.position, ViewCamera.Zoom);
-    SapphireEngine::DrawLines(view);
     for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)
     {
         if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].GetRenderer())
@@ -338,6 +337,7 @@ void Editor::RenderViewport()
         }
         Engine::GetActiveScene().Objects[i].id = i;
     }
+    SapphireEngine::DrawDebug(view);
 
     ViewportFBO.Unbind();
 }
@@ -380,6 +380,7 @@ bool CheckForErrors()
     return true;
 }
 float TimeStep = 0;
+bool NextFrame = false;
 void Editor::RenderPlayMode()
 {
     if((*Editor::GetWindowState("Play"))){
@@ -387,7 +388,7 @@ void Editor::RenderPlayMode()
             // ImGui::End();
             // return;
         }
-        Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0));
+        Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
         WindowPos = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
         WindowSize = glm::vec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
         ImVec2 pos = ImGui::GetCursorScreenPos();
@@ -431,6 +432,12 @@ void Editor::RenderPlayMode()
             {
                 Paused = !Paused;
             }
+            ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - 200, 20));
+            // Set the ImGui Button to play the game
+            if (ImGui::Button("Next Frame") && Paused)
+            {
+                NextFrame = true;
+            }
         }
         if (ImGui::BeginPopup("Save Menu"))
         {
@@ -470,7 +477,7 @@ void Editor::RenderPlayMode()
         std::cout << "Avg frame delta time: " << SapphireEngine::FrameRate << ", Frame count: " << SapphireEngine::FrameCount << '\n';
         SapphireEngine::FrameCount = 0;
     } 
-    if(!GameRunning){
+    if(!GameRunning || (Paused && !NextFrame)){
         for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)
         {
             engine.Render(&Engine::GetActiveScene().Objects[i]);
@@ -480,12 +487,14 @@ void Editor::RenderPlayMode()
             }
         }
     }
-    if(GameRunning && !Paused){
+    if((GameRunning && !Paused) || NextFrame){
+        SapphireEngine::ClearData();
         float time = glfwGetTime();
         engine.Run();
         TimeStep = (glfwGetTime() - time)*1000.0f;
         SapphireEngine::FrameCount++;
         SapphireEngine::FrameRate = (SapphireEngine::FrameRate + (glfwGetTime() - time))/SapphireEngine::FrameCount;
+        NextFrame = false;
     }
 
     //Changing the start bool to false here so all the start functions get executed

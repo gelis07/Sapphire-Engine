@@ -30,16 +30,21 @@ Engine::Engine(const std::string& mainPath)
     m_ActiveScene.Add(std::move(Camera));
     CameraObjectID = m_ActiveScene.Objects.size()-1;
 }
-
+float TimeAccumulator = 0.0f;
 void Engine::Run()
 {
+
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
         if(!m_ActiveScene.Objects[i].Active) continue;
         m_ActiveScene.Objects[i].OnStart();
     }
+    TimeAccumulator += GetDeltaTime();
     ExecuteLua();
-    PhysicsSim();
+    while(TimeAccumulator >= FixedTimeStep){
+        PhysicsSim();
+        TimeAccumulator -= FixedTimeStep;
+    }
     // std::future<void> physicsFuture = std::async(std::launch::async, &Engine::PhysicsSim, this);
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
@@ -69,14 +74,14 @@ void Engine::Run()
 
 void Engine::Render(Object* object)
 {
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), -Engine::GetCameraObject()->GetTransform()->GetPosition() + Engine::GetCameraObject()->GetTransform()->GetSize() / 2.0f);
+    glm::mat4 view = glm::translate(glm::mat4(1.0f), -Engine::GetCameraObject()->GetTransform()->GetPosition()  TOPIXELS + Engine::GetCameraObject()->GetTransform()->GetSize() TOPIXELS / 2.0f);
     if(std::shared_ptr<Renderer> renderer = object->GetRenderer()) {
         if(object != Engine::GetCameraObject())
-            renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition(), 1.0f);
+            renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition() TOPIXELS, 1.0f);
     }
     else
         if(object->GetRenderer() = object->GetComponent<Renderer>()) 
-            renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition(), 1.0f);
+            renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition() TOPIXELS, 1.0f);
 }
 
 void Engine::PhysicsSim()

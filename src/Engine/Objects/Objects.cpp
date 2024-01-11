@@ -109,7 +109,7 @@ Object* Object::CreateObject(std::string &&ObjName)
     
     NewObj.renderer->Color.Get() = glm::vec4(1);
     NewObj.transform->SetSize(glm::vec3(0));
-    NewObj.transform->SetSize(glm::vec3(20.0f, 20.0f, 0.0f));
+    NewObj.transform->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
 
     NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
     Engine::GetActiveScene().Add(std::move(NewObj));

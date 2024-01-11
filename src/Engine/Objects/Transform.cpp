@@ -6,7 +6,7 @@ Transform::Transform(std::string File, std::string ArgName, unsigned int ArgId, 
 {
     Position.Get() = glm::vec3(0);
     Rotation.Get() = glm::vec3(0);
-    Size.Get() = glm::vec3(20,20,0);
+    Size.Get() = glm::vec3(1,1,0);
     Model = glm::mat4(1.0f);
     Model = glm::translate(Model, Position.Get());
     Model = glm::rotate(Model, Rotation.Get().z, glm::vec3(0,0,1));
@@ -16,18 +16,7 @@ Transform::Transform(std::string File, std::string ArgName, unsigned int ArgId, 
         Points.push_back(glm::vec3(Model * glm::vec4(OriginalPoints[i],1.0f)));
     }
     std::function<void()> OnChange = [this]() {
-        if(Parent == nullptr){
-            Model = glm::mat4(1.0f);
-            Model = glm::translate(Model, Position.Get());
-            Model = glm::rotate(Model, Rotation.Get().z, glm::vec3(0,0,1));
-            Model = glm::scale(Model, Size.Get());
-            for (size_t i = 0; i < Points.size(); i++)
-            {
-                Points[i] = glm::vec3(Model * glm::vec4(OriginalPoints[i],1.0f));
-            }
-        }else{
-            Parent->UpdateModel();
-        }
+        UpdateModel();
 
     };
     Position.SetOnChangeFunc(OnChange);
@@ -56,14 +45,7 @@ Transform::Transform(const Transform &transform)
         Points.push_back(glm::vec3(Model * glm::vec4(OriginalPoints[i],1.0f)));
     }
     std::function<void()> OnChange = [this]() {
-        Model = glm::mat4(1.0f);
-        Model = glm::translate(Model, Position.Get());
-        Model = glm::rotate(Model, Rotation.Get().z, glm::vec3(0,0,1));
-        Model = glm::scale(Model, Size.Get());
-        for (size_t i = 0; i < Points.size(); i++)
-        {
-            Points[i] = glm::vec3(Model * glm::vec4(OriginalPoints[i],1.0f));
-        }
+        UpdateModel();
     };
     Position.SetOnChangeFunc(OnChange);
     Rotation.SetOnChangeFunc(OnChange);
@@ -182,9 +164,9 @@ void Transform::UpdateModel()
 {
     if(Parent == nullptr){
         Model = glm::mat4(1.0f);
-        Model = glm::translate(Model, Position.Get());
+        Model = glm::translate(Model, Position.Get() TOPIXELS);
         Model = glm::rotate(Model, Rotation.Get().z, glm::vec3(0,0,1));
-        Model = glm::scale(Model, Size.Get());
+        Model = glm::scale(Model, Size.Get() TOPIXELS);
         for (auto &&child : childrenTransforms)
         {
             child->Model = glm::mat4(1.0f);
@@ -201,6 +183,6 @@ void Transform::UpdatePoints()
 {
     for (size_t i = 0; i < Points.size(); i++)
     {
-        Points[i] = glm::vec3(Model * glm::vec4(OriginalPoints[i],1.0f));
+        Points[i] = glm::vec3(Model * glm::vec4(OriginalPoints[i],1.0f)) TOUNITS;
     }
 }

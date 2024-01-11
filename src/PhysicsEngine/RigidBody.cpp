@@ -5,7 +5,7 @@
 #include <execution>
 #include <glm/gtx/norm.hpp>
 #include "Editor/DebugDraw.h"
-#define ITERATIONS 4
+#define ITERATIONS 1
 #define VECTOR_THRESHOLD 1e-12
 
 SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp) : Trigger("Trigger", Variables), 
@@ -15,7 +15,7 @@ StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction",
 {
     Trigger.Get() = false;
     Static.Get() = false;
-    Restitution.Get() = 0.0f;
+    Restitution.Get() = 0.2f;
     StaticFriction.Get() = 0.6f;
     DynamicFriction.Get() = 0.4f;
     Restitution.Min = 0.0f;
@@ -31,6 +31,7 @@ StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction",
     Mass.Min = 0.001f;
     Functions["Impulse"] = Impulse;
     Functions["SetVelocity"] = SetVelocity;
+    Functions["GetVelocity"] = GetVelocity;
     Functions["Raycast"] = RayCast;
 }
 
@@ -57,18 +58,28 @@ Component(std::move(""), std::move("Renderer"), 0, false)
     Mass.Min = 0.001f;
     Functions["Impulse"] = Impulse;
     Functions["SetVelocity"] = SetVelocity;
+    Functions["GetVelocity"] = GetVelocity;
+    Functions["Raycast"] = RayCast;
 }
 
 void SapphirePhysics::RigidBody::Update(const float &DeltaTime)
 {
     if(Static.Get()) return;
-    Force = glm::vec3(0, SapphirePhysics::CollisionDetection::g.Get(), 0) * Mass.Get();
-    Accelaration = (Force/Mass.Get());
-    Velocity += StartingVelocity + Accelaration * DeltaTime;
-
-    transform->Move(Velocity * DeltaTime);
-    transform->Rotate(AngularVelocity.z * DeltaTime);
+    Forces.push_back(glm::vec3(0, SapphirePhysics::CollisionDetection::g.Get(), 0) * Mass.Get());
+    Accelaration = (SapphireEngine::VectorSum(Forces)/Mass.Get());
+    AngularAccelaration = SapphireEngine::VectorSum(Torques) / (((1.0f / 12.0f) * Mass.Get() * (transform->GetSize().x * transform->GetSize().x + transform->GetSize().y * transform->GetSize().y)));
+    Velocity += StartingVelocity + Accelaration * FixedTimeStep;
+    AngularVelocity.z += AngularAccelaration.z * FixedTimeStep;
+    // std::stringstream ss;
+    // ss << "Velocity x: " << Velocity.x << ", y: " << Velocity.y << '\n';
+    // ss << "Accelaration x: " << Accelaration.x << "y: " << Accelaration.y;
+    // SapphireEngine::Log(ss.str());
+    // if(glm::length2(Velocity) <= 0.1f) Velocity = glm::vec3(0);
+    transform->Move(Velocity * FixedTimeStep);
+    transform->Rotate(AngularVelocity.z * FixedTimeStep);
     StartingVelocity = glm::vec3(0);
+    Forces.clear();
+    Torques.clear();
 }
 struct StackObjectDeleter {
     void operator()(Object* /* object */) const {
@@ -84,8 +95,9 @@ bool SapphirePhysics::RigidBody::IntersectAABBs(AABB a, AABB b)
 
 void SapphirePhysics::RigidBody::BroadPhase(Object* current)
 {
+    int index = Engine::GetActiveScene().ObjectRefrences[current->GetRefID()];
     if(current->GetRb()->ShapeType == SapphireRenderer::RectangleT){
-        std::for_each(std::execution::par,Engine::GetActiveScene().Objects.begin(), Engine::GetActiveScene().Objects.end(), [current](auto&& object) {
+        std::for_each(std::execution::par,(Engine::GetActiveScene().Objects.begin()+index), Engine::GetActiveScene().Objects.end(), [current](auto&& object) {
             if(object.Name == "MainCamera" || &object == current || object.GetRb() == nullptr) return;
             if(!IntersectAABBs(object.GetRb()->GetAABB(), current->GetRb()->GetAABB())) {
                 return;
@@ -111,22 +123,22 @@ void SapphirePhysics::RigidBody::NarrowPhase()
 
     for (auto &&pair : ContactPairs)
     {
+        std::stringstream ss;
         CollisionData CD;
         std::shared_ptr<Object> sharedObject(pair.second,StackObjectDeleter{});
         if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, pair.first,CD)){
-            if(!(pair.first->CalledOnCollision)){
-                pair.first->OnCollision(pair.second);
-                std::cout << "called first" << '\n';
-                pair.first->CalledOnCollision = true;
-            }
-            if(!(pair.second->CalledOnCollision)){
-                pair.second->OnCollision(pair.first);
-                std::cout << "called second" << '\n';
-                pair.second->CalledOnCollision = true;
-            }
+            // if(!(pair.first->CalledOnCollision)){
+            //     pair.first->OnCollision(pair.second);
+            //     std::cout << "called first" << '\n';
+            //     pair.first->CalledOnCollision = true;
+            // }
+            // if(!(pair.second->CalledOnCollision)){
+            //     pair.second->OnCollision(pair.first);
+            //     std::cout << "called second" << '\n';
+            //     pair.second->CalledOnCollision = true;
+            // }
             OnCollisionRotation(pair.first, pair.second, std::move(CD));  
         }
-
     }
 }
 
@@ -175,152 +187,90 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* Obo
         bodyBInvMass = 0.0f;
         bodyBInvInertia = 0.0f;
     }
-    //Not realistic, but good enough for a video game.
-    float StaticFriction = (bodyA->StaticFriction.Get() + bodyB->StaticFriction.Get()) * 0.5f;
-    float DynamicFriction = (bodyA->DynamicFriction.Get() + bodyB->DynamicFriction.Get()) * 0.5f;
-    glm::vec2 normal = CD.Normal;
-    glm::vec2 contact1 = CD.ContactPoint1;
-    glm::vec2 contact2 = CD.ContactPoint2;
-    int contactCount = CD.ContactPointCount;
+    // glm::vec3 RelativeVelocity = bodyB->Velocity - bodyA->Velocity;
+    // float J = glm::length(RelativeVelocity) * ((0.2f) + 1) / (bodyAInvMass + bodyBInvMass);
+    // glm::vec2 Point = CD.ContactPoint1 + (CD.ContactPoint2 - CD.ContactPoint1) / 2.0f;
+    // if(glm::vec2(Point - CD.ContactPoint2).x < 0 && glm::vec2(Point - CD.ContactPoint1).x < 0 && glm::dot(glm::normalize(glm::vec2(Point - CD.ContactPoint2)), glm::normalize(glm::vec2(Point - CD.ContactPoint1))) == 1){
+    //     Point = CD.ContactPoint2;
+    // }
+    // glm::vec2 Point = glm::vec2(CD.ContactPoint1.x + (CD.ContactPoint2.x - CD.ContactPoint1.x) / 2.0f, bodyAPos.y);
+    // if(CD.ContactPointCount == 1){
+    //     Point = glm::vec2(CD.ContactPoint1.x, bodyAPos.y);
+    // }
+    // glm::vec2 PointA = (CD.ContactPoint1 + CD.ContactPoint2) / 2.0f - glm::vec2(bodyAPos);
+    // glm::vec2 PointB = (CD.ContactPoint1 + CD.ContactPoint2) / 2.0f - glm::vec2(bodyBPos);
+    // SapphireEngine::Log(std::to_string(r1.x) + ", " + std::to_string(r1.y));
+    // SapphireEngine::AddLine(glm::vec2(0,0), Point, glm::vec4(0,0,1,1), 5.0f);
+    // SapphireEngine::AddLine(glm::vec2(0,0), CD.ContactPoint2, glm::vec4(0,1,0,1), 5.0f);
+    // SapphireEngine::AddLine(glm::vec2(0,0), CD.ContactPoint1, glm::vec4(0,1,1,1), 5.0f);
+    // SapphireEngine::AddLine(glm::vec2(0,0), glm::vec2(bodyAPos), glm::vec4(1,0,0,1), 5.0f);
 
-    float e = std::min(bodyA->Restitution.Get(), bodyB->Restitution.Get());
     std::array<glm::vec2, 2> contactList {glm::vec2(0),glm::vec2(0)};
-    std::array<glm::vec2, 2> impulseList = {glm::vec2(0),glm::vec2(0)};
-    std::array<glm::vec2, 2> FrictionImpulseList = {glm::vec2(0),glm::vec2(0)};
-    std::array<glm::vec2, 2> raList = {glm::vec2(0),glm::vec2(0)};
-    std::array<glm::vec2, 2> rbList = {glm::vec2(0),glm::vec2(0)};
+    std::array<glm::vec3, 2> FrictionImpulseList = {glm::vec3(0),glm::vec3(0)};
+    std::array<glm::vec3, 2> raList = {glm::vec3(0),glm::vec3(0)};
+    std::array<glm::vec3, 2> rbList = {glm::vec3(0),glm::vec3(0)};
     std::array<float, 2> JList;
-    contactList[0] = contact1;
-    contactList[1] = contact2;
+    contactList[0] = CD.ContactPoint1;
+    contactList[1] = CD.ContactPoint2;
+    // glm::vec3 n = glm::vec3(0,1,0);
+    // // n = glm::vec3(-n.y, n.x, n.z);
 
-    for (int i = 0; i < contactCount; i++)
+    glm::vec3 n = glm::vec3(CD.Normal,0);
+    for (size_t i = 0; i < CD.ContactPointCount; i++)
     {
-        glm::vec2 ra = contactList[i] - glm::vec2(bodyAPos);
-        glm::vec2 rb = contactList[i] - glm::vec2(bodyBPos);
+        glm::vec2 Point = contactList[i];
+        glm::vec3 r1 = glm::vec3(Point - glm::vec2(bodyAPos), 0);
+        glm::vec3 r2 = glm::vec3(Point - glm::vec2(bodyBPos), 0);
+        glm::vec3 Vp1 = bodyA->Velocity + glm::cross(bodyA->AngularVelocity, r1);
+        glm::vec3 Vp2 = bodyB->Velocity + glm::cross(bodyB->AngularVelocity, r2);
+        glm::vec3 RelativeVelocity = Vp1 - Vp2;
+        float J = -glm::dot(RelativeVelocity, n) * (0.0f + 1) 
+        / (bodyAInvMass + bodyBInvMass 
+        + glm::dot(n, glm::cross(glm::cross(r1, n) * bodyAInvMass, r1))
+        + glm::dot(n, glm::cross(glm::cross(r2, n) * bodyBInvInertia, r2)));
+        JList[i] = J;
+        raList[i] = r1;
+        rbList[i] = r2;
 
-        raList[i] = ra;
-        rbList[i] = rb;
-
-        glm::vec2 raPerp = glm::vec2(-ra.y, ra.x);
-        glm::vec2 rbPerp = glm::vec2(-rb.y, rb.x);
-        // raPerp = glm::normalize(raPerp);
-        // rbPerp = glm::normalize(rbPerp);
-        glm::vec2 angularLinearVelocityA = raPerp * bodyA->AngularVelocity.z;
-        glm::vec2 angularLinearVelocityB = rbPerp * bodyB->AngularVelocity.z;
-
-        glm::vec2 relativeVelocity = 
-            (glm::vec2(bodyB->Velocity) + angularLinearVelocityB) - 
-            (glm::vec2(bodyA->Velocity) + angularLinearVelocityA);
-
-        float contactVelocityMag = glm::dot(relativeVelocity, normal);
-
-        if (contactVelocityMag > 0.0f)
-        {
-            continue;
-        }
-
-        float raPerpDotN = glm::dot(raPerp, normal);
-        float rbPerpDotN = glm::dot(rbPerp, normal);
-
-        float denom = bodyAInvMass + bodyBInvMass + 
-            (raPerpDotN * raPerpDotN) * bodyAInvInertia + 
-            (rbPerpDotN * rbPerpDotN) * bodyBInvInertia;
-
-        float j = -(1.0f + e) * contactVelocityMag;
-        if(denom != 0) j /= denom;
-        if(contactCount != 0) j /= (float)contactCount;
-        JList[i] = j;
-        glm::vec2 impulse = j * normal;
-        impulseList[i] = impulse;
-    }
-    for(int i = 0; i < contactCount; i++)
-    {
-        glm::vec2 impulse = impulseList[i];
-        glm::vec2 ra = raList[i];
-        glm::vec2 rb = rbList[i];
-        bodyA->Velocity += glm::vec3(-impulse * bodyAInvMass,0);
-        bodyA->AngularVelocity.z += -CrossProduct(ra, impulse) * bodyAInvInertia;
-        SapphireEngine::AddLine(glm::vec2(bodyAPos), glm::vec2(bodyAPos) + glm::vec2(-impulse * bodyAInvMass), glm::vec4(0.2f, 0.5f, 0.1f, 1.0f), 5.0f);
-        bodyB->Velocity += glm::vec3(impulse * bodyBInvMass,0);
-        bodyB->AngularVelocity.z += CrossProduct(rb, impulse) * bodyBInvInertia;
-        SapphireEngine::AddLine(glm::vec2(bodyBPos), glm::vec2(bodyBPos)+glm::vec2(impulse * bodyAInvMass), glm::vec4(0.2f, 0.5f, 0.1f, 1.0f), 5.0f);
     }
 
-    for (int i = 0; i < contactCount; i++)
-    {
-        glm::vec2 ra = contactList[i] - glm::vec2(bodyAPos);
-        glm::vec2 rb = contactList[i] - glm::vec2(bodyBPos);
-
-        raList[i] = ra;
-        rbList[i] = rb;
-
-        glm::vec2 raPerp = glm::vec2(-ra.y, ra.x);
-        glm::vec2 rbPerp = glm::vec2(-rb.y, rb.x);
-        raPerp = glm::normalize(raPerp);
-        rbPerp = glm::normalize(rbPerp);
-        glm::vec2 angularLinearVelocityA = raPerp * bodyA->AngularVelocity.z;
-        glm::vec2 angularLinearVelocityB = rbPerp * bodyB->AngularVelocity.z;
-
-        glm::vec2 relativeVelocity = 
-            (glm::vec2(bodyB->Velocity) + angularLinearVelocityB) - 
-            (glm::vec2(bodyA->Velocity) + angularLinearVelocityA);
-
-        glm::vec2 tangent = relativeVelocity - glm::dot(relativeVelocity, normal) * normal;
-        if(tangent == glm::vec2(0)){
-            continue;
-        }else{
-            float squaredLength = glm::length2(tangent);
-            float length = 1;
-            if (squaredLength > VECTOR_THRESHOLD) {
-                length = glm::sqrt(squaredLength);
-                tangent = glm::vec2(tangent.x/length, tangent.y/length);
-            } else {
-                //Vector is very close to 0, consider it as 0.
-                continue;
-            }
-            if(std::isnan(tangent.x) || std::isnan(tangent.y)){
-                //Vector was close to 0 and the length came out as 0 and then normalized which caused the tangent to be NaN.
-                continue;
-            }
-        }
-        float raPerpDotT = glm::dot(raPerp, tangent);
-        float rbPerpDotT = glm::dot(rbPerp, tangent);
-
-        float denom = bodyAInvMass + bodyBInvMass + 
-            (raPerpDotT * raPerpDotT) * bodyAInvInertia + 
-            (rbPerpDotT * rbPerpDotT) * bodyBInvInertia;
-
-        float jt = -glm::dot(relativeVelocity, tangent);
-        if(denom != 0) jt /= denom;
-        if(contactCount != 0) jt /= (float)contactCount;
-        glm::vec2 FrictionImpulse;
-        if(abs(jt) <= JList[i] * StaticFriction){
-            FrictionImpulse = jt * tangent;
-        }else{
-            FrictionImpulse = -JList[i] * tangent * DynamicFriction;
-        }
-        FrictionImpulseList[i] = FrictionImpulse;
-    }
-    for(int i = 0; i < contactCount; i++)
-    {
-        glm::vec2 impulse = FrictionImpulseList[i];
-        glm::vec2 ra = raList[i];
-        glm::vec2 rb = rbList[i];
-
-        bodyA->Velocity += glm::vec3(-impulse * bodyAInvMass,0);
-        bodyA->AngularVelocity.z += -CrossProduct(glm::normalize(ra), impulse) * bodyAInvInertia;
-        SapphireEngine::AddLine(glm::vec2(bodyAPos), glm::vec2(bodyAPos) + glm::vec2(-impulse * bodyAInvMass), glm::vec4(0.7f, 0.3f, 0.8f, 1.0f), 5.0f);
-        bodyB->Velocity += glm::vec3(impulse * bodyBInvMass,0);
-        bodyB->AngularVelocity.z += CrossProduct(glm::normalize(rb), impulse) * bodyBInvInertia;
-        SapphireEngine::AddLine(glm::vec2(bodyBPos), glm::vec2(bodyBPos)+glm::vec2(impulse * bodyAInvMass), glm::vec4(0.7f, 0.3f, 0.8f, 1.0f), 5.0f);
-    }
-    if(bodyB->Static.Get())
+    if(bodyB->Static.Get()){
         bodyA->transform->Move(glm::vec3(-CD.Normal * CD.Depth,0));
-    else if(bodyA->Static.Get())
+        bodyA->Forces.push_back(JList[0]*n/FixedTimeStep);
+        for (size_t i = 0; i < CD.ContactPointCount; i++)
+        {
+            // bodyA->Torques.push_back(-glm::cross(raList[i],weight));
+            // bodyA->Forces.push_back(J*n/FixedTimeStep);
+            // bodyA->Velocity += (J*n) / bodyA->Mass.Get();
+            bodyA->AngularVelocity += (glm::cross(raList[i], JList[i] * n)) * bodyAInvInertia;
+        }
+        
+    }
+    else if(bodyA->Static.Get()){
         bodyB->transform->Move(glm::vec3(CD.Normal * CD.Depth,0));
+        bodyB->Forces.push_back(-JList[0]*n/FixedTimeStep);
+        for (size_t i = 0; i < CD.ContactPointCount; i++)
+        {
+            // bodyA->Torques.push_back(-glm::cross(raList[i],weight));
+            // bodyA->Forces.push_back(J*n/FixedTimeStep);
+            // bodyA->Velocity += (J*n) / bodyA->Mass.Get();
+            bodyB->AngularVelocity += (glm::cross(rbList[i], -JList[i] * n)) * bodyBInvInertia;
+        }
+    }
     else{
         bodyA->transform->Move(glm::vec3(-CD.Normal * CD.Depth / 2.0f,0));
         bodyB->transform->Move(glm::vec3(CD.Normal * CD.Depth / 2.0f,0));
+
+        bodyA->Forces.push_back(JList[0]*n/FixedTimeStep);
+        bodyB->Forces.push_back(-JList[0]*n/FixedTimeStep);
+        bodyA->Forces.push_back(JList[0]*n/FixedTimeStep);
+        bodyB->Forces.push_back(-JList[0]*n/FixedTimeStep);
+        for (size_t i = 0; i < CD.ContactPointCount; i++)
+        {
+            bodyB->AngularVelocity += (glm::cross(rbList[i], -JList[i] * n)) * bodyBInvInertia;
+            bodyA->AngularVelocity += (glm::cross(raList[i], JList[i] * n)) * bodyAInvInertia;
+        }
+        
     } 
 }
 void SapphirePhysics::RigidBody::Simulate(Object* current, const float& DeltaTime) {
@@ -328,7 +278,7 @@ void SapphirePhysics::RigidBody::Simulate(Object* current, const float& DeltaTim
     {
         object.CalledOnCollision = false;
     }
-    for (size_t i = 0; i < ITERATIONS; i++)
+    for (size_t i = 1; i <= ITERATIONS; i++)
     {
         ContactPairs.clear();
         Update(DeltaTime / ITERATIONS);
@@ -473,6 +423,23 @@ int SapphirePhysics::RigidBody::SetVelocity(lua_State *L)
     float x = (float)luaL_checknumber(L, 2);
     float y = (float)luaL_checknumber(L, 3);
     glm::vec3 velocity(x,y,0);
-    rb->SetStartingVel(velocity);
+    rb->Velocity = velocity;
     return 0;
+}
+
+int SapphirePhysics::RigidBody::GetVelocity(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    SapphirePhysics::RigidBody* rb = static_cast<SapphirePhysics::RigidBody*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    lua_newtable(L);
+    lua_pushnumber(L, rb->Velocity.x);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, rb->Velocity.y);
+    lua_setfield(L, -2, "y");
+    return 1;
 }
