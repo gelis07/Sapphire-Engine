@@ -271,9 +271,26 @@ bool Component::GetLuaVariables()
             }
         }
         else if(type == LUA_TTABLE){
-            var.Value = new SapphireEngine::LuaTable(var.Name, Variables);
-            std::unordered_map<std::string, SapphireEngine::Variable*> test = ScriptingEngine::GetTable(L, std::string(var.Name), {});
-            ((SapphireEngine::LuaTable*)var.Value)->Get() = test;
+            lua_getfield(L, -1, "x");
+            if(!lua_isnil(L, -1)){
+                float x = lua_tonumber(L, -1);
+                lua_pop(L, 1);
+                lua_getfield(L, -1, "y");
+                if(!lua_isnil(L, -1)){
+                    float y = lua_tonumber(L, -1);
+                    lua_pop(L, 1);
+                    var.Value = new SapphireEngine::Vec2(var.Name, Variables);
+                    ((SapphireEngine::Vec2*)var.Value)->Get() = glm::vec2(x,y);
+                }else{
+                    var.Value = new SapphireEngine::LuaTable(var.Name, Variables);
+                    std::unordered_map<std::string, SapphireEngine::Variable*> test = ScriptingEngine::GetTable(L, std::string(var.Name), {});
+                    ((SapphireEngine::LuaTable*)var.Value)->Get() = test;
+                }
+            }else{
+                var.Value = new SapphireEngine::LuaTable(var.Name, Variables);
+                std::unordered_map<std::string, SapphireEngine::Variable*> test = ScriptingEngine::GetTable(L, std::string(var.Name), {});
+                ((SapphireEngine::LuaTable*)var.Value)->Get() = test;
+            }
         }
         else if(type == LUA_TBOOLEAN){
             var.Value = new SapphireEngine::Bool(var.Name, Variables);

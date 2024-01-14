@@ -26,6 +26,7 @@ namespace SapphirePhysics{
             static int GetVelocity(lua_State* L);
             SapphireEngine::Bool Trigger;
             SapphireEngine::Bool Static;
+            SapphireEngine::Bool Rotate;
             SapphireEngine::Float Mass;
             SapphireEngine::Float Restitution;
             SapphireEngine::Float StaticFriction;

@@ -132,6 +132,9 @@ void SapphireEngine::Vec2::SendToLua(lua_State *L)
     lua_setfield(L, -2, "x");
     lua_pushnumber(L, vecValue.y);
     lua_setfield(L, -2, "y");
+    luaL_getmetatable(L, "Vector");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
 }
 
 void SapphireEngine::Vec2::GetFromLua(lua_State *L)

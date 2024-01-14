@@ -21,7 +21,8 @@ end)";
 const char* defaultScene = R"({
   "Object: 0": {
     "Name": "MainCamera",
-    "ID": 44630,
+    "Tag": "",
+    "ID": 4014,
     "Children": null,
     "Components": {
       "Transform": {
@@ -30,8 +31,8 @@ const char* defaultScene = R"({
           "Size": [
             5690004131215169010,
             {
-              "x": 1658.0,
-              "y": 599.0,
+              "x": 31.920000076293945,
+              "y": 12.640000343322754,
               "z": 0.0
             }
           ],

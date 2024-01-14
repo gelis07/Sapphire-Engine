@@ -21,7 +21,13 @@ ObjectRef Scene::Add(Object &&obj, int refID)
 }
 void Scene::Delete(int ID)
 {
-    ObjectRefrences.erase(ObjectRefrences.find((Objects.begin() + ID)->GetRefID()));
+    ObjectRef obj = Objects[ID].GetRef();
+    for (auto& child : obj->Children)
+    {
+        Delete(child.Get());
+    }
+    ID = ObjectRefrences[obj->GetRefID()];
+    ObjectRefrences.erase(obj->GetRefID());
     for (auto& ref : ObjectRefrences)
     {
         if(ref.second < ID) continue;
@@ -32,7 +38,11 @@ void Scene::Delete(int ID)
 }
 void Scene::Delete(Object *obj)
 {
-    const int& ID = ObjectRefrences[obj->GetRefID()];
+    for (auto& child : obj->Children)
+    {
+        Delete(child.Get());
+    }
+    int ID = ObjectRefrences[obj->GetRefID()];
     ObjectRefrences.erase(ObjectRefrences.find(obj->GetRefID()));
     for (auto& ref : ObjectRefrences)
     {
@@ -240,17 +250,37 @@ void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)
         {
             Name = "##";
         }
-        if(Objects[i].Children.size() == 0){
+        if(Objects[i].Children.size() == 0 && Objects[i].Parent == null_ref){
             if (ImGui::Selectable((Name + "##" + std::to_string(Objects[i].id)).c_str(), &Objects[i] == SelectedObj))
             {
                 SelectedObjID = i;
                 Editor::SelectedObjChildID = -1;
+            }
+            ImVec2 textSize = ImGui::CalcTextSize(Name.c_str());
+            if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y), glm::vec2(textSize.x, textSize.y))){
+                if((**ref) != Objects[i].GetRefID()){
+                    Objects[i].Children.push_back(**ref);
+                    (**ref)->Parent = Objects[i].GetRef();
+                    (**ref)->GetTransform()->Parent = Objects[i].GetTransform().get();
+                    Objects[i].GetTransform()->childrenTransforms.push_back((**ref)->GetTransform().get());
+                    (**ref)->GetTransform()->UpdateModel();
+                }
             }
             if(ImGui::IsItemClicked(0)){
                 HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(Objects[i].GetRefID()));
             }
         }else{
             if(ImGui::TreeNode((Name + "##" + std::to_string(Objects[i].id)).c_str())){
+                ImVec2 textSize = ImGui::CalcTextSize(Name.c_str());
+                if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y), glm::vec2(textSize.x, textSize.y))){
+                    if((**ref) != Objects[i].GetRefID()){
+                        Objects[i].Children.push_back(**ref);
+                        (**ref)->Parent = Objects[i].GetRef();
+                        (**ref)->GetTransform()->Parent = Objects[i].GetTransform().get();
+                        Objects[i].GetTransform()->childrenTransforms.push_back((**ref)->GetTransform().get());
+                        (**ref)->GetTransform()->UpdateModel();
+                    }
+                }
                 if(ImGui::IsItemClicked(0)){
                     SelectedObjID = i;
                     Editor::SelectedObjChildID = -1;

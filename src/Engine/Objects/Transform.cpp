@@ -170,9 +170,9 @@ void Transform::UpdateModel()
         for (auto &&child : childrenTransforms)
         {
             child->Model = glm::mat4(1.0f);
-            child->Model = glm::translate(child->Model, Position.Get() + child->GetPosition());
+            child->Model = glm::translate(child->Model, (Position.Get() + child->GetPosition()) TOPIXELS);
             child->Model = glm::rotate(child->Model, Rotation.Get().z + child->GetRotation().z, glm::vec3(0,0,1));
-            child->Model = glm::scale(child->Model, child->GetSize());
+            child->Model = glm::scale(child->Model, child->GetSize() TOPIXELS);
         }
     }else{
         Parent->UpdateModel();

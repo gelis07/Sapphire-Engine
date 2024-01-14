@@ -10,11 +10,12 @@
 
 SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp) : Trigger("Trigger", Variables), 
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
-StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),
+StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables), Rotate("Rotate", Variables),
     Component(std::move(File), std::move(ArgName), ArgId,LuaComp)
 {
     Trigger.Get() = false;
     Static.Get() = false;
+    Rotate.Get() = true;
     Restitution.Get() = 0.2f;
     StaticFriction.Get() = 0.6f;
     DynamicFriction.Get() = 0.4f;
@@ -37,11 +38,12 @@ StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction",
 
 SapphirePhysics::RigidBody::RigidBody(const RigidBody &rb): Trigger("Trigger", Variables), 
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
-StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),
+StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),Rotate("Rotate", Variables),
 Component(std::move(""), std::move("Renderer"), 0, false)
 {
     Trigger.Get() = rb.Trigger.Get();
     Static.Get() = rb.Static.Get();
+    Rotate.Get() = rb.Rotate.Get();
     Restitution.Get() = rb.Restitution.Get();
     StaticFriction.Get() = rb.StaticFriction.Get();
     DynamicFriction.Get() = rb.DynamicFriction.Get();
@@ -76,7 +78,8 @@ void SapphirePhysics::RigidBody::Update(const float &DeltaTime)
     // SapphireEngine::Log(ss.str());
     // if(glm::length2(Velocity) <= 0.1f) Velocity = glm::vec3(0);
     transform->Move(Velocity * FixedTimeStep);
-    transform->Rotate(AngularVelocity.z * FixedTimeStep);
+    if(Rotate.Get())
+        transform->Rotate(AngularVelocity.z * FixedTimeStep);
     StartingVelocity = glm::vec3(0);
     Forces.clear();
     Torques.clear();
@@ -163,10 +166,7 @@ SapphirePhysics::AABB SapphirePhysics::RigidBody::GetAABB()
     }
     return AABB(min,max);
 }
-float CrossProduct(glm::vec2 v1, glm::vec2 v2){
-    return v1.x * v2.y - v1.y * v2.x;
-}
-const float ImpulseThreshold = 10.0f;
+//Thanks to the book "Physics for Game Developers" from David M. Bourg and Bryan Bywalec.
 void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* ObodyB, CollisionData &&CD)
 {
     RigidBody* bodyA = ObodyA->GetRb().get();
@@ -187,23 +187,6 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* Obo
         bodyBInvMass = 0.0f;
         bodyBInvInertia = 0.0f;
     }
-    // glm::vec3 RelativeVelocity = bodyB->Velocity - bodyA->Velocity;
-    // float J = glm::length(RelativeVelocity) * ((0.2f) + 1) / (bodyAInvMass + bodyBInvMass);
-    // glm::vec2 Point = CD.ContactPoint1 + (CD.ContactPoint2 - CD.ContactPoint1) / 2.0f;
-    // if(glm::vec2(Point - CD.ContactPoint2).x < 0 && glm::vec2(Point - CD.ContactPoint1).x < 0 && glm::dot(glm::normalize(glm::vec2(Point - CD.ContactPoint2)), glm::normalize(glm::vec2(Point - CD.ContactPoint1))) == 1){
-    //     Point = CD.ContactPoint2;
-    // }
-    // glm::vec2 Point = glm::vec2(CD.ContactPoint1.x + (CD.ContactPoint2.x - CD.ContactPoint1.x) / 2.0f, bodyAPos.y);
-    // if(CD.ContactPointCount == 1){
-    //     Point = glm::vec2(CD.ContactPoint1.x, bodyAPos.y);
-    // }
-    // glm::vec2 PointA = (CD.ContactPoint1 + CD.ContactPoint2) / 2.0f - glm::vec2(bodyAPos);
-    // glm::vec2 PointB = (CD.ContactPoint1 + CD.ContactPoint2) / 2.0f - glm::vec2(bodyBPos);
-    // SapphireEngine::Log(std::to_string(r1.x) + ", " + std::to_string(r1.y));
-    // SapphireEngine::AddLine(glm::vec2(0,0), Point, glm::vec4(0,0,1,1), 5.0f);
-    // SapphireEngine::AddLine(glm::vec2(0,0), CD.ContactPoint2, glm::vec4(0,1,0,1), 5.0f);
-    // SapphireEngine::AddLine(glm::vec2(0,0), CD.ContactPoint1, glm::vec4(0,1,1,1), 5.0f);
-    // SapphireEngine::AddLine(glm::vec2(0,0), glm::vec2(bodyAPos), glm::vec4(1,0,0,1), 5.0f);
 
     std::array<glm::vec2, 2> contactList {glm::vec2(0),glm::vec2(0)};
     std::array<glm::vec3, 2> FrictionImpulseList = {glm::vec3(0),glm::vec3(0)};
@@ -212,10 +195,10 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* Obo
     std::array<float, 2> JList;
     contactList[0] = CD.ContactPoint1;
     contactList[1] = CD.ContactPoint2;
+    //coefficient of restitution.
     float e = std::min(bodyA->Restitution.Get(), bodyB->Restitution.Get());
-    float cf = (bodyA->StaticFriction.Get() + bodyB->StaticFriction.Get()) * 0.5f;;
-    // glm::vec3 n = glm::vec3(0,1,0);
-    // // n = glm::vec3(-n.y, n.x, n.z);
+    //coefficient of friction.
+    float cf = (bodyA->StaticFriction.Get() + bodyB->StaticFriction.Get()) * 0.5f;
 
     glm::vec3 n = glm::vec3(CD.Normal,0);
     for (size_t i = 0; i < CD.ContactPointCount; i++)
@@ -243,7 +226,7 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* Obo
         bodyA->Forces.push_back(cf * JList[0]*t /FixedTimeStep);
         for (size_t i = 0; i < CD.ContactPointCount; i++)
         {
-            bodyA->Torques.push_back(glm::cross(raList[i], (JList[i] * n) + (cf*JList[i])*t));
+            bodyA->Torques.push_back(glm::cross(raList[i], (JList[i] * n)));
         }
         
     }
@@ -253,7 +236,7 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* Obo
         bodyB->Forces.push_back(cf * -JList[0]*t /FixedTimeStep);
         for (size_t i = 0; i < CD.ContactPointCount; i++)
         {
-            bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n + (cf*JList[i]*t)));
+            bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n));
         }
     }
     else{
@@ -262,14 +245,13 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* Obo
 
         bodyA->Forces.push_back(JList[0]*n/FixedTimeStep);
         bodyB->Forces.push_back(-JList[0]*n/FixedTimeStep);
+
         bodyB->Forces.push_back(cf * -JList[0]*t /FixedTimeStep);
         bodyA->Forces.push_back(cf * JList[0]*t /FixedTimeStep);
         for (size_t i = 0; i < CD.ContactPointCount; i++)
         {
-            // bodyA->Torques.push_back(glm::cross(raList[i], JList[i] * n));
-            // bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n));
-            bodyA->Torques.push_back(glm::cross(raList[i], (JList[i] * n) + (cf*JList[i])*t));
-            bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n + (cf*JList[i]*t)));
+            bodyA->Torques.push_back(glm::cross(raList[i], (JList[i] * n)));
+            bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n ));
         }
         
     } 
@@ -293,15 +275,17 @@ int SapphirePhysics::RigidBody::Impulse(lua_State *L) {
     lua_getfield(L, 1, "__userdata");
     SapphirePhysics::RigidBody* rb = static_cast<SapphirePhysics::RigidBody*>(lua_touserdata(L, -1));
     lua_pop(L, 1);
-    float x = (float)luaL_checknumber(L, 2);
-    float y = (float)luaL_checknumber(L, 3);
-    float z = (float)luaL_checknumber(L, 4);
-    glm::vec3 Force(x,y,z);
-    float& mass = rb->Mass.Get();
-    glm::vec3 weight = glm::vec3(0,SapphirePhysics::CollisionDetection::g.Get() * mass,0);
-    glm::vec3 Fnet = Force - weight;
-    float DeltaTime = 0.2f;
-    rb->Velocity = glm::vec3(Fnet * DeltaTime) / mass;
+    lua_getfield(L, -1, "x");
+    float x = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    lua_getfield(L, -1, "y");
+    float y = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    // float x = (float)luaL_checknumber(L, 2);
+    // float y = (float)luaL_checknumber(L, 3);
+    // float z = (float)luaL_checknumber(L, 4);
+    glm::vec3 Force(x,y,0);
+    rb->Forces.push_back(Force/FixedTimeStep);
     return 0;
 }
 

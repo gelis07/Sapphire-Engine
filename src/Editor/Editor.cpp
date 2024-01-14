@@ -338,6 +338,7 @@ void Editor::RenderViewport()
         Engine::GetActiveScene().Objects[i].id = i;
     }
     SapphireEngine::DrawDebug(view);
+    SapphireEngine::ClearData();
 
     ViewportFBO.Unbind();
 }

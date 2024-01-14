@@ -82,12 +82,13 @@ int Object::SetActive(lua_State *L)
 
 void Object::OnUpdate()
 {
+    ObjectRef obj(RefID);
     for (size_t i = 0; i < Components.size(); i++)
     {
         if (!Components[i]->Active || Components[i]->GetFile().empty())
             continue;
-        Components[i]->ExecuteFunction("OnUpdate");
-        Components[i]->UpdateExistingVars();
+        obj->Components[i]->ExecuteFunction("OnUpdate");
+        obj->Components[i]->UpdateExistingVars();
     }
 }
 
@@ -136,7 +137,7 @@ ObjectRef Object::CreateObjectRuntime(std::string &&ObjName)
     
     NewObj.renderer->Color.Get() = glm::vec4(1);
     NewObj.transform->SetSize(glm::vec3(0));
-    NewObj.transform->SetSize(glm::vec3(20.0f, 20.0f, 0.0f));
+    NewObj.transform->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
 
     NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
 
@@ -168,37 +169,6 @@ void Object::RenderGUI()
     }
     if(ImGui::Button("Add Component")){
         ImGui::OpenPopup("Components");
-    }
-    if(ImGui::Button("Add Child")){
-        Object NewObj("Child");
-        std::vector<glm::vec3> points;
-        points.push_back(glm::vec3(-0.5f,-0.5f,0));
-        points.push_back(glm::vec3(0.5f,-0.5f,0));
-        points.push_back(glm::vec3(0.5f,0.5f,0));
-        points.push_back(glm::vec3(-0.5f,0.5f,0));
-        NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0,std::move(points), false)));
-        NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
-        NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
-
-        NewObj.renderer = NewObj.GetComponent<Renderer>(); 
-        NewObj.transform = NewObj.GetComponent<Transform>();
-        NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
-        
-        NewObj.renderer->Color.Get() = glm::vec4(1);
-        NewObj.transform->SetSize(glm::vec3(0));
-        NewObj.transform->SetSize(glm::vec3(20.0f, 20.0f, 0.0f));
-
-        NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
-        NewObj.GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
-        NewObj.GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::RectangleT;
-        NewObj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(NewObj.GetRenderer()->shape->ShapeType);
-        NewObj.GetTransform()->Parent = transform.get();
-        //I need this reference because even this-> can become a dangling pointer after adding to the objects vector
-        ObjectRef thisObj = this->GetRef();
-        NewObj.Parent = thisObj;
-        ObjectRef obj = Engine::GetActiveScene().Add(std::move(NewObj));
-        thisObj->Children.push_back(obj);
-        thisObj->transform->childrenTransforms.push_back(thisObj->Children.back()->GetTransform().get());
     }
     if(ImGui::BeginPopup("Components")){
         if(ImGui::Button("RigidBody") && rb == nullptr){

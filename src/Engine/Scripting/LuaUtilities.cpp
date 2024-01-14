@@ -74,6 +74,246 @@ int LuaUtilities::SetObject(lua_State *L)
     lua_setmetatable(L, -2);
     return 1;
 }
+int mult(lua_State* L){
+    lua_pushstring(L, "x");
+    lua_gettable(L, -3);
+    float x = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -3);
+    float y = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    float multiplier = luaL_checknumber(L, 2);
+
+    lua_newtable(L);
+    lua_pushnumber(L, x * multiplier);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, y*multiplier);
+    lua_setfield(L, -2, "y");
+
+    luaL_getmetatable(L, "Vector");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+    return 1;
+}
+int div(lua_State* L){
+    lua_pushstring(L, "x");
+    lua_gettable(L, -3);
+    float x = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -3);
+    float y = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    float multiplier = luaL_checknumber(L, 2);
+    lua_newtable(L);
+    lua_pushnumber(L, x / multiplier);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, y/multiplier);
+    lua_setfield(L, -2, "y");
+
+    luaL_getmetatable(L, "Vector");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+    return 1;
+}
+int norm(lua_State* L){
+    lua_pushstring(L, "x");
+    lua_gettable(L, -2);
+    float x = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -2);
+    float y = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    float length = glm::sqrt(pow(x,2)+ pow(y,2));
+    lua_newtable(L);
+    lua_pushnumber(L, x / length);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, y/ length);
+    lua_setfield(L, -2, "y");
+
+    luaL_getmetatable(L, "Vector");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+    return 1;
+}
+int length(lua_State* L){
+    lua_pushstring(L, "x");
+    lua_gettable(L, -2);
+    float x = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -2);
+    float y = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    float length = glm::sqrt(pow(x,2)+ pow(y,2));
+    lua_pushnumber(L, length);
+    return 1;
+}
+int tostring(lua_State* L){
+    lua_pushstring(L, "x");
+    lua_gettable(L, -2);
+    float x = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -2);
+    float y = lua_tonumber(L, -1);
+    lua_pop(L,1);
+
+    std::string vector = "x: " + std::to_string(x) + ", y: " + std::to_string(y);
+    lua_pushstring(L, vector.c_str());
+    return 1;
+}
+int unm(lua_State* L){
+    lua_pushstring(L, "x");
+    lua_gettable(L, -2);
+    float x = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -2);
+    float y = lua_tonumber(L, -1);
+    lua_pop(L,1);
+
+    lua_newtable(L);
+    lua_pushnumber(L, -x);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, -y);
+    lua_setfield(L, -2, "y");
+
+    luaL_getmetatable(L, "Vector");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+    return 1;
+}
+
+int add(lua_State* L){
+    lua_pushstring(L, "x");
+    lua_gettable(L, -3);
+    float xLeft = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -3);
+    float yLeft = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "x");
+    lua_gettable(L, -2);
+    float xRight = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -2);
+    float yRight = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_newtable(L);
+    lua_pushnumber(L, xRight + xLeft);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, yRight + yLeft);
+    lua_setfield(L, -2, "y");
+
+    luaL_getmetatable(L, "Vector");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+    return 1;
+}
+int sub(lua_State* L){
+    lua_pushstring(L, "x");
+    lua_gettable(L, -3);
+    float xLeft = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -3);
+    float yLeft = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "x");
+    lua_gettable(L, -2);
+    float xRight = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_pushstring(L, "y");
+    lua_gettable(L, -2);
+    float yRight = lua_tonumber(L, -1);
+    lua_pop(L,1);
+    lua_newtable(L);
+    lua_pushnumber(L, xLeft - xRight);
+    lua_setfield(L, -2, "x");
+
+    lua_pushnumber(L, yLeft - yRight);
+    lua_setfield(L, -2, "y");
+
+    luaL_getmetatable(L, "Vector");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+    return 1;
+}
+int index(lua_State* L){
+    lua_newtable(L);
+    lua_getfield(L, -2, "x");
+    lua_pushnumber(L, lua_tonumber(L, -1));
+    lua_setfield(L, -1, "x");
+    lua_pop(L, 1);
+    lua_getfield(L, -2, "y");
+    lua_pushnumber(L, lua_tonumber(L, -1));
+    lua_setfield(L, -1, "y");
+    lua_pop(L, 1);
+    return 1;
+}
+int LuaUtilities::Vector(lua_State *L)
+{
+    int n = lua_gettop(L);
+    if (n != 2) {
+        return luaL_error(L, "Expected 2 argument, got %d", n);
+    }
+
+    float x = luaL_checknumber(L, 1);
+    float y = luaL_checknumber(L, 2);
+
+    luaL_newmetatable(L, "Vector");
+
+    // lua_pushstring(L, "__index");
+    // lua_pushcfunction(L, index);
+    // lua_settable(L, -3);
+    lua_pushstring(L, "__tostring");
+    lua_pushcfunction(L, tostring);
+    lua_settable(L, -3);
+    lua_pushstring(L, "__unm");
+    lua_pushcfunction(L, unm);
+    lua_settable(L, -3);
+    lua_pushstring(L, "__add");
+    lua_pushcfunction(L, add);
+    lua_settable(L, -3);
+    lua_pushstring(L, "__mul");
+    lua_pushcfunction(L, mult);
+    lua_settable(L, -3);
+    lua_pushstring(L, "__sub");
+    lua_pushcfunction(L, sub);
+    lua_settable(L, -3);
+    lua_pushstring(L, "__div");
+    lua_pushcfunction(L, div);
+    lua_settable(L, -3);
+
+    lua_newtable(L);
+
+    lua_pushnumber(L, x);
+    lua_setfield(L, -2, "x");
+
+    lua_pushcfunction(L, norm);
+    lua_setfield(L, -2, "normalize");
+
+    lua_pushcfunction(L, length);
+    lua_setfield(L, -2, "length");
+
+    lua_pushnumber(L, y);
+    lua_setfield(L, -2, "y");
+
+    luaL_getmetatable(L, "Vector");
+    lua_istable(L, -1);
+    lua_setmetatable(L, -2);
+    return 1;
+}
 int LuaUtilities::KeyPress(lua_State *L)
 {
     int n = lua_gettop(L);
@@ -190,9 +430,10 @@ int LuaUtilities::GetMouseCoord(lua_State *L)
     double x,y;
     glfwGetCursorPos(Engine::app->GetWindow(), &x, &y);
     glm::vec2 FinalCoords = (Editor::WindowPos + Editor::WindowSize / 2.0f) - glm::vec2(x,y);
+    FinalCoords = FinalCoords TOUNITS;
     FinalCoords.x *= -1;
     FinalCoords += glm::vec2(Engine::GetCameraObject()->GetTransform()->GetPosition());
-    lua_pushnumber(L, FinalCoords.x);
+    lua_pushnumber(L, FinalCoords.x );
     lua_setfield(L, -2, "x");
 
     lua_pushnumber(L, FinalCoords.y);
@@ -453,6 +694,8 @@ int LuaUtilities::luaopen_SapphireEngine(lua_State *L)
     lua_setfield(L, -2, "Clamp");
     lua_pushcfunction(L, SetObject);
     lua_setfield(L, -2, "SetObject");
+    lua_pushcfunction(L, Vector);
+    lua_setfield(L, -2, "Vector");
 
     // Return the table
     return 1;
