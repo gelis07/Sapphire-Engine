@@ -100,14 +100,16 @@ Object* Object::CreateObject(std::string &&ObjName)
     points.push_back(glm::vec3(0.5f,-0.5f,0));
     points.push_back(glm::vec3(0.5f,0.5f,0));
     points.push_back(glm::vec3(-0.5f,0.5f,0));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0,std::move(points), false)));
+    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("Transform",std::move(points))));
     NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
     NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
 
     NewObj.renderer = NewObj.GetComponent<Renderer>(); 
     NewObj.transform = NewObj.GetComponent<Transform>();
     NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
-    
+    NewObj.renderer->transform = NewObj.transform.get();
+    Renderer::Shapes.push_back(NewObj.renderer);
+
     NewObj.renderer->Color.Get() = glm::vec4(1);
     NewObj.transform->SetSize(glm::vec3(0));
     NewObj.transform->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
@@ -127,14 +129,15 @@ ObjectRef Object::CreateObjectRuntime(std::string &&ObjName)
     points.push_back(glm::vec3(0.5f,-0.5f,0));
     points.push_back(glm::vec3(0.5f,0.5f,0));
     points.push_back(glm::vec3(-0.5f,0.5f,0));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("", "Transform", 0,std::move(points), false)));
+    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("Transform", std::move(points))));
     NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
     NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
 
     NewObj.renderer = NewObj.GetComponent<Renderer>(); 
     NewObj.transform = NewObj.GetComponent<Transform>();
     NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
-    
+    NewObj.renderer->transform = NewObj.transform.get();
+    Renderer::Shapes.push_back(NewObj.renderer);
     NewObj.renderer->Color.Get() = glm::vec4(1);
     NewObj.transform->SetSize(glm::vec3(0));
     NewObj.transform->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
@@ -322,7 +325,7 @@ Object* Object::LoadPrefab(std::string FilePath)
             points.push_back(glm::vec3(0.5f,-0.5f,0));
             points.push_back(glm::vec3(0.5f,0.5f,0));
             points.push_back(glm::vec3(-0.5f,0.5f,0));
-            object.GetComponents().push_back(std::make_shared<Transform>(element.value()["path"], element.key(), object.GetComponents().size(), std::move(points),element.value()["path"] != ""));
+            object.GetComponents().push_back(std::make_shared<Transform>(element.key(),std::move(points)));
             object.GetComponents().back()->Load(element.value()["Variables"]);
         }else
         {

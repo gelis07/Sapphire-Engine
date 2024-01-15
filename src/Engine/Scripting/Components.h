@@ -16,6 +16,7 @@ class Component
     using TableVariable = std::unordered_map<std::string, SapphireEngine::Variable*>;
     public:
         Component(std::string File, std::string ArgName , unsigned int ArgId, bool LuaComp=false);
+        Component(const std::string& ArgName) : Name(ArgName) {} // This will be used for the non lua components.
         Component(const Component& comp);
         ~Component();
         virtual void CustomRendering() {};
@@ -47,17 +48,3 @@ class Component
     A component class should contain a SapphireEngine type if it should be rendered on the UI, Saved on the scene file and send/received from lua.
     Also, it should be Initialized on the Component constructor with the variable name and the Variables map (should stay the same for most variables).
 */
-
-class LuaCamera : public Component
-{
-    public:
-        LuaCamera(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false)
-        : Component(std::move(File), std::move(ArgName), ArgId,LuaComp), BgColor("BgColor", Variables), Zoom("Zoom", Variables){
-            BgColor.Get() = glm::vec4(0,0,0,1);
-            Zoom.Get() = 1.0f;
-        };
-        SapphireEngine::Color BgColor;
-        SapphireEngine::Float Zoom;
-};
-
-

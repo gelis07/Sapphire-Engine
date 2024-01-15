@@ -10,24 +10,28 @@ Engine::Engine(const std::string& mainPath)
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::TextureShader.GetID()), "Shaders/Texture.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::AnimationShader.GetID()), "Shaders/Animation.glsl");
 
-    Object Camera("MainCamera");
+    Object CameraObj("MainCamera");
     std::vector<glm::vec3> points;
     points.push_back(glm::vec3(-1,-1,0));
     points.push_back(glm::vec3(1,-1,0));
     points.push_back(glm::vec3(1,1,0));
     points.push_back(glm::vec3(-1,1,0));
-    Camera.AddComponent<Transform>(std::make_shared<Transform>("", "Transform", 1, std::move(points),false));
-    Camera.AddComponent<LuaCamera>(std::make_shared<LuaCamera>("", "Camera", 2,  false));
-    Camera.AddComponent<Renderer>(std::make_shared<Renderer>("", "Renderer", 3, false));
+    CameraObj.AddComponent<Transform>(std::make_shared<Transform>("Transform", std::move(points)));
+    CameraObj.AddComponent<Camera>(std::make_shared<Camera>("Camera"));
+    CameraObj.AddComponent<Renderer>(std::make_shared<Renderer>("", "Renderer", 3, false));
 
-    Camera.GetTransform() = Camera.GetComponent<Transform>();
-    Camera.GetRenderer() = Camera.GetComponent<Renderer>();
+    CameraObj.GetTransform() = CameraObj.GetComponent<Transform>();
+    CameraObj.GetRenderer() = CameraObj.GetComponent<Renderer>();
     
-    Camera.GetRenderer()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
-    Camera.GetRenderer()->shape->ShapeType = SapphireRenderer::RectangleT;
+    CameraObj.GetRenderer()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+    CameraObj.GetRenderer()->shape->ShapeType = SapphireRenderer::RectangleT;
 
-    Camera.GetRenderer()->shape->Wireframe() = true;
-    m_ActiveScene.Add(std::move(Camera));
+    CameraObj.GetComponent<Camera>()->Transform = CameraObj.GetTransform();
+    CameraObj.GetTransform()->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
+    CameraObj.GetRenderer()->shape->Wireframe() = true;
+    CameraObj.GetRenderer()->transform = CameraObj.GetTransform().get();
+    Renderer::Shapes.push_back(CameraObj.GetRenderer());
+    m_ActiveScene.Add(std::move(CameraObj));
     CameraObjectID = m_ActiveScene.Objects.size()-1;
 }
 float TimeAccumulator = 0.0f;
@@ -46,15 +50,7 @@ void Engine::Run()
         TimeAccumulator -= FixedTimeStep;
     }
     // std::future<void> physicsFuture = std::async(std::launch::async, &Engine::PhysicsSim, this);
-    for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
-    {
-        if(!m_ActiveScene.Objects[i].Active) continue;
-        Render(&m_ActiveScene.Objects[i]);
-        for (size_t j = 0; j < m_ActiveScene.Objects[i].Children.size(); j++)
-        {
-            Render(m_ActiveScene.Objects[i].Children[j].Get());
-        }
-    }
+    Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get());
     if(ShouldLoadScene != ""){
         GetActiveScene().Load(ShouldLoadScene);
         ShouldLoadScene = "";
@@ -74,14 +70,14 @@ void Engine::Run()
 
 void Engine::Render(Object* object)
 {
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), -Engine::GetCameraObject()->GetTransform()->GetPosition()  TOPIXELS + Engine::GetCameraObject()->GetTransform()->GetSize() TOPIXELS / 2.0f);
-    if(std::shared_ptr<Renderer> renderer = object->GetRenderer()) {
-        if(object != Engine::GetCameraObject())
-            renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition() TOPIXELS, 1.0f);
-    }
-    else
-        if(object->GetRenderer() = object->GetComponent<Renderer>()) 
-            renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition() TOPIXELS, 1.0f);
+    // glm::mat4 view = glm::translate(glm::mat4(1.0f), -Engine::GetCameraObject()->GetTransform()->GetPosition()  TOPIXELS + Engine::GetCameraObject()->GetTransform()->GetSize() TOPIXELS / 2.0f);
+    // if(std::shared_ptr<Renderer> renderer = object->GetRenderer()) {
+    //     if(object != Engine::GetCameraObject())
+    //         renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition() TOPIXELS, 1.0f);
+    // }
+    // else
+    //     if(object->GetRenderer() = object->GetComponent<Renderer>()) 
+    //         renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition() TOPIXELS, 1.0f);
 }
 
 void Engine::PhysicsSim()

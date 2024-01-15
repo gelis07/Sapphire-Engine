@@ -22,7 +22,7 @@ void window_focus_callback(GLFWwindow* window, int focused)
     }
 }
 
-Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),true,mainPath) , engine()
+Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),true,mainPath) , engine(), ViewCamera("Camera")
 {
     engine.SetApp(this);
     PlayModeFBO.Init();
@@ -66,6 +66,13 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
         Load(ThemeName.Get());
     }
     SapphireEngine::Init();
+    std::vector<glm::vec3> points;
+    points.push_back(glm::vec3(-0.5f,-0.5f,0));
+    points.push_back(glm::vec3(0.5f,-0.5f,0));
+    points.push_back(glm::vec3(0.5f,0.5f,0));
+    points.push_back(glm::vec3(-0.5f,0.5f,0));
+    ViewCamera.Transform = std::make_shared<Transform>("Transform",std::move(points));
+    ViewCamera.Transform->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
 }
 
 void Editor::OnResize(GLFWwindow *window, int width, int height)
@@ -225,13 +232,13 @@ bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm:
     return true;
 }
 void Editor::Zooming(GLFWwindow* window, double xoffset, double yoffset){
-    ViewportCamera* camera = static_cast<ViewportCamera*>(glfwGetWindowUserPointer(window));
-    if(yoffset < 0.0f && camera->Zoom <= 0.1f){
-        camera->Zoom = 0.1f;
+    Camera* camera = static_cast<Camera*>(glfwGetWindowUserPointer(window));
+    if(yoffset < 0.0f && camera->Zoom.Get() <= 0.1f){
+        camera->Zoom.Get() = 0.1f;
         return;
     }
-    if(yoffset > 0 || camera->Zoom > 0.5f)
-        camera->Zoom += yoffset/10;
+    if(yoffset > 0 || camera->Zoom.Get() > 0.5f)
+        camera->Zoom.Get() += yoffset/10;
 
     ImGuiIO& io = ImGui::GetIO();
     io.MouseWheelH += static_cast<float>(xoffset);
@@ -254,8 +261,9 @@ void Editor::RenderViewport()
 
     WindowWidth = ImGui::GetContentRegionAvail().x;
     WindowHeight = ImGui::GetContentRegionAvail().y;
-
     MoveCamera(glm::vec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y));
+    ViewCamera.Transform->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
+    Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
     glfwSetWindowUserPointer(window, &ViewCamera);
     glfwSetScrollCallback(window, ImGui::IsWindowHovered() ? Zooming : Default);
 
@@ -274,12 +282,11 @@ void Editor::RenderViewport()
     
     ImGuizmo::SetRect(ImGui::GetWindowPos().x + offset.x, ImGui::GetWindowPos().y + offset.y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
     
-    glm::mat4 view = glm::translate(glm::mat4(1.0f), ViewCamera.position + glm::vec3(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y, 0) / 2.0f);
     if(SelectedObjID != -1){
         const glm::vec3& Position = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetPosition() TOPIXELS;
         const glm::vec3& Rotation = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetRotation();
         const glm::vec3& Scale = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetSize() TOPIXELS;
-        glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom, 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom, -1.0f, 1.0f);
+        glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom.Get(), 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom.Get(), -1.0f, 1.0f);
         // glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
 
 
@@ -294,7 +301,7 @@ void Editor::RenderViewport()
         else if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
             m_Operation = ImGuizmo::OPERATION::SCALE;
 
-        ImGuizmo::Manipulate(&view[0][0], &proj[0][0], m_Operation, ImGuizmo::WORLD, &Transform[0][0]);
+        ImGuizmo::Manipulate(glm::value_ptr(ViewCamera.GetView()), glm::value_ptr(proj), m_Operation, ImGuizmo::WORLD, glm::value_ptr(Transform));
         if(ImGuizmo::IsUsing())
         {
             glm::vec3 translation, rotation, scale;
@@ -322,22 +329,9 @@ void Editor::RenderViewport()
     
     GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
-    grid.Render(ViewCamera.position, ViewCamera.Zoom);
-    for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)
-    {
-        if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].GetRenderer())
-            renderer->Render(*(Engine::GetActiveScene().Objects[i].GetTransform()), view, &Engine::GetActiveScene().Objects[i] == &Engine::GetActiveScene().Objects[SelectedObjID], ViewCamera.position, ViewCamera.Zoom);
-
-        
-        for (size_t j = 0; j < Engine::GetActiveScene().Objects[i].Children.size(); j++)
-        {
-            if(std::shared_ptr<Renderer> renderer = Engine::GetActiveScene().Objects[i].Children[j]->GetRenderer())
-                renderer->Render(*(Engine::GetActiveScene().Objects[i].Children[j]->GetTransform()), view, &Engine::GetActiveScene().Objects[i] == &Engine::GetActiveScene().Objects[SelectedObjID], ViewCamera.position, ViewCamera.Zoom);
-        }
-        Engine::GetActiveScene().Objects[i].id = i;
-    }
-    SapphireEngine::DrawDebug(view);
+    grid.Render(ViewCamera.Transform->GetPosition() TOPIXELS,ViewCamera.Zoom.Get());
+    Renderer::Render(&ViewCamera);
+    SapphireEngine::DrawDebug(ViewCamera.Transform->GetModel());
     SapphireEngine::ClearData();
 
     ViewportFBO.Unbind();
@@ -355,10 +349,10 @@ void Editor::MoveCamera(glm::vec2 &&Size, glm::vec2 &&Position)
     {
         if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_PRESS){
             if(FirstTimeClicking){
-                LastPos = CursorPosToWind - glm::vec2(ViewCamera.position);
+                LastPos = CursorPosToWind - glm::vec2(ViewCamera.Transform->GetPosition() TOPIXELS);
                 FirstTimeClicking = false;
             }
-            ViewCamera.position = glm::vec3(CursorPosToWind.x - LastPos.x, CursorPosToWind.y - LastPos.y, 0);
+            ViewCamera.Transform->SetPosition(glm::vec3(CursorPosToWind.x - LastPos.x, CursorPosToWind.y - LastPos.y, 0) TOUNITS);
         }
     }
     if(glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_RIGHT) == GLFW_RELEASE && !FirstTimeClicking) FirstTimeClicking = true;
@@ -389,7 +383,7 @@ void Editor::RenderPlayMode()
             // ImGui::End();
             // return;
         }
-        Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
+        // Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
         WindowPos = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
         WindowSize = glm::vec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
         ImVec2 pos = ImGui::GetCursorScreenPos();
@@ -462,7 +456,7 @@ void Editor::RenderPlayMode()
 
     PlayModeFBO.RescaleFrameBuffer(WindowWidth, WindowHeight);
     GLCall(glViewport(0, 0, WindowWidth, WindowHeight));
-    const glm::vec4& ClearColor = Engine::GetCameraObject()->GetComponent<LuaCamera>()->BgColor.Get();
+    const glm::vec4& ClearColor = Engine::GetCameraObject()->GetComponent<Camera>()->BgColor.Get();
     GLCall(glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a));
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
@@ -479,14 +473,7 @@ void Editor::RenderPlayMode()
         SapphireEngine::FrameCount = 0;
     } 
     if(!GameRunning || (Paused && !NextFrame)){
-        for (size_t i = 0; i < Engine::GetActiveScene().Objects.size(); i++)
-        {
-            engine.Render(&Engine::GetActiveScene().Objects[i]);
-            for (size_t j = 0; j < Engine::GetActiveScene().Objects[i].Children.size(); j++)
-            {
-                engine.Render(Engine::GetActiveScene().Objects[i].Children[j].Get());
-            }
-        }
+        Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get());
     }
     if((GameRunning && !Paused) || NextFrame){
         SapphireEngine::ClearData();

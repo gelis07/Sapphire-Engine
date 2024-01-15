@@ -109,6 +109,7 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId, b
     lua_settable(L, -3);
 }
 
+
 Component::Component(const Component &comp)
 {
     L = luaL_newstate();

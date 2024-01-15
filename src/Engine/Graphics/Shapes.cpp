@@ -2,6 +2,7 @@
 #include "Objects/Objects.h"
 #include "Engine/Engine.h"
 #include "stb_image_write.h"
+#include "Editor.h"
 
 static glm::vec4 LineColor(1.0f, 0.0f, 0.0f, 1.0f);
 float lineWidth = 5.0f;
@@ -42,12 +43,11 @@ SapphireRenderer::Shape::~Shape()
     }
 }
 
-void SapphireRenderer::Shape::Render(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, 
-float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shader& shader)>& SetUpUniforms)
+void SapphireRenderer::Shape::Render(const Transform& transform,const glm::vec4& Color,Camera* cam, bool OutLine, 
+const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms)
 {
-    const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetSize() TOPIXELS);
-    // m_Projection = glm::ortho( -WindowSize.x/2.0f / CameraZoom, WindowSize.x/2.0f / CameraZoom, -WindowSize.y / 2.0f / CameraZoom, WindowSize.y / 2.0f / CameraZoom, -1.0f, 1.0f);
-    m_Projection = glm::ortho( 0.0f, WindowSize.x / CameraZoom, 0.0f, WindowSize.y / CameraZoom, -1.0f, 1.0f);
+    // const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetSize() TOPIXELS);
+    m_Projection = glm::ortho( 0.0f, cam->Transform->GetSize().x TOPIXELS / cam->Zoom.Get(), 0.0f, cam->Transform->GetSize().y TOPIXELS / cam->Zoom.Get(), -1.0f, 1.0f);
     
     if(CurrentAnimation) CurrentAnimation.value().SelectKeyFrame(VertexBuffer);
 
@@ -56,14 +56,14 @@ float CameraZoom, bool OutLine ,const std::function<void(SapphireRenderer::Shade
     IndexBuffer.Bind();
     //Here is the standard model view projection matrix
     const glm::vec3& Pos = transform.GetPosition();
-    glm::mat4 mvp = m_Projection * view * transform.GetModel();
+    glm::mat4 mvp = m_Projection * cam->GetView() * transform.GetModel();
     Shader.SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
     if(HasTexture){
         Texture.SetAsActive();
         Texture.Bind();
         Shader.SetUniform("u_Texture", (int)Texture.GetSlot());
     }
-    SetUpUniforms(Shader);
+    setUpUniforms(Shader);
 
     if(OutLine){
         Shader.SetUniform("u_Color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));

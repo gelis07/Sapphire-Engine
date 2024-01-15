@@ -125,12 +125,12 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
             points.push_back(glm::vec3(0.5f, -0.5f, 0));
             points.push_back(glm::vec3(0.5f, 0.5f, 0));
             points.push_back(glm::vec3(-0.5f, 0.5f, 0));
-            obj.GetComponents().push_back(std::make_shared<Transform>(element.value()["path"], element.key(), obj.GetComponents().size(), std::move(points), element.value()["path"] != ""));
+            obj.GetComponents().push_back(std::make_shared<Transform>(element.key(), std::move(points)));
             obj.GetComponents().back()->Load(element.value()["Variables"]);
         }
         else if (element.key() == "Camera")
         {
-            obj.GetComponents().push_back(std::make_shared<LuaCamera>(element.value()["path"], element.key(), obj.GetComponents().size(), element.value()["path"] != ""));
+            obj.GetComponents().push_back(std::make_shared<Camera>(element.key()));
             obj.GetComponents().back()->Load(element.value()["Variables"]);
             Engine::CameraObjectID = i;
         }
@@ -190,7 +190,8 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
 
     if (i == Engine::CameraObjectID)
     {
-        obj.GetComponent<Transform>()->SetSize(glm::vec3(Editor::GetWindowSize().x, Editor::GetWindowSize().y, 0));
+        // obj.GetComponent<Transform>()->SetSize(glm::vec3(Editor::GetWindowSize().x, Editor::GetWindowSize().y, 0));
+        obj.GetComponent<Camera>()->Transform = obj.GetTransform();
         shape->Wireframe() = true;
     }
     if(obj.GetComponent<Renderer>() != nullptr){
@@ -207,6 +208,11 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
         if(obj.GetComponent<Renderer>() != nullptr)
             RbComp->ShapeType = static_cast<int>(obj.GetRenderer()->shape->ShapeType);
     }
+
+
+    obj.GetRenderer()->transform = obj.GetTransform().get();
+    Renderer::Shapes.push_back(obj.GetRenderer());
+
     return obj;
 }
 void Scene::Load(const std::string FilePath)
@@ -221,6 +227,7 @@ void Scene::Load(const std::string FilePath)
         ObjectRefrences.erase(ObjectRefrences.find((Objects.begin() + i)->GetRefID()));
     }
     Objects.clear();
+    Renderer::Shapes.clear();
     for (size_t i = 0; i < Data.size(); i++)
     {
         std::stringstream ss;

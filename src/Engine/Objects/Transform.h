@@ -7,7 +7,7 @@ class Object;
 class Transform : public Component
 {
     public:
-        Transform(std::string File, std::string ArgName, unsigned int ArgId, std::vector<glm::vec3> aPoints, bool LuaComp = false);
+        Transform(std::string ArgName, std::vector<glm::vec3> aPoints);
         Transform(const Transform& transform);
         void Move(const glm::vec3& translation);
         void Rotate(const float& amount);

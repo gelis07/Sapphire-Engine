@@ -19,13 +19,7 @@ struct TextureAtlas{
     SapphireRenderer::Texture AtlasID;
 };
 
-struct ViewportCamera{
-    float Zoom = 1;
-    glm::vec3 position = glm::vec3(0);
-    glm::mat4 View = glm::mat4(0.0f);
-};
-
-
+class Camera;
 namespace SapphireRenderer
 {
     struct KeyFramePair{
@@ -82,7 +76,7 @@ namespace SapphireRenderer
             Shape(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::string& path = "");
             ~Shape();
             // That's the function that actually render's a shape
-            virtual void Render(const Transform& transform,const glm::vec4& Color,const glm::vec3 &CamPos, const glm::mat4& view, float CameraZoom, bool OutLine, const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms);
+            virtual void Render(const Transform& transform,const glm::vec4& Color,Camera* cam, bool OutLine, const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms);
             void Load(const std::string& path, bool flip = false);
             void SetShader(const SapphireRenderer::Shader& shader, const std::function<void(SapphireRenderer::Shader& shader)>& SetUpUniforms) {Shader = shader;}
             const glm::vec2 GetTextureDimensions() const;

@@ -45,7 +45,7 @@ class Editor : public Application{
         void RenderViewport();
         inline static int WindowWidth, WindowHeight;
         void MoveCamera(glm::vec2&& Size, glm::vec2&& Position);
-        ViewportCamera ViewCamera; //This Camera is only for the m_Viewport NOT the game's camera
+        Camera ViewCamera; //This Camera is only for the m_Viewport NOT the game's camera
         ImGuizmo::OPERATION m_Operation = ImGuizmo::OPERATION::TRANSLATE;
         bool m_FirstTime = true; // Indicates the first time the user clicks on the SelectedObj
         Grid grid;

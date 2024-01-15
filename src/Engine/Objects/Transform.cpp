@@ -1,16 +1,16 @@
 #include "Transform.h"
 #include "Editor/DebugDraw.h"
 #define PI 3.14159265359
-Transform::Transform(std::string File, std::string ArgName, unsigned int ArgId,  std::vector<glm::vec3> aPoints, bool LuaComp)
-: Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables), OriginalPoints(aPoints)
+Transform::Transform(std::string ArgName, std::vector<glm::vec3> aPoints)
+: Component(std::move(ArgName)), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables), OriginalPoints(aPoints)
 {
     Position.Get() = glm::vec3(0);
     Rotation.Get() = glm::vec3(0);
     Size.Get() = glm::vec3(1,1,0);
     Model = glm::mat4(1.0f);
-    Model = glm::translate(Model, Position.Get());
+    Model = glm::translate(Model, Position.Get() TOPIXELS);
     Model = glm::rotate(Model, Rotation.Get().z, glm::vec3(0,0,1));
-    Model = glm::scale(Model, Size.Get());
+    Model = glm::scale(Model, Size.Get() TOPIXELS);
     for (size_t i = 0; i < OriginalPoints.size(); i++)
     {
         Points.push_back(glm::vec3(Model * glm::vec4(OriginalPoints[i],1.0f)));

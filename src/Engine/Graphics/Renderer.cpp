@@ -1,43 +1,4 @@
 #include "Renderer.h"
-void Renderer::Render(const Transform& transform, const glm::mat4& view, bool&& IsSelected ,glm::vec3 CameraPos,float CameraZoom)
-{
-    //That means that the object is an empty
-    if(shape == nullptr) return;
-    // Here it renders the object's outline to indicate that the current object is selected
-    if(IsSelected){
-        if(shape->ShapeType == SapphireRenderer::RectangleT){
-            shape->Render(transform, Color.Get(),CameraPos,view,CameraZoom,false, [](SapphireRenderer::Shader& shader) {  });
-        }else if(shape->ShapeType == SapphireRenderer::CircleT){
-            const glm::vec3& ObjectSize = transform.GetSize();
-            const glm::vec3& ObjectPos = transform.GetPosition();
-
-            glm::vec2 StartPos(ObjectPos.x - ObjectSize.x/2 + CameraPos.x, ObjectPos.y - ObjectSize.y/2 + CameraPos.y);
-            std::function<void(SapphireRenderer::Shader& shader)> Uniforms = [StartPos,CameraZoom, ObjectSize](SapphireRenderer::Shader& shader) { 
-                shader.SetUniform("RectWidth", ObjectSize.x);
-                shader.SetUniform("RectHeight", ObjectSize.y);
-                shader.SetUniform("StartPoint", StartPos);
-                shader.SetUniform("CameraZoom", CameraZoom);
-            };
-            shape->Render(transform, Color.Get(),CameraPos,view,CameraZoom,true, Uniforms);
-        }
-    }
-
-    if(shape->ShapeType == SapphireRenderer::RectangleT){
-        shape->Render(transform, Color.Get(),CameraPos,view,CameraZoom,false, [](SapphireRenderer::Shader& shader) {  });
-    }else{
-        const glm::vec3& ObjectSize = transform.GetSize();
-        const glm::vec3& ObjectPos = transform.GetPosition();
-
-        glm::vec2 StartPos(ObjectPos.x - ObjectSize.x/2 + CameraPos.x, ObjectPos.y - ObjectSize.y/2 + CameraPos.y);
-        std::function<void(SapphireRenderer::Shader& shader)> Uniforms = [StartPos,CameraZoom, ObjectSize](SapphireRenderer::Shader& shader) { 
-            shader.SetUniform("RectWidth", ObjectSize.x);
-            shader.SetUniform("RectHeight", ObjectSize.y);
-            shader.SetUniform("StartPoint", StartPos);
-            shader.SetUniform("CameraZoom", CameraZoom);
-        };
-        shape->Render(transform, Color.Get(),CameraPos,view,CameraZoom,false, Uniforms);
-    }
-}
 
 void Renderer::CustomRendering()
 {
@@ -75,8 +36,15 @@ int Renderer::SetColor(lua_State *L)
     renderer->Color.Get() = glm::vec4(r,g,b,1);
     return 0;
 }
+void Renderer::Render(Camera* cam)
+{
+    for (auto &&rend : Shapes)
+    {
+        rend->shape->Render((*rend->transform), rend->Color.Get(), cam, false, [](SapphireRenderer::Shader& shader) {  });
+    }
+}
 Renderer::Renderer(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp)
-: Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Color("Color", Variables), TexturePath("Path", Variables) 
+    : Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Color("Color", Variables), TexturePath("Path", Variables)
 {
     Color.Get() = glm::vec4(1);
     TexturePath.Get() = "";
@@ -109,4 +77,12 @@ Renderer::Renderer(const Renderer &renderer)
 Renderer::~Renderer()
 {
     shape.reset();
+}
+
+glm::mat4 Camera::GetView()
+{
+
+    glm::mat4 view(1.0f);
+    view = glm::translate(view, (Transform->GetPosition() + Transform->GetSize() / 2.0f)TOPIXELS);
+    return view;
 }
