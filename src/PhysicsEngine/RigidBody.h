@@ -7,19 +7,20 @@ constexpr float FixedTimeStep = 1/120.0f;
 namespace SapphirePhysics{
     class RigidBody : public Component{
         public:
+            static void Run();
             Transform* transform;
             int ShapeType;
-            RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp = false);
+            RigidBody();
             RigidBody(const RigidBody& rb);
-            void Update(const float& DeltaTime);
+            void Update();
             static bool IntersectAABBs(AABB a, AABB b);
-            static void BroadPhase(Object* current);
-            static void NarrowPhase();
+            void BroadPhase(int Index);
+            void NarrowPhase();
             void SetStartingVel(const glm::vec3& startingVel) {StartingVelocity = startingVel;}
-            inline static std::vector<std::pair<Object*, Object*>> ContactPairs;
+            inline static std::vector<std::pair<RigidBody*, RigidBody*>> ContactPairs;
             AABB GetAABB();
-            static void OnCollisionRotation(Object* current, Object* obj, CollisionData&& CD);
-            void Simulate(Object* current, const float& DeltaTime);
+            static void OnCollisionRotation(RigidBody* current, RigidBody* obj, CollisionData&& CD);
+            void Simulate(int Index);
             static int Impulse(lua_State* L);
             static int RayCast(lua_State* L);
             static int SetVelocity(lua_State* L);
@@ -38,6 +39,7 @@ namespace SapphirePhysics{
             glm::vec3 AngularAccelaration = glm::vec3(0);
             std::vector<glm::vec3> Forces;
             std::vector<glm::vec3> Torques;
+            inline static std::vector<RigidBody*> Rigibodies;
         private:
             glm::vec3 StartingVelocity = glm::vec3(0);
     };

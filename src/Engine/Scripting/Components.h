@@ -15,7 +15,7 @@ class Component
 {
     using TableVariable = std::unordered_map<std::string, SapphireEngine::Variable*>;
     public:
-        Component(std::string File, std::string ArgName , unsigned int ArgId, bool LuaComp=false);
+        Component(std::string File, std::string ArgName , unsigned int ArgId);
         Component(const std::string& ArgName) : Name(ArgName) {} // This will be used for the non lua components.
         Component(const Component& comp);
         ~Component();

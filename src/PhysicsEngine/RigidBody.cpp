@@ -8,10 +8,18 @@
 #define ITERATIONS 1
 #define VECTOR_THRESHOLD 1e-12
 
-SapphirePhysics::RigidBody::RigidBody(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp) : Trigger("Trigger", Variables), 
+void SapphirePhysics::RigidBody::Run()
+{
+    for (size_t i = 0; i < Rigibodies.size(); i++)
+    {
+        Rigibodies[i]->Simulate(i);
+    }
+}
+
+SapphirePhysics::RigidBody::RigidBody() : Trigger("Trigger", Variables),
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
-StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables), Rotate("Rotate", Variables),
-    Component(std::move(File), std::move(ArgName), ArgId,LuaComp)
+StaticFriction("Static Friction", Variables), DynamicFriction("Dynamic Friction", Variables), Rotate("Rotate", Variables),
+Component("Rigidbody")
 {
     Trigger.Get() = false;
     Static.Get() = false;
@@ -39,7 +47,7 @@ StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction",
 SapphirePhysics::RigidBody::RigidBody(const RigidBody &rb): Trigger("Trigger", Variables), 
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
 StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),Rotate("Rotate", Variables),
-Component(std::move(""), std::move("Renderer"), 0, false)
+Component("Rigidbody")
 {
     Trigger.Get() = rb.Trigger.Get();
     Static.Get() = rb.Static.Get();
@@ -64,13 +72,13 @@ Component(std::move(""), std::move("Renderer"), 0, false)
     Functions["Raycast"] = RayCast;
 }
 
-void SapphirePhysics::RigidBody::Update(const float &DeltaTime)
+void SapphirePhysics::RigidBody::Update()
 {
     if(Static.Get()) return;
     Forces.push_back(glm::vec3(0, SapphirePhysics::CollisionDetection::g.Get(), 0) * Mass.Get());
     Accelaration = (SapphireEngine::VectorSum(Forces)/Mass.Get());
     AngularAccelaration = SapphireEngine::VectorSum(Torques) / (((1.0f / 12.0f) * Mass.Get() * (transform->GetSize().x * transform->GetSize().x + transform->GetSize().y * transform->GetSize().y)));
-    Velocity += StartingVelocity + Accelaration * FixedTimeStep;
+    Velocity += Accelaration * FixedTimeStep;
     AngularVelocity.z += AngularAccelaration.z * FixedTimeStep;
     // std::stringstream ss;
     // ss << "Velocity x: " << Velocity.x << ", y: " << Velocity.y << '\n';
@@ -96,19 +104,16 @@ bool SapphirePhysics::RigidBody::IntersectAABBs(AABB a, AABB b)
         || a.Max.y <= b.Min.y || b.Max.y <= a.Min.y);
 }
 
-void SapphirePhysics::RigidBody::BroadPhase(Object* current)
+void SapphirePhysics::RigidBody::BroadPhase(int Index)
 {
-    int index = Engine::GetActiveScene().ObjectRefrences[current->GetRefID()];
-    if(current->GetRb()->ShapeType == SapphireRenderer::RectangleT){
-        std::for_each(std::execution::par,(Engine::GetActiveScene().Objects.begin()+index), Engine::GetActiveScene().Objects.end(), [current](auto&& object) {
-            if(object.Name == "MainCamera" || &object == current || object.GetRb() == nullptr) return;
-            if(!IntersectAABBs(object.GetRb()->GetAABB(), current->GetRb()->GetAABB())) {
-                return;
-            };
-            if(object.GetRb()->Static.Get() && current->GetRb()->Static.Get()) return;
-            ContactPairs.push_back(std::pair<Object*, Object*>(current, &object));
-        });
-    }
+    std::for_each(std::execution::par,(Rigibodies.begin() + Index), Rigibodies.end(), [this](auto&& object) {
+        if(object == this) return;
+        if(!IntersectAABBs(object->GetAABB(), this->GetAABB())) {
+            return;
+        };
+        if(object->Static.Get() && this->Static.Get()) return;
+        ContactPairs.push_back(std::pair<RigidBody*, RigidBody*>(this, object));
+    });
 }
 
 void SapphirePhysics::RigidBody::NarrowPhase()
@@ -128,8 +133,7 @@ void SapphirePhysics::RigidBody::NarrowPhase()
     {
         std::stringstream ss;
         CollisionData CD;
-        std::shared_ptr<Object> sharedObject(pair.second,StackObjectDeleter{});
-        if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, pair.first,CD)){
+        if(SapphirePhysics::CollisionDetection::RectanglexRectangle(pair.second, pair.first,CD)){
             // if(!(pair.first->CalledOnCollision)){
             //     pair.first->OnCollision(pair.second);
             //     std::cout << "called first" << '\n';
@@ -167,10 +171,8 @@ SapphirePhysics::AABB SapphirePhysics::RigidBody::GetAABB()
     return AABB(min,max);
 }
 //Thanks to the book "Physics for Game Developers" from David M. Bourg and Bryan Bywalec.
-void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* ObodyB, CollisionData &&CD)
+void SapphirePhysics::RigidBody::OnCollisionRotation(RigidBody* bodyA, RigidBody* bodyB, CollisionData &&CD)
 {
-    RigidBody* bodyA = ObodyA->GetRb().get();
-    RigidBody* bodyB = ObodyB->GetRb().get();
     const glm::vec3& bodyAPos = bodyA->transform->GetPosition();
     const glm::vec3& bodyASize = bodyA->transform->GetSize();
     const glm::vec3& bodyBPos = bodyB->transform->GetPosition();
@@ -256,7 +258,7 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(Object* ObodyA, Object* Obo
         
     } 
 }
-void SapphirePhysics::RigidBody::Simulate(Object* current, const float& DeltaTime) {
+void SapphirePhysics::RigidBody::Simulate(int Index) {
     for (auto &object : Engine::GetActiveScene().Objects)
     {
         object.CalledOnCollision = false;
@@ -264,8 +266,8 @@ void SapphirePhysics::RigidBody::Simulate(Object* current, const float& DeltaTim
     for (size_t i = 1; i <= ITERATIONS; i++)
     {
         ContactPairs.clear();
-        Update(DeltaTime / ITERATIONS);
-        BroadPhase(current);
+        Update();
+        BroadPhase(Index);
         NarrowPhase();
     }
 }

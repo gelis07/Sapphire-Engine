@@ -43,9 +43,10 @@ class Editor : public Application{
         static void Zooming(GLFWwindow* window, double xoffset, double yoffset);
         SapphireRenderer::FrameBuffer ViewportFBO;
         void RenderViewport();
+        void Gizmos();
         inline static int WindowWidth, WindowHeight;
-        void MoveCamera(glm::vec2&& Size, glm::vec2&& Position);
-        Camera ViewCamera; //This Camera is only for the m_Viewport NOT the game's camera
+        void MoveCamera(glm::vec2 &&Size, glm::vec2 &&Position);
+        Camera ViewCamera; // This Camera is only for the m_Viewport NOT the game's camera
         ImGuizmo::OPERATION m_Operation = ImGuizmo::OPERATION::TRANSLATE;
         bool m_FirstTime = true; // Indicates the first time the user clicks on the SelectedObj
         Grid grid;

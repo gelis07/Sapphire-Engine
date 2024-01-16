@@ -18,7 +18,7 @@ Engine::Engine(const std::string& mainPath)
     points.push_back(glm::vec3(-1,1,0));
     CameraObj.AddComponent<Transform>(std::make_shared<Transform>("Transform", std::move(points)));
     CameraObj.AddComponent<Camera>(std::make_shared<Camera>("Camera"));
-    CameraObj.AddComponent<Renderer>(std::make_shared<Renderer>("", "Renderer", 3, false));
+    CameraObj.AddComponent<Renderer>(std::make_shared<Renderer>());
 
     CameraObj.GetTransform() = CameraObj.GetComponent<Transform>();
     CameraObj.GetRenderer() = CameraObj.GetComponent<Renderer>();
@@ -46,7 +46,7 @@ void Engine::Run()
     TimeAccumulator += GetDeltaTime();
     ExecuteLua();
     while(TimeAccumulator >= FixedTimeStep){
-        PhysicsSim();
+        SapphirePhysics::RigidBody::Run();
         TimeAccumulator -= FixedTimeStep;
     }
     // std::future<void> physicsFuture = std::async(std::launch::async, &Engine::PhysicsSim, this);
@@ -82,13 +82,13 @@ void Engine::Render(Object* object)
 
 void Engine::PhysicsSim()
 {
-    for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
-    {
-        if(!m_ActiveScene.Objects[i].Active) continue;
-        if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
-            rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
-        }
-    }
+    // for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
+    // {
+    //     if(!m_ActiveScene.Objects[i].Active) continue;
+    //     if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
+    //         rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
+    //     }
+    // }
 }
 
 void Engine::ExecuteLua()

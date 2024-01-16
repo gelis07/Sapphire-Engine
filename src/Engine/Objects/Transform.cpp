@@ -31,7 +31,7 @@ Transform::Transform(std::string ArgName, std::vector<glm::vec3> aPoints)
 }
 
 Transform::Transform(const Transform &transform)
-: Component(std::move(""), std::move("Renderer"), 0, false), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables), OriginalPoints(transform.GetPoints())
+: Component(std::move("Transform")), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables), OriginalPoints(transform.GetPoints())
 {
     Position.Get() = transform.GetPosition();
     Rotation.Get() = transform.GetRotation();

@@ -83,16 +83,16 @@ int Object::SetActive(lua_State *L)
 void Object::OnUpdate()
 {
     ObjectRef obj(RefID);
-    for (size_t i = 0; i < Components.size(); i++)
+    for (size_t i = 0; i < obj->Components.size(); i++)
     {
-        if (!Components[i]->Active || Components[i]->GetFile().empty())
+        if (!obj->Components[i]->Active || obj->Components[i]->GetFile().empty())
             continue;
         obj->Components[i]->ExecuteFunction("OnUpdate");
         obj->Components[i]->UpdateExistingVars();
     }
 }
 
-Object* Object::CreateObject(std::string &&ObjName)
+ObjectRef Object::CreateObject(std::string &&ObjName)
 {
     Object NewObj(std::move(ObjName));
     std::vector<glm::vec3> points;
@@ -101,53 +101,22 @@ Object* Object::CreateObject(std::string &&ObjName)
     points.push_back(glm::vec3(0.5f,0.5f,0));
     points.push_back(glm::vec3(-0.5f,0.5f,0));
     NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("Transform",std::move(points))));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
+    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>()));
+    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>()));
 
     NewObj.renderer = NewObj.GetComponent<Renderer>(); 
     NewObj.transform = NewObj.GetComponent<Transform>();
     NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
     NewObj.renderer->transform = NewObj.transform.get();
     Renderer::Shapes.push_back(NewObj.renderer);
+    SapphirePhysics::RigidBody::Rigibodies.push_back(NewObj.rb.get());
 
     NewObj.renderer->Color.Get() = glm::vec4(1);
     NewObj.transform->SetSize(glm::vec3(0));
     NewObj.transform->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
 
     NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
-    Engine::GetActiveScene().Add(std::move(NewObj));
-
-
-    return &Engine::GetActiveScene().Objects.back();
-}
-
-ObjectRef Object::CreateObjectRuntime(std::string &&ObjName)
-{
-    Object NewObj(std::move(ObjName));
-    std::vector<glm::vec3> points;
-    points.push_back(glm::vec3(-0.5f,-0.5f,0));
-    points.push_back(glm::vec3(0.5f,-0.5f,0));
-    points.push_back(glm::vec3(0.5f,0.5f,0));
-    points.push_back(glm::vec3(-0.5f,0.5f,0));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("Transform", std::move(points))));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>("", "Renderer",0, false)));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
-
-    NewObj.renderer = NewObj.GetComponent<Renderer>(); 
-    NewObj.transform = NewObj.GetComponent<Transform>();
-    NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
-    NewObj.renderer->transform = NewObj.transform.get();
-    Renderer::Shapes.push_back(NewObj.renderer);
-    NewObj.renderer->Color.Get() = glm::vec4(1);
-    NewObj.transform->SetSize(glm::vec3(0));
-    NewObj.transform->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
-
-    NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
-
-    // int refID = SapphireEngine::RandomNumber(1,100000);
-    // NewObj.SetRefID(refID);
-    // Engine::GetActiveScene().ObjectsToAdd.push_back(NewObj);
-    return Engine::GetActiveScene().Add(std::move(NewObj));
+    return Engine::GetActiveScene().Add(std::move(NewObj));;
 }
 
 void Object::Delete(int id)
@@ -175,7 +144,7 @@ void Object::RenderGUI()
     }
     if(ImGui::BeginPopup("Components")){
         if(ImGui::Button("RigidBody") && rb == nullptr){
-            Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>("", "Rigidbody", 0, false)));
+            Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>()));
             rb = GetComponent<SapphirePhysics::RigidBody>();
             GetComponent<SapphirePhysics::RigidBody>()->transform = GetTransform().get();
         }
@@ -229,7 +198,7 @@ void Object::Inspect()
     if (File != NULL)
     {
         if(File->get()->Extension == ".lua"){
-            std::shared_ptr<Component> NewComponent = std::make_shared<Component>((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size(),true);
+            std::shared_ptr<Component> NewComponent = std::make_shared<Component>((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size());
             lua_State* L = NewComponent->GetState();
             if (NewComponent->GetLuaVariables())
                 AddComponent<Component>(NewComponent);
@@ -315,7 +284,7 @@ Object* Object::LoadPrefab(std::string FilePath)
         //! Got to find a better way to handle object!
         if(element.key() == "Renderer")
         {
-            object.GetComponents().push_back(std::make_shared<Renderer>(element.value()["path"], element.key(), object.GetComponents().size(),element.value()["path"] != ""));
+            object.GetComponents().push_back(std::make_shared<Renderer>());
             object.GetComponents().back()->Load(element.value()["Variables"]);
         }
         else if(element.key() == "Transform")
@@ -329,7 +298,7 @@ Object* Object::LoadPrefab(std::string FilePath)
             object.GetComponents().back()->Load(element.value()["Variables"]);
         }else
         {
-            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), object.GetComponents().size(), element.value()["path"] != "");
+            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), object.GetComponents().size());
             comp->Load(element.value()["Variables"]);
             object.AddComponent<Component>(comp);
         }

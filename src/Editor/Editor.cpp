@@ -279,43 +279,9 @@ void Editor::RenderViewport()
     // Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
     ImGuizmo::SetOrthographic(true);
     ImGuizmo::SetDrawlist();
-    
     ImGuizmo::SetRect(ImGui::GetWindowPos().x + offset.x, ImGui::GetWindowPos().y + offset.y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-    
     if(SelectedObjID != -1){
-        const glm::vec3& Position = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetPosition() TOPIXELS;
-        const glm::vec3& Rotation = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetRotation();
-        const glm::vec3& Scale = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetSize() TOPIXELS;
-        glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom.Get(), 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom.Get(), -1.0f, 1.0f);
-        // glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
-
-
-        glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
-        glm::mat4 Transform = glm::translate(glm::mat4(1.0f), Position) * rotation * glm::scale(glm::mat4(1.0f), Scale);
-
-
-        if(glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-            m_Operation = ImGuizmo::OPERATION::TRANSLATE;
-        else if(glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
-            m_Operation = ImGuizmo::OPERATION::ROTATE;
-        else if(glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-            m_Operation = ImGuizmo::OPERATION::SCALE;
-
-        ImGuizmo::Manipulate(glm::value_ptr(ViewCamera.GetView()), glm::value_ptr(proj), m_Operation, ImGuizmo::WORLD, glm::value_ptr(Transform));
-        if(ImGuizmo::IsUsing())
-        {
-            glm::vec3 translation, rotation, scale;
-            DecomposeTransform(Transform, translation, rotation, scale);
-
-            if(m_Operation == ImGuizmo::OPERATION::TRANSLATE)
-                Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetPosition(translation TOUNITS);
-            else if(m_Operation == ImGuizmo::OPERATION::SCALE)
-                Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetSize(scale TOUNITS);
-            else if(m_Operation == ImGuizmo::OPERATION::ROTATE){
-                glm::vec3 deltaRotation = rotation - Rotation;
-                Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->Rotate(deltaRotation.z);
-            }
-        }
+        Gizmos();
     }
 
 
@@ -335,6 +301,41 @@ void Editor::RenderViewport()
     SapphireEngine::ClearData();
 
     ViewportFBO.Unbind();
+}
+void Editor::Gizmos()
+{
+    const glm::vec3 &Position = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetPosition() TOPIXELS;
+    const glm::vec3 &Rotation = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetRotation();
+    const glm::vec3 &Scale = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetSize() TOPIXELS;
+    glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom.Get(), 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom.Get(), -1.0f, 1.0f);
+    // glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
+
+    glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
+    glm::mat4 Transform = glm::translate(glm::mat4(1.0f), Position) * rotation * glm::scale(glm::mat4(1.0f), Scale);
+
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        m_Operation = ImGuizmo::OPERATION::TRANSLATE;
+    else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        m_Operation = ImGuizmo::OPERATION::ROTATE;
+    else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        m_Operation = ImGuizmo::OPERATION::SCALE;
+
+    ImGuizmo::Manipulate(glm::value_ptr(ViewCamera.GetView()), glm::value_ptr(proj), m_Operation, ImGuizmo::WORLD, glm::value_ptr(Transform));
+    if (ImGuizmo::IsUsing())
+    {
+        glm::vec3 translation, rotation, scale;
+        DecomposeTransform(Transform, translation, rotation, scale);
+
+        if (m_Operation == ImGuizmo::OPERATION::TRANSLATE)
+            Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetPosition(translation TOUNITS);
+        else if (m_Operation == ImGuizmo::OPERATION::SCALE)
+            Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetSize(scale TOUNITS);
+        else if (m_Operation == ImGuizmo::OPERATION::ROTATE)
+        {
+            glm::vec3 deltaRotation = rotation - Rotation;
+            Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->Rotate(deltaRotation.z);
+        }
+    }
 }
 static bool pressed = false;
 static bool FirstTimeClicking = true; // Indicates the first time the user clicks on the SelectedObj
@@ -428,7 +429,7 @@ void Editor::RenderPlayMode()
                 Paused = !Paused;
             }
             ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - 200, 20));
-            // Set the ImGui Button to play the game
+            // Skip a frame while paused for debugging.
             if (ImGui::Button("Next Frame") && Paused)
             {
                 NextFrame = true;
@@ -473,9 +474,11 @@ void Editor::RenderPlayMode()
         SapphireEngine::FrameCount = 0;
     } 
     if(!GameRunning || (Paused && !NextFrame)){
+        //If the game is not running. Just render everything.
         Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get());
     }
     if((GameRunning && !Paused) || NextFrame){
+        //The game is running so the engine should start running.
         SapphireEngine::ClearData();
         float time = glfwGetTime();
         engine.Run();

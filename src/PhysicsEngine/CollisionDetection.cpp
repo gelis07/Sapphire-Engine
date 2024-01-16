@@ -1,5 +1,5 @@
 #include "CollisionDetection.h"
-#include "Objects/Objects.h"
+#include "PhysicsEngine/RigidBody.h"
 #include "Engine/Engine.h"
 #include "Editor.h"
 SapphireEngine::Float SapphirePhysics::CollisionDetection::g("g", Engine::SettingsVariables);
@@ -76,17 +76,18 @@ bool SapphirePhysics::CollisionDetection::CirclexRectangle(Object* obj, Object* 
 }
 
 //Thanks to the video by https://www.youtube.com/watch?v=5gDC1GU3Ivg&list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs&index=22
-void SapphirePhysics::CollisionDetection::FindPolygonContactPoint(std::shared_ptr<Object> obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
+void SapphirePhysics::CollisionDetection::FindPolygonContactPoint(SapphirePhysics::RigidBody* bodyA, SapphirePhysics::RigidBody* bodyB, 
+glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
 {
     ContactPoint1 = glm::vec2(0);
     ContactPoint2 = glm::vec2(0);
     ContactPointCount = 0;
-    glm::vec2 CurrentPos = glm::vec2(current->GetTransform()->GetPosition());
-    glm::vec2 ObjPos = glm::vec2(obj->GetTransform()->GetPosition());
-    std::array<glm::vec3, 4> CurrentPoints = {current->GetTransform()->GetPoints()[0], current->GetTransform()->GetPoints()[1],
-    current->GetTransform()->GetPoints()[2], current->GetTransform()->GetPoints()[3]};
-    std::array<glm::vec3, 4> ObjPoints = {obj->GetTransform()->GetPoints()[0], obj->GetTransform()->GetPoints()[1],
-    obj->GetTransform()->GetPoints()[2], obj->GetTransform()->GetPoints()[3]};
+    glm::vec2 BodyAPos = glm::vec2(bodyA->transform->GetPosition());
+    glm::vec2 BodyBPos = glm::vec2(bodyB->transform->GetPosition());
+    std::array<glm::vec3, 4> CurrentPoints = {bodyA->transform->GetPoints()[0], bodyA->transform->GetPoints()[1],
+    bodyA->transform->GetPoints()[2], bodyA->transform->GetPoints()[3]};
+    std::array<glm::vec3, 4> ObjPoints = {bodyB->transform->GetPoints()[0], bodyB->transform->GetPoints()[1],
+    bodyB->transform->GetPoints()[2], bodyB->transform->GetPoints()[3]};
 
     float minDistanceSquared = INFINITY;
 
@@ -243,31 +244,30 @@ void SapphirePhysics::CollisionDetection::PointSegmentDistance(glm::vec2 p, glm:
 }
 
 // Would like to thank Javidx9 for the amazing video on implementing SAT (Seperated Axis Theorem) with c++! https://www.youtube.com/watch?v=7Ik2vowGcU0
-bool SapphirePhysics::CollisionDetection::RectanglexRectangle(std::shared_ptr<Object> obj, Object *current, CollisionData& CD)
+bool SapphirePhysics::CollisionDetection::RectanglexRectangle(SapphirePhysics::RigidBody* bodyA, SapphirePhysics::RigidBody* bodyB, CollisionData& CD)
 {
-    Object* Obj1 = obj.get();
-    Object* Obj2 = current;
     CD.Normal = glm::vec2(0);
     CD.Depth = INFINITY;
-    std::array<glm::vec3, 4> Obj1Points = {Obj1->GetTransform()->GetPoints()[0], Obj1->GetTransform()->GetPoints()[1],
-    Obj1->GetTransform()->GetPoints()[2], Obj1->GetTransform()->GetPoints()[3]};
-    std::array<glm::vec3, 4> Obj2Points = {Obj2->GetTransform()->GetPoints()[0], Obj2->GetTransform()->GetPoints()[1],
-    Obj2->GetTransform()->GetPoints()[2], Obj2->GetTransform()->GetPoints()[3]};
-    glm::vec2 Obj1Position = glm::vec2(Obj1->GetTransform()->GetPosition().x, Obj1->GetTransform()->GetPosition().y);
-    glm::vec2 Obj2Position = glm::vec2(Obj2->GetTransform()->GetPosition().x, Obj2->GetTransform()->GetPosition().y);
+    std::array<glm::vec3, 4> Obj1Points = {bodyA->transform->GetPoints()[0], bodyA->transform->GetPoints()[1],
+    bodyA->transform->GetPoints()[2], bodyA->transform->GetPoints()[3]};
+    std::array<glm::vec3, 4> Obj2Points = {bodyB->transform->GetPoints()[0], bodyB->transform->GetPoints()[1],
+    bodyB->transform->GetPoints()[2], bodyB->transform->GetPoints()[3]};
+    glm::vec2 Obj1Position = glm::vec2(bodyA->transform->GetPosition().x, bodyA->transform->GetPosition().y);
+    glm::vec2 Obj2Position = glm::vec2(bodyB->transform->GetPosition().x, bodyB->transform->GetPosition().y);
     for (size_t shape = 0; shape < 2; shape++)
     {
         //"Inverting" the shapes so both objects are tested on eachother.
         if(shape == 1){
-            Obj1 = current;
-            Obj2 = obj.get();
+            RigidBody* bodyAcopy = bodyA;
+            bodyA = bodyB;
+            bodyB = bodyAcopy;
 
-            Obj1Points = {Obj1->GetTransform()->GetPoints()[0], Obj1->GetTransform()->GetPoints()[1],
-            Obj1->GetTransform()->GetPoints()[2], Obj1->GetTransform()->GetPoints()[3]};
-            Obj2Points = {Obj2->GetTransform()->GetPoints()[0], Obj2->GetTransform()->GetPoints()[1],
-            Obj2->GetTransform()->GetPoints()[2], Obj2->GetTransform()->GetPoints()[3]};
-            Obj1Position = glm::vec2(Obj1->GetTransform()->GetPosition().x, Obj1->GetTransform()->GetPosition().y);
-            Obj2Position = glm::vec2(Obj2->GetTransform()->GetPosition().x, Obj2->GetTransform()->GetPosition().y);
+            Obj1Points = {bodyA->transform->GetPoints()[0], bodyA->transform->GetPoints()[1],
+            bodyA->transform->GetPoints()[2], bodyA->transform->GetPoints()[3]};
+            Obj2Points = {bodyB->transform->GetPoints()[0], bodyB->transform->GetPoints()[1],
+            bodyB->transform->GetPoints()[2], bodyB->transform->GetPoints()[3]};
+            Obj1Position = glm::vec2(bodyA->transform->GetPosition().x, bodyA->transform->GetPosition().y);
+            Obj2Position = glm::vec2(bodyB->transform->GetPosition().x, bodyB->transform->GetPosition().y);
         }
         for (size_t i = 0; i < Obj1Points.size(); i++)
         {
@@ -308,19 +308,19 @@ bool SapphirePhysics::CollisionDetection::RectanglexRectangle(std::shared_ptr<Ob
     {
         CD.Normal = -CD.Normal;
     }
-    FindPolygonContactPoint(obj, current, CD.ContactPoint1, CD.ContactPoint2, CD.ContactPointCount);
+    FindPolygonContactPoint(bodyB, bodyA, CD.ContactPoint1, CD.ContactPoint2, CD.ContactPointCount);
     return true;
 }
-bool SapphirePhysics::CollisionDetection::CirclexCircle(Object* obj, Object* current, CollisionData& CD)
+bool SapphirePhysics::CollisionDetection::CirclexCircle(SapphirePhysics::RigidBody* obj, SapphirePhysics::RigidBody* current, CollisionData& CD)
 {
     //! Comments here
     // Checking if the length of the vector with points the circles points is less than the sum of the radiuses
-    glm::vec2 DistanceVec(current->GetTransform()->GetPosition().x - obj->GetTransform()->GetPosition().x, current->GetTransform()->GetPosition().y - obj->GetTransform()->GetPosition().y);
+    glm::vec2 DistanceVec(current->transform->GetPosition().x - obj->transform->GetPosition().x, current->transform->GetPosition().y - obj->transform->GetPosition().y);
     float Distance = SapphireEngine::LengthVec(DistanceVec);
-    float radii = obj->GetTransform()->GetSize().x / 2.0f + current->GetTransform()->GetSize().x / 2.0f; // GetSize().x/2 Basically refers to the radius
-    CD.ContactPoint1 = glm::normalize(DistanceVec) * current->GetTransform()->GetSize().x / 2.0f;
+    float radii = obj->transform->GetSize().x / 2.0f + current->transform->GetSize().x / 2.0f; // GetSize().x/2 Basically refers to the radius
+    CD.ContactPoint1 = glm::normalize(DistanceVec) * current->transform->GetSize().x / 2.0f;
     CD.ContactPointCount = 1;
-    CD.Normal = glm::normalize(glm::vec2(obj->GetTransform()->GetPosition() - current->GetTransform()->GetPosition()));
+    CD.Normal = glm::normalize(glm::vec2(obj->transform->GetPosition() - current->transform->GetPosition()));
     CD.Depth = radii - Distance;
     return Distance < radii; 
 }

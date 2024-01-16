@@ -9,17 +9,16 @@ struct CollisionData{
     glm::vec2 ContactPoint1, ContactPoint2;
     int ContactPointCount;
 };
-
-class Object;
 namespace SapphirePhysics{
+    class RigidBody;
     class CollisionDetection {
         public:
             static SapphireEngine::Float g; 
             //Collision
-            static bool CirclexCircle(Object* obj, Object* current,CollisionData& CD);
-            static bool RectanglexRectangle(std::shared_ptr<Object> obj, Object *current, CollisionData& CD);
+            static bool CirclexCircle(SapphirePhysics::RigidBody* obj, SapphirePhysics::RigidBody* current,CollisionData& CD);
+            static bool RectanglexRectangle(SapphirePhysics::RigidBody* bodyA, SapphirePhysics::RigidBody* bodyB, CollisionData& CD);
             static bool CirclexRectangle(Object* obj, Object *current,CollisionData& CD);
-            static void FindPolygonContactPoint(std::shared_ptr<Object> obj, Object *current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount);
+            static void FindPolygonContactPoint(SapphirePhysics::RigidBody* obj, SapphirePhysics::RigidBody* current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount);
             static glm::vec2 FindPolygonCircleContactPoint(const glm::vec2& CirclePosition, const float& Radius, const glm::vec2& PolygonPosition, const std::array<glm::vec3, 4>& PolygonPoints);
         private:
             static bool NearlyEqual(float a, float b);

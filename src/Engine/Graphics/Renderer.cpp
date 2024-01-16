@@ -43,8 +43,8 @@ void Renderer::Render(Camera* cam)
         rend->shape->Render((*rend->transform), rend->Color.Get(), cam, false, [](SapphireRenderer::Shader& shader) {  });
     }
 }
-Renderer::Renderer(std::string File, std::string ArgName, unsigned int ArgId, bool LuaComp)
-    : Component(std::move(File), std::move(ArgName), ArgId, LuaComp), Color("Color", Variables), TexturePath("Path", Variables)
+Renderer::Renderer()
+    : Component("Renderer"), Color("Color", Variables), TexturePath("Path", Variables)
 {
     Color.Get() = glm::vec4(1);
     TexturePath.Get() = "";
@@ -59,7 +59,7 @@ Renderer::Renderer(std::string File, std::string ArgName, unsigned int ArgId, bo
     Functions["SetColor"] = SetColor;
 }
 Renderer::Renderer(const Renderer &renderer)
-: Component(std::move(""), std::move("Renderer"), 0, false), Color("Color", Variables), TexturePath("Path", Variables) 
+: Component(std::move("Renderer")), Color("Color", Variables), TexturePath("Path", Variables) 
 {
     Color.Get() = renderer.Color.Get();
     TexturePath.Get() = "";

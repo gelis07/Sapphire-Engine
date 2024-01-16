@@ -87,9 +87,8 @@ static int ComponentNewIndex(lua_State* L)
 
 
 
-Component::Component(std::string File,std::string ArgName, unsigned int ArgId, bool luaComp) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
+Component::Component(std::string File,std::string ArgName, unsigned int ArgId) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
 {
-    if(!luaComp) return;
     if(L != nullptr) 
     lua_close(L);
     L = luaL_newstate();

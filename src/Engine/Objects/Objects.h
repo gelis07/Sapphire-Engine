@@ -26,8 +26,7 @@ class Object
         std::enable_if_t<std::is_base_of_v<Component, Derived>, void> AddComponent(const std::shared_ptr<Derived>& Comp);
         std::vector<std::shared_ptr<Component>>& GetComponents() {return Components;}
         
-        static Object* CreateObject(std::string &&ObjName);
-        static ObjectRef CreateObjectRuntime(std::string &&ObjName);
+        static ObjectRef CreateObject(std::string &&ObjName);
         static void Delete(int id);
 
         void OnCollision(Object* other);
