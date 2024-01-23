@@ -20,7 +20,7 @@ class Camera : public Component
 class Renderer : public Component
 {
     public:
-        Transform* transform;
+        std::shared_ptr<Transform> transform;
         Renderer();
         Renderer(const Renderer& renderer);
         ~Renderer();
@@ -32,5 +32,7 @@ class Renderer : public Component
         static int LoadTexture(lua_State* L);
         static int SetColor(lua_State* L);
         static void Render(Camera* cam);
-        inline static std::vector<std::shared_ptr<Renderer>> Shapes;
+        static void RenderGizmos(Camera* cam);
+        inline static std::vector<std::shared_ptr<Renderer>> SceneRenderers;
+        inline static std::vector<std::shared_ptr<Renderer>> Gizmos;
 };

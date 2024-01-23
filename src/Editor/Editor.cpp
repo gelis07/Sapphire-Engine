@@ -3,6 +3,7 @@
 #include "DebugDraw.h"
 #include "Engine/Scripting/LuaUtilities.h"
 SapphireEngine::String Editor::ThemeName("ThemeName", Editor::UserPreferences);
+SapphireEngine::Float Editor::AASamples("Anti aliasing samples", Engine::SettingsVariables);
 
 
 
@@ -73,6 +74,17 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
     points.push_back(glm::vec3(-0.5f,0.5f,0));
     ViewCamera.Transform = std::make_shared<Transform>("Transform",std::move(points));
     ViewCamera.Transform->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
+
+    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>();
+    rend->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+    rend->shape->ShapeType = SapphireRenderer::RectangleT;
+    rend->shape->Wireframe() = true;
+    rend->transform = Engine::GetCameraObject()->GetTransform();
+    Renderer::Gizmos.push_back(rend);
+
+    AASamples.Get() = 4;
+    AASamples.Max = 24;
+    AASamples.Min = 1;
 }
 
 void Editor::OnResize(GLFWwindow *window, int width, int height)
@@ -253,6 +265,23 @@ static void Default(GLFWwindow* window, double xoffset, double yoffset){
 constexpr glm::vec2 offset = glm::vec2(8, -6);
 void Editor::RenderViewport()
 {
+
+    ViewportFBO.Bind();
+
+    
+    ViewportFBO.RescaleFrameBuffer(WindowWidth, WindowHeight);
+    GLCall(glViewport(0, 0, WindowWidth, WindowHeight));
+    GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+    GLCall(glClear(GL_COLOR_BUFFER_BIT));
+    grid.Render(ViewCamera.Transform->GetPosition() TOPIXELS,ViewCamera.Zoom.Get());
+    Renderer::Render(&ViewCamera);
+    Renderer::RenderGizmos(&ViewCamera);
+    SapphireEngine::DrawDebug(ViewCamera.Transform->GetModel());
+    SapphireEngine::ClearData();
+    ViewportFBO.Blit(WindowWidth, WindowHeight);
+    ViewportFBO.Unbind();
+
+
     if(!(*Editor::GetWindowState("Viewport"))) return;
     if(!ImGui::Begin("Viewport", Editor::GetWindowState("Viewport"))){
         // ImGui::End();
@@ -270,7 +299,7 @@ void Editor::RenderViewport()
     ImVec2 pos = ImGui::GetCursorScreenPos();
     
     ImGui::GetWindowDrawList()->AddImage(
-        reinterpret_cast<ImTextureID*>(ViewportFBO.GetTexture().GetID()), 
+        reinterpret_cast<ImTextureID*>(ViewportFBO.RendFrameBuffer.GetTexture().GetID()), 
         ImVec2(pos.x, pos.y), 
         ImVec2(pos.x + WindowWidth, pos.y + WindowHeight), 
         ImVec2(0, 1), 
@@ -286,21 +315,6 @@ void Editor::RenderViewport()
 
 
     ImGui::End();
-
-
-    ViewportFBO.Bind();
-
-    ViewportFBO.RescaleFrameBuffer(WindowWidth, WindowHeight);
-    GLCall(glViewport(0, 0, WindowWidth, WindowHeight));
-    
-    GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-    GLCall(glClear(GL_COLOR_BUFFER_BIT));
-    grid.Render(ViewCamera.Transform->GetPosition() TOPIXELS,ViewCamera.Zoom.Get());
-    Renderer::Render(&ViewCamera);
-    SapphireEngine::DrawDebug(ViewCamera.Transform->GetModel());
-    SapphireEngine::ClearData();
-
-    ViewportFBO.Unbind();
 }
 void Editor::Gizmos()
 {
@@ -310,8 +324,7 @@ void Editor::Gizmos()
     glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom.Get(), 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom.Get(), -1.0f, 1.0f);
     // glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
 
-    glm::mat4 rotation = glm::toMat4(glm::quat(Rotation));
-    glm::mat4 Transform = glm::translate(glm::mat4(1.0f), Position) * rotation * glm::scale(glm::mat4(1.0f), Scale);
+    glm::mat4 Transform = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetModel();
 
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         m_Operation = ImGuizmo::OPERATION::TRANSLATE;
@@ -379,6 +392,50 @@ float TimeStep = 0;
 bool NextFrame = false;
 void Editor::RenderPlayMode()
 {
+    
+    PlayModeFBO.Bind();
+
+    PlayModeFBO.RescaleFrameBuffer(WindowWidth, WindowHeight);
+    GLCall(glViewport(0, 0, WindowWidth, WindowHeight));
+    const glm::vec4& ClearColor = Engine::GetCameraObject()->GetComponent<Camera>()->BgColor.Get();
+    GLCall(glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a));
+    GLCall(glClear(GL_COLOR_BUFFER_BIT));
+
+    if(!GameRunning && !Start){
+        //This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
+        Engine::GetActiveScene().Load(Engine::GetActiveScene().SceneFile);
+        Start = true;
+        Paused = false;
+        for (auto const& stat : SapphireEngine::stats)
+        {
+            std::cout << stat.first << ": " << stat.second << '\n';
+        }
+        std::cout << "Avg frame delta time: " << SapphireEngine::FrameRate << ", Frame count: " << SapphireEngine::FrameCount << '\n';
+        SapphireEngine::FrameCount = 0;
+    } 
+    if(!GameRunning || (Paused && !NextFrame)){
+        //If the game is not running. Just render everything.
+        Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get());
+    }
+    if((GameRunning && !Paused) || NextFrame){
+        //The game is running so the engine should start running.
+        SapphireEngine::ClearData();
+        float time = glfwGetTime();
+        engine.Run();
+        TimeStep = (glfwGetTime() - time)*1000.0f;
+        SapphireEngine::FrameCount++;
+        SapphireEngine::FrameRate = (SapphireEngine::FrameRate + (glfwGetTime() - time))/SapphireEngine::FrameCount;
+        NextFrame = false;
+    }
+
+    //Changing the start bool to false here so all the start functions get executed
+    if(GameRunning) Start = false;
+    PlayModeFBO.Blit(WindowWidth, WindowHeight);
+    PlayModeFBO.Unbind();
+
+
+
+
     if((*Editor::GetWindowState("Play"))){
         if(!ImGui::Begin("Play", Editor::GetWindowState("Play"))){
             // ImGui::End();
@@ -390,7 +447,7 @@ void Editor::RenderPlayMode()
         ImVec2 pos = ImGui::GetCursorScreenPos();
         
         ImGui::GetWindowDrawList()->AddImage(
-            reinterpret_cast<ImTextureID*>(PlayModeFBO.GetTexture().GetID()), 
+            reinterpret_cast<ImTextureID*>(PlayModeFBO.RendFrameBuffer.GetTexture().GetID()), 
             ImVec2(pos.x, pos.y), 
             ImVec2(pos.x + WindowWidth, pos.y + WindowHeight), 
             ImVec2(0, 1), 
@@ -451,46 +508,6 @@ void Editor::RenderPlayMode()
 
         ImGui::End();
     }
-    
-
-    PlayModeFBO.Bind();
-
-    PlayModeFBO.RescaleFrameBuffer(WindowWidth, WindowHeight);
-    GLCall(glViewport(0, 0, WindowWidth, WindowHeight));
-    const glm::vec4& ClearColor = Engine::GetCameraObject()->GetComponent<Camera>()->BgColor.Get();
-    GLCall(glClearColor(ClearColor.r, ClearColor.g, ClearColor.b, ClearColor.a));
-    GLCall(glClear(GL_COLOR_BUFFER_BIT));
-
-    if(!GameRunning && !Start){
-        //This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
-        Engine::GetActiveScene().Load(Engine::GetActiveScene().SceneFile);
-        Start = true;
-        Paused = false;
-        for (auto const& stat : SapphireEngine::stats)
-        {
-            std::cout << stat.first << ": " << stat.second << '\n';
-        }
-        std::cout << "Avg frame delta time: " << SapphireEngine::FrameRate << ", Frame count: " << SapphireEngine::FrameCount << '\n';
-        SapphireEngine::FrameCount = 0;
-    } 
-    if(!GameRunning || (Paused && !NextFrame)){
-        //If the game is not running. Just render everything.
-        Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get());
-    }
-    if((GameRunning && !Paused) || NextFrame){
-        //The game is running so the engine should start running.
-        SapphireEngine::ClearData();
-        float time = glfwGetTime();
-        engine.Run();
-        TimeStep = (glfwGetTime() - time)*1000.0f;
-        SapphireEngine::FrameCount++;
-        SapphireEngine::FrameRate = (SapphireEngine::FrameRate + (glfwGetTime() - time))/SapphireEngine::FrameCount;
-        NextFrame = false;
-    }
-
-    //Changing the start bool to false here so all the start functions get executed
-    if(GameRunning) Start = false;
-    PlayModeFBO.Unbind();
 }
 
 void Editor::OnWindowFocus(GLFWwindow *window, int focused)

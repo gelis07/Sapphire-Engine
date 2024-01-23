@@ -179,7 +179,7 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
             }
             case SapphireRenderer::RectangleT:
             {
-                shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::TextureShader, SapphireRenderer::RectangleVertices, obj.GetComponent<Renderer>()->TexturePath.Get());
+                shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, obj.GetComponent<Renderer>()->TexturePath.Get());
                 shape->ShapeType = SapphireRenderer::RectangleT;
                 break;
             }
@@ -192,7 +192,7 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
     {
         // obj.GetComponent<Transform>()->SetSize(glm::vec3(Editor::GetWindowSize().x, Editor::GetWindowSize().y, 0));
         obj.GetComponent<Camera>()->Transform = obj.GetTransform();
-        shape->Wireframe() = true;
+        // shape->Wireframe() = true;
     }
     if(obj.GetComponent<Renderer>() != nullptr){
         if (obj.GetComponent<Renderer>()->TexturePath.Get() != "")
@@ -200,8 +200,8 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
             shape->Load(Engine::GetMainPath() + obj.GetComponent<Renderer>()->TexturePath.Get(), true);
         }
         obj.GetComponent<Renderer>()->shape = shape;
-        obj.GetRenderer()->transform = obj.GetTransform().get();
-        Renderer::Shapes.push_back(obj.GetRenderer());
+        obj.GetRenderer()->transform = obj.GetTransform();
+        Renderer::SceneRenderers.push_back(obj.GetRenderer());
     }
 
     if (std::shared_ptr<SapphirePhysics::RigidBody> RbComp = obj.GetComponent<SapphirePhysics::RigidBody>())
@@ -229,7 +229,8 @@ void Scene::Load(const std::string FilePath)
         ObjectRefrences.erase(ObjectRefrences.find((Objects.begin() + i)->GetRefID()));
     }
     Objects.clear();
-    Renderer::Shapes.clear();
+    Renderer::SceneRenderers.clear();
+    Renderer::Gizmos.clear();
     SapphirePhysics::RigidBody::Rigibodies.clear();
     for (size_t i = 0; i < Data.size(); i++)
     {
@@ -244,6 +245,14 @@ void Scene::Load(const std::string FilePath)
             child->Parent = NewObj; 
         }
     }
+
+
+    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>();
+    rend->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+    rend->shape->ShapeType = SapphireRenderer::RectangleT;
+    rend->shape->Wireframe() = true;
+    rend->transform = Engine::GetCameraObject()->GetTransform();
+    Renderer::Gizmos.push_back(rend);
 }
 
 void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)

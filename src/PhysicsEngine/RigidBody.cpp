@@ -18,7 +18,7 @@ void SapphirePhysics::RigidBody::Run()
 
 SapphirePhysics::RigidBody::RigidBody() : Trigger("Trigger", Variables),
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
-StaticFriction("Static Friction", Variables), DynamicFriction("Dynamic Friction", Variables), Rotate("Rotate", Variables),
+StaticFriction("StaticFriction", Variables), DynamicFriction("DynamicFriction", Variables), Rotate("Rotate", Variables),
 Component("Rigidbody")
 {
     Trigger.Get() = false;
@@ -194,6 +194,8 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(RigidBody* bodyA, RigidBody
     std::array<glm::vec3, 2> FrictionImpulseList = {glm::vec3(0),glm::vec3(0)};
     std::array<glm::vec3, 2> raList = {glm::vec3(0),glm::vec3(0)};
     std::array<glm::vec3, 2> rbList = {glm::vec3(0),glm::vec3(0)};
+    std::array<glm::vec3, 2> VpA = {glm::vec3(0),glm::vec3(0)};
+    std::array<glm::vec3, 2> VpB = {glm::vec3(0),glm::vec3(0)};
     std::array<float, 2> JList;
     contactList[0] = CD.ContactPoint1;
     contactList[1] = CD.ContactPoint2;
@@ -218,6 +220,8 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(RigidBody* bodyA, RigidBody
         JList[i] = J;
         raList[i] = r1;
         rbList[i] = r2;
+        VpA[i] = Vp1;
+        VpB[i] = Vp2;
 
     }
     glm::vec3 t = glm::normalize(bodyA->Velocity - bodyB->Velocity);
@@ -228,7 +232,7 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(RigidBody* bodyA, RigidBody
         bodyA->Forces.push_back(cf * JList[0]*t /FixedTimeStep);
         for (size_t i = 0; i < CD.ContactPointCount; i++)
         {
-            bodyA->Torques.push_back(glm::cross(raList[i], (JList[i] * n)));
+            bodyA->Torques.push_back(glm::cross(raList[i], (JList[i] * n) + (cf * JList[i] * VpA[i])));
         }
         
     }
@@ -238,7 +242,7 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(RigidBody* bodyA, RigidBody
         bodyB->Forces.push_back(cf * -JList[0]*t /FixedTimeStep);
         for (size_t i = 0; i < CD.ContactPointCount; i++)
         {
-            bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n));
+            bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n + (cf * JList[i] * VpB[i])));
         }
     }
     else{
@@ -252,8 +256,8 @@ void SapphirePhysics::RigidBody::OnCollisionRotation(RigidBody* bodyA, RigidBody
         bodyA->Forces.push_back(cf * JList[0]*t /FixedTimeStep);
         for (size_t i = 0; i < CD.ContactPointCount; i++)
         {
-            bodyA->Torques.push_back(glm::cross(raList[i], (JList[i] * n)));
-            bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n ));
+            bodyA->Torques.push_back(glm::cross(raList[i], (JList[i] * n) + (cf * JList[i] * VpA[i])));
+            bodyB->Torques.push_back(glm::cross(rbList[i], -JList[i] * n + (cf * JList[i] * VpB[i])));
         }
         
     } 

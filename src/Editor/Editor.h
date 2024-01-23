@@ -35,13 +35,14 @@ class Editor : public Application{
             {"Settings", false},
             {"Project Settings", false}};
         static SapphireEngine::String ThemeName;
+        static SapphireEngine::Float AASamples;
     private:
         Engine engine;
         inline static float DeltaTime;
         glm::vec4 BackgroundColor;
         inline static std::string MainPath;
         static void Zooming(GLFWwindow* window, double xoffset, double yoffset);
-        SapphireRenderer::FrameBuffer ViewportFBO;
+        SapphireRenderer::MultisampleTextureFrameBuffer ViewportFBO;
         void RenderViewport();
         void Gizmos();
         inline static int WindowWidth, WindowHeight;
@@ -52,7 +53,7 @@ class Editor : public Application{
         Grid grid;
         glm::vec2 m_Offset; // Offset of the Cursor and the SelectedObj when the user first clicks on the SelectedObj
 
-        SapphireRenderer::FrameBuffer PlayModeFBO;
+        SapphireRenderer::MultisampleTextureFrameBuffer PlayModeFBO;
         bool Start = true;
         void RenderPlayMode();
         std::string SceneFileName;

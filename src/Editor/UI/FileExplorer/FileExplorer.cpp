@@ -22,7 +22,7 @@ const char* defaultScene = R"({
   "Object: 0": {
     "Name": "MainCamera",
     "Tag": "",
-    "ID": 4014,
+    "ID": 29981,
     "Children": null,
     "Components": {
       "Transform": {
@@ -31,8 +31,8 @@ const char* defaultScene = R"({
           "Size": [
             5690004131215169010,
             {
-              "x": 31.920000076293945,
-              "y": 12.640000343322754,
+              "x": 31.399999618530273,
+              "y": 12.300000190734863,
               "z": 0.0
             }
           ],
@@ -71,27 +71,8 @@ const char* defaultScene = R"({
             }
           ]
         }
-      },
-      "Renderer": {
-        "path": "",
-        "Variables": {
-          "Path": [
-            1055573096244375537,
-            ""
-          ],
-          "Color": [
-            16809261544032701581,
-            {
-              "r": 1.0,
-              "g": 1.0,
-              "b": 1.0,
-              "a": 1.0
-            }
-          ]
-        }
       }
-    },
-    "shape": 1
+    }
   }
 })";
 

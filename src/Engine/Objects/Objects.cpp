@@ -107,15 +107,15 @@ ObjectRef Object::CreateObject(std::string &&ObjName)
     NewObj.renderer = NewObj.GetComponent<Renderer>(); 
     NewObj.transform = NewObj.GetComponent<Transform>();
     NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
-    NewObj.renderer->transform = NewObj.transform.get();
-    Renderer::Shapes.push_back(NewObj.renderer);
-    SapphirePhysics::RigidBody::Rigibodies.push_back(NewObj.rb.get());
+    NewObj.renderer->transform = NewObj.transform;
+    Renderer::SceneRenderers.push_back(NewObj.renderer);
 
     NewObj.renderer->Color.Get() = glm::vec4(1);
     NewObj.transform->SetSize(glm::vec3(0));
     NewObj.transform->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
 
     NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
+    SapphirePhysics::RigidBody::Rigibodies.push_back(NewObj.rb.get());
     return Engine::GetActiveScene().Add(std::move(NewObj));;
 }
 
@@ -131,6 +131,20 @@ void Object::RenderGUI()
         Components[i]->Render();
         if(ImGui::Button(("Remove Component##" + std::to_string(i)).c_str()))
         {
+            if(Components[i]->Name == "Renderer"){
+                for (size_t k = 0; k < Renderer::SceneRenderers.size(); k++)
+                {
+                    if(Renderer::SceneRenderers[k] == Components[i]){
+                        Renderer::SceneRenderers.erase(Renderer::SceneRenderers.begin() + k);
+                        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>();
+                        rend->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+                        rend->shape->ShapeType = SapphireRenderer::RectangleT;
+                        rend->shape->Wireframe() = true;
+                        rend->transform = this->GetTransform();
+                        Renderer::Gizmos.push_back(rend);
+                    }
+                }
+            }
             Components.erase(Components.begin() + i);
             if(GetComponent<SapphirePhysics::RigidBody>() == nullptr)
                 rb = nullptr;

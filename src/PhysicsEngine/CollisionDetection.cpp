@@ -63,8 +63,7 @@ bool SapphirePhysics::CollisionDetection::CirclexRectangle(Object* obj, Object* 
         CD.Depth = AxisDepth;
         CD.Normal = AxisProj;
     }
-    // CD.Depth /= glm::length(CD.Normal);
-    // CD.Normal = glm::normalize(CD.Normal);
+
     glm::vec2 Direction = Obj1Position - Obj2Position;
     if(glm::dot(Direction, CD.Normal) < 0.0f)
     {
@@ -258,6 +257,15 @@ bool SapphirePhysics::CollisionDetection::RectanglexRectangle(SapphirePhysics::R
     {
         //"Inverting" the shapes so both objects are tested on eachother.
         if(shape == 1){
+            //I need a copy because if I do this:
+            /*
+                bodyA = bodyB
+                bodyB = bodyA
+                then bodyB would be bodyB so
+                BodyA = bodyB
+                BodyB = BodyB
+                but with that method the bodies are succesfully swaped.
+            */
             RigidBody* bodyAcopy = bodyA;
             bodyA = bodyB;
             bodyB = bodyAcopy;
@@ -313,7 +321,6 @@ bool SapphirePhysics::CollisionDetection::RectanglexRectangle(SapphirePhysics::R
 }
 bool SapphirePhysics::CollisionDetection::CirclexCircle(SapphirePhysics::RigidBody* obj, SapphirePhysics::RigidBody* current, CollisionData& CD)
 {
-    //! Comments here
     // Checking if the length of the vector with points the circles points is less than the sum of the radiuses
     glm::vec2 DistanceVec(current->transform->GetPosition().x - obj->transform->GetPosition().x, current->transform->GetPosition().y - obj->transform->GetPosition().y);
     float Distance = SapphireEngine::LengthVec(DistanceVec);

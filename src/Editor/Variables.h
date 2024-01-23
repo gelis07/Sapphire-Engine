@@ -44,6 +44,7 @@ namespace SapphireEngine{
             void CommunicateWithLua(bool state) {m_CommunicateWithLua = state;}
             const std::string GetName() {return Name;}
             void SetOnChangeFunc(const std::function<void()>& func) {OnChange = func;}
+            int luaType = -1;
         protected:
             std::function<void()> OnChange = []() { };
             bool m_ShowOnInspector = true;

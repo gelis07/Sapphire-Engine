@@ -38,7 +38,28 @@ int Renderer::SetColor(lua_State *L)
 }
 void Renderer::Render(Camera* cam)
 {
-    for (auto &&rend : Shapes)
+    for (auto &&rend : SceneRenderers)
+    {
+        if(rend->shape->ShapeType == SapphireRenderer::CircleT){
+            const glm::vec3& ObjectSize = rend->transform->GetSize() TOPIXELS;
+            const glm::vec3& ObjectPos = rend->transform->GetPosition() TOPIXELS;
+            glm::vec3 CamPos = (cam->Transform->GetPosition() + cam->Transform->GetSize() / 2.0f) TOPIXELS;
+            glm::vec2 StartPos(ObjectPos.x - ObjectSize.x/2 + CamPos.x, ObjectPos.y - ObjectSize.y/2 + CamPos.y);
+            std::function<void(SapphireRenderer::Shader& shader)> Uniforms = [StartPos,cam, ObjectSize](SapphireRenderer::Shader& shader) { 
+                shader.SetUniform("RectWidth", ObjectSize.x);
+                shader.SetUniform("RectHeight", ObjectSize.y);
+                shader.SetUniform("StartPoint", StartPos);
+                shader.SetUniform("CameraZoom", cam->Zoom.Get());
+            };
+            rend->shape->Render((*rend->transform), rend->Color.Get(), cam, false, Uniforms);
+        }else{
+            rend->shape->Render((*rend->transform), rend->Color.Get(), cam, false, [](SapphireRenderer::Shader& shader) {  });
+        }
+    }
+}
+void Renderer::RenderGizmos(Camera *cam)
+{
+    for (auto &&rend : Gizmos)
     {
         rend->shape->Render((*rend->transform), rend->Color.Get(), cam, false, [](SapphireRenderer::Shader& shader) {  });
     }
@@ -83,6 +104,6 @@ glm::mat4 Camera::GetView()
 {
 
     glm::mat4 view(1.0f);
-    view = glm::translate(view, (Transform->GetPosition() + Transform->GetSize() / 2.0f)TOPIXELS);
+    view = glm::translate(view, (Transform->GetPosition() + Transform->GetSize() / 2.0f) TOPIXELS);
     return view;
 }

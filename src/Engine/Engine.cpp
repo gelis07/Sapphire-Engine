@@ -18,20 +18,23 @@ Engine::Engine(const std::string& mainPath)
     points.push_back(glm::vec3(-1,1,0));
     CameraObj.AddComponent<Transform>(std::make_shared<Transform>("Transform", std::move(points)));
     CameraObj.AddComponent<Camera>(std::make_shared<Camera>("Camera"));
-    CameraObj.AddComponent<Renderer>(std::make_shared<Renderer>());
+    // CameraObj.AddComponent<Renderer>(std::make_shared<Renderer>());
 
     CameraObj.GetTransform() = CameraObj.GetComponent<Transform>();
-    CameraObj.GetRenderer() = CameraObj.GetComponent<Renderer>();
+    // CameraObj.GetRenderer() = CameraObj.GetComponent<Renderer>();
     
-    CameraObj.GetRenderer()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
-    CameraObj.GetRenderer()->shape->ShapeType = SapphireRenderer::RectangleT;
+    // CameraObj.GetRenderer()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+    // CameraObj.GetRenderer()->shape->ShapeType = SapphireRenderer::RectangleT;
 
     CameraObj.GetComponent<Camera>()->Transform = CameraObj.GetTransform();
     CameraObj.GetTransform()->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
-    CameraObj.GetRenderer()->shape->Wireframe() = true;
-    CameraObj.GetRenderer()->transform = CameraObj.GetTransform().get();
-    Renderer::Shapes.push_back(CameraObj.GetRenderer());
+    // CameraObj.GetRenderer()->shape->Wireframe() = true;
+    // CameraObj.GetRenderer()->transform = CameraObj.GetTransform().get();
+    // Renderer::Shapes.push_back(CameraObj.GetRenderer());
+
     m_ActiveScene.Add(std::move(CameraObj));
+
+
     CameraObjectID = m_ActiveScene.Objects.size()-1;
 }
 float TimeAccumulator = 0.0f;

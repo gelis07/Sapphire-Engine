@@ -260,7 +260,7 @@ bool Component::GetLuaVariables()
 
         VarsTested.push_back(var.Name);
 
-        if(Variables.find(var.Name) != Variables.end()){
+        if(Variables.find(var.Name) != Variables.end() && Variables.find(var.Name)->second->luaType == type){
             lua_pop(L ,1);
             continue;
         }
@@ -303,6 +303,7 @@ bool Component::GetLuaVariables()
             var.Value = new SapphireEngine::Float(var.Name, Variables);
             ((SapphireEngine::Float*)var.Value)->Get() = (float)lua_tonumber(L, -1);
         }
+        var.Value->luaType = type;
         lua_pop(L, 1);
     }
     TableVariable NewVars = Variables;
@@ -331,7 +332,6 @@ void Component::UpdateExistingVars()
 
 void Component::SetLuaComponent(lua_State* ComponentsState)
 {
-    // if(L != nullptr) return;
     luaL_newmetatable(ComponentsState, "Component");
     lua_pushstring(ComponentsState, "__index");
     lua_pushcfunction(ComponentsState, ComponentIndex);
@@ -417,7 +417,6 @@ void Component::Load(nlohmann::ordered_json JSON)
 
         SapphireEngine::Variable* CurrentlyEditedVariable = Variables[JSONVariable.key()];
 
-        //At least at my knowledge of programming/c++, I couldn't find a way to remove this repetitive code.
         if(JsonArray[0] == typeid(SapphireEngine::Float).hash_code()){ 
             if(CurrentlyEditedVariable == nullptr)
                 CurrentlyEditedVariable = new SapphireEngine::Float(JSONVariable.key(), Variables);

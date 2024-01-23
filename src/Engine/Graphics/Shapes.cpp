@@ -16,7 +16,7 @@ SapphireRenderer::Shape::Shape(const SapphireRenderer::Shader& shader, const std
     IndexBuffer.Bind();
 
 
-    VertexBuffer.AssignData(16 * sizeof(float), (GLbyte*)Vertices.data(), GL_DYNAMIC_DRAW);
+    VertexBuffer.AssignData(16 * sizeof(float), (GLbyte*)Vertices.data(), GL_STATIC_DRAW);
 
     SapphireRenderer::VertexBufferLayout layout;
     layout.Push(GL_FLOAT, 2);
@@ -28,7 +28,7 @@ SapphireRenderer::Shape::Shape(const SapphireRenderer::Shader& shader, const std
     };
 
     IndexBuffer.AssignData(6 * sizeof(unsigned int), (GLbyte*)Indices, GL_STATIC_DRAW);
-    Shader = SapphireRenderer::BasicShader;
+    // Shader = SapphireRenderer::CircleShader;
 
     VertexArray.Unbind();
     VertexBuffer.Unbind();
