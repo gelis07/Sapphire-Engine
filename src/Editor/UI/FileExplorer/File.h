@@ -108,12 +108,18 @@ class ImageFile : public File
             system((entry.path().string()).c_str());
         }
 };
+struct CPUTexture{
+    GLubyte* data;
+    int width,height,channels;
+};
 class AnimationFile : public File
 {
     public:
         inline static std::filesystem::path AnimationSelectedFile = "";
         inline static SapphireRenderer::KeyFrame* SelectedKeyframe = nullptr;
         inline static std::vector<SapphireRenderer::KeyFrame*> Keyframes;
+        inline static std::vector<CPUTexture> CachedTextures;
+
         void SetIconPos() override{
             m_IconPos = glm::vec2(ICON_SIZE,0);
             m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
@@ -142,7 +148,12 @@ class AnimationFile : public File
             std::vector<SapphireRenderer::KeyFramePair> newKeyFrames = SapphireRenderer::Animation::readKeyFramePairsFromBinaryFile(AnimationSelectedFile.string());
             for (auto &&keyframe : newKeyFrames)
             {
-                Keyframes.push_back(new SapphireRenderer::KeyFrame({keyframe.TimeStamp, *keyframe.path}));
+                SapphireRenderer::KeyFrame* MainKeyframe = new SapphireRenderer::KeyFrame({keyframe.TimeStamp, *keyframe.path});
+                Keyframes.push_back(MainKeyframe);
+                CPUTexture texture; 
+                stbi_set_flip_vertically_on_load(true);
+                texture.data = stbi_load(MainKeyframe->path.c_str(), &texture.width, &texture.height, &texture.channels, 0);
+                AnimationFile::CachedTextures.push_back(texture);
             }
         }
 };

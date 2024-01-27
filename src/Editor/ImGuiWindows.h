@@ -3,6 +3,7 @@
 #include "Variables.h"
 #include "json.hpp"
 
+class File;
 void LogWindow();
 void Toolbar();
 void FileMenu();
@@ -21,4 +22,6 @@ void ProjectSettings();
 void Settings();
 void AnimationPreview();
 void AnimationTimeline();
+void OnFileDrop(std::shared_ptr<File> *File);
+void RenderKeyFrames(size_t i, float WindowPosX);
 inline static std::map<ImGuiCol_, ImVec4> LoadedTheme;

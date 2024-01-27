@@ -17,6 +17,7 @@
 #include <iostream>
 #include <array>
 #include <vector>
+#include <typeindex>
 #include <functional>
 #include <iostream>
 #include <string>

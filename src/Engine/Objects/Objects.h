@@ -1,5 +1,5 @@
 #pragma once
-#include "Graphics/Shapes.h"
+#include "Graphics/Animation.h"
 #include "Scripting/Components.h"
 #include "Transform.h"
 #include "PhysicsEngine/RigidBody.h"
@@ -26,7 +26,6 @@ class Object
         std::enable_if_t<std::is_base_of_v<Component, Derived>, void> AddComponent(const std::shared_ptr<Derived>& Comp);
         std::vector<std::shared_ptr<Component>>& GetComponents() {return Components;}
         
-        static ObjectRef CreateObject(std::string &&ObjName);
         static void Delete(int id);
 
         void OnCollision(Object* other);
@@ -41,20 +40,12 @@ class Object
         ObjectRef Parent = ObjectRef(null_ref);
         bool Active = true;
         //Please use these functions because it doesn't have to search for these objects!
-        std::shared_ptr<Transform>& GetTransform() {return transform;}
-        std::shared_ptr<Renderer>& GetRenderer() {return renderer;} 
-        std::shared_ptr<SapphirePhysics::RigidBody>& GetRb() {return rb;} 
-        const std::shared_ptr<Transform>& GetTransform() const {return transform;}
-        const std::shared_ptr<Renderer>& GetRenderer() const {return renderer;} 
-        const std::shared_ptr<SapphirePhysics::RigidBody>& GetRb() const {return rb;} 
-        std::vector<std::shared_ptr<Component>> Components;
+        std::vector<std::shared_ptr<Component>> Components; // This one is for looping through
+        std::unordered_map<std::type_index, std::shared_ptr<Component>> ComponentMap; //This one is for searching
         void SetRefID(int refID) {RefID = refID;}
         const int& GetRefID() {return RefID;}
         ObjectRef GetRef() {return ObjectRef(RefID);}
     private:
-        std::shared_ptr<Transform> transform;
-        std::shared_ptr<Renderer> renderer;
-        std::shared_ptr<SapphirePhysics::RigidBody> rb;
         bool m_CalledStart = false;
         int RefID;
 };
@@ -62,12 +53,9 @@ class Object
 template <typename T>
 std::shared_ptr<T> Object::GetComponent()
 {
-    for (std::shared_ptr<Component> component : Components)
-    {
-        if (std::shared_ptr<T> SpecificComponent = std::dynamic_pointer_cast<T>(component))
-        {
-            return SpecificComponent;
-        }
+    auto it = ComponentMap.find(std::type_index(typeid(T)));
+    if (it != ComponentMap.end()) {
+        return std::dynamic_pointer_cast<T>(it->second);
     }
     return nullptr;
 }
@@ -105,5 +93,10 @@ static int GetComponentFromObject(lua_State* L) {
 template<typename Derived>
 std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddComponent(const std::shared_ptr<Derived>& Comp) 
 {
-    Components.push_back(std::move(Comp));
+    if(GetComponent<Derived>() == nullptr){
+        ComponentMap[std::type_index(typeid(Derived))] = Comp;
+        Components.push_back(std::move(Comp));
+    }else{
+        ComponentMap[std::type_index(typeid(Derived))] = Comp;
+    }
 }

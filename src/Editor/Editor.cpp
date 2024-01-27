@@ -75,11 +75,10 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
     ViewCamera.Transform = std::make_shared<Transform>("Transform",std::move(points));
     ViewCamera.Transform->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
 
-    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>();
-    rend->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
-    rend->shape->ShapeType = SapphireRenderer::RectangleT;
-    rend->shape->Wireframe() = true;
-    rend->transform = Engine::GetCameraObject()->GetTransform();
+    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices);
+    rend->ShapeType = SapphireRenderer::RectangleT;
+    rend->Wireframe = true;
+    rend->transform = Engine::GetCameraObject()->GetComponent<Transform>();
     Renderer::Gizmos.push_back(rend);
 
     AASamples.Get() = 4;
@@ -108,31 +107,7 @@ void Editor::OnUpdate(const float DeltaTime)
     LogWindow();
 
     if(GetInput(GLFW_KEY_LEFT_CONTROL) && GetInputDown(GLFW_KEY_D)){
-        Object* selectedObj = &Engine::GetActiveScene().Objects[SelectedObjID];
-        Object NewObj(selectedObj->Name + " Copy");
-        if(selectedObj->GetRenderer() != nullptr){
-            NewObj.Components.push_back(std::shared_ptr<Renderer>(new Renderer(*selectedObj->GetRenderer())));
-            NewObj.GetRenderer() = NewObj.GetComponent<Renderer>();
-        }
-        if(selectedObj->GetRb() != nullptr){
-            NewObj.Components.push_back(std::shared_ptr<SapphirePhysics::RigidBody>(new SapphirePhysics::RigidBody(*selectedObj->GetRb())));
-            NewObj.GetRb() = NewObj.GetComponent<SapphirePhysics::RigidBody>();
-        }
-        if(selectedObj->GetTransform() != nullptr){
-            NewObj.Components.push_back(std::shared_ptr<Transform>(new Transform(*selectedObj->GetTransform())));
-            NewObj.GetTransform() = NewObj.GetComponent<Transform>();
-        }
-        NewObj.GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
-        NewObj.GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::RectangleT;
-        NewObj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(NewObj.GetRenderer()->shape->ShapeType);
-        for (auto &&component : selectedObj->Components)
-        {
-            if(component->GetState() == nullptr) continue;
-            NewObj.Components.push_back(std::shared_ptr<Component>(new Component(*component)));
-        }
-        NewObj.GetTransform()->Move(glm::vec3(20,20,0));
-        Engine::GetActiveScene().Add(std::move(NewObj));
-        SelectedObjID = Engine::GetActiveScene().Objects.size() - 1;
+        DuplicateObj();
     }
     if(GetInput(GLFW_KEY_LEFT_CONTROL) && GetInput(GLFW_KEY_S)){
         if(Engine::GetActiveScene().SceneFile != ""){
@@ -157,6 +132,39 @@ void Editor::OnUpdate(const float DeltaTime)
         }
     }
     Engine::GetActiveScene().Hierechy(&Engine::GetActiveScene().Objects[SelectedObjID], SelectedObjID);
+}
+
+void Editor::DuplicateObj()
+{
+    Object *selectedObj = &Engine::GetActiveScene().Objects[SelectedObjID];
+    Object NewObj(selectedObj->Name + " Copy");
+    if (selectedObj->GetComponent<Renderer>() != nullptr)
+    {
+        NewObj.Components.push_back(std::shared_ptr<Renderer>(new Renderer(*selectedObj->GetComponent<Renderer>())));
+        NewObj.GetComponent<Renderer>() = NewObj.GetComponent<Renderer>();
+    }
+    if (selectedObj->GetComponent<SapphirePhysics::RigidBody>() != nullptr)
+    {
+        NewObj.Components.push_back(std::shared_ptr<SapphirePhysics::RigidBody>(new SapphirePhysics::RigidBody(*selectedObj->GetComponent<SapphirePhysics::RigidBody>())));
+        NewObj.GetComponent<SapphirePhysics::RigidBody>() = NewObj.GetComponent<SapphirePhysics::RigidBody>();
+    }
+    if (selectedObj->GetComponent<Transform>() != nullptr)
+    {
+        NewObj.Components.push_back(std::shared_ptr<Transform>(new Transform(*selectedObj->GetComponent<Transform>())));
+        NewObj.GetComponent<Transform>() = NewObj.GetComponent<Transform>();
+    }
+    // NewObj.GetComponent<Renderer>()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
+    // NewObj.GetComponent<Renderer>()->shape->ShapeType = SapphireRenderer::RectangleT;
+    NewObj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(NewObj.GetComponent<Renderer>()->ShapeType);
+    for (auto &&component : selectedObj->Components)
+    {
+        if (component->GetState() == nullptr)
+            continue;
+        NewObj.Components.push_back(std::shared_ptr<Component>(new Component(*component)));
+    }
+    NewObj.GetComponent<Transform>()->Move(glm::vec3(20, 20, 0));
+    Engine::GetActiveScene().Add(std::move(NewObj));
+    SelectedObjID = Engine::GetActiveScene().Objects.size() - 1;
 }
 
 void Editor::OnStart()
@@ -265,25 +273,17 @@ static void Default(GLFWwindow* window, double xoffset, double yoffset){
 constexpr glm::vec2 offset = glm::vec2(8, -6);
 void Editor::RenderViewport()
 {
-
-    ViewportFBO.Bind();
-
-    
-    ViewportFBO.RescaleFrameBuffer(WindowWidth, WindowHeight);
-    GLCall(glViewport(0, 0, WindowWidth, WindowHeight));
-    GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
-    GLCall(glClear(GL_COLOR_BUFFER_BIT));
-    grid.Render(ViewCamera.Transform->GetPosition() TOPIXELS,ViewCamera.Zoom.Get());
-    Renderer::Render(&ViewCamera);
-    Renderer::RenderGizmos(&ViewCamera);
-    SapphireEngine::DrawDebug(ViewCamera.Transform->GetModel());
-    SapphireEngine::ClearData();
-    ViewportFBO.Blit(WindowWidth, WindowHeight);
-    ViewportFBO.Unbind();
-
-
-    if(!(*Editor::GetWindowState("Viewport"))) return;
-    if(!ImGui::Begin("Viewport", Editor::GetWindowState("Viewport"))){
+    RenderFrameBufferViewport();
+    bool retFlag;
+    ViewportGUI(retFlag);
+}
+void Editor::ViewportGUI(bool &retFlag)
+{
+    retFlag = true;
+    if (!(*Editor::GetWindowState("Viewport")))
+        return;
+    if (!ImGui::Begin("Viewport", Editor::GetWindowState("Viewport")))
+    {
         // ImGui::End();
         // return;
     }
@@ -292,39 +292,55 @@ void Editor::RenderViewport()
     WindowHeight = ImGui::GetContentRegionAvail().y;
     MoveCamera(glm::vec2(ImGui::GetContentRegionAvail().x, ImGui::GetContentRegionAvail().y), glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y));
     ViewCamera.Transform->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
-    Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
+    Engine::GetCameraObject()->GetComponent<Transform>()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
     glfwSetWindowUserPointer(window, &ViewCamera);
     glfwSetScrollCallback(window, ImGui::IsWindowHovered() ? Zooming : Default);
 
     ImVec2 pos = ImGui::GetCursorScreenPos();
-    
+
     ImGui::GetWindowDrawList()->AddImage(
-        reinterpret_cast<ImTextureID*>(ViewportFBO.RendFrameBuffer.GetTexture().GetID()), 
-        ImVec2(pos.x, pos.y), 
-        ImVec2(pos.x + WindowWidth, pos.y + WindowHeight), 
-        ImVec2(0, 1), 
-        ImVec2(1, 0)
-    );
+        reinterpret_cast<ImTextureID *>(ViewportFBO.RendFrameBuffer.GetTexture().GetID()),
+        ImVec2(pos.x, pos.y),
+        ImVec2(pos.x + WindowWidth, pos.y + WindowHeight),
+        ImVec2(0, 1),
+        ImVec2(1, 0));
     // Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
     ImGuizmo::SetOrthographic(true);
     ImGuizmo::SetDrawlist();
     ImGuizmo::SetRect(ImGui::GetWindowPos().x + offset.x, ImGui::GetWindowPos().y + offset.y, ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-    if(SelectedObjID != -1){
+    if (SelectedObjID != -1)
+    {
         Gizmos();
     }
 
-
     ImGui::End();
+    retFlag = false;
+}
+void Editor::RenderFrameBufferViewport()
+{
+    ViewportFBO.Bind();
+
+    ViewportFBO.RescaleFrameBuffer(WindowWidth, WindowHeight);
+    GLCall(glViewport(0, 0, WindowWidth, WindowHeight));
+    GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+    GLCall(glClear(GL_COLOR_BUFFER_BIT));
+    grid.Render(ViewCamera.Transform->GetPosition() TOPIXELS, ViewCamera.Zoom.Get());
+    Renderer::Render(&ViewCamera, Renderer::SceneRenderers);
+    Renderer::Render(&ViewCamera, Renderer::Gizmos);
+    SapphireEngine::DrawDebug(ViewCamera.Transform->GetModel());
+    SapphireEngine::ClearData();
+    ViewportFBO.Blit(WindowWidth, WindowHeight);
+    ViewportFBO.Unbind();
 }
 void Editor::Gizmos()
 {
-    const glm::vec3 &Position = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetPosition() TOPIXELS;
-    const glm::vec3 &Rotation = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetRotation();
-    const glm::vec3 &Scale = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetSize() TOPIXELS;
+    const glm::vec3 &Position = Engine::GetActiveScene().Objects[SelectedObjID].GetComponent<Transform>()->GetPosition() TOPIXELS;
+    const glm::vec3 &Rotation = Engine::GetActiveScene().Objects[SelectedObjID].GetComponent<Transform>()->GetRotation();
+    const glm::vec3 &Scale = Engine::GetActiveScene().Objects[SelectedObjID].GetComponent<Transform>()->GetSize() TOPIXELS;
     glm::mat4 proj = glm::ortho(0.0f, ImGui::GetWindowSize().x / ViewCamera.Zoom.Get(), 0.0f, ImGui::GetWindowSize().y / ViewCamera.Zoom.Get(), -1.0f, 1.0f);
     // glm::mat4 proj = glm::ortho( -ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().x/2.0f / ViewCamera.Zoom, -ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, ImGui::GetWindowSize().y / 2.0f / ViewCamera.Zoom, -1.0f, 1.0f);
 
-    glm::mat4 Transform = Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->GetModel();
+    glm::mat4 model = Engine::GetActiveScene().Objects[SelectedObjID].GetComponent<Transform>()->GetModel();
 
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         m_Operation = ImGuizmo::OPERATION::TRANSLATE;
@@ -333,20 +349,20 @@ void Editor::Gizmos()
     else if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         m_Operation = ImGuizmo::OPERATION::SCALE;
 
-    ImGuizmo::Manipulate(glm::value_ptr(ViewCamera.GetView()), glm::value_ptr(proj), m_Operation, ImGuizmo::WORLD, glm::value_ptr(Transform));
+    ImGuizmo::Manipulate(glm::value_ptr(ViewCamera.GetView()), glm::value_ptr(proj), m_Operation, ImGuizmo::WORLD, glm::value_ptr(model));
     if (ImGuizmo::IsUsing())
     {
         glm::vec3 translation, rotation, scale;
-        DecomposeTransform(Transform, translation, rotation, scale);
+        DecomposeTransform(model, translation, rotation, scale);
 
         if (m_Operation == ImGuizmo::OPERATION::TRANSLATE)
-            Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetPosition(translation TOUNITS);
+            Engine::GetActiveScene().Objects[SelectedObjID].GetComponent<Transform>()->SetPosition(translation TOUNITS);
         else if (m_Operation == ImGuizmo::OPERATION::SCALE)
-            Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->SetSize(scale TOUNITS);
+            Engine::GetActiveScene().Objects[SelectedObjID].GetComponent<Transform>()->SetSize(scale TOUNITS);
         else if (m_Operation == ImGuizmo::OPERATION::ROTATE)
         {
             glm::vec3 deltaRotation = rotation - Rotation;
-            Engine::GetActiveScene().Objects[SelectedObjID].GetTransform()->Rotate(deltaRotation.z);
+            Engine::GetActiveScene().Objects[SelectedObjID].GetComponent<Transform>()->Rotate(deltaRotation.z);
         }
     }
 }
@@ -402,20 +418,11 @@ void Editor::RenderPlayMode()
     GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
     if(!GameRunning && !Start){
-        //This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
-        Engine::GetActiveScene().Load(Engine::GetActiveScene().SceneFile);
-        Start = true;
-        Paused = false;
-        for (auto const& stat : SapphireEngine::stats)
-        {
-            std::cout << stat.first << ": " << stat.second << '\n';
-        }
-        std::cout << "Avg frame delta time: " << SapphireEngine::FrameRate << ", Frame count: " << SapphireEngine::FrameCount << '\n';
-        SapphireEngine::FrameCount = 0;
+        OnGameRestart();
     } 
     if(!GameRunning || (Paused && !NextFrame)){
         //If the game is not running. Just render everything.
-        Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get());
+        Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get(), Renderer::SceneRenderers);
     }
     if((GameRunning && !Paused) || NextFrame){
         //The game is running so the engine should start running.
@@ -433,40 +440,50 @@ void Editor::RenderPlayMode()
     PlayModeFBO.Blit(WindowWidth, WindowHeight);
     PlayModeFBO.Unbind();
 
+    PlayModeGUI();
+}
 
-
-
-    if((*Editor::GetWindowState("Play"))){
-        if(!ImGui::Begin("Play", Editor::GetWindowState("Play"))){
+void Editor::PlayModeGUI()
+{
+    if ((*Editor::GetWindowState("Play")))
+    {
+        if (!ImGui::Begin("Play", Editor::GetWindowState("Play")))
+        {
             // ImGui::End();
             // return;
         }
-        // Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
+        // Engine::GetCameraObject()->GetComponent<Transform>()->SetSize(glm::vec3(WindowWidth, WindowHeight, 0) TOUNITS);
         WindowPos = glm::vec2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
         WindowSize = glm::vec2(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
         ImVec2 pos = ImGui::GetCursorScreenPos();
-        
+
         ImGui::GetWindowDrawList()->AddImage(
-            reinterpret_cast<ImTextureID*>(PlayModeFBO.RendFrameBuffer.GetTexture().GetID()), 
-            ImVec2(pos.x, pos.y), 
-            ImVec2(pos.x + WindowWidth, pos.y + WindowHeight), 
-            ImVec2(0, 1), 
-            ImVec2(1, 0)
-        );
+            reinterpret_cast<ImTextureID *>(PlayModeFBO.RendFrameBuffer.GetTexture().GetID()),
+            ImVec2(pos.x, pos.y),
+            ImVec2(pos.x + WindowWidth, pos.y + WindowHeight),
+            ImVec2(0, 1),
+            ImVec2(1, 0));
 
         std::string Label;
-        if (!GameRunning){ Label = "Play"; }
-        else{ Label = "Stop"; }
+        if (!GameRunning)
+            Label = "Play";
+        else
+            Label = "Stop";
         ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2, 20));
         // Set the ImGui Button to play the game
         if (ImGui::Button(Label.c_str()))
         {
-            if(Engine::GetActiveScene().SceneFile == ""){
+            if (Engine::GetActiveScene().SceneFile == "")
+            {
                 ImGui::OpenPopup("Save Menu");
-            }else{
-                if(!GameRunning) Engine::GetActiveScene().Save(Engine::GetActiveScene().SceneFile);
+            }
+            else
+            {
+                if (!GameRunning)
+                    Engine::GetActiveScene().Save(Engine::GetActiveScene().SceneFile);
 
-                if(CheckForErrors()){
+                if (CheckForErrors())
+                {
                     GameRunning = !GameRunning;
                 }
                 else
@@ -477,7 +494,7 @@ void Editor::RenderPlayMode()
         std::stringstream ss;
         ss << (TimeStep) << ", Objects: " << Engine::GetActiveScene().Objects.size();
         ImGui::Text(ss.str().c_str());
-        if(GameRunning)
+        if (GameRunning)
         {
             ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x / 2 - 100, 20));
             // Set the ImGui Button to play the game
@@ -497,7 +514,8 @@ void Editor::RenderPlayMode()
             ImGui::InputText("Scene Name", &SceneFileName, ImGuiInputTextFlags_CharsNoBlank);
             if (ImGui::MenuItem("Save") || glfwGetKey(window, GLFW_KEY_ENTER) == GLFW_PRESS)
             {
-                if(CheckForErrors()){
+                if (CheckForErrors())
+                {
                     Engine::GetActiveScene().Save(std::string(SceneFileName) + ".scene");
                     GameRunning = !GameRunning;
                 }
@@ -508,6 +526,21 @@ void Editor::RenderPlayMode()
 
         ImGui::End();
     }
+}
+
+void Editor::OnGameRestart()
+{
+    // This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
+    Engine::GetActiveScene().Load(Engine::GetActiveScene().SceneFile);
+    Start = true;
+    Paused = false;
+    for (auto const &stat : SapphireEngine::stats)
+    {
+        std::cout << stat.first << ": " << stat.second << '\n';
+    }
+    std::cout << "Avg frame delta time: " << SapphireEngine::FrameRate << ", Frame count: " << SapphireEngine::FrameCount << '\n';
+    SapphireEngine::FrameCount = 0;
+    Engine::GameTime = 0.0f;
 }
 
 void Editor::OnWindowFocus(GLFWwindow *window, int focused)

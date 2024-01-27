@@ -1,4 +1,4 @@
-#include "Shapes.h"
+#include "Animation.h"
 #include "Objects/Objects.h"
 #include "Engine/Engine.h"
 #include "stb_image_write.h"
@@ -6,121 +6,20 @@
 
 static glm::vec4 LineColor(1.0f, 0.0f, 0.0f, 1.0f);
 float lineWidth = 5.0f;
-//This is a complicated name but its just the shape constructor
-SapphireRenderer::Shape::Shape(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices, const std::string& path)
-: Shader(shader), VertexArray(), VertexBuffer(), IndexBuffer()
-{
-    Shader = shader;
-    VertexArray.Bind();
-    VertexBuffer.Bind();
-    IndexBuffer.Bind();
-
-
-    VertexBuffer.AssignData(16 * sizeof(float), (GLbyte*)Vertices.data(), GL_STATIC_DRAW);
-
-    SapphireRenderer::VertexBufferLayout layout;
-    layout.Push(GL_FLOAT, 2);
-    layout.Push(GL_FLOAT, 2);
-    VertexArray.AddBuffer(VertexBuffer, layout);
-    unsigned int Indices[] = {
-        0,1,2,
-        2,3,0
-    };
-
-    IndexBuffer.AssignData(6 * sizeof(unsigned int), (GLbyte*)Indices, GL_STATIC_DRAW);
-    // Shader = SapphireRenderer::CircleShader;
-
-    VertexArray.Unbind();
-    VertexBuffer.Unbind();
-    IndexBuffer.Unbind();
-}
-
-SapphireRenderer::Shape::~Shape()
-{
-    for (auto& animation : Animations)
-    {
-        delete animation.second;
-    }
-}
-
-void SapphireRenderer::Shape::Render(const Transform& transform,const glm::vec4& Color,Camera* cam, bool OutLine, 
-const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms)
-{
-    // const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetSize() TOPIXELS);
-    m_Projection = glm::ortho( 0.0f, cam->Transform->GetSize().x TOPIXELS / cam->Zoom.Get(), 0.0f, cam->Transform->GetSize().y TOPIXELS / cam->Zoom.Get(), -1.0f, 1.0f);
-    
-    if(CurrentAnimation) CurrentAnimation.value().SelectKeyFrame(VertexBuffer);
-
-    Shader.Bind();
-    VertexArray.Bind();
-    IndexBuffer.Bind();
-    //Here is the standard model view projection matrix
-    const glm::vec3& Pos = transform.GetPosition();
-    glm::mat4 mvp = m_Projection * cam->GetView() * transform.GetModel();
-    Shader.SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));
-    if(HasTexture){
-        Texture.SetAsActive();
-        Texture.Bind();
-        Shader.SetUniform("u_Texture", (int)Texture.GetSlot());
-    }
-    setUpUniforms(Shader);
-
-    if(OutLine){
-        Shader.SetUniform("u_Color", glm::vec4(1.0f, 0.0f, 0.0f, 1.0f));
-    }else{
-        Shader.SetUniform("u_Color", Color);
-    }
-    if(!m_Wireframe){
-        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
-    }else{
-        GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_LINE));
-    }
-    GLCall(glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr));
-
-    if(HasTexture) Texture.Unbind();
-
-    Shader.Unbind();
-    VertexArray.Unbind();
-    IndexBuffer.Unbind();
-}
-
-void SapphireRenderer::Shape::Load(const std::string &path, bool flip)
-{
-    Shader = SapphireRenderer::TextureShader;
-    HasTexture = true;
-    Texture.Load(path, true);
-}
-const glm::vec2 SapphireRenderer::Shape::GetTextureDimensions() const
-{
-    return Texture.GetDimensions();
-}
-
-void SapphireRenderer::Shape::SelectAnimation(const std::string &name)
-{
-    if(Animations.find(name) != Animations.end())
-    {
-        // Load(Animations.at(name).GetTexturePath(), true);
-        Texture = Animations.at(name)->GetTexture();
-        Shader = SapphireRenderer::TextureShader;
-        HasTexture = true;
-        // Texture = Animations.at(name).texture;
-        Animations.at(name)->SetSelectedAnimation(CurrentAnimation);
-    }else
-        SapphireEngine::Log("Animation with name: " + name + " was not found.", SapphireEngine::Error);
-}
 
 SapphireRenderer::Animation::Animation(const std::string& AnimationFile, const std::string& TexturePath)
 {
+    AnimFile = AnimationFile;
     Texture.Load(TexturePath, true);
     KeyFramesData = readKeyFramePairsFromBinaryFile(AnimationFile);
 }
 void SapphireRenderer::Animation::SelectKeyFrame(VertexBuffer& VBO)
 {
-    if(glfwGetTime() >= LastRecoredTime + KeyFramesData[CurrentKeyFrameIdx].TimeStamp){
+    if(Engine::GameTime >= LastRecoredTime + KeyFramesData[CurrentKeyFrameIdx].TimeStamp){
         CurrentKeyFrameIdx++;
         if(CurrentKeyFrameIdx >= KeyFramesData.size()){
             CurrentKeyFrameIdx = 0;
-            LastRecoredTime = glfwGetTime();
+            LastRecoredTime = Engine::GameTime;
         }
         VBO.Bind();
         VBO.SubData(KeyFramesData[CurrentKeyFrameIdx].vertices.size() * sizeof(glm::vec2) * 2.0f, (GLbyte*)KeyFramesData[CurrentKeyFrameIdx].vertices.data());
@@ -227,17 +126,6 @@ void SapphireRenderer::Animation::Export(const std::vector<KeyFrame*>& MainKeyfr
 {
     stbi_set_flip_vertically_on_load(true);
     stbi_flip_vertically_on_write(true);
-    // std::vector<KeyFrame> MainKeyframes ={
-    //     {0.1f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite1.png"},
-    //     {0.2f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite2.png"},
-    //     {0.3f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite3.png"},
-    //     {0.4f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite4.png"},
-    //     {0.5f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite5.png"},
-    //     {0.6f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite6.png"},
-    //     {0.7f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite7.png"},
-    //     {0.8f, "C:/Gelis/Programs/Graphics/ImGui demo/Imgui/Sprite8.png"},
-    //     {0.9f, "C:/Gelis/Omorfo.png"},
-    // };
     std::vector<KeyFrameData> keyframeData;
     for (size_t i = 0; i < MainKeyframes.size(); i++)
     {

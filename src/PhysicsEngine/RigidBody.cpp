@@ -319,12 +319,12 @@ int SapphirePhysics::RigidBody::RayCast(lua_State *L)
     ObjectRef obj(null_ref);
     for (auto &object : Engine::GetActiveScene().Objects)
     {
-        if(object.GetRb().get() == rb) continue;
+        if(object.GetComponent<SapphirePhysics::RigidBody>().get() == rb) continue;
         if(tag != "" && object.Tag != tag) continue;
-        for (size_t i = 0; i < object.GetTransform()->GetPoints().size(); i++)
+        for (size_t i = 0; i < object.GetComponent<Transform>()->GetPoints().size(); i++)
         {
-            glm::vec2 C = object.GetTransform()->GetPoints()[i];
-            glm::vec2 D = object.GetTransform()->GetPoints()[(i + 1) % object.GetTransform()->GetPoints().size()];
+            glm::vec2 C = object.GetComponent<Transform>()->GetPoints()[i];
+            glm::vec2 D = object.GetComponent<Transform>()->GetPoints()[(i + 1) % object.GetComponent<Transform>()->GetPoints().size()];
             SapphireEngine::AddLine(C, D, glm::vec4(1,0,0,1), 5.0f);
             glm::vec2 CD = D - C;
             float tangent1 = (D.y - C.y) / (D.x - C.x);

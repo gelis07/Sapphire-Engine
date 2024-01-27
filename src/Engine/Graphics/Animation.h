@@ -52,6 +52,10 @@ namespace SapphireRenderer
         {glm::vec2(0.5f, 0.5f), glm::vec2(1.0f, 1.0f)},
         {glm::vec2(-0.5f, 0.5f), glm::vec2(0.0f, 1.0f)}
     };
+    const std::vector<GLuint> RectangleIndices = {
+        0,1,2,
+        2,3,0
+    };
     enum Type{
         RectangleT=1,CircleT=2,Null=-1
     };
@@ -63,37 +67,13 @@ namespace SapphireRenderer
             void SetSelectedAnimation(std::optional<Animation>& CurrentAnimation);
             const SapphireRenderer::Texture& GetTexture() const { return Texture; }
             static std::vector<KeyFramePair> readKeyFramePairsFromBinaryFile(const std::string& filename);
+            const std::string& GetAnimFile() {return AnimFile;}
         private:
+            std::string AnimFile;
             SapphireRenderer::Texture Texture;
             double LastRecoredTime = 0.0;
             unsigned int CurrentKeyFrameIdx = 0;
             std::vector<KeyFramePair> KeyFramesData;
     };
-    class Shape{
-        public:
-            SapphireRenderer::Type ShapeType = SapphireRenderer::Null;
-            bool& Wireframe() {return m_Wireframe;}
-            Shape(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::string& path = "");
-            ~Shape();
-            // That's the function that actually render's a shape
-            virtual void Render(const Transform& transform,const glm::vec4& Color,Camera* cam, bool OutLine, const std::function<void(SapphireRenderer::Shader& shader)>& setUpUniforms);
-            void Load(const std::string& path, bool flip = false);
-            void SetShader(const SapphireRenderer::Shader& shader, const std::function<void(SapphireRenderer::Shader& shader)>& SetUpUniforms) {Shader = shader;}
-            const glm::vec2 GetTextureDimensions() const;
-            SapphireRenderer::VertexBuffer VertexBuffer;
-            void SelectAnimation(const std::string& name);
-            std::unordered_map<std::string,Animation*> Animations;
-            std::unordered_map<std::string,SapphireRenderer::Texture> Textures;
-        protected:
-            std::optional<Animation> CurrentAnimation = std::nullopt;
-            bool HasTexture = false;
-            SapphireRenderer::Shader Shader;
-            SapphireRenderer::VertexArray VertexArray;
-            SapphireRenderer::IndexBuffer IndexBuffer;
-            SapphireRenderer::Texture Texture;
-            glm::mat4 m_Projection;
-            bool m_Wireframe = false;
-    };
-
 }
 

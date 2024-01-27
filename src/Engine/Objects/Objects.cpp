@@ -9,6 +9,24 @@
 Object::Object(std::string &&Name)
 {
     this->Name = Name;
+    std::vector<glm::vec3> points;
+    points.push_back(glm::vec3(-0.5f,-0.5f,0));
+    points.push_back(glm::vec3(0.5f,-0.5f,0));
+    points.push_back(glm::vec3(0.5f,0.5f,0));
+    points.push_back(glm::vec3(-0.5f,0.5f,0));
+    AddComponent((std::make_shared<Transform>("Transform",std::move(points))));
+    AddComponent((std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices)));
+    AddComponent((std::make_shared<SapphirePhysics::RigidBody>()));
+
+    GetComponent<Renderer>()->transform = GetComponent<Transform>();
+    Renderer::SceneRenderers.push_back(GetComponent<Renderer>());
+
+    GetComponent<Renderer>()->Color.Get() = glm::vec4(1);
+    GetComponent<Transform>()->SetSize(glm::vec3(0));
+    GetComponent<Transform>()->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
+
+    GetComponent<SapphirePhysics::RigidBody>()->transform = GetComponent<Transform>().get();
+    SapphirePhysics::RigidBody::Rigibodies.push_back(GetComponent<SapphirePhysics::RigidBody>().get());
 }
 Object::~Object()
 {
@@ -17,6 +35,9 @@ Object::~Object()
 void Object::RemoveComponent(unsigned int id)
 {
     Components.erase(Components.begin() + id);
+    auto it = ComponentMap.begin();
+    std::advance(it, id - 1);
+    ComponentMap.erase(it);
 }
 
 void Object::SetUpObject(Object *obj, lua_State *L, const std::string& Name)
@@ -92,32 +113,7 @@ void Object::OnUpdate()
     }
 }
 
-ObjectRef Object::CreateObject(std::string &&ObjName)
-{
-    Object NewObj(std::move(ObjName));
-    std::vector<glm::vec3> points;
-    points.push_back(glm::vec3(-0.5f,-0.5f,0));
-    points.push_back(glm::vec3(0.5f,-0.5f,0));
-    points.push_back(glm::vec3(0.5f,0.5f,0));
-    points.push_back(glm::vec3(-0.5f,0.5f,0));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Transform>("Transform",std::move(points))));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<Renderer>()));
-    NewObj.Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>()));
 
-    NewObj.renderer = NewObj.GetComponent<Renderer>(); 
-    NewObj.transform = NewObj.GetComponent<Transform>();
-    NewObj.rb = NewObj.GetComponent<SapphirePhysics::RigidBody>();
-    NewObj.renderer->transform = NewObj.transform;
-    Renderer::SceneRenderers.push_back(NewObj.renderer);
-
-    NewObj.renderer->Color.Get() = glm::vec4(1);
-    NewObj.transform->SetSize(glm::vec3(0));
-    NewObj.transform->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
-
-    NewObj.GetComponent<SapphirePhysics::RigidBody>()->transform = NewObj.GetTransform().get();
-    SapphirePhysics::RigidBody::Rigibodies.push_back(NewObj.rb.get());
-    return Engine::GetActiveScene().Add(std::move(NewObj));;
-}
 
 void Object::Delete(int id)
 {
@@ -136,20 +132,15 @@ void Object::RenderGUI()
                 {
                     if(Renderer::SceneRenderers[k] == Components[i]){
                         Renderer::SceneRenderers.erase(Renderer::SceneRenderers.begin() + k);
-                        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>();
-                        rend->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
-                        rend->shape->ShapeType = SapphireRenderer::RectangleT;
-                        rend->shape->Wireframe() = true;
-                        rend->transform = this->GetTransform();
+                        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices);
+                        rend->ShapeType = SapphireRenderer::RectangleT;
+                        rend->Wireframe = true;
+                        rend->transform = this->GetComponent<Transform>();
                         Renderer::Gizmos.push_back(rend);
                     }
                 }
             }
             Components.erase(Components.begin() + i);
-            if(GetComponent<SapphirePhysics::RigidBody>() == nullptr)
-                rb = nullptr;
-            else if(GetComponent<Renderer>() == nullptr)
-                renderer = nullptr;
         }
         ImGui::Separator();
     }
@@ -157,10 +148,9 @@ void Object::RenderGUI()
         ImGui::OpenPopup("Components");
     }
     if(ImGui::BeginPopup("Components")){
-        if(ImGui::Button("RigidBody") && rb == nullptr){
-            Components.push_back(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>()));
-            rb = GetComponent<SapphirePhysics::RigidBody>();
-            GetComponent<SapphirePhysics::RigidBody>()->transform = GetTransform().get();
+        if(ImGui::Button("RigidBody") && GetComponent<SapphirePhysics::RigidBody>() == nullptr){
+            AddComponent(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>()));
+            GetComponent<SapphirePhysics::RigidBody>()->transform = GetComponent<Transform>().get();
         }
         ImGui::EndPopup();
     }
@@ -200,13 +190,6 @@ void Object::Inspect()
         ImGui::EndPopup();
     }
     RenderGUI();
-    // for (auto const& animation : renderer->shape->Animations)
-    // {
-    //     if(ImGui::Button(animation.first.c_str()))
-    //     {
-    //         renderer->shape->SelectAnimation(animation.first);
-    //     }
-    // }
     
     std::shared_ptr<File>* File = FileExplorerDrop.ReceiveDrop(ImGui::GetCurrentWindow());
     if (File != NULL)
@@ -217,13 +200,13 @@ void Object::Inspect()
             if (NewComponent->GetLuaVariables())
                 AddComponent<Component>(NewComponent);
         }else if(File->get()->Extension == ".png"){
-            GetRenderer()->TexturePath.Get() = (*File)->Path;
-            GetRenderer()->shape->Load(Engine::GetMainPath() +(*File)->Path, true);
+            GetComponent<Renderer>()->TexturePath.Get() = (*File)->Path;
+            GetComponent<Renderer>()->Load(Engine::GetMainPath() +(*File)->Path, true);
         }else if(File->get()->Extension == ".anim"){
             std::string FullPath = Engine::GetMainPath() + (*File)->Path;
-            GetRenderer()->shape->Animations.emplace(File->get()->Name.substr(0, File->get()->Name.length() - 5), new SapphireRenderer::Animation(FullPath,FullPath.substr(0, FullPath.length() - 4) + "png"));
-            // GetRenderer()->shape->Textures.emplace(FullPath.substr(0, FullPath.length() - 4) + "png", texture);
-            GetRenderer()->shape->SelectAnimation(File->get()->Name.substr(0, File->get()->Name.length() - 5));
+            GetComponent<Renderer>()->TexturePath.Get() = (*File)->Path;
+            GetComponent<Renderer>()->Animations.emplace(File->get()->Name.substr(0, File->get()->Name.length() - 5), new SapphireRenderer::Animation(FullPath,FullPath.substr(0, FullPath.length() - 4) + "png"));
+            GetComponent<Renderer>()->SelectAnimation(File->get()->Name.substr(0, File->get()->Name.length() - 5));
         }
     }
     ImGui::End();
@@ -237,11 +220,7 @@ int Object::RemoveComponent(lua_State* L)
     for (size_t i = 0; i < (*obj)->GetComponents().size(); i++)
     {
         if((*obj)->GetComponents()[i]->Name == name){
-            (*obj)->GetComponents().erase((*obj)->GetComponents().begin() + i);
-            if((*obj)->GetComponent<SapphirePhysics::RigidBody>() == nullptr)
-                (*obj)->GetRb() = nullptr;
-            else if((*obj)->GetComponent<Renderer>() == nullptr)
-                (*obj)->GetRenderer() = nullptr;
+            (*obj)->RemoveComponent(i);
         }
     }
     return 0;
@@ -264,7 +243,7 @@ void Object::SavePrefab()
     }
     JsonObj["Components"] = JsonComponents;
     std::stringstream ss;
-    JsonObj["shape"] = this->GetComponent<Renderer>()->shape->ShapeType;
+    JsonObj["shape"] = this->GetComponent<Renderer>()->ShapeType;
     
     stream << JsonObj.dump(2);
     stream.close();
@@ -277,29 +256,28 @@ Object* Object::LoadPrefab(std::string FilePath)
     stream >> JsonObj;
     stream.close();
 
-    std::shared_ptr<SapphireRenderer::Shape> shape;
     Object object(JsonObj["Name"]);
-    switch (JsonObj["shape"].get<int>())
-    {
-        case SapphireRenderer::CircleT:{
-            shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
-            shape->ShapeType = SapphireRenderer::CircleT;
-            break;
-        }
-        case SapphireRenderer::RectangleT:
-            shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader,SapphireRenderer::RectangleVertices);
-            shape->ShapeType = SapphireRenderer::RectangleT;
-            break;
-        default:
-            shape = nullptr;
-    }
+
     nlohmann::ordered_json& JsonComp = JsonObj["Components"];
     for (auto& element : JsonObj["Components"].items()) {
         //! Got to find a better way to handle object!
         if(element.key() == "Renderer")
         {
-            object.GetComponents().push_back(std::make_shared<Renderer>());
-            object.GetComponents().back()->Load(element.value()["Variables"]);
+            switch (JsonObj["shape"].get<int>())
+            {
+                case SapphireRenderer::CircleT:{
+                    // shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
+                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices));
+                    object.GetComponents().back()->Load(element.value()["Variables"]);
+                    object.GetComponent<Renderer>()->ShapeType = SapphireRenderer::CircleT;
+                    break;
+                }
+                case SapphireRenderer::RectangleT:
+                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices));
+                    object.GetComponents().back()->Load(element.value()["Variables"]);
+                    object.GetComponent<Renderer>()->ShapeType = SapphireRenderer::RectangleT;
+                    break;
+            }
         }
         else if(element.key() == "Transform")
         {
@@ -318,7 +296,6 @@ Object* Object::LoadPrefab(std::string FilePath)
         }
     }
 
-    object.GetComponent<Renderer>()->shape = shape;
     Engine::GetActiveScene().Add(std::move(object));
     return &Engine::GetActiveScene().Objects.back();
 }

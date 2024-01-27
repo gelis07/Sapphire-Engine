@@ -8,11 +8,11 @@ SapphireEngine::Float SapphirePhysics::CollisionDetection::g("g", Engine::Settin
 bool SapphirePhysics::CollisionDetection::CirclexRectangle(Object* obj, Object* current,CollisionData& CD)
 {
     CD.Depth = INFINITY;
-    std::array<glm::vec3, 4> Obj1Points = {current->GetTransform()->GetPoints()[0], current->GetTransform()->GetPoints()[1],
-    current->GetTransform()->GetPoints()[2], current->GetTransform()->GetPoints()[3]};
-    glm::vec2 Obj1Position = glm::vec2(current->GetTransform()->GetPosition().x, current->GetTransform()->GetPosition().y);
-    glm::vec2 Obj2Position = glm::vec2(obj->GetTransform()->GetPosition().x, obj->GetTransform()->GetPosition().y);
-    float Obj2Radius = obj->GetTransform()->GetSize().x / 2.0f;
+    std::array<glm::vec3, 4> Obj1Points = {current->GetComponent<Transform>()->GetPoints()[0], current->GetComponent<Transform>()->GetPoints()[1],
+    current->GetComponent<Transform>()->GetPoints()[2], current->GetComponent<Transform>()->GetPoints()[3]};
+    glm::vec2 Obj1Position = glm::vec2(current->GetComponent<Transform>()->GetPosition().x, current->GetComponent<Transform>()->GetPosition().y);
+    glm::vec2 Obj2Position = glm::vec2(obj->GetComponent<Transform>()->GetPosition().x, obj->GetComponent<Transform>()->GetPosition().y);
+    float Obj2Radius = obj->GetComponent<Transform>()->GetSize().x / 2.0f;
 
     float AxisDepth = 0;
     glm::vec2 AxisProj;

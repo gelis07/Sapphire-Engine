@@ -4,8 +4,8 @@ void SapphireEngine::DrawDebug(const glm::mat4& view)
 {
     glBindVertexArray(VAO);
     SapphireRenderer::LineShader.Bind();
-    const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetSize()) TOPIXELS;
-    const glm::vec2& WindowPos = glm::vec2(Engine::GetCameraObject()->GetTransform()->GetPosition());
+    const glm::vec2& WindowSize = glm::vec2(Engine::GetCameraObject()->GetComponent<Transform>()->GetSize()) TOPIXELS;
+    const glm::vec2& WindowPos = glm::vec2(Engine::GetCameraObject()->GetComponent<Transform>()->GetPosition());
     glm::mat4 projection = glm::ortho( 0.0f, WindowSize.x, 0.0f, WindowSize.y, -1.0f, 1.0f);
     glm::mat4 mvp = projection * view;
     SapphireRenderer::LineShader.SetUniform("u_MVP", 1,GL_FALSE, glm::value_ptr(mvp));

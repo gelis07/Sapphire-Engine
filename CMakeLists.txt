@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 add_executable(Sapphire-Engine
     src/main.cpp
     src/Application/Application.cpp
-    src/Engine/Graphics/Shapes.cpp
+    src/Engine/Graphics/Animation.cpp
     src/Engine/Graphics/Renderer.cpp
     src/Engine/Graphics/Renderer/FrameBuffer.cpp
     src/Engine/Graphics/Renderer/IndexBuffer.cpp

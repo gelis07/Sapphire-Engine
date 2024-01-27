@@ -624,6 +624,30 @@ src/Engine/Engine.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Engine.cpp.s
 .PHONY : src/Engine/Engine.cpp.s
 
+src/Engine/Graphics/Animation.obj: src/Engine/Graphics/Animation.cpp.obj
+.PHONY : src/Engine/Graphics/Animation.obj
+
+# target to build an object file
+src/Engine/Graphics/Animation.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Animation.cpp.obj
+.PHONY : src/Engine/Graphics/Animation.cpp.obj
+
+src/Engine/Graphics/Animation.i: src/Engine/Graphics/Animation.cpp.i
+.PHONY : src/Engine/Graphics/Animation.i
+
+# target to preprocess a source file
+src/Engine/Graphics/Animation.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Animation.cpp.i
+.PHONY : src/Engine/Graphics/Animation.cpp.i
+
+src/Engine/Graphics/Animation.s: src/Engine/Graphics/Animation.cpp.s
+.PHONY : src/Engine/Graphics/Animation.s
+
+# target to generate assembly for a file
+src/Engine/Graphics/Animation.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Animation.cpp.s
+.PHONY : src/Engine/Graphics/Animation.cpp.s
+
 src/Engine/Graphics/Grid.obj: src/Engine/Graphics/Grid.cpp.obj
 .PHONY : src/Engine/Graphics/Grid.obj
 
@@ -815,30 +839,6 @@ src/Engine/Graphics/Renderer/VertexBuffer.s: src/Engine/Graphics/Renderer/Vertex
 src/Engine/Graphics/Renderer/VertexBuffer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Renderer/VertexBuffer.cpp.s
 .PHONY : src/Engine/Graphics/Renderer/VertexBuffer.cpp.s
-
-src/Engine/Graphics/Shapes.obj: src/Engine/Graphics/Shapes.cpp.obj
-.PHONY : src/Engine/Graphics/Shapes.obj
-
-# target to build an object file
-src/Engine/Graphics/Shapes.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Shapes.cpp.obj
-.PHONY : src/Engine/Graphics/Shapes.cpp.obj
-
-src/Engine/Graphics/Shapes.i: src/Engine/Graphics/Shapes.cpp.i
-.PHONY : src/Engine/Graphics/Shapes.i
-
-# target to preprocess a source file
-src/Engine/Graphics/Shapes.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Shapes.cpp.i
-.PHONY : src/Engine/Graphics/Shapes.cpp.i
-
-src/Engine/Graphics/Shapes.s: src/Engine/Graphics/Shapes.cpp.s
-.PHONY : src/Engine/Graphics/Shapes.s
-
-# target to generate assembly for a file
-src/Engine/Graphics/Shapes.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Engine/Graphics/Shapes.cpp.s
-.PHONY : src/Engine/Graphics/Shapes.cpp.s
 
 src/Engine/Objects/Objects.obj: src/Engine/Objects/Objects.cpp.obj
 .PHONY : src/Engine/Objects/Objects.obj
@@ -1200,6 +1200,9 @@ help:
 	@echo "... src/Engine/Engine.obj"
 	@echo "... src/Engine/Engine.i"
 	@echo "... src/Engine/Engine.s"
+	@echo "... src/Engine/Graphics/Animation.obj"
+	@echo "... src/Engine/Graphics/Animation.i"
+	@echo "... src/Engine/Graphics/Animation.s"
 	@echo "... src/Engine/Graphics/Grid.obj"
 	@echo "... src/Engine/Graphics/Grid.i"
 	@echo "... src/Engine/Graphics/Grid.s"
@@ -1224,9 +1227,6 @@ help:
 	@echo "... src/Engine/Graphics/Renderer/VertexBuffer.obj"
 	@echo "... src/Engine/Graphics/Renderer/VertexBuffer.i"
 	@echo "... src/Engine/Graphics/Renderer/VertexBuffer.s"
-	@echo "... src/Engine/Graphics/Shapes.obj"
-	@echo "... src/Engine/Graphics/Shapes.i"
-	@echo "... src/Engine/Graphics/Shapes.s"
 	@echo "... src/Engine/Objects/Objects.obj"
 	@echo "... src/Engine/Objects/Objects.i"
 	@echo "... src/Engine/Objects/Objects.s"

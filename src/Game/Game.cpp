@@ -18,7 +18,7 @@ void Game::OnUpdate(const float DeltaTime)
 {
     int width,height;
     glfwGetWindowSize(window,&width, &height);
-    Engine::GetCameraObject()->GetTransform()->SetSize(glm::vec3(width, height,0));
+    Engine::GetCameraObject()->GetComponent<Transform>()->SetSize(glm::vec3(width, height,0));
     this->DeltaTime = SapphireEngine::Clamp(0.001f, 0.5f, this->DeltaTime);
     engine.Run();
 }

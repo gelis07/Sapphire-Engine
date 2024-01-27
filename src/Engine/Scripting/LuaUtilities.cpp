@@ -432,7 +432,7 @@ int LuaUtilities::GetMouseCoord(lua_State *L)
     glm::vec2 FinalCoords = (Editor::WindowPos + Editor::WindowSize / 2.0f) - glm::vec2(x,y);
     FinalCoords = FinalCoords TOUNITS;
     FinalCoords.x *= -1;
-    FinalCoords += glm::vec2(Engine::GetCameraObject()->GetTransform()->GetPosition());
+    FinalCoords += glm::vec2(Engine::GetCameraObject()->GetComponent<Transform>()->GetPosition());
     lua_pushnumber(L, FinalCoords.x );
     lua_setfield(L, -2, "x");
 
@@ -489,25 +489,24 @@ int LuaUtilities::CreateObject(lua_State *L)
     }
     const char* ObjName = lua_tostring(L, -2);
     const char* ObjShape = lua_tostring(L, -1);
-    ObjectRef obj = Object::CreateObject(std::string(ObjName));
-    std::shared_ptr<SapphireRenderer::Shape> shape;
-    if(std::string(ObjShape) == "Rectangle"){
-        shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader,SapphireRenderer::RectangleVertices);
-        //? why are there so many shape types???
-        shape->ShapeType = SapphireRenderer::RectangleT;
-        obj->GetComponent<Renderer>()->Type = SapphireRenderer::RectangleT;
-        obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::RectangleT;
-    }else{
-        shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
-        //? why are there so many shape types???
-        shape->ShapeType = SapphireRenderer::CircleT;
-        obj->GetComponent<Renderer>()->Type = SapphireRenderer::CircleT;
-        obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::CircleT;
-    }
-    obj->GetComponent<Renderer>()->shape = shape;
+    Object obj = Object(std::string(ObjName));
+    // if(std::string(ObjShape) == "Rectangle"){
+    //     shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader,SapphireRenderer::RectangleVertices);
+    //     //? why are there so many shape types???
+    //     shape->ShapeType = SapphireRenderer::RectangleT;
+    //     obj->GetComponent<Renderer>()->Type = SapphireRenderer::RectangleT;
+    //     obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::RectangleT;
+    // }else{
+    //     shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
+    //     //? why are there so many shape types???
+    //     shape->ShapeType = SapphireRenderer::CircleT;
+    //     obj->GetComponent<Renderer>()->Type = SapphireRenderer::CircleT;
+    //     obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::CircleT;
+    // }
+    // obj->GetComponent<Renderer>()->shape = shape;
 
     ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
-    *ud = obj;
+    *ud = Engine::GetActiveScene().Add(std::move(obj));
     luaL_getmetatable(L, "ObjectMetaTable");
     lua_istable(L, -1);
     lua_setmetatable(L, -2);

@@ -18,22 +18,10 @@ Engine::Engine(const std::string& mainPath)
     points.push_back(glm::vec3(-1,1,0));
     CameraObj.AddComponent<Transform>(std::make_shared<Transform>("Transform", std::move(points)));
     CameraObj.AddComponent<Camera>(std::make_shared<Camera>("Camera"));
-    // CameraObj.AddComponent<Renderer>(std::make_shared<Renderer>());
 
-    CameraObj.GetTransform() = CameraObj.GetComponent<Transform>();
-    // CameraObj.GetRenderer() = CameraObj.GetComponent<Renderer>();
-    
-    // CameraObj.GetRenderer()->shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices);
-    // CameraObj.GetRenderer()->shape->ShapeType = SapphireRenderer::RectangleT;
-
-    CameraObj.GetComponent<Camera>()->Transform = CameraObj.GetTransform();
-    CameraObj.GetTransform()->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
-    // CameraObj.GetRenderer()->shape->Wireframe() = true;
-    // CameraObj.GetRenderer()->transform = CameraObj.GetTransform().get();
-    // Renderer::Shapes.push_back(CameraObj.GetRenderer());
-
+    CameraObj.GetComponent<Camera>()->Transform = CameraObj.GetComponent<Transform>();
+    CameraObj.GetComponent<Transform>()->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
     m_ActiveScene.Add(std::move(CameraObj));
-
 
     CameraObjectID = m_ActiveScene.Objects.size()-1;
 }
@@ -47,13 +35,14 @@ void Engine::Run()
         m_ActiveScene.Objects[i].OnStart();
     }
     TimeAccumulator += GetDeltaTime();
+    GameTime += GetDeltaTime();
     ExecuteLua();
     while(TimeAccumulator >= FixedTimeStep){
         SapphirePhysics::RigidBody::Run();
         TimeAccumulator -= FixedTimeStep;
     }
     // std::future<void> physicsFuture = std::async(std::launch::async, &Engine::PhysicsSim, this);
-    Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get());
+    Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get(), Renderer::SceneRenderers);
     if(ShouldLoadScene != ""){
         GetActiveScene().Load(ShouldLoadScene);
         ShouldLoadScene = "";
