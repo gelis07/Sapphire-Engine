@@ -17,20 +17,35 @@ Engine::Engine(const std::string& mainPath)
 
     CameraObjectID = m_ActiveScene.Objects.size()-1;
 
-    Component::RegisterComponentType<Renderer>([](ObjectRef obj) { 
+    Component::RegisterComponentType<Renderer>([](Object* obj) { 
         std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT);
         rend->transform = obj->GetComponent<Transform>();
         obj->AddComponent(rend);
         Renderer::SceneRenderers.push_back(rend);
         return rend; 
     }, "Renderer");
-    Component::RegisterComponentType<SapphirePhysics::RigidBody>([](ObjectRef obj) { 
+    Component::RegisterComponentType<SapphirePhysics::RigidBody>([](Object* obj) { 
         std::shared_ptr<SapphirePhysics::RigidBody> rb = std::make_shared<SapphirePhysics::RigidBody>(SapphireRenderer::RectangleT);
         rb->transform = obj->GetComponent<Transform>().get();
         obj->AddComponent(rb);
         SapphirePhysics::RigidBody::Rigibodies.push_back(rb.get());
         return rb; 
     }, "RigidBody");
+    Component::RegisterComponentType<Camera>([](Object* obj) { 
+        std::shared_ptr<Camera> camera = std::make_shared<Camera>("Camera");
+        obj->AddComponent(camera);
+        return camera; 
+    }, "Camera");
+    Component::RegisterComponentType<Transform>([](Object* obj) { 
+        std::vector<glm::vec3> points;
+        points.push_back(glm::vec3(-0.5f,-0.5f,0));
+        points.push_back(glm::vec3(0.5f,-0.5f,0));
+        points.push_back(glm::vec3(0.5f,0.5f,0));
+        points.push_back(glm::vec3(-0.5f,0.5f,0));
+        std::shared_ptr<Transform> transform = std::make_shared<Transform>("Transform",std::move(points));
+        obj->AddComponent(transform);
+        return transform; 
+    }, "Transform");
 }
 float TimeAccumulator = 0.0f;
 void Engine::Run()

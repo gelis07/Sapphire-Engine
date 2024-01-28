@@ -15,9 +15,9 @@ class Component
 {
     using TableVariable = std::unordered_map<std::string, SapphireEngine::Variable*>;
     public:
-        inline static std::unordered_map<std::string, std::function<std::shared_ptr<Component>(ObjectRef)>> ComponentTypeRegistry;
+        inline static std::unordered_map<std::string, std::function<std::shared_ptr<Component>(Object*)>> ComponentTypeRegistry;
         template <typename T>
-        static void RegisterComponentType(std::function<std::shared_ptr<T>(ObjectRef)> func, const std::string& ClassName) {
+        static void RegisterComponentType(std::function<std::shared_ptr<T>(Object*)> func, const std::string& ClassName) {
             ComponentTypeRegistry[ClassName] = func;
         }
     public:

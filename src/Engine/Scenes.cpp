@@ -118,24 +118,30 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
     nlohmann::ordered_json &JsonComp = JsonObj["Components"];
     for (auto &element : JsonObj["Components"].items())
     {
-        //! Got to find a better way to handle this!
+        if(Component::ComponentTypeRegistry.find(element.key()) != Component::ComponentTypeRegistry.end()){
+            Component::ComponentTypeRegistry[element.key()](&obj);
+        }
+        else{
+            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), obj.GetComponents().size());
+            obj.AddComponent<Component>(comp);
+        }
         if (element.key() == "Renderer")
         {
-            if(JsonObj.find("shape") != JsonObj.end()){
-                switch (JsonObj["shape"].get<int>())
-                {
-                    case SapphireRenderer::CircleT:{
-                        obj.AddComponent(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::CircleT));
-                        obj.GetComponents().back()->Load(element.value()["Variables"]);
-                        break;
-                    }
-                    case SapphireRenderer::RectangleT:{
-                        obj.AddComponent(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT));
-                        obj.GetComponents().back()->Load(element.value()["Variables"]);
-                        break;
-                    }
-                }
-            }
+            // if(JsonObj.find("shape") != JsonObj.end()){
+            //     switch (JsonObj["shape"].get<int>())
+            //     {
+            //         case SapphireRenderer::CircleT:{
+            //             obj.AddComponent(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::CircleT));
+            //             obj.GetComponents().back()->Load(element.value()["Variables"]);
+            //             break;
+            //         }
+            //         case SapphireRenderer::RectangleT:{
+            //             obj.AddComponent(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT));
+            //             obj.GetComponents().back()->Load(element.value()["Variables"]);
+            //             break;
+            //         }
+            //     }
+            // }
             for (auto &anim : element.value()["Animations"].items())
             {
                 std::string FullPath = anim.value().get<std::string>();
@@ -144,32 +150,14 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
                 obj.GetComponent<Renderer>()->SelectAnimation(FileName);
             }
         }
-        else if (element.key() == "Transform")
-        {
-            obj.GetComponent<Transform>()->Load(element.value()["Variables"]);
-        }
         else if (element.key() == "Camera")
         {
-            obj.AddComponent(std::make_shared<Camera>(element.key()));
-            obj.GetComponents().back()->Load(element.value()["Variables"]);
             Engine::CameraObjectID = i;
         }
-        else if (element.key() == "Rigidbody")
-        {
-            obj.AddComponent(std::make_shared<SapphirePhysics::RigidBody>(SapphireRenderer::RectangleT));
-            obj.GetComponents().back()->Load(element.value()["Variables"]);
-        }
-        else
-        {
-            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), obj.GetComponents().size());
-            comp->Load(element.value()["Variables"]);
-            obj.AddComponent<Component>(comp);
-        }
+        obj.GetComponents().back()->Load(element.value()["Variables"]);
     }
-
     obj.GetComponent<Transform>()->UpdateModel();
     obj.GetComponent<Transform>()->UpdatePoints();
-
     for(auto& child : JsonObj["Children"].items()){
         std::vector<ObjectRef> children; //This represents the children that may be inside the child
         Object childObj = LoadObj(child.value(), i, children);

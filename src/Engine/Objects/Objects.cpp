@@ -151,8 +151,8 @@ void Object::RenderGUI()
             for(const auto &CompReg : Component::ComponentTypeRegistry){
                 if(ImGui::Selectable(CompReg.first.c_str()))
                 {
-                    CompReg.second(this->GetRef());
-                    ImGui::CloseCurrentPopup();
+                    CompReg.second(this);
+                    ImGui::ClosePopupsExceptModals();
                 }
             }
             ImGui::EndCombo();

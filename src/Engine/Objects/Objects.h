@@ -95,7 +95,5 @@ std::enable_if_t<std::is_base_of_v<Component, Derived>, void> Object::AddCompone
     if(GetComponent<Derived>() == nullptr){
         ComponentMap[std::type_index(typeid(Derived))] = Comp;
         Components.push_back(std::move(Comp));
-    }else{
-        ComponentMap[std::type_index(typeid(Derived))] = Comp;
     }
 }
