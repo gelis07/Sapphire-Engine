@@ -105,9 +105,11 @@ void Renderer::SelectAnimation(const std::string &name)
     }else
         SapphireEngine::Log("Animation with name: " + name + " was not found.", SapphireEngine::Error);
 }
-Renderer::Renderer(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::vector<GLuint>& Indices,  const std::string& path)
+Renderer::Renderer(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::vector<GLuint>& Indices,SapphireRenderer::Type st,  const std::string& path)
     : Component("Renderer"), Color("Color", Variables), TexturePath("Path", Variables), Shader(shader), VertexArray(), VertexBuffer(), IndexBuffer()
 {
+
+    ShapeType = st;
     Color.Get() = glm::vec4(1);
     TexturePath.Get() = "";
     TexturePath.ShowOnInspector(false);
@@ -160,6 +162,12 @@ Renderer::~Renderer()
     for (auto& animation : Animations)
     {
         delete animation.second;
+    }
+    for (size_t i = 0; i < SceneRenderers.size(); i++)
+    {
+        if(this == SceneRenderers[i].get()){
+            SceneRenderers.erase(SceneRenderers.begin() + i);
+        }
     }
 }
 

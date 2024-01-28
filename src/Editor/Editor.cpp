@@ -75,8 +75,7 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
     ViewCamera.Transform = std::make_shared<Transform>("Transform",std::move(points));
     ViewCamera.Transform->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
 
-    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices);
-    rend->ShapeType = SapphireRenderer::RectangleT;
+    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT);
     rend->Wireframe = true;
     rend->transform = Engine::GetCameraObject()->GetComponent<Transform>();
     Renderer::Gizmos.push_back(rend);

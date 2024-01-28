@@ -125,16 +125,13 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
                 switch (JsonObj["shape"].get<int>())
                 {
                     case SapphireRenderer::CircleT:{
-                        // shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
-                        obj.AddComponent(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices));
+                        obj.AddComponent(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::CircleT));
                         obj.GetComponents().back()->Load(element.value()["Variables"]);
-                        obj.GetComponent<Renderer>()->ShapeType = SapphireRenderer::CircleT;
                         break;
                     }
                     case SapphireRenderer::RectangleT:{
-                        obj.AddComponent(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices));
+                        obj.AddComponent(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT));
                         obj.GetComponents().back()->Load(element.value()["Variables"]);
-                        obj.GetComponent<Renderer>()->ShapeType = SapphireRenderer::RectangleT;
                         break;
                     }
                 }
@@ -149,13 +146,7 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
         }
         else if (element.key() == "Transform")
         {
-            std::vector<glm::vec3> points;
-            points.push_back(glm::vec3(-0.5f, -0.5f, 0));
-            points.push_back(glm::vec3(0.5f, -0.5f, 0));
-            points.push_back(glm::vec3(0.5f, 0.5f, 0));
-            points.push_back(glm::vec3(-0.5f, 0.5f, 0));
-            obj.AddComponent(std::make_shared<Transform>(element.key(), std::move(points)));
-            obj.GetComponents().back()->Load(element.value()["Variables"]);
+            obj.GetComponent<Transform>()->Load(element.value()["Variables"]);
         }
         else if (element.key() == "Camera")
         {
@@ -165,7 +156,7 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
         }
         else if (element.key() == "Rigidbody")
         {
-            obj.AddComponent(std::make_shared<SapphirePhysics::RigidBody>());
+            obj.AddComponent(std::make_shared<SapphirePhysics::RigidBody>(SapphireRenderer::RectangleT));
             obj.GetComponents().back()->Load(element.value()["Variables"]);
         }
         else
@@ -254,10 +245,7 @@ void Scene::Load(const std::string FilePath)
             child->Parent = NewObj; 
         }
     }
-
-
-    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices);
-    rend->ShapeType = SapphireRenderer::RectangleT;
+    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT);
     rend->Wireframe = true;
     rend->transform = Engine::GetCameraObject()->GetComponent<Transform>();
     Renderer::Gizmos.push_back(rend);
@@ -360,20 +348,25 @@ void Scene::CreateMenu(Object *SelectedObj)
             std::stringstream ss;
             ss << "Object: " << Objects.size();
             Object Obj = Object(ss.str());
+            Add(std::move(Obj));
         }
         if (ImGui::MenuItem("Create Circle"))
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
             Object Obj = Object(ss.str());
-            Obj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj.GetComponent<Renderer>()->ShapeType);
+            Add(std::move(Obj));
         }
         if (ImGui::MenuItem("Create Rectangle"))
         {
             std::stringstream ss;
             ss << "Object: " << Objects.size();
             Object Obj = Object(ss.str());
-            Obj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj.GetComponent<Renderer>()->ShapeType);
+            Obj.AddComponent((std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT)));
+            Obj.GetComponent<Renderer>()->transform = Obj.GetComponent<Transform>();
+            Renderer::SceneRenderers.push_back(Obj.GetComponent<Renderer>());
+            Obj.GetComponent<Renderer>()->Color.Get() = glm::vec4(1);
+            Add(std::move(Obj));
         }
         if (ImGui::MenuItem("Create Sprite"))
         {
@@ -382,6 +375,7 @@ void Scene::CreateMenu(Object *SelectedObj)
             Object Obj = Object(ss.str());
             Obj.GetComponent<Renderer>()->ShapeType = SapphireRenderer::RectangleT;
             Obj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj.GetComponent<Renderer>()->ShapeType);
+            Add(std::move(Obj));
         }
         ImGui::EndPopup();
     }

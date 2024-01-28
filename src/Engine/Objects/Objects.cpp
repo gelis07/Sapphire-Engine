@@ -15,18 +15,8 @@ Object::Object(std::string &&Name)
     points.push_back(glm::vec3(0.5f,0.5f,0));
     points.push_back(glm::vec3(-0.5f,0.5f,0));
     AddComponent((std::make_shared<Transform>("Transform",std::move(points))));
-    AddComponent((std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices)));
-    AddComponent((std::make_shared<SapphirePhysics::RigidBody>()));
-
-    GetComponent<Renderer>()->transform = GetComponent<Transform>();
-    Renderer::SceneRenderers.push_back(GetComponent<Renderer>());
-
-    GetComponent<Renderer>()->Color.Get() = glm::vec4(1);
     GetComponent<Transform>()->SetSize(glm::vec3(0));
     GetComponent<Transform>()->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
-
-    GetComponent<SapphirePhysics::RigidBody>()->transform = GetComponent<Transform>().get();
-    SapphirePhysics::RigidBody::Rigibodies.push_back(GetComponent<SapphirePhysics::RigidBody>().get());
 }
 Object::~Object()
 {
@@ -34,10 +24,14 @@ Object::~Object()
 }
 void Object::RemoveComponent(unsigned int id)
 {
+    for (auto &&comp : ComponentMap)
+    {
+        if(comp.second == Components[id]){
+            ComponentMap.erase(comp.first);
+            break;
+        }
+    }
     Components.erase(Components.begin() + id);
-    auto it = ComponentMap.begin();
-    std::advance(it, id - 1);
-    ComponentMap.erase(it);
 }
 
 void Object::SetUpObject(Object *obj, lua_State *L, const std::string& Name)
@@ -104,6 +98,7 @@ int Object::SetActive(lua_State *L)
 void Object::OnUpdate()
 {
     ObjectRef obj(RefID);
+    // SapphireEngine::Log(obj->GetComponent<Renderer>()->Name);
     for (size_t i = 0; i < obj->Components.size(); i++)
     {
         if (!obj->Components[i]->Active || obj->Components[i]->GetFile().empty())
@@ -132,15 +127,14 @@ void Object::RenderGUI()
                 {
                     if(Renderer::SceneRenderers[k] == Components[i]){
                         Renderer::SceneRenderers.erase(Renderer::SceneRenderers.begin() + k);
-                        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices);
-                        rend->ShapeType = SapphireRenderer::RectangleT;
+                        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT);
                         rend->Wireframe = true;
                         rend->transform = this->GetComponent<Transform>();
                         Renderer::Gizmos.push_back(rend);
                     }
                 }
             }
-            Components.erase(Components.begin() + i);
+            RemoveComponent(i);
         }
         ImGui::Separator();
     }
@@ -148,9 +142,20 @@ void Object::RenderGUI()
         ImGui::OpenPopup("Components");
     }
     if(ImGui::BeginPopup("Components")){
-        if(ImGui::Button("RigidBody") && GetComponent<SapphirePhysics::RigidBody>() == nullptr){
-            AddComponent(std::static_pointer_cast<Component>(std::make_shared<SapphirePhysics::RigidBody>()));
-            GetComponent<SapphirePhysics::RigidBody>()->transform = GetComponent<Transform>().get();
+        // if(ImGui::Button("RigidBody") && GetComponent<SapphirePhysics::RigidBody>() == nullptr){
+        //     AddComponent((std::make_shared<SapphirePhysics::RigidBody>(SapphireRenderer::RectangleT)));
+        //     GetComponent<SapphirePhysics::RigidBody>()->transform = GetComponent<Transform>().get();
+        //     SapphirePhysics::RigidBody::Rigibodies.push_back(GetComponent<SapphirePhysics::RigidBody>().get());
+        // }
+        if(ImGui::BeginCombo("Comp", "Select Component")){
+            for(const auto &CompReg : Component::ComponentTypeRegistry){
+                if(ImGui::Selectable(CompReg.first.c_str()))
+                {
+                    CompReg.second(this->GetRef());
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+            ImGui::EndCombo();
         }
         ImGui::EndPopup();
     }
@@ -267,27 +272,20 @@ Object* Object::LoadPrefab(std::string FilePath)
             {
                 case SapphireRenderer::CircleT:{
                     // shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
-                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices));
+                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::CircleT));
                     object.GetComponents().back()->Load(element.value()["Variables"]);
-                    object.GetComponent<Renderer>()->ShapeType = SapphireRenderer::CircleT;
                     break;
                 }
-                case SapphireRenderer::RectangleT:
-                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices));
+                case SapphireRenderer::RectangleT:{
+                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT));
                     object.GetComponents().back()->Load(element.value()["Variables"]);
-                    object.GetComponent<Renderer>()->ShapeType = SapphireRenderer::RectangleT;
                     break;
+                }
             }
         }
         else if(element.key() == "Transform")
         {
-            std::vector<glm::vec3> points;
-            points.push_back(glm::vec3(-0.5f,-0.5f,0));
-            points.push_back(glm::vec3(0.5f,-0.5f,0));
-            points.push_back(glm::vec3(0.5f,0.5f,0));
-            points.push_back(glm::vec3(-0.5f,0.5f,0));
-            object.GetComponents().push_back(std::make_shared<Transform>(element.key(),std::move(points)));
-            object.GetComponents().back()->Load(element.value()["Variables"]);
+            object.GetComponent<Transform>()->Load(element.value()["Variables"]);
         }else
         {
             std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), object.GetComponents().size());

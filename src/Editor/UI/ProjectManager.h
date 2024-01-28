@@ -14,7 +14,7 @@ class ProjectManager : public Application{
         ProjectManager();
         void OnStart() override {}
         void OnUpdate(const float DeltaTime) override;
-        void DeleteProject(float IconPosY, std::string &ShouldDeleteProject, const nlohmann::json_abi_v3_11_2::detail::iteration_proxy_value<nlohmann::json_abi_v3_11_2::detail::iter_impl<nlohmann::json_abi_v3_11_2::ordered_json>> &Project, bool ProjectExists, std::string &ProjectName, bool &AreProjectsHovered);
+        void OnHover(float IconPosY, std::string &ShouldDeleteProject, const nlohmann::json_abi_v3_11_2::detail::iteration_proxy_value<nlohmann::json_abi_v3_11_2::detail::iter_impl<nlohmann::json_abi_v3_11_2::ordered_json>> &Project, bool ProjectExists, std::string &ProjectName, bool &AreProjectsHovered);
         void FileExplorer();
         void OnExit() override;
         std::string Path;

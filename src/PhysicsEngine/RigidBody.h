@@ -10,8 +10,9 @@ namespace SapphirePhysics{
             static void Run();
             Transform* transform;
             int ShapeType;
-            RigidBody();
+            RigidBody(int st);
             RigidBody(const RigidBody& rb);
+            ~RigidBody();
             void Update();
             static bool IntersectAABBs(AABB a, AABB b);
             void BroadPhase(int Index);

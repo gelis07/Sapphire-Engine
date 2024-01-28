@@ -28,7 +28,34 @@ void ProjectManager::OnUpdate(const float DeltaTime)
     }
     if (ImGuiFileDialog::Instance()->Display("ChooseDirDlgKey")) 
     {
-        FileExplorer();
+        // action if OK
+        if (ImGuiFileDialog::Instance()->IsOk())
+        {
+            std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
+            std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
+            bool FoundBackslash = false;
+            for (size_t i = 0; i < filePath.size(); i++)
+            {
+                if(filePath[i] == '\\'){
+                    filePath[i] = '/';
+                }
+            }
+            int LastSlashIdx = 0;
+            for (size_t i = filePath.size(); i >= 0; i--)
+            {
+                if(filePath[i] == '/'){
+                    LastSlashIdx = i;
+                    break;
+                }
+            }
+            Path = std::string(filePath);
+            filePathName = filePath.erase(0, LastSlashIdx + 1);
+            std::replace(Path.begin(), Path.end(), ' ', '_');
+            SaveJson(filePathName);
+        }
+        
+        // close
+        ImGuiFileDialog::Instance()->Close();
     }
     bool AreProjectsHovered = false;
     std::string ShouldDeleteProject = "";
@@ -39,8 +66,6 @@ void ProjectManager::OnUpdate(const float DeltaTime)
         if(!(ProjectExists = std::filesystem::exists(Project.value()["MainPath"]))){
             TextColor = ImVec4(0.6f, 0.6f, 0.6f, 1);
         }
-        ImVec2 childSize = ImGui::GetWindowSize();
-        float IconPosY = (childSize.y - ICON_SIZE) * 0.5f;
         std::string ProjectName = Project.value()["Name"].get<std::string>();
         ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 10);
         if(m_SelectedProject != ProjectName) ImGui::PushStyleColor(ImGuiCol_ChildBg, ImVec4(0, 0, 0, 0.5f));
@@ -48,15 +73,19 @@ void ProjectManager::OnUpdate(const float DeltaTime)
         ImGui::BeginChild(ProjectName.c_str(), ImVec2(ImGui::GetWindowSize().x - 30, 50), false,ImGuiWindowFlags_NoFocusOnAppearing | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
         // Calculate the position to center the text within the child window
+        ImVec2 childSize = ImGui::GetWindowSize();
         ImVec2 textSize = ImGui::CalcTextSize(ProjectName.c_str());
         float PosY = (childSize.y - textSize.y) * 0.5f;
+        float IconPosY = (childSize.y - ICON_SIZE) * 0.5f;
         glm::vec4 IconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(ICON_SIZE*3, 0), glm::vec2(ICON_SIZE, ICON_SIZE), m_IconAtlas.AtlasID.GetDimensions()); 
         ImGui::SetCursorPos(ImVec2(5, IconPosY)); // Set the cursor position to center the text
         ImGui::Image(reinterpret_cast<ImTextureID>(m_IconAtlas.AtlasID.GetID()), ImVec2(ICON_SIZE, ICON_SIZE), ImVec2(IconUVs.x, IconUVs.y), ImVec2(IconUVs.z, IconUVs.w));
         
         if(ImGui::IsWindowHovered()){
-            DeleteProject(IconPosY, ShouldDeleteProject, Project, ProjectExists, ProjectName, AreProjectsHovered);
+            OnHover(IconPosY, ShouldDeleteProject, Project, ProjectExists, ProjectName, AreProjectsHovered);
         }
+
+
 
         if(ImGui::BeginPopupModal("Warning", nullptr, ImGuiWindowFlags_NoResize))
         {
@@ -67,6 +96,7 @@ void ProjectManager::OnUpdate(const float DeltaTime)
             }
             ImGui::EndPopup();
         }
+
 
         ImGui::SetCursorPos(ImVec2(65, PosY - ImGui::CalcTextSize(ProjectName.c_str()).y + 5)); // Set the cursor position to center the text
         ImGui::PushStyleColor(ImGuiCol_Text, TextColor);
@@ -103,7 +133,7 @@ void ProjectManager::OnUpdate(const float DeltaTime)
     ImGui::End();
 }
 
-void ProjectManager::DeleteProject(float IconPosY, std::string &ShouldDeleteProject, const nlohmann::json_abi_v3_11_2::detail::iteration_proxy_value<nlohmann::json_abi_v3_11_2::detail::iter_impl<nlohmann::json_abi_v3_11_2::ordered_json>> &Project, bool ProjectExists, std::string &ProjectName, bool &AreProjectsHovered)
+void ProjectManager::OnHover(float IconPosY, std::string &ShouldDeleteProject, const nlohmann::json_abi_v3_11_2::detail::iteration_proxy_value<nlohmann::json_abi_v3_11_2::detail::iter_impl<nlohmann::json_abi_v3_11_2::ordered_json>> &Project, bool ProjectExists, std::string &ProjectName, bool &AreProjectsHovered)
 {
     glm::vec4 BinIconUVs = SapphireEngine::LoadIconFromAtlas(glm::vec2(ICON_SIZE * 4, 0), glm::vec2(ICON_SIZE, ICON_SIZE), m_IconAtlas.AtlasID.GetDimensions());
     ImGui::SetCursorPos(ImVec2(ImGui::GetWindowSize().x - ICON_SIZE - 40, IconPosY)); // Set the cursor position to center the text
@@ -145,38 +175,6 @@ void ProjectManager::DeleteProject(float IconPosY, std::string &ShouldDeleteProj
     }
 }
 
-void ProjectManager::FileExplorer()
-{
-    // action if OK
-    if (ImGuiFileDialog::Instance()->IsOk())
-    {
-        std::string filePathName = ImGuiFileDialog::Instance()->GetFilePathName();
-        std::string filePath = ImGuiFileDialog::Instance()->GetCurrentPath();
-        bool FoundBackslash = false;
-        for (size_t i = 0; i < filePath.size(); i++)
-        {
-            if(filePath[i] == '\\'){
-                filePath[i] = '/';
-            }
-        }
-        int LastSlashIdx = 0;
-        for (size_t i = filePath.size(); i >= 0; i--)
-        {
-            if(filePath[i] == '/'){
-                LastSlashIdx = i;
-                break;
-            }
-        }
-        Path = std::string(filePath);
-        filePathName = filePath.erase(0, LastSlashIdx + 1);
-        std::replace(Path.begin(), Path.end(), ' ', '_');
-        SaveJson(filePathName);
-    }
-    
-    // close
-    ImGuiFileDialog::Instance()->Close();
-}
-
 void ProjectManager::OnExit()
 {
     m_IconAtlas.AtlasID.Unbind();
@@ -201,4 +199,3 @@ void ProjectManager::SaveJson(std::string Name){
     stream << Projects.dump(2);
     stream.close();
 }
-

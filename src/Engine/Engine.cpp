@@ -11,19 +11,26 @@ Engine::Engine(const std::string& mainPath)
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::AnimationShader.GetID()), "Shaders/Animation.glsl");
 
     Object CameraObj("MainCamera");
-    std::vector<glm::vec3> points;
-    points.push_back(glm::vec3(-1,-1,0));
-    points.push_back(glm::vec3(1,-1,0));
-    points.push_back(glm::vec3(1,1,0));
-    points.push_back(glm::vec3(-1,1,0));
-    CameraObj.AddComponent<Transform>(std::make_shared<Transform>("Transform", std::move(points)));
     CameraObj.AddComponent<Camera>(std::make_shared<Camera>("Camera"));
-
     CameraObj.GetComponent<Camera>()->Transform = CameraObj.GetComponent<Transform>();
-    CameraObj.GetComponent<Transform>()->SetSize(glm::vec3(1 TOUNITS, 1 TOUNITS, 0.0f));
     m_ActiveScene.Add(std::move(CameraObj));
 
     CameraObjectID = m_ActiveScene.Objects.size()-1;
+
+    Component::RegisterComponentType<Renderer>([](ObjectRef obj) { 
+        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT);
+        rend->transform = obj->GetComponent<Transform>();
+        obj->AddComponent(rend);
+        Renderer::SceneRenderers.push_back(rend);
+        return rend; 
+    }, "Renderer");
+    Component::RegisterComponentType<SapphirePhysics::RigidBody>([](ObjectRef obj) { 
+        std::shared_ptr<SapphirePhysics::RigidBody> rb = std::make_shared<SapphirePhysics::RigidBody>(SapphireRenderer::RectangleT);
+        rb->transform = obj->GetComponent<Transform>().get();
+        obj->AddComponent(rb);
+        SapphirePhysics::RigidBody::Rigibodies.push_back(rb.get());
+        return rb; 
+    }, "RigidBody");
 }
 float TimeAccumulator = 0.0f;
 void Engine::Run()

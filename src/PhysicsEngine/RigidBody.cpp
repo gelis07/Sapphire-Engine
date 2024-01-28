@@ -16,11 +16,12 @@ void SapphirePhysics::RigidBody::Run()
     }
 }
 
-SapphirePhysics::RigidBody::RigidBody() : Trigger("Trigger", Variables),
+SapphirePhysics::RigidBody::RigidBody(int st) : Trigger("Trigger", Variables),
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
 StaticFriction("StaticFriction", Variables), DynamicFriction("DynamicFriction", Variables), Rotate("Rotate", Variables),
 Component("Rigidbody")
 {
+    ShapeType = st;
     Trigger.Get() = false;
     Static.Get() = false;
     Rotate.Get() = true;
@@ -72,6 +73,16 @@ Component("Rigidbody")
     Functions["Raycast"] = RayCast;
 }
 
+SapphirePhysics::RigidBody::~RigidBody()
+{
+    for (size_t i = 0; i < Rigibodies.size(); i++)
+    {
+        if(this == Rigibodies[i]){
+            Rigibodies.erase(Rigibodies.begin() + i);
+        }
+    }
+}
+
 void SapphirePhysics::RigidBody::Update()
 {
     if(Static.Get()) return;
@@ -80,11 +91,6 @@ void SapphirePhysics::RigidBody::Update()
     AngularAccelaration = SapphireEngine::VectorSum(Torques) / (((1.0f / 12.0f) * Mass.Get() * (transform->GetSize().x * transform->GetSize().x + transform->GetSize().y * transform->GetSize().y)));
     Velocity += Accelaration * FixedTimeStep;
     AngularVelocity.z += AngularAccelaration.z * FixedTimeStep;
-    // std::stringstream ss;
-    // ss << "Velocity x: " << Velocity.x << ", y: " << Velocity.y << '\n';
-    // ss << "Accelaration x: " << Accelaration.x << "y: " << Accelaration.y;
-    // SapphireEngine::Log(ss.str());
-    // if(glm::length2(Velocity) <= 0.1f) Velocity = glm::vec3(0);
     transform->Move(Velocity * FixedTimeStep);
     if(Rotate.Get())
         transform->Rotate(AngularVelocity.z * FixedTimeStep);
@@ -92,12 +98,6 @@ void SapphirePhysics::RigidBody::Update()
     Forces.clear();
     Torques.clear();
 }
-struct StackObjectDeleter {
-    void operator()(Object* /* object */) const {
-        // Custom deleter, no need to delete stack-allocated objects7
-    }
-};
-
 bool SapphirePhysics::RigidBody::IntersectAABBs(AABB a, AABB b)
 {
     return !(a.Max.x <= b.Min.x || b.Max.x <= a.Min.x
@@ -118,17 +118,6 @@ void SapphirePhysics::RigidBody::BroadPhase(int Index)
 
 void SapphirePhysics::RigidBody::NarrowPhase()
 {
-    //! FOR SOME REASON IT WORKS WITH SHARED POITNERS ONLY I HAVE NO IDEA WHY.
-    // std::for_each(std::execution::par,ContactPairs.begin(), ContactPairs.end(), [](auto&& pair) {
-    //     CollisionData CD;
-    //     std::shared_ptr<Object> sharedObject(pair.second,StackObjectDeleter{});
-    //     if(SapphirePhysics::CollisionDetection::RectanglexRectangle(sharedObject, pair.first,CD)){
-    //         pair.first->OnCollision(pair.second);
-    //         pair.second->OnCollision(pair.first);
-    //         OnCollisionRotation(pair.first, pair.second, std::move(CD));
-    //     }
-    // });
-
     for (auto &&pair : ContactPairs)
     {
         std::stringstream ss;
@@ -287,9 +276,6 @@ int SapphirePhysics::RigidBody::Impulse(lua_State *L) {
     lua_getfield(L, -1, "y");
     float y = lua_tonumber(L, -1);
     lua_pop(L, 1);
-    // float x = (float)luaL_checknumber(L, 2);
-    // float y = (float)luaL_checknumber(L, 3);
-    // float z = (float)luaL_checknumber(L, 4);
     glm::vec3 Force(x,y,0);
     rb->Forces.push_back(Force/FixedTimeStep);
     return 0;

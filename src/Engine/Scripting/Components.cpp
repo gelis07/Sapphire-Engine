@@ -89,8 +89,7 @@ static int ComponentNewIndex(lua_State* L)
 
 Component::Component(std::string File,std::string ArgName, unsigned int ArgId) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
 {
-    if(L != nullptr) 
-    lua_close(L);
+    // lua_close(L);
     L = luaL_newstate();
     luaL_openlibs(L);
     luaL_requiref(L, "SapphireEngine", LuaUtilities::luaopen_SapphireEngine, 0);

@@ -39,7 +39,6 @@ class Object
         std::vector<ObjectRef> Children = {};
         ObjectRef Parent = ObjectRef(null_ref);
         bool Active = true;
-        //Please use these functions because it doesn't have to search for these objects!
         std::vector<std::shared_ptr<Component>> Components; // This one is for looping through
         std::unordered_map<std::type_index, std::shared_ptr<Component>> ComponentMap; //This one is for searching
         void SetRefID(int refID) {RefID = refID;}

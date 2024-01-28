@@ -21,10 +21,9 @@ class Renderer : public Component
 {
     public:
         std::shared_ptr<Transform> transform;
-        Renderer(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::vector<GLuint>& Indices,  const std::string& path = "");
+        Renderer(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::vector<GLuint>& Indices,SapphireRenderer::Type st,  const std::string& path = "");
         Renderer(const Renderer& renderer);
         ~Renderer();
-        SapphireRenderer::Type Type;
         SapphireEngine::Color Color;
         SapphireEngine::String TexturePath;
         void CustomRendering() override;

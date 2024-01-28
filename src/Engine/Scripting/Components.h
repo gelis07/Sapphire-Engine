@@ -15,6 +15,12 @@ class Component
 {
     using TableVariable = std::unordered_map<std::string, SapphireEngine::Variable*>;
     public:
+        inline static std::unordered_map<std::string, std::function<std::shared_ptr<Component>(ObjectRef)>> ComponentTypeRegistry;
+        template <typename T>
+        static void RegisterComponentType(std::function<std::shared_ptr<T>(ObjectRef)> func, const std::string& ClassName) {
+            ComponentTypeRegistry[ClassName] = func;
+        }
+    public:
         Component(std::string File, std::string ArgName , unsigned int ArgId);
         Component(const std::string& ArgName) : Name(ArgName) {} // This will be used for the non lua components.
         Component(const Component& comp);
@@ -37,6 +43,8 @@ class Component
         void UpdateVariable(const std::string& Name, SapphireEngine::Variable* var);
         std::unordered_map<std::string, lua_CFunction> Functions;
         std::unordered_map<std::string, LuaFunction> LuaFunctions;
+
+
     protected:
         TableVariable VariablesToUpdate;
         lua_State* L = nullptr;
