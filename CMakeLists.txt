@@ -25,7 +25,10 @@ add_executable(Sapphire-Engine
     src/Engine/Scripting/Scripting.cpp
     src/Editor/Variables.cpp
     src/Editor/DebugDraw.cpp
-    src/Editor/ImGuiWindows.cpp
+    src/Editor/UI/ImGuiWindow.cpp
+    src/Editor/UI/Viewport.cpp
+    src/Editor/UI/Menus.cpp
+    src/Editor/UI/GamePreview.cpp
     src/Engine/Objects/Objects.cpp
     src/Engine/Objects/Transform.cpp
     src/Engine/Scripting/LuaUtilities.cpp
@@ -71,6 +74,7 @@ target_link_libraries(Sapphire-Engine PRIVATE
     glew32s
     lua54
     opengl32
+    box2d
 )
 
 # Set additional compiler options and flags

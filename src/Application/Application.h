@@ -41,5 +41,4 @@ class Application
         virtual void OnStart() {};
         virtual void OnUpdate(const float DeltaTime) {}; 
         virtual void OnExit() {};
-
 };

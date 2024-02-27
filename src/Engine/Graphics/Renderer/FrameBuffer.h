@@ -5,6 +5,7 @@
 namespace SapphireRenderer{
     class FrameBuffer{
         public:
+            static void CheckFBO();
             FrameBuffer() {}
             ~FrameBuffer();
             void Init();

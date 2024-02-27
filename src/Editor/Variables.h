@@ -21,7 +21,9 @@ class ObjectRef{
         ObjectRef(int id) : ID(id) {}
         Object* operator->();
         bool operator==(int other);
+        bool operator==(ObjectRef other);
         bool operator!=(int other);
+        bool operator!=(ObjectRef other);
         Object* Get();
     private:
         int ID;

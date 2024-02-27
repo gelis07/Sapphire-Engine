@@ -333,6 +333,25 @@ int LuaUtilities::KeyPress(lua_State *L)
     }
     return 1;
 }
+int LuaUtilities::KeyPressDown(lua_State * L)
+{
+    int n = lua_gettop(L);
+    if (n != 1) {
+        return luaL_error(L, "Expected 1 argument, got %d", n);
+    }
+
+    const char* message = luaL_checkstring(L, 1);
+    if (Keys.find(std::string(message)) != Keys.end()) {
+        bool test = Engine::app->GetInputDown(Keys[std::string(message)]);
+        lua_pushboolean(L, test);
+    }
+    else {
+        std::stringstream ss;
+        ss << "The key " << std::string(message) << " doesn't exist!"; 
+        return luaL_error(L, ss.str().c_str());
+    }
+    return 1;
+}
 int LuaUtilities::Click(lua_State *L)
 {
     int n = lua_gettop(L);
@@ -490,21 +509,8 @@ int LuaUtilities::CreateObject(lua_State *L)
     const char* ObjName = lua_tostring(L, -2);
     const char* ObjShape = lua_tostring(L, -1);
     Object obj = Object(std::string(ObjName));
-    // if(std::string(ObjShape) == "Rectangle"){
-    //     shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::BasicShader,SapphireRenderer::RectangleVertices);
-    //     //? why are there so many shape types???
-    //     shape->ShapeType = SapphireRenderer::RectangleT;
-    //     obj->GetComponent<Renderer>()->Type = SapphireRenderer::RectangleT;
-    //     obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::RectangleT;
-    // }else{
-    //     shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
-    //     //? why are there so many shape types???
-    //     shape->ShapeType = SapphireRenderer::CircleT;
-    //     obj->GetComponent<Renderer>()->Type = SapphireRenderer::CircleT;
-    //     obj->GetComponent<SapphirePhysics::RigidBody>()->ShapeType = SapphireRenderer::CircleT;
-    // }
-    // obj->GetComponent<Renderer>()->shape = shape;
-
+    Component::ComponentTypeRegistry["Renderer"](&obj);
+    Component::ComponentTypeRegistry["Rigidbody"](&obj);
     ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
     *ud = Engine::GetActiveScene().Add(std::move(obj));
     luaL_getmetatable(L, "ObjectMetaTable");
@@ -660,6 +666,8 @@ int LuaUtilities::luaopen_SapphireEngine(lua_State *L)
     lua_setfield(L, -2, "Log");
     lua_pushcfunction(L, KeyPress);
     lua_setfield(L, -2, "KeyPress");
+    lua_pushcfunction(L, KeyPressDown);
+    lua_setfield(L, -2, "KeyPressDown");
     lua_pushcfunction(L, Click);
     lua_setfield(L, -2, "Click");
     lua_pushcfunction(L, GetMouseCoord);

@@ -7,6 +7,7 @@
 
 class Grid{
     public:
+        ~Grid();
         void Init();
         void Render(const glm::vec3& CameraPos, float CameraZoom);
     private:

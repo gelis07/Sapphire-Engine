@@ -4,6 +4,7 @@
 #include "Engine/Engine.h"
 #include "Editor.h"
 #include "Objects.h"
+#include "Variables.h"
 
 
 Object::Object(std::string &&Name)
@@ -14,7 +15,7 @@ Object::Object(std::string &&Name)
     points.push_back(glm::vec3(0.5f,-0.5f,0));
     points.push_back(glm::vec3(0.5f,0.5f,0));
     points.push_back(glm::vec3(-0.5f,0.5f,0));
-    AddComponent((std::make_shared<Transform>("Transform",std::move(points))));
+    AddComponent((std::make_shared<Transform>("Transform",std::move(points), GetRef())));
     GetComponent<Transform>()->SetSize(glm::vec3(0));
     GetComponent<Transform>()->SetSize(glm::vec3(1.0f, 1.0f, 0.0f));
 }
@@ -97,6 +98,7 @@ int Object::SetActive(lua_State *L)
 
 void Object::OnUpdate()
 {
+    PROFILE_FUNC();
     ObjectRef obj(RefID);
     // SapphireEngine::Log(obj->GetComponent<Renderer>()->Name);
     for (size_t i = 0; i < obj->Components.size(); i++)
@@ -127,7 +129,7 @@ void Object::RenderGUI()
                 {
                     if(Renderer::SceneRenderers[k] == Components[i]){
                         Renderer::SceneRenderers.erase(Renderer::SceneRenderers.begin() + k);
-                        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT);
+                        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT, GetRef());
                         rend->Wireframe = true;
                         rend->transform = this->GetComponent<Transform>();
                         Renderer::Gizmos.push_back(rend);
@@ -142,13 +144,11 @@ void Object::RenderGUI()
         ImGui::OpenPopup("Components");
     }
     if(ImGui::BeginPopup("Components")){
-        // if(ImGui::Button("RigidBody") && GetComponent<SapphirePhysics::RigidBody>() == nullptr){
-        //     AddComponent((std::make_shared<SapphirePhysics::RigidBody>(SapphireRenderer::RectangleT)));
-        //     GetComponent<SapphirePhysics::RigidBody>()->transform = GetComponent<Transform>().get();
-        //     SapphirePhysics::RigidBody::Rigibodies.push_back(GetComponent<SapphirePhysics::RigidBody>().get());
-        // }
         if(ImGui::BeginCombo("Comp", "Select Component")){
             for(const auto &CompReg : Component::ComponentTypeRegistry){
+                //We dont want the user to be able to add a camera to a random object.
+                //Transform is just useless (I mean as an option) because every object has it and can't be removed.
+                if(CompReg.first == "Camera" || CompReg.first == "Transform") continue;
                 if(ImGui::Selectable(CompReg.first.c_str()))
                 {
                     CompReg.second(this);
@@ -163,9 +163,7 @@ void Object::RenderGUI()
 std::string TagInput;
 void Object::Inspect()
 {
-    if(!(*Editor::GetWindowState("Inspector"))) return;
-
-    ImGui::Begin("Inspect", Editor::GetWindowState("Inspector"));
+    ImGui::Begin("Inspect");
     ImGui::Checkbox("##Active", &Active);
     ImGui::SameLine();
     ImGui::InputText("Object Name", &Name);
@@ -200,7 +198,7 @@ void Object::Inspect()
     if (File != NULL)
     {
         if(File->get()->Extension == ".lua"){
-            std::shared_ptr<Component> NewComponent = std::make_shared<Component>((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size());
+            std::shared_ptr<Component> NewComponent = std::make_shared<Component>((*File)->Path, std::string((*File)->Name).erase((*File)->Name.size() - 4, (*File)->Name.size()), Components.size(), GetRef());
             lua_State* L = NewComponent->GetState();
             if (NewComponent->GetLuaVariables())
                 AddComponent<Component>(NewComponent);
@@ -272,12 +270,12 @@ Object* Object::LoadPrefab(std::string FilePath)
             {
                 case SapphireRenderer::CircleT:{
                     // shape = std::make_shared<SapphireRenderer::Shape>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices);
-                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::CircleT));
+                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::CircleShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::CircleT, object.GetRef()));
                     object.GetComponents().back()->Load(element.value()["Variables"]);
                     break;
                 }
                 case SapphireRenderer::RectangleT:{
-                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT));
+                    object.GetComponents().push_back(std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT, object.GetRef()));
                     object.GetComponents().back()->Load(element.value()["Variables"]);
                     break;
                 }
@@ -288,7 +286,7 @@ Object* Object::LoadPrefab(std::string FilePath)
             object.GetComponent<Transform>()->Load(element.value()["Variables"]);
         }else
         {
-            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), object.GetComponents().size());
+            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), object.GetComponents().size(), object.GetRef());
             comp->Load(element.value()["Variables"]);
             object.AddComponent<Component>(comp);
         }
@@ -313,9 +311,18 @@ bool ObjectRef::operator==(int other)
 {
     return ID == other;
 }
+bool ObjectRef::operator==(ObjectRef other)
+{
+    return &other == this;
+}
 bool ObjectRef::operator!=(int other)
 {
     return ID != other;
+}
+
+bool ObjectRef::operator!=(ObjectRef other)
+{
+    return &other != this;
 }
 
 Object *ObjectRef::Get()

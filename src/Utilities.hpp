@@ -10,20 +10,6 @@
         } \
     }  
 
-#define Stopwatch(x) \
-    {\
-        float StartingTime = glfwGetTime(); \
-        x;\
-        std::stringstream ss; \
-        ss << "(" << __FILE__ << ":" << __LINE__ << ")"; \
-        if(SapphireEngine::stats.find(ss.str()) == SapphireEngine::stats.end()){ \
-            SapphireEngine::stats[ss.str()] = glfwGetTime() - StartingTime; \
-        } else{ \
-            SapphireEngine::stats[ss.str()] = (SapphireEngine::stats[ss.str()] + (glfwGetTime() - StartingTime)) / SapphireEngine::FrameCount; \
-        }\
-    }
-
-
 
 class ImGuiLogger {
 public:

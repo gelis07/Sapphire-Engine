@@ -7,6 +7,7 @@ namespace SapphireRenderer{
     class Shader{
         public:
             Shader(const std::string& Path);
+            Shader(const std::string& name, bool test) {Name = name;} //! I hate this solution.
             Shader() {}
             ~Shader();
             void Bind();
@@ -18,6 +19,7 @@ namespace SapphireRenderer{
             void SetUniform(const char* Name, const glm::vec4& vector);
             void SetUniform(const char* Name, int val, int boolean, const float* matrix);
             const GLuint& GetID() const {return ID;}
+            std::string Name;
         private:
             GLuint ID;
 
@@ -57,7 +59,7 @@ namespace SapphireRenderer{
         }
         return { ss[0].str(), ss[1].str() };
     }
-    static void LoadShader(GLuint &sh, std::string path)
+    static void LoadShader(GLuint &sh, const std::string& path)
     {
         ShaderProgramSource sp;
         sp = ParseShader(path);

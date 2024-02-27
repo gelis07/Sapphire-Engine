@@ -2,18 +2,25 @@
 #include "CollisionDetection.h"
 #include "Objects/Transform.h"
 #include "AABB.h"
+#include <box2d/box2d.h>
+
 class Object;
-constexpr float FixedTimeStep = 1/120.0f;
+constexpr float FixedTimeStep = 1/30.0f;
+constexpr int32 velocityIterations = 6;
+constexpr int32 positionIterations = 2;
 namespace SapphirePhysics{
     class RigidBody : public Component{
         public:
+            static b2World world;
             static void Run();
             Transform* transform;
+            b2Body* body = nullptr;
             int ShapeType;
-            RigidBody(int st);
+            RigidBody(int st,ObjectRef obj);
             RigidBody(const RigidBody& rb);
+            void Init();
             ~RigidBody();
-            void Update();
+            void Update(float DeltaTime);
             static bool IntersectAABBs(AABB a, AABB b);
             void BroadPhase(int Index);
             void NarrowPhase();

@@ -26,9 +26,11 @@ void main()
   Point.x = (gl_FragCoord.x / CameraZoom - StartPoint.x) / RectWidth;
   Point.y = (gl_FragCoord.y / CameraZoom - StartPoint.y) / RectHeight;
   float Length = sqrt(((Point.x - Center.x) * (Point.x - Center.x)) + ((Point.y - Center.y) * (Point.y - Center.y)));
-  if(Length <= 0.5){
-    color = u_Color;
-  }else{
-    color = vec4(0.0, 0.0, 0.0, 0.0);
-  }
+  float len = 1.0 - (Length * 2.0);
+  // The smooth step function basically interpolates well.. smoother (the step function would give a value of 0 
+  // (outside the circle) or 1 (inside the circle) but the
+  // smooth step will interpolate a bit so it blurs the end of the circle)
+  // so it gives a way of anti-aliasing.
+  vec4 col = vec4(smoothstep(0.0, 0.005, len)); 
+  color = col * u_Color;
 };

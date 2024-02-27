@@ -1,9 +1,10 @@
 #pragma once
+#include "Utilities.hpp"
 #include <typeinfo>
 #include <functional>
 #include <typeindex>
-#include "Editor.h"
-
+#include "Editor/UI/ImGuiWindow.h"
+#include "Engine/Graphics/Animation.h"
 constexpr int ICON_SIZE = 128;
 
 class File{
@@ -49,14 +50,8 @@ class Folder : public File
             m_IconPos = glm::vec2(0,ICON_SIZE*2); 
             m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
         }
-        void OnClick(std::filesystem::directory_entry entry) 
-        {
-
-        }
-        void OnDoubleClick(std::filesystem::directory_entry entry) override
-        {
-            Editor::CurrentPath = entry.path().string();
-        }
+        void OnClick(std::filesystem::directory_entry entry){}
+        void OnDoubleClick(std::filesystem::directory_entry entry) override;
 };
 
 class LuaFile : public File
@@ -66,10 +61,7 @@ class LuaFile : public File
             m_IconPos = glm::vec2(ICON_SIZE,ICON_SIZE); 
             m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
         }
-        void OnClick(std::filesystem::directory_entry entry) 
-        {
-            
-        }
+        void OnClick(std::filesystem::directory_entry entry) {}
         void OnDoubleClick(std::filesystem::directory_entry entry) override
         {
             system(("code " + entry.path().string()).c_str()); // Open the script in visual studio code
@@ -83,14 +75,8 @@ class SceneFile : public File
             m_IconPos = glm::vec2(0,0);
             m_IconSize = glm::vec2(ICON_SIZE,ICON_SIZE); 
         }
-        void OnClick(std::filesystem::directory_entry entry) override
-        {
-
-        }
-        void OnDoubleClick(std::filesystem::directory_entry entry) override
-        {
-            Engine::GetActiveScene().Load(entry.path().filename().string());
-        }
+        void OnClick(std::filesystem::directory_entry entry) override {}
+        void OnDoubleClick(std::filesystem::directory_entry entry) override;
 };
 class ImageFile : public File
 {

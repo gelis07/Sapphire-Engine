@@ -12,19 +12,44 @@ void Renderer::CustomRendering()
         {
             ImGui::Text(anim.first.c_str());
             ImGui::SameLine();
-            if(ImGui::Button("Remove")){
+            if(ImGui::Button(("Remove##"+anim.first).c_str())){
                 delete anim.second;
                 Animations.erase(anim.first);
                 SelectAnimation(Animations.begin()->first);
                 break;
             }
         }
-        
-        // if(ImGui::Button("Remove")){
-        //     // shape->DeleteTexture();
-        //     // TexturePath.Get() = "";
-        //     // shape->SetShader(SapphireRenderer::BasicShader, [](SapphireRenderer::Shader& shader) {  });
-        // }
+    }
+    if(ImGui::BeginCombo("Shader", Shader.Name.c_str())){
+        for(const auto &sh : SapphireRenderer::shaders){
+            if(ImGui::Selectable(sh->Name.c_str()))
+            {
+                Shader = *sh;
+            }
+        }
+        ImGui::EndCombo();
+    }
+    std::string name = "Rectangle";
+    if(ShapeType == SapphireRenderer::CircleT)
+        name = "Circle";
+
+    if(ImGui::BeginCombo("Shape", name.c_str())){
+        if(ImGui::Selectable("Rectangle"))
+            ShapeType = SapphireRenderer::RectangleT;
+        if(ImGui::Selectable("Circle")){
+            SetUpUniforms = [this](SapphireRenderer::Shader& shader, Camera* cam) { 
+                const glm::vec3& ObjectSize = transform->GetSize() TOPIXELS;
+                const glm::vec3& ObjectPos = transform->GetPosition() TOPIXELS;
+                glm::vec3 CamPos = (-cam->Transform->GetPosition() + cam->Transform->GetSize() / 2.0f) TOPIXELS;
+                glm::vec2 StartPos(ObjectPos.x - ObjectSize.x/2 + CamPos.x, ObjectPos.y - ObjectSize.y/2 + CamPos.y);
+                shader.SetUniform("RectWidth", ObjectSize.x);
+                shader.SetUniform("RectHeight", ObjectSize.y);
+                shader.SetUniform("StartPoint", StartPos);
+                shader.SetUniform("CameraZoom", cam->Zoom.Get());
+            };
+            ShapeType = SapphireRenderer::CircleT;
+        }
+        ImGui::EndCombo();
     }
 }
 int Renderer::LoadTexture(lua_State *L)
@@ -51,6 +76,7 @@ int Renderer::SetColor(lua_State *L)
 }
 void Renderer::Render(Camera* cam, const std::vector<std::shared_ptr<Renderer>>& renderers)
 {
+    PROFILE_FUNC();
     for (auto &&rend : renderers)
     {
         glm::mat4 projection = glm::ortho( 0.0f, cam->Transform->GetSize().x TOPIXELS / cam->Zoom.Get(), 0.0f, cam->Transform->GetSize().y TOPIXELS / cam->Zoom.Get(), -1.0f, 1.0f);
@@ -69,7 +95,7 @@ void Renderer::Render(Camera* cam, const std::vector<std::shared_ptr<Renderer>>&
             rend->Texture.Bind();
             rend->Shader.SetUniform("u_Texture", (int)rend->Texture.GetSlot());
         }
-        rend->SetUpUniforms(rend->Shader);
+        rend->SetUpUniforms(rend->Shader, cam);
         rend->Shader.SetUniform("u_Color", rend->Color.Get());
         if(!rend->Wireframe){
             GLCall(glPolygonMode(GL_FRONT_AND_BACK, GL_FILL));
@@ -105,8 +131,8 @@ void Renderer::SelectAnimation(const std::string &name)
     }else
         SapphireEngine::Log("Animation with name: " + name + " was not found.", SapphireEngine::Error);
 }
-Renderer::Renderer(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::vector<GLuint>& Indices,SapphireRenderer::Type st,  const std::string& path)
-    : Component("Renderer"), Color("Color", Variables), TexturePath("Path", Variables), Shader(shader), VertexArray(), VertexBuffer(), IndexBuffer()
+Renderer::Renderer(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::vector<GLuint>& Indices,SapphireRenderer::Type st,  ObjectRef obj,const std::string& path)
+    : Component("Renderer", obj), Color("Color", Variables), TexturePath("Path", Variables), Shader(shader), VertexArray(), VertexBuffer(), IndexBuffer()
 {
 
     ShapeType = st;
@@ -142,7 +168,7 @@ Renderer::Renderer(const SapphireRenderer::Shader& shader, const std::vector<Ver
     IndexBuffer.Unbind();
 }
 Renderer::Renderer(const Renderer &renderer)
-: Component(std::move("Renderer")), Color("Color", Variables), TexturePath("Path", Variables) 
+: Component(std::move("Renderer"), renderer.Parent), Color("Color", Variables), TexturePath("Path", Variables) 
 {
     Color.Get() = renderer.Color.Get();
     TexturePath.Get() = "";
@@ -175,6 +201,6 @@ glm::mat4 Camera::GetView()
 {
 
     glm::mat4 view(1.0f);
-    view = glm::translate(view, (Transform->GetPosition() + Transform->GetSize() / 2.0f) TOPIXELS);
+    view = glm::translate(view, (-Transform->GetPosition() + Transform->GetSize() / 2.0f) TOPIXELS);
     return view;
 }

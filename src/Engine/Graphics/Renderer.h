@@ -6,8 +6,8 @@
 class Camera : public Component
 {
     public:
-        Camera(const std::string& Name)
-        : Component(Name), BgColor("BgColor", Variables), Zoom("Zoom", Variables){
+        Camera(const std::string& Name, ObjectRef obj)
+        : Component(Name, obj), BgColor("BgColor", Variables), Zoom("Zoom", Variables){
             BgColor.Get() = glm::vec4(0,0,0,1);
             Zoom.Get() = 1.0f;
         };
@@ -21,7 +21,7 @@ class Renderer : public Component
 {
     public:
         std::shared_ptr<Transform> transform;
-        Renderer(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::vector<GLuint>& Indices,SapphireRenderer::Type st,  const std::string& path = "");
+        Renderer(const SapphireRenderer::Shader& shader, const std::vector<Vertex>& Vertices,const std::vector<GLuint>& Indices,SapphireRenderer::Type st,  ObjectRef obj,const std::string& path = "");
         Renderer(const Renderer& renderer);
         ~Renderer();
         SapphireEngine::Color Color;
@@ -39,7 +39,7 @@ class Renderer : public Component
         std::unordered_map<std::string,SapphireRenderer::Animation*> Animations;
     public:
         std::optional<SapphireRenderer::Animation> CurrentAnimation = std::nullopt;
-        std::function<void(SapphireRenderer::Shader& shader)> SetUpUniforms = [](SapphireRenderer::Shader& shader) {  };
+        std::function<void(SapphireRenderer::Shader& shader, Camera* cam)> SetUpUniforms = [](SapphireRenderer::Shader& shader, Camera* cam) {  };
         unsigned int IndicesAmount = 0;
         SapphireRenderer::Shader Shader;
         SapphireRenderer::VertexArray VertexArray;

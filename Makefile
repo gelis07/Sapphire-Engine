@@ -480,30 +480,6 @@ src/Editor/Editor.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/Editor.cpp.s
 .PHONY : src/Editor/Editor.cpp.s
 
-src/Editor/ImGuiWindows.obj: src/Editor/ImGuiWindows.cpp.obj
-.PHONY : src/Editor/ImGuiWindows.obj
-
-# target to build an object file
-src/Editor/ImGuiWindows.cpp.obj:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/ImGuiWindows.cpp.obj
-.PHONY : src/Editor/ImGuiWindows.cpp.obj
-
-src/Editor/ImGuiWindows.i: src/Editor/ImGuiWindows.cpp.i
-.PHONY : src/Editor/ImGuiWindows.i
-
-# target to preprocess a source file
-src/Editor/ImGuiWindows.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/ImGuiWindows.cpp.i
-.PHONY : src/Editor/ImGuiWindows.cpp.i
-
-src/Editor/ImGuiWindows.s: src/Editor/ImGuiWindows.cpp.s
-.PHONY : src/Editor/ImGuiWindows.s
-
-# target to generate assembly for a file
-src/Editor/ImGuiWindows.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/ImGuiWindows.cpp.s
-.PHONY : src/Editor/ImGuiWindows.cpp.s
-
 src/Editor/UI/FileExplorer/File.obj: src/Editor/UI/FileExplorer/File.cpp.obj
 .PHONY : src/Editor/UI/FileExplorer/File.obj
 
@@ -552,6 +528,78 @@ src/Editor/UI/FileExplorer/FileExplorer.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/FileExplorer/FileExplorer.cpp.s
 .PHONY : src/Editor/UI/FileExplorer/FileExplorer.cpp.s
 
+src/Editor/UI/GamePreview.obj: src/Editor/UI/GamePreview.cpp.obj
+.PHONY : src/Editor/UI/GamePreview.obj
+
+# target to build an object file
+src/Editor/UI/GamePreview.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/GamePreview.cpp.obj
+.PHONY : src/Editor/UI/GamePreview.cpp.obj
+
+src/Editor/UI/GamePreview.i: src/Editor/UI/GamePreview.cpp.i
+.PHONY : src/Editor/UI/GamePreview.i
+
+# target to preprocess a source file
+src/Editor/UI/GamePreview.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/GamePreview.cpp.i
+.PHONY : src/Editor/UI/GamePreview.cpp.i
+
+src/Editor/UI/GamePreview.s: src/Editor/UI/GamePreview.cpp.s
+.PHONY : src/Editor/UI/GamePreview.s
+
+# target to generate assembly for a file
+src/Editor/UI/GamePreview.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/GamePreview.cpp.s
+.PHONY : src/Editor/UI/GamePreview.cpp.s
+
+src/Editor/UI/ImGuiWindow.obj: src/Editor/UI/ImGuiWindow.cpp.obj
+.PHONY : src/Editor/UI/ImGuiWindow.obj
+
+# target to build an object file
+src/Editor/UI/ImGuiWindow.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/ImGuiWindow.cpp.obj
+.PHONY : src/Editor/UI/ImGuiWindow.cpp.obj
+
+src/Editor/UI/ImGuiWindow.i: src/Editor/UI/ImGuiWindow.cpp.i
+.PHONY : src/Editor/UI/ImGuiWindow.i
+
+# target to preprocess a source file
+src/Editor/UI/ImGuiWindow.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/ImGuiWindow.cpp.i
+.PHONY : src/Editor/UI/ImGuiWindow.cpp.i
+
+src/Editor/UI/ImGuiWindow.s: src/Editor/UI/ImGuiWindow.cpp.s
+.PHONY : src/Editor/UI/ImGuiWindow.s
+
+# target to generate assembly for a file
+src/Editor/UI/ImGuiWindow.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/ImGuiWindow.cpp.s
+.PHONY : src/Editor/UI/ImGuiWindow.cpp.s
+
+src/Editor/UI/Menus.obj: src/Editor/UI/Menus.cpp.obj
+.PHONY : src/Editor/UI/Menus.obj
+
+# target to build an object file
+src/Editor/UI/Menus.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/Menus.cpp.obj
+.PHONY : src/Editor/UI/Menus.cpp.obj
+
+src/Editor/UI/Menus.i: src/Editor/UI/Menus.cpp.i
+.PHONY : src/Editor/UI/Menus.i
+
+# target to preprocess a source file
+src/Editor/UI/Menus.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/Menus.cpp.i
+.PHONY : src/Editor/UI/Menus.cpp.i
+
+src/Editor/UI/Menus.s: src/Editor/UI/Menus.cpp.s
+.PHONY : src/Editor/UI/Menus.s
+
+# target to generate assembly for a file
+src/Editor/UI/Menus.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/Menus.cpp.s
+.PHONY : src/Editor/UI/Menus.cpp.s
+
 src/Editor/UI/ProjectManager.obj: src/Editor/UI/ProjectManager.cpp.obj
 .PHONY : src/Editor/UI/ProjectManager.obj
 
@@ -575,6 +623,30 @@ src/Editor/UI/ProjectManager.s: src/Editor/UI/ProjectManager.cpp.s
 src/Editor/UI/ProjectManager.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/ProjectManager.cpp.s
 .PHONY : src/Editor/UI/ProjectManager.cpp.s
+
+src/Editor/UI/Viewport.obj: src/Editor/UI/Viewport.cpp.obj
+.PHONY : src/Editor/UI/Viewport.obj
+
+# target to build an object file
+src/Editor/UI/Viewport.cpp.obj:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/Viewport.cpp.obj
+.PHONY : src/Editor/UI/Viewport.cpp.obj
+
+src/Editor/UI/Viewport.i: src/Editor/UI/Viewport.cpp.i
+.PHONY : src/Editor/UI/Viewport.i
+
+# target to preprocess a source file
+src/Editor/UI/Viewport.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/Viewport.cpp.i
+.PHONY : src/Editor/UI/Viewport.cpp.i
+
+src/Editor/UI/Viewport.s: src/Editor/UI/Viewport.cpp.s
+.PHONY : src/Editor/UI/Viewport.s
+
+# target to generate assembly for a file
+src/Editor/UI/Viewport.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Sapphire-Engine.dir/build.make CMakeFiles/Sapphire-Engine.dir/src/Editor/UI/Viewport.cpp.s
+.PHONY : src/Editor/UI/Viewport.cpp.s
 
 src/Editor/Variables.obj: src/Editor/Variables.cpp.obj
 .PHONY : src/Editor/Variables.obj
@@ -1182,18 +1254,27 @@ help:
 	@echo "... src/Editor/Editor.obj"
 	@echo "... src/Editor/Editor.i"
 	@echo "... src/Editor/Editor.s"
-	@echo "... src/Editor/ImGuiWindows.obj"
-	@echo "... src/Editor/ImGuiWindows.i"
-	@echo "... src/Editor/ImGuiWindows.s"
 	@echo "... src/Editor/UI/FileExplorer/File.obj"
 	@echo "... src/Editor/UI/FileExplorer/File.i"
 	@echo "... src/Editor/UI/FileExplorer/File.s"
 	@echo "... src/Editor/UI/FileExplorer/FileExplorer.obj"
 	@echo "... src/Editor/UI/FileExplorer/FileExplorer.i"
 	@echo "... src/Editor/UI/FileExplorer/FileExplorer.s"
+	@echo "... src/Editor/UI/GamePreview.obj"
+	@echo "... src/Editor/UI/GamePreview.i"
+	@echo "... src/Editor/UI/GamePreview.s"
+	@echo "... src/Editor/UI/ImGuiWindow.obj"
+	@echo "... src/Editor/UI/ImGuiWindow.i"
+	@echo "... src/Editor/UI/ImGuiWindow.s"
+	@echo "... src/Editor/UI/Menus.obj"
+	@echo "... src/Editor/UI/Menus.i"
+	@echo "... src/Editor/UI/Menus.s"
 	@echo "... src/Editor/UI/ProjectManager.obj"
 	@echo "... src/Editor/UI/ProjectManager.i"
 	@echo "... src/Editor/UI/ProjectManager.s"
+	@echo "... src/Editor/UI/Viewport.obj"
+	@echo "... src/Editor/UI/Viewport.i"
+	@echo "... src/Editor/UI/Viewport.s"
 	@echo "... src/Editor/Variables.obj"
 	@echo "... src/Editor/Variables.i"
 	@echo "... src/Editor/Variables.s"

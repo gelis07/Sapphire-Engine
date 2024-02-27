@@ -21,7 +21,4 @@ class Scene{
 
         // Read a json representation of the object from a stream
         void Load(const std::string FilePath);
-
-        void Hierechy(Object* SelectedObj,int& SelectedObjID);
-        void CreateMenu(Object* SelectedObj);
 };

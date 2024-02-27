@@ -9,30 +9,37 @@ Engine::Engine(const std::string& mainPath)
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::BasicShader.GetID()), "Shaders/Basic.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::TextureShader.GetID()), "Shaders/Texture.glsl");
     SapphireRenderer::LoadShader(const_cast<GLuint&>(SapphireRenderer::AnimationShader.GetID()), "Shaders/Animation.glsl");
-
+    SapphireRenderer::shaders.push_back(&SapphireRenderer::CircleShader);
+    SapphireRenderer::shaders.push_back(&SapphireRenderer::LineShader);
+    SapphireRenderer::shaders.push_back(&SapphireRenderer::BasicShader);
+    SapphireRenderer::shaders.push_back(&SapphireRenderer::TextureShader);
+    SapphireRenderer::shaders.push_back(&SapphireRenderer::AnimationShader);
     Object CameraObj("MainCamera");
-    CameraObj.AddComponent<Camera>(std::make_shared<Camera>("Camera"));
+    CameraObj.AddComponent<Camera>(std::make_shared<Camera>("Camera", CameraObj.GetRef()));
     CameraObj.GetComponent<Camera>()->Transform = CameraObj.GetComponent<Transform>();
     m_ActiveScene.Add(std::move(CameraObj));
 
     CameraObjectID = m_ActiveScene.Objects.size()-1;
-
+    InitCustomComponents();
+}
+void Engine::InitCustomComponents(){
     Component::RegisterComponentType<Renderer>([](Object* obj) { 
-        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT);
+        std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT, obj->GetRef());
         rend->transform = obj->GetComponent<Transform>();
         obj->AddComponent(rend);
         Renderer::SceneRenderers.push_back(rend);
         return rend; 
     }, "Renderer");
     Component::RegisterComponentType<SapphirePhysics::RigidBody>([](Object* obj) { 
-        std::shared_ptr<SapphirePhysics::RigidBody> rb = std::make_shared<SapphirePhysics::RigidBody>(SapphireRenderer::RectangleT);
+        std::shared_ptr<SapphirePhysics::RigidBody> rb = std::make_shared<SapphirePhysics::RigidBody>(SapphireRenderer::RectangleT, obj->GetRef());
         rb->transform = obj->GetComponent<Transform>().get();
         obj->AddComponent(rb);
+        rb->Init();
         SapphirePhysics::RigidBody::Rigibodies.push_back(rb.get());
         return rb; 
-    }, "RigidBody");
+    }, "Rigidbody");
     Component::RegisterComponentType<Camera>([](Object* obj) { 
-        std::shared_ptr<Camera> camera = std::make_shared<Camera>("Camera");
+        std::shared_ptr<Camera> camera = std::make_shared<Camera>("Camera", obj->GetRef());
         obj->AddComponent(camera);
         return camera; 
     }, "Camera");
@@ -42,7 +49,7 @@ Engine::Engine(const std::string& mainPath)
         points.push_back(glm::vec3(0.5f,-0.5f,0));
         points.push_back(glm::vec3(0.5f,0.5f,0));
         points.push_back(glm::vec3(-0.5f,0.5f,0));
-        std::shared_ptr<Transform> transform = std::make_shared<Transform>("Transform",std::move(points));
+        std::shared_ptr<Transform> transform = std::make_shared<Transform>("Transform",std::move(points), obj->GetRef());
         obj->AddComponent(transform);
         return transform; 
     }, "Transform");
@@ -50,7 +57,7 @@ Engine::Engine(const std::string& mainPath)
 float TimeAccumulator = 0.0f;
 void Engine::Run()
 {
-
+    PROFILE_FUNC();
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
         if(!m_ActiveScene.Objects[i].Active) continue;
@@ -59,9 +66,9 @@ void Engine::Run()
     TimeAccumulator += GetDeltaTime();
     GameTime += GetDeltaTime();
     ExecuteLua();
-    while(TimeAccumulator >= FixedTimeStep){
+    {
+        PROFILE_SCOPE("Physics Simulation");
         SapphirePhysics::RigidBody::Run();
-        TimeAccumulator -= FixedTimeStep;
     }
     // std::future<void> physicsFuture = std::async(std::launch::async, &Engine::PhysicsSim, this);
     Renderer::Render(Engine::GetCameraObject()->GetComponent<Camera>().get(), Renderer::SceneRenderers);
@@ -81,32 +88,9 @@ void Engine::Run()
     if(m_ActiveScene.ObjectsToAdd.size() != 0) m_ActiveScene.ObjectsToAdd.clear();
     if(m_ActiveScene.ObjectsToDelete.size() != 0) m_ActiveScene.ObjectsToDelete.clear();
 }
-
-void Engine::Render(Object* object)
-{
-    // glm::mat4 view = glm::translate(glm::mat4(1.0f), -Engine::GetCameraObject()->GetTransform()->GetPosition()  TOPIXELS + Engine::GetCameraObject()->GetTransform()->GetSize() TOPIXELS / 2.0f);
-    // if(std::shared_ptr<Renderer> renderer = object->GetRenderer()) {
-    //     if(object != Engine::GetCameraObject())
-    //         renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition() TOPIXELS, 1.0f);
-    // }
-    // else
-    //     if(object->GetRenderer() = object->GetComponent<Renderer>()) 
-    //         renderer->Render(*object->GetTransform(),view, false, -Engine::GetCameraObject()->GetTransform()->GetPosition() TOPIXELS, 1.0f);
-}
-
-void Engine::PhysicsSim()
-{
-    // for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
-    // {
-    //     if(!m_ActiveScene.Objects[i].Active) continue;
-    //     if(std::shared_ptr<SapphirePhysics::RigidBody> rb = m_ActiveScene.Objects[i].GetComponent<SapphirePhysics::RigidBody>()) {
-    //         rb->Simulate(&m_ActiveScene.Objects[i], app->GetDeltaTime());
-    //     }
-    // }
-}
-
 void Engine::ExecuteLua()
 {
+    PROFILE_FUNC();
     for (size_t i = 0; i < m_ActiveScene.Objects.size(); i++)
     {
         if(!m_ActiveScene.Objects[i].Active) continue;

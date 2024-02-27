@@ -65,20 +65,27 @@ void Application::Update()
 {
     OnStart();
     ImGuiIO& io = ImGui::GetIO();
+    int fCounter = 0;
     while (!glfwWindowShouldClose(window))
     {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-
+        GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
         float currentTime = glfwGetTime();
         DeltaTime = currentTime - LastTime;
         LastTime = currentTime;
-        OnUpdate(DeltaTime);
 
+        OnUpdate(DeltaTime);
+		if(fCounter > 250) {
+			std::cout << "FPS: " << 1 / DeltaTime << std::endl;
+			fCounter = 0;
+		} else {
+			fCounter++;
+		}
         ImGui::Render();
-        glViewport(0, 0, (int)io.DisplaySize.x, (int)io.DisplaySize.y);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);

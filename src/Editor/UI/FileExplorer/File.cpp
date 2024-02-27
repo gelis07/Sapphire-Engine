@@ -67,3 +67,12 @@ void File::RenderGUI(std::filesystem::directory_entry entry, ImVec2 Position, Te
 
 }
 
+void Folder::OnDoubleClick(std::filesystem::directory_entry entry)
+{
+    Editor::CurrentPath = entry.path().string();
+}
+
+void SceneFile::OnDoubleClick(std::filesystem::directory_entry entry)
+{
+    Engine::GetActiveScene().Load(entry.path().filename().string());
+}

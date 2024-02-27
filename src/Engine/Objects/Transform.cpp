@@ -1,8 +1,8 @@
 #include "Transform.h"
 #include "Editor/DebugDraw.h"
 #define PI 3.14159265359
-Transform::Transform(std::string ArgName, std::vector<glm::vec3> aPoints)
-: Component(std::move(ArgName)), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables), OriginalPoints(aPoints)
+Transform::Transform(std::string ArgName, std::vector<glm::vec3> aPoints, ObjectRef obj)
+: Component(std::move(ArgName), obj), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables), OriginalPoints(aPoints)
 {
     Position.Get() = glm::vec3(0);
     Rotation.Get() = glm::vec3(0);
@@ -27,11 +27,12 @@ Transform::Transform(std::string ArgName, std::vector<glm::vec3> aPoints)
     Functions["Rotate"] = RotateLua;
     Functions["LookAt"] = LookAt;
     Functions["SetPosition"] = SetPositionLua;
+    Functions["SetSize"] = SetScaleLua;
     Functions["SetRotation"] = SetRotationLua;
 }
 
 Transform::Transform(const Transform &transform)
-: Component(std::move("Transform")), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables), OriginalPoints(transform.GetPoints())
+: Component(std::move("Transform"), transform.Parent), Position("Position", Variables), Rotation("Rotation", Variables), Size("Size", Variables), OriginalPoints(transform.GetPoints())
 {
     Position.Get() = transform.GetPosition();
     Rotation.Get() = transform.GetRotation();
@@ -75,8 +76,8 @@ void Transform::SetPosition(const glm::vec3& NewPosition)
 
 glm::vec3 Transform::GetWorldPositon() const
 {
-    if(Parent != nullptr){
-        return Position.Get() + Parent->GetPosition();
+    if(TransParent != nullptr){
+        return Position.Get() + TransParent->GetPosition();
     }
     return Position.Get();
 }
@@ -138,6 +139,18 @@ int Transform::SetPositionLua(lua_State *L)
     return 0;
 }
 
+int Transform::SetScaleLua(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    Transform* transform = static_cast<Transform*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float x = (float)luaL_checknumber(L, 2);
+    float y = (float)luaL_checknumber(L, 3);
+    transform->SetSize(glm::vec3(x,y,0));
+    return 0;
+}
+
 int Transform::SetRotationLua(lua_State *L)
 {
     luaL_checktype(L, 1, LUA_TTABLE);
@@ -162,7 +175,7 @@ int Transform::RotateLua(lua_State *L)
 
 void Transform::UpdateModel()
 {
-    if(Parent == nullptr){
+    if(TransParent == nullptr){
         Model = glm::mat4(1.0f);
         Model = glm::translate(Model, Position.Get() TOPIXELS);
         Model = glm::rotate(Model, Rotation.Get().z, glm::vec3(0,0,1));
@@ -175,7 +188,7 @@ void Transform::UpdateModel()
             child->Model = glm::scale(child->Model, child->GetSize() TOPIXELS);
         }
     }else{
-        Parent->UpdateModel();
+        TransParent->UpdateModel();
     }
 }
 

@@ -2,31 +2,31 @@
 #include "File.h"
 #include <unordered_map>
 #include "UI/DragAndDrop.hpp"
-
+#include "Editor/UI/ImGuiWindow.h"
 
 inline DragAndDrop<std::shared_ptr<File>> FileExplorerDrop;
 inline DragAndDrop<std::shared_ptr<File>> AnimationDrop;
 inline DragAndDrop<std::shared_ptr<ObjectRef>> HierachyDrop;
 
-class FileExplorer
+class FileExplorer : Window
 {
     public:
-        static void Open(std::string& path);
-        static void Init();
-        static const std::unordered_map<std::string, std::shared_ptr<File>>& GetFiles() {return m_Files;}
-        static void CopyAndOverwrite(std::string&& CopyFrom, std::string&& PasteTo);
-        static const TextureAtlas& GetAtlas() {return m_MinIconAtlas;}
-        static std::optional<std::string> InputFieldResult();
+        FileExplorer();
+        void Display() override;
+        const std::unordered_map<std::string, std::shared_ptr<File>>& GetFiles() {return m_Files;}
+        void CopyAndOverwrite(std::string&& CopyFrom, std::string&& PasteTo);
+        const TextureAtlas& GetAtlas() {return m_MinIconAtlas;}
+        std::optional<std::string> InputFieldResult();
     private:
-        inline static TextureAtlas m_IconAtlas;
-        inline static TextureAtlas m_MinIconAtlas;
-        inline static std::unordered_map<std::string, std::shared_ptr<File>> m_Files;
-        inline static bool m_RightClicked;
-        inline static void RightClickPopUp(const std::filesystem::path& path);
-        inline static std::string m_SelectedFile;
-        inline static std::string m_NewFileName;
-        inline static bool m_SelectedCut;
-        inline static std::filesystem::path m_CopiedFilePath;
-        inline static bool Renaming = false;
-        inline static bool ShouldStopRenaming = true;
+        TextureAtlas m_IconAtlas;
+        TextureAtlas m_MinIconAtlas;
+        std::unordered_map<std::string, std::shared_ptr<File>> m_Files;
+        bool m_RightClicked;
+        void RightClickPopUp(const std::filesystem::path& path);
+        std::string m_SelectedFile;
+        std::string m_NewFileName;
+        bool m_SelectedCut;
+        std::filesystem::path m_CopiedFilePath;
+        bool Renaming = false;
+        bool ShouldStopRenaming = true;
 };

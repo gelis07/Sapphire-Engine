@@ -122,7 +122,7 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
             Component::ComponentTypeRegistry[element.key()](&obj);
         }
         else{
-            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), obj.GetComponents().size());
+            std::shared_ptr<Component> comp = std::make_shared<Component>(element.value()["path"], element.key(), obj.GetComponents().size(), null_ref);
             obj.AddComponent<Component>(comp);
         }
         if (element.key() == "Renderer")
@@ -164,7 +164,7 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
         ObjectRef NewChildObj = Add(std::move(childObj), child.value()["ID"]);
         obj.Children.push_back(NewChildObj);
         o_CreatedChildren.push_back(NewChildObj);
-        NewChildObj->GetComponent<Transform>()->Parent = obj.GetComponent<Transform>().get();
+        NewChildObj->GetComponent<Transform>()->TransParent = obj.GetComponent<Transform>().get();
         obj.GetComponent<Transform>()->childrenTransforms.push_back(obj.Children.back()->GetComponent<Transform>().get());
         obj.GetComponent<Transform>()->UpdateModel();
         //If the NewObj that was just loaded has any children, set their parent to be the new object.
@@ -189,16 +189,19 @@ Object Scene::LoadObj(nlohmann::ordered_json& JsonObj, int i, std::vector<Object
             }
         }
         obj.GetComponent<Renderer>()->transform = obj.GetComponent<Transform>();
-        Renderer::SceneRenderers.push_back(obj.GetComponent<Renderer>());
     }
 
     if (std::shared_ptr<SapphirePhysics::RigidBody> RbComp = obj.GetComponent<SapphirePhysics::RigidBody>())
     {
         RbComp->transform = obj.GetComponent<Transform>().get();
+        RbComp->Init();
+        if(RbComp->Static.Get() == true){
+            RbComp->body->SetType(b2_staticBody);
+        }else{
+            RbComp->body->SetType(b2_dynamicBody);
+        }
         if(obj.GetComponent<Renderer>() != nullptr)
             RbComp->ShapeType = static_cast<int>(obj.GetComponent<Renderer>()->ShapeType);
-
-        SapphirePhysics::RigidBody::Rigibodies.push_back(RbComp.get());
     }
 
 
@@ -217,6 +220,12 @@ void Scene::Load(const std::string FilePath)
         ObjectRefrences.erase(ObjectRefrences.find((Objects.begin() + i)->GetRefID()));
     }
     Objects.clear();
+    b2Body* body = SapphirePhysics::RigidBody::world.GetBodyList();
+    while (body) {
+        b2Body* nextBody = body->GetNext(); // Get the next body before destroying the current one
+        SapphirePhysics::RigidBody::world.DestroyBody(body); // Destroy the current body
+        body = nextBody; // Move to the next body
+    }
     Renderer::SceneRenderers.clear();
     Renderer::Gizmos.clear();
     SapphirePhysics::RigidBody::Rigibodies.clear();
@@ -227,144 +236,19 @@ void Scene::Load(const std::string FilePath)
         nlohmann::ordered_json JsonObj = Data[ss.str().c_str()];
         std::vector<ObjectRef> children;
         ObjectRef NewObj = Add(std::move(LoadObj(JsonObj, i, children)), JsonObj["ID"]);
+        for (auto &&comp : NewObj->GetComponents())
+        {
+            comp->Parent = NewObj;
+        }
+        
         //If the NewObj that was just loaded has any children, set their parent to be the new object.
         for (auto &child : children)
         {
             child->Parent = NewObj; 
         }
     }
-    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT);
+    std::shared_ptr<Renderer> rend = std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT, Engine::GetCameraObject()->GetRef());
     rend->Wireframe = true;
     rend->transform = Engine::GetCameraObject()->GetComponent<Transform>();
     Renderer::Gizmos.push_back(rend);
-}
-
-void Scene::Hierechy(Object *SelectedObj, int &SelectedObjID)
-{
-    if (!(*Editor::GetWindowState("Hierachy")))
-        return;
-    ImGui::Begin("Hierachy", Editor::GetWindowState("Hierachy"));
-    for (size_t i = 0; i < Objects.size(); i++)
-    {
-        if(Objects[i].Parent != null_ref) continue;
-        std::string Name = "";
-        Name = Objects[i].Name.c_str();
-        if (Name.empty())
-        {
-            Name = "##";
-        }
-        if(Objects[i].Children.size() == 0 && Objects[i].Parent == null_ref){
-            if (ImGui::Selectable((Name + "##" + std::to_string(Objects[i].id)).c_str(), &Objects[i] == SelectedObj))
-            {
-                SelectedObjID = i;
-                Editor::SelectedObjChildID = -1;
-            }
-            ImVec2 textSize = ImGui::CalcTextSize(Name.c_str());
-            if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y), glm::vec2(textSize.x, textSize.y))){
-                if((**ref) != Objects[i].GetRefID()){
-                    Objects[i].Children.push_back(**ref);
-                    (**ref)->Parent = Objects[i].GetRef();
-                    (**ref)->GetComponent<Transform>()->Parent = Objects[i].GetComponent<Transform>().get();
-                    Objects[i].GetComponent<Transform>()->childrenTransforms.push_back((**ref)->GetComponent<Transform>().get());
-                    (**ref)->GetComponent<Transform>()->UpdateModel();
-                }
-            }
-            if(ImGui::IsItemClicked(0)){
-                HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(Objects[i].GetRefID()));
-            }
-        }else{
-            if(ImGui::TreeNode((Name + "##" + std::to_string(Objects[i].id)).c_str())){
-                ImVec2 textSize = ImGui::CalcTextSize(Name.c_str());
-                if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y), glm::vec2(textSize.x, textSize.y))){
-                    if((**ref) != Objects[i].GetRefID()){
-                        Objects[i].Children.push_back(**ref);
-                        (**ref)->Parent = Objects[i].GetRef();
-                        (**ref)->GetComponent<Transform>()->Parent = Objects[i].GetComponent<Transform>().get();
-                        Objects[i].GetComponent<Transform>()->childrenTransforms.push_back((**ref)->GetComponent<Transform>().get());
-                        (**ref)->GetComponent<Transform>()->UpdateModel();
-                    }
-                }
-                if(ImGui::IsItemClicked(0)){
-                    SelectedObjID = i;
-                    Editor::SelectedObjChildID = -1;
-                    HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(Objects[i].GetRefID()));
-                }
-                for (size_t j = 0; j < Objects[i].Children.size(); j++)
-                {
-                    if (ImGui::Selectable((Objects[i].Children[j]->Name + "##" + std::to_string(Objects[i].Children[j]->id)).c_str(), &Objects[i] == SelectedObj))
-                    {
-                        SelectedObjID = i;
-                        Editor::SelectedObjChildID = j;
-                    }
-                    if(ImGui::IsItemClicked(0)){
-                        HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(Objects[i].Children[j]));
-                    }
-                }
-                ImGui::TreePop();
-            }
-        }
-    }
-    if (Engine::app->GetInputDown(GLFW_KEY_DELETE) && ImGui::IsWindowFocused())
-    {
-        for (size_t i = 0; i < Objects.size(); i++)
-        {
-            if (Objects[i].Name == SelectedObj->Name)
-            {
-                Object::Delete(i);
-                if(Editor::SelectedObjID >= Objects.size()){
-                    Editor::SelectedObjID = Objects.size() - 1;
-                }else if(Objects.size() == 0){
-                    Editor::SelectedObjID = -1;
-                }
-            }
-        }
-    }
-    if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(ImGuiMouseButton_Right))
-    {
-        ImGui::OpenPopup("Context Menu");
-    }
-    CreateMenu(SelectedObj);
-    ImGui::End();
-}
-
-void Scene::CreateMenu(Object *SelectedObj)
-{
-    if (ImGui::BeginPopup("Context Menu"))
-    {
-        if (ImGui::MenuItem("Create Empty"))
-        {
-            std::stringstream ss;
-            ss << "Object: " << Objects.size();
-            Object Obj = Object(ss.str());
-            Add(std::move(Obj));
-        }
-        if (ImGui::MenuItem("Create Circle"))
-        {
-            std::stringstream ss;
-            ss << "Object: " << Objects.size();
-            Object Obj = Object(ss.str());
-            Add(std::move(Obj));
-        }
-        if (ImGui::MenuItem("Create Rectangle"))
-        {
-            std::stringstream ss;
-            ss << "Object: " << Objects.size();
-            Object Obj = Object(ss.str());
-            Obj.AddComponent((std::make_shared<Renderer>(SapphireRenderer::BasicShader, SapphireRenderer::RectangleVertices, SapphireRenderer::RectangleIndices, SapphireRenderer::RectangleT)));
-            Obj.GetComponent<Renderer>()->transform = Obj.GetComponent<Transform>();
-            Renderer::SceneRenderers.push_back(Obj.GetComponent<Renderer>());
-            Obj.GetComponent<Renderer>()->Color.Get() = glm::vec4(1);
-            Add(std::move(Obj));
-        }
-        if (ImGui::MenuItem("Create Sprite"))
-        {
-            std::stringstream ss;
-            ss << "Object: " << Objects.size();
-            Object Obj = Object(ss.str());
-            Obj.GetComponent<Renderer>()->ShapeType = SapphireRenderer::RectangleT;
-            Obj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj.GetComponent<Renderer>()->ShapeType);
-            Add(std::move(Obj));
-        }
-        ImGui::EndPopup();
-    }
 }

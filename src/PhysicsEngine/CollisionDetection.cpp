@@ -92,7 +92,7 @@ glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
 
     for (size_t i = 0; i < CurrentPoints.size(); i++)
     {
-        glm::vec2 CurrentPoint = CurrentPoints[i];
+        const glm::vec2& CurrentPoint = CurrentPoints[i];
         for (size_t j = 0; j < ObjPoints.size(); j++)
         {
             glm::vec2 ObjPoint = ObjPoints[j];
@@ -118,7 +118,7 @@ glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount)
     }
     for (size_t i = 0; i < ObjPoints.size(); i++)
     {
-        glm::vec2 ObjPoint = ObjPoints[i];
+        const glm::vec2& ObjPoint = ObjPoints[i];
         for (size_t j = 0; j < CurrentPoints.size(); j++)
         {
             glm::vec2 CurrentPoint = CurrentPoints[j];

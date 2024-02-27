@@ -87,7 +87,7 @@ static int ComponentNewIndex(lua_State* L)
 
 
 
-Component::Component(std::string File,std::string ArgName, unsigned int ArgId) :m_LuaFile(File), Name(ArgName), m_ID(ArgId)
+Component::Component(std::string File,std::string ArgName, unsigned int ArgId, ObjectRef obj) :m_LuaFile(File), Name(ArgName), m_ID(ArgId), Parent(obj)
 {
     // lua_close(L);
     L = luaL_newstate();
@@ -108,7 +108,7 @@ Component::Component(std::string File,std::string ArgName, unsigned int ArgId) :
 }
 
 
-Component::Component(const Component &comp)
+Component::Component(const Component &comp): Parent(comp.Parent)
 {
     L = luaL_newstate();
     luaL_openlibs(L);

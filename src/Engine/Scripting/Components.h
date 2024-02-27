@@ -2,7 +2,7 @@
 #include <map>
 #include <variant>
 #include "Scripting.h"
-
+#include "Editor/Variables.h"
 
 struct LuaFunction
 {
@@ -21,8 +21,8 @@ class Component
             ComponentTypeRegistry[ClassName] = func;
         }
     public:
-        Component(std::string File, std::string ArgName , unsigned int ArgId);
-        Component(const std::string& ArgName) : Name(ArgName) {} // This will be used for the non lua components.
+        Component(std::string File, std::string ArgName , unsigned int ArgId, ObjectRef obj);
+        Component(const std::string& ArgName, ObjectRef obj) : Name(ArgName), Parent(obj) {} // This will be used for the non lua components.
         Component(const Component& comp);
         ~Component();
         virtual void CustomRendering() {};
@@ -32,6 +32,7 @@ class Component
         void UpdateExistingVars();
         void SetLuaComponent(lua_State* ComponentsState);
         void Render();
+        ObjectRef Parent;
         SapphireEngine::Variable* Get(std::string Name);
         nlohmann::ordered_json Save();
         void Load(nlohmann::ordered_json JSON);

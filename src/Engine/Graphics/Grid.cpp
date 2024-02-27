@@ -1,5 +1,13 @@
 #include "Grid.h"
 
+Grid::~Grid()
+{
+    delete VertexArray;
+    delete VertexBuffer;
+    delete IndexBuffer;
+    delete Shader;
+}
+
 void Grid::Init()
 {
     float Vertices[] = {
@@ -27,12 +35,6 @@ void Grid::Init()
     VertexBuffer->Unbind();
     IndexBuffer->Unbind();
     VertexArray->Unbind();
-    
-    // glm::mat4 proj = glm::ortho(-480.0f, 480.0f, -280.0f, 280.0f, -1.0f, 1.0f);
-    // glm::mat4 model = glm::mat4(1.0f);
-    // model = glm::translate(model, glm::vec3(0.0f));
-    // glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f));    
-    // mvp = proj * view * model;
 }
 
 void Grid::Render(const glm::vec3& CameraPos, float CameraZoom)

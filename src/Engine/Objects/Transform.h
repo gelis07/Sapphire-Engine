@@ -7,7 +7,7 @@ class Object;
 class Transform : public Component
 {
     public:
-        Transform(std::string ArgName, std::vector<glm::vec3> aPoints);
+        Transform(std::string ArgName, std::vector<glm::vec3> aPoints, ObjectRef obj);
         Transform(const Transform& transform);
         void Move(const glm::vec3& translation);
         void Rotate(const float& amount);
@@ -31,10 +31,11 @@ class Transform : public Component
         static int MoveLua(lua_State* L);
         static int LookAt(lua_State* L);
         static int SetPositionLua(lua_State* L);
+        static int SetScaleLua(lua_State* L);
         static int SetRotationLua(lua_State* L);
         static int RotateLua(lua_State* L);
         std::vector<Transform*> childrenTransforms;
-        Transform* Parent = nullptr;
+        Transform* TransParent = nullptr;
     private:
         std::vector<glm::vec3> OriginalPoints;
         std::vector<glm::vec3> Points;

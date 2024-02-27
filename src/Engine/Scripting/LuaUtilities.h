@@ -9,6 +9,7 @@ namespace LuaUtilities{
     static int log(lua_State *L);
     static int Clamp(lua_State *L);
     static int KeyPress(lua_State *L);
+    static int KeyPressDown(lua_State *L);
     static int Click(lua_State *L);
     static int LoadScene(lua_State *L);
     static int GetObject(lua_State *L);

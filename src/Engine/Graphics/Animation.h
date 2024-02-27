@@ -41,11 +41,12 @@ namespace SapphireRenderer
         unsigned char* Data;
         float width, height, channels;
     };
-    inline SapphireRenderer::Shader BasicShader;
-    inline SapphireRenderer::Shader LineShader;
-    inline SapphireRenderer::Shader CircleShader;
-    inline SapphireRenderer::Shader AnimationShader;
-    inline SapphireRenderer::Shader TextureShader;
+    inline SapphireRenderer::Shader BasicShader("Basic", true);
+    inline SapphireRenderer::Shader LineShader("Line", true);
+    inline SapphireRenderer::Shader CircleShader("Circle", true);
+    inline SapphireRenderer::Shader AnimationShader("Animation", true);
+    inline SapphireRenderer::Shader TextureShader("Texture", true);
+    inline std::vector<SapphireRenderer::Shader*> shaders;
     const std::vector<Vertex> RectangleVertices = {
         {glm::vec2(-0.5f, -0.5f),glm::vec2(0.0f, 0.0f)},
         {glm::vec2(0.5f, -0.5f), glm::vec2(1.0f, 0.0f)},
