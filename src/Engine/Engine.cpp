@@ -85,8 +85,15 @@ void Engine::Run()
     {
         m_ActiveScene.Delete(m_ActiveScene.ObjectsToDelete[i]);
     }
+    for (auto &&compPair : Object::ComponentsToAdd)
+    {
+        if (compPair.second->GetLuaVariables())
+            compPair.first->AddComponent<Component>(compPair.second);
+    }
+    
     if(m_ActiveScene.ObjectsToAdd.size() != 0) m_ActiveScene.ObjectsToAdd.clear();
     if(m_ActiveScene.ObjectsToDelete.size() != 0) m_ActiveScene.ObjectsToDelete.clear();
+    if(Object::ComponentsToAdd.size() != 0) Object::ComponentsToAdd.clear();
 }
 void Engine::ExecuteLua()
 {

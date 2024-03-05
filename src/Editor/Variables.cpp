@@ -437,7 +437,7 @@ void SapphireEngine::ObjectVar::RenderGUI(std::unordered_map<std::string, Sapphi
 
     ImGui::GetWindowDrawList()->AddRectFilled(ImVec2(textPos.x - offset/2, textPos.y), ImVec2(textPos.x + textSize.x + offset/2, textPos.y + textSize.y), IM_COL32(bgColor.x * 255, bgColor.y * 255, bgColor.z * 255, bgColor.w * 255));
     ImGui::GetWindowDrawList()->AddText(textPos, IM_COL32(textColor.x * 255, textColor.y * 255, textColor.z * 255, textColor.w * 255), txt.c_str());
-    if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(textPos.x  - offset/2, textPos.y), glm::vec2(textSize.x + offset/2, textSize.y))){
+    if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(textPos.x  - offset/2, textPos.y), glm::vec2(textSize.x + offset, textSize.y))){
         data = **ref;
         Variables[Name] = this;
     }

@@ -14,7 +14,9 @@ class Object
         void RemoveComponent(unsigned int id);
         void RenderGUI(); // render the object on the ImGUI inspector
         void Inspect();
+        inline static std::vector<std::pair<ObjectRef, std::shared_ptr<Component>>> ComponentsToAdd;
         static int RemoveComponent(lua_State* L);
+        static int AddComponentLua(lua_State* L);
         static void SetUpObject(Object* obj,lua_State* L,const std::string& Name);
 
         void SavePrefab();
@@ -77,6 +79,10 @@ static int GetComponentFromObject(lua_State* L) {
     }
     if(VariableName == "RemoveComponent"){
         lua_pushcfunction(L, Object::RemoveComponent);
+        return 1;
+    }
+    if(VariableName == "AddComponent"){
+        lua_pushcfunction(L, Object::AddComponentLua);
         return 1;
     }
     for(auto &comp : (*obj)->GetComponents()){

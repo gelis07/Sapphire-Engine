@@ -18,6 +18,7 @@ namespace SapphirePhysics{
             static bool CirclexCircle(SapphirePhysics::RigidBody* obj, SapphirePhysics::RigidBody* current,CollisionData& CD);
             static bool RectanglexRectangle(SapphirePhysics::RigidBody* bodyA, SapphirePhysics::RigidBody* bodyB, CollisionData& CD);
             static bool CirclexRectangle(Object* obj, Object *current,CollisionData& CD);
+            static bool StaticCirclexRectangle(SapphirePhysics::RigidBody* rb, const glm::vec3& pos, float radius, CollisionData& CD);
             static void FindPolygonContactPoint(SapphirePhysics::RigidBody* obj, SapphirePhysics::RigidBody* current, glm::vec2& ContactPoint1, glm::vec2& ContactPoint2, int& ContactPointCount);
             static glm::vec2 FindPolygonCircleContactPoint(const glm::vec2& CirclePosition, const float& Radius, const glm::vec2& PolygonPosition, const std::array<glm::vec3, 4>& PolygonPoints);
         private:

@@ -5,7 +5,7 @@
 #include <box2d/box2d.h>
 
 class Object;
-constexpr float FixedTimeStep = 1/30.0f;
+constexpr float FixedTimeStep = 1/60.0f;
 constexpr int32 velocityIterations = 6;
 constexpr int32 positionIterations = 2;
 namespace SapphirePhysics{
@@ -33,8 +33,12 @@ namespace SapphirePhysics{
             static int RayCast(lua_State* L);
             static int SetVelocity(lua_State* L);
             static int GetVelocity(lua_State* L);
+            static int SetFriction(lua_State* L);
+            static int SetKinematic(lua_State* L);
+            static int SetMass(lua_State* L);
             SapphireEngine::Bool Trigger;
             SapphireEngine::Bool Static;
+            SapphireEngine::Bool Kinematic;
             SapphireEngine::Bool Rotate;
             SapphireEngine::Float Mass;
             SapphireEngine::Float Restitution;

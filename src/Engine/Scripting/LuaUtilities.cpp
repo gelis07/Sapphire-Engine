@@ -74,7 +74,36 @@ int LuaUtilities::SetObject(lua_State *L)
     lua_setmetatable(L, -2);
     return 1;
 }
-int mult(lua_State* L){
+int LuaUtilities::OverlapCircle(lua_State *L)
+{;
+    float x = (float)luaL_checknumber(L, 1);
+    float y = (float)luaL_checknumber(L, 2);
+    float radius = (float)luaL_checknumber(L, 3);
+    std::vector<SapphirePhysics::RigidBody*> rigidbodies;
+    for (auto &&rb : SapphirePhysics::RigidBody::Rigibodies)
+    {
+        CollisionData cd;
+        if(SapphirePhysics::CollisionDetection::StaticCirclexRectangle(rb, glm::vec3(x,y,0), radius, cd))
+        {
+            rigidbodies.push_back(rb);
+        }
+    }
+
+    lua_newtable(L);
+    for (int i = 0; i < rigidbodies.size(); ++i) {
+        ObjectRef *ud = (ObjectRef *)lua_newuserdata(L, sizeof(ObjectRef));
+        *ud = rigidbodies[i]->Parent;
+        luaL_getmetatable(L, "ObjectMetaTable");
+        lua_setmetatable(L, -2);
+        // Set the ObjectRef userdata into the Lua table at index i + 1
+        lua_rawseti(L, -2, i + 1);
+    }
+    
+
+    return 1;
+}
+int mult(lua_State *L)
+{
     lua_pushstring(L, "x");
     lua_gettable(L, -3);
     float x = lua_tonumber(L, -1);
@@ -519,6 +548,17 @@ int LuaUtilities::CreateObject(lua_State *L)
 
     return 1;
 }
+int LuaUtilities::GetTime(lua_State *L)
+{
+    int n = lua_gettop(L);
+    if (n != 0) {
+        return luaL_error(L, "Expected 2 argument, got %d", n);
+    }
+
+    lua_pushnumber(L, Engine::GameTime);
+
+    return 1;
+}
 int LuaUtilities::LoadObjectPrefab(lua_State *L)
 {
     int n = lua_gettop(L);
@@ -682,6 +722,8 @@ int LuaUtilities::luaopen_SapphireEngine(lua_State *L)
     lua_setfield(L, -2, "GetCameraPos");
     lua_pushcfunction(L, SetCameraPos);
     lua_setfield(L, -2, "SetCameraPos");
+    lua_pushcfunction(L, OverlapCircle);
+    lua_setfield(L, -2, "OverlapCircle");
 
     lua_pushcfunction(L, GetCameraSize);
     lua_setfield(L, -2, "GetCameraSize");
@@ -690,6 +732,8 @@ int LuaUtilities::luaopen_SapphireEngine(lua_State *L)
 
     lua_pushcfunction(L, GetDeltaTime);
     lua_setfield(L, -2, "GetDeltaTime");
+    lua_pushcfunction(L, GetTime);
+    lua_setfield(L, -2, "GetTime");
 
     lua_pushcfunction(L, LoadScene);
     lua_setfield(L, -2, "LoadScene");

@@ -73,6 +73,75 @@ bool SapphirePhysics::CollisionDetection::CirclexRectangle(Object* obj, Object* 
     CD.ContactPointCount = 1;
     return true;
 }
+bool SapphirePhysics::CollisionDetection::StaticCirclexRectangle(SapphirePhysics::RigidBody* rb, const glm::vec3& pos, float radius, CollisionData& CD)
+{
+    CD.Depth = INFINITY;
+    Transform* RbTrans = rb->transform;
+    std::array<glm::vec3, 4> Obj1Points = {RbTrans->GetPoints()[0], RbTrans->GetPoints()[1],
+    RbTrans->GetPoints()[2], RbTrans->GetPoints()[3]};
+    glm::vec2 Obj1Position = glm::vec2(RbTrans->GetPosition().x, RbTrans->GetPosition().y);
+    glm::vec2 Obj2Position = glm::vec2(pos.x, pos.y);
+    float Obj2Radius = radius;
+
+    float AxisDepth = 0;
+    glm::vec2 AxisProj;
+    for (size_t i = 0; i < Obj1Points.size(); i++)
+    {
+        //Ni = Next Index. Making sure to be in range
+        int Ni = (i + 1) % Obj1Points.size();
+        //Perpendicular vector to the currently selected axis.
+        AxisProj = glm::vec2(-(Obj1Points[Ni].y - Obj1Points[i].y), Obj1Points[Ni].x - Obj1Points[i].x);
+        AxisProj = glm::normalize(AxisProj);
+        float MinObj1 = INFINITY, MaxObj1 = -INFINITY;
+        for (size_t j = 0; j < Obj1Points.size(); j++)
+        {
+            float DotProduct = Obj1Points[j].x * AxisProj.x + Obj1Points[j].y * AxisProj.y;
+            MinObj1 = std::min(MinObj1, DotProduct);
+            MaxObj1 = std::max(MaxObj1, DotProduct);
+        }
+        float MinObj2 = INFINITY,MaxObj2 = -INFINITY;
+        ProjectCircle(Obj2Position, Obj2Radius, AxisProj, MinObj2, MaxObj2);
+        if(MinObj1 >= MaxObj2 || MinObj2 >= MaxObj1){
+            return false;
+        }
+        AxisDepth = std::min(MaxObj2 - MinObj1, MaxObj1 - MinObj2);
+        if(AxisDepth < CD.Depth){
+            CD.Depth = AxisDepth;
+            CD.Normal = AxisProj;
+        }
+    }
+
+    int CpIndex = FindClosestPointOnPolygon(Obj2Position, Obj1Points);
+    glm::vec3& Cp = Obj1Points[CpIndex];
+    float MinObj1 = INFINITY, MaxObj1 = -INFINITY;
+    AxisProj = glm::vec2(Cp) - Obj2Position;
+    AxisProj = glm::normalize(AxisProj);
+    for (size_t j = 0; j < Obj1Points.size(); j++)
+    {
+        float DotProduct = Obj1Points[j].x * AxisProj.x + Obj1Points[j].y * AxisProj.y;
+        MinObj1 = std::min(MinObj1, DotProduct);
+        MaxObj1 = std::max(MaxObj1, DotProduct);
+    }
+    float MinObj2 = INFINITY,MaxObj2 = -INFINITY;
+    ProjectCircle(Obj2Position, Obj2Radius, AxisProj, MinObj2, MaxObj2);
+    if(MinObj1 >= MaxObj2 || MinObj2 >= MaxObj1){
+        return false;
+    }
+    AxisDepth = std::min(MaxObj2 - MinObj1, MaxObj1 - MinObj2);
+    if(AxisDepth < CD.Depth){
+        CD.Depth = AxisDepth;
+        CD.Normal = AxisProj;
+    }
+
+    glm::vec2 Direction = Obj1Position - Obj2Position;
+    if(glm::dot(Direction, CD.Normal) < 0.0f)
+    {
+        CD.Normal = -CD.Normal;
+    }
+    CD.ContactPoint1 = FindPolygonCircleContactPoint(Obj2Position, Obj2Radius, Obj1Position, Obj1Points);
+    CD.ContactPointCount = 1;
+    return true;
+}
 
 //Thanks to the video by https://www.youtube.com/watch?v=5gDC1GU3Ivg&list=PLSlpr6o9vURwq3oxVZSimY8iC-cdd3kIs&index=22
 void SapphirePhysics::CollisionDetection::FindPolygonContactPoint(SapphirePhysics::RigidBody* bodyA, SapphirePhysics::RigidBody* bodyB, 

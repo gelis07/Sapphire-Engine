@@ -22,6 +22,15 @@ ObjectRef Scene::Add(Object &&obj, int refID)
 void Scene::Delete(int ID)
 {
     ObjectRef obj = Objects[ID].GetRef();
+    Renderer* rend = obj->GetComponent<Renderer>().get();
+    if(rend){
+        for (size_t i = 0; i < Renderer::SceneRenderers.size(); i++)
+        {
+            if(rend == Renderer::SceneRenderers[i].get()){
+                Renderer::SceneRenderers.erase(Renderer::SceneRenderers.begin() + i);
+            }
+        }
+    }
     for (auto& child : obj->Children)
     {
         Delete(child.Get());
@@ -38,6 +47,15 @@ void Scene::Delete(int ID)
 }
 void Scene::Delete(Object *obj)
 {
+    Renderer* rend = obj->GetComponent<Renderer>().get();
+    if(rend){
+        for (size_t i = 0; i < Renderer::SceneRenderers.size(); i++)
+        {
+            if(rend == Renderer::SceneRenderers[i].get()){
+                Renderer::SceneRenderers.erase(Renderer::SceneRenderers.begin() + i);
+            }
+        }
+    }
     for (auto& child : obj->Children)
     {
         Delete(child.Get());

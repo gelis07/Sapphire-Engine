@@ -232,8 +232,7 @@ void Hierachy::Display()
                 {
                     if (ImGui::Selectable((obj->Children[j]->Name + "##" + std::to_string(obj->Children[j]->id)).c_str(), obj == viewport->SelectedObj))
                     {
-                        viewport->SelectedObj = obj;
-                        Editor::SelectedObjChildID = j;
+                        viewport->SelectedObj = obj->Children[j];
                     }
                     if(ImGui::IsItemClicked(0)){
                         HierachyDrop.StartedDragging(std::make_shared<ObjectRef>(obj->Children[j]));
@@ -246,18 +245,18 @@ void Hierachy::Display()
     ImVec2 textSize = ImGui::CalcTextSize(Engine::GetActiveScene().Objects[0].Name.c_str());
     if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(ImGui::GetWindowPos().x, textSize.y * Engine::GetActiveScene().Objects.size()), 
     glm::vec2(ImGui::GetWindowPos().x +ImGui::GetWindowSize().x , ImGui::GetWindowPos().y +ImGui::GetWindowSize().y))){
-        if((**ref)->Parent != null_ref){
-            for (size_t i = 0; i < (**ref)->Parent->Children.size(); i++)
-            {
+        // if((**ref)->Parent != null_ref){
+        //     for (size_t i = 0; i < (**ref)->Parent->Children.size(); i++)
+        //     {
                 
-                if((**ref)->Parent->Children[i].Get() == (**ref).Get()){
-                    (**ref)->Parent->GetComponent<Transform>()->childrenTransforms.erase((**ref)->Parent->GetComponent<Transform>()->childrenTransforms.begin() + i);
-                    (**ref)->Parent->Children.erase((**ref)->Parent->Children.begin() + i);
-                }
-            }
-        }
-        (**ref)->Parent = null_ref;
-        (**ref)->GetComponent<Transform>()->TransParent = nullptr;
+        //         if((**ref)->Parent->Children[i].Get() == (**ref).Get()){
+        //             (**ref)->Parent->GetComponent<Transform>()->childrenTransforms.erase((**ref)->Parent->GetComponent<Transform>()->childrenTransforms.begin() + i);
+        //             (**ref)->Parent->Children.erase((**ref)->Parent->Children.begin() + i);
+        //         }
+        //     }
+        // }
+        // (**ref)->Parent = null_ref;
+        // (**ref)->GetComponent<Transform>()->TransParent = nullptr;
     }
     if (Engine::app->GetInputDown(GLFW_KEY_DELETE) && ImGui::IsWindowFocused())
     {

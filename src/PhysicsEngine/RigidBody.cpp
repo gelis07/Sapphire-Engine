@@ -16,6 +16,29 @@ void SapphirePhysics::RigidBody::Run()
     for (size_t i = 0; i < Rigibodies.size(); i++)
     {
         b2Body* body = Rigibodies[i]->body;
+        Transform* transform = Rigibodies[i]->transform;
+        b2Fixture* fixture = body->GetFixtureList();
+        while (fixture) {
+            b2Fixture* nextFixture = fixture->GetNext();
+            body->DestroyFixture(fixture);
+            fixture = nextFixture;
+        }
+        // Define a box shape for the dynamic body
+        b2PolygonShape Box;
+        const glm::vec3 size = glm::vec3(abs(transform->GetSize().x) / 2.0f, abs(transform->GetSize().y)  / 2.0f, 0.0f);
+        Box.SetAsBox(size.x, size.y); // Box dimensions
+
+        float area = size.x * size.y;
+        float den = Rigibodies[i]->Mass.Get() / area;
+        // Define fixture
+        b2FixtureDef dynamicFixtureDef;
+        dynamicFixtureDef.shape = &Box;
+        dynamicFixtureDef.restitution = 0.0f;
+        dynamicFixtureDef.density = den / 4.0f;
+        dynamicFixtureDef.friction = Rigibodies[i]->StaticFriction.Get();
+
+        // Attach fixture to dynamic body
+        body->CreateFixture(&dynamicFixtureDef);
         const glm::vec3 Pos = Rigibodies[i]->transform->GetPosition();
         body->SetTransform(b2Vec2(Pos.x, Pos.y), Rigibodies[i]->transform->GetRotation().z);
     }
@@ -30,13 +53,14 @@ void SapphirePhysics::RigidBody::Run()
 
 SapphirePhysics::RigidBody::RigidBody(int st, ObjectRef obj) : Trigger("Trigger", Variables),
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
-StaticFriction("StaticFriction", Variables), DynamicFriction("DynamicFriction", Variables), Rotate("Rotate", Variables),
+StaticFriction("StaticFriction", Variables), DynamicFriction("DynamicFriction", Variables), Rotate("Rotate", Variables), Kinematic("Kinematic", Variables),
 Component("Rigidbody", obj)
 {
     ShapeType = st;
     Trigger.Get() = false;
     Static.Get() = false;
     Rotate.Get() = true;
+    Kinematic.Get() = false;
     Restitution.Get() = 0.0f;
     StaticFriction.Get() = 0.0f;
     DynamicFriction.Get() = 0.0f;
@@ -52,23 +76,42 @@ Component("Rigidbody", obj)
     Mass.Get() = 1.0f;
     Mass.Min = 0.001f;
     Functions["Impulse"] = Impulse;
+    Functions["SetMass"] = SetMass;
+    Functions["SetFriction"] = SetFriction;
     Functions["SetVelocity"] = SetVelocity;
     Functions["GetVelocity"] = GetVelocity;
     Functions["Raycast"] = RayCast;
-
-    std::function<void()> OnChange = [this]() {
-        if(Static.Get() == true){
-            body->SetType(b2_staticBody);
-        }else{
-            body->SetType(b2_dynamicBody);
-        }
-    };
-    Static.SetOnChangeFunc(OnChange);
+    {
+        std::function<void()> OnChange = [this]() {
+            if(Static.Get() == true){
+                body->SetType(b2_staticBody);
+            }else{
+                body->SetType(b2_dynamicBody);
+            }
+        };
+        Static.SetOnChangeFunc(OnChange);
+    }
+    {
+        std::function<void()> OnChange = [this]() {
+            if(Kinematic.Get() == true){
+                body->SetType(b2_kinematicBody);
+            }else{
+                body->SetType(b2_dynamicBody);
+            }
+        };
+        Kinematic.SetOnChangeFunc(OnChange);
+    }
+    {
+        std::function<void()> OnChange = [this]() {
+            body->SetFixedRotation(!(Rotate.Get()));
+        };
+        Rotate.SetOnChangeFunc(OnChange);
+    }
 }
 
 SapphirePhysics::RigidBody::RigidBody(const RigidBody &rb): Trigger("Trigger", Variables), 
 Mass("Mass", Variables), Static("Static", Variables), Restitution("Restitution", Variables),
-StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),Rotate("Rotate", Variables),
+StaticFriction("Static Friction", Variables),DynamicFriction("Dynamic Friction", Variables),Kinematic("Kinematic", Variables),Rotate("Rotate", Variables),
 Component("Rigidbody", rb.Parent)
 {
     Trigger.Get() = rb.Trigger.Get();
@@ -89,6 +132,8 @@ Component("Rigidbody", rb.Parent)
     Mass.Get() = rb.Mass.Get();
     Mass.Min = 0.001f;
     Functions["Impulse"] = Impulse;
+    Functions["SetMass"] = SetMass;
+    Functions["SetFriction"] = SetFriction;
     Functions["SetVelocity"] = SetVelocity;
     Functions["GetVelocity"] = GetVelocity;
     Functions["Raycast"] = RayCast;
@@ -96,24 +141,34 @@ Component("Rigidbody", rb.Parent)
 
 void SapphirePhysics::RigidBody::Init()
 {
-    if(body != nullptr) return;
+    if(body != nullptr){
+        SapphirePhysics::RigidBody::world.DestroyBody(body);
+    }
     b2BodyDef BodyDef;
     BodyDef.type = b2_dynamicBody;
     BodyDef.position.Set(transform->GetPosition().x, transform->GetPosition().y); // Set the initial position
     body = RigidBody::world.CreateBody(&BodyDef);
 
+
     // Define a box shape for the dynamic body
     b2PolygonShape Box;
-    Box.SetAsBox(transform->GetSize().x / 2.0f, transform->GetSize().y / 2.0f); // Box dimensions
+    const glm::vec3 size = glm::vec3(abs(transform->GetSize().x) / 2.0f, abs(transform->GetSize().y)  / 2.0f, 0.0f);
+    Box.SetAsBox(size.x, size.y); // Box dimensions
 
+    float area = size.x * size.y;
+    float den = Mass.Get() / area;
     // Define fixture
     b2FixtureDef dynamicFixtureDef;
     dynamicFixtureDef.shape = &Box;
-    dynamicFixtureDef.density = 1.0f;
-    dynamicFixtureDef.friction = 0.3f;
+    dynamicFixtureDef.restitution = 0.0f;
+    dynamicFixtureDef.density = den / 4.0f;
+    dynamicFixtureDef.friction = StaticFriction.Get();
 
     // Attach fixture to dynamic body
     body->CreateFixture(&dynamicFixtureDef);
+    body->SetFixedRotation(!(Rotate.Get()));
+    // Reset mass data to recalculate mass properties
+    // body->ResetMassData();
 }
 
 SapphirePhysics::RigidBody::~RigidBody()
@@ -373,7 +428,7 @@ int SapphirePhysics::RigidBody::Impulse(lua_State *L) {
     float y = lua_tonumber(L, -1);
     lua_pop(L, 1);
     glm::vec3 Force(x,y,0);
-    rb->body->ApplyLinearImpulse(b2Vec2(x TOPIXELS,y TOPIXELS),b2Vec2(rb->transform->GetPosition().x, rb->transform->GetPosition().y), true);
+    rb->body->ApplyLinearImpulse(b2Vec2(x,y),b2Vec2(rb->transform->GetPosition().x, rb->transform->GetPosition().y), true);
     return 0;
 }
 
@@ -396,7 +451,6 @@ int SapphirePhysics::RigidBody::RayCast(lua_State *L)
     glm::vec2 AB = B - A;
     float tangent = (B.y - A.y) / (B.x - A.x);
     float offset = A.y - tangent * A.x;
-    SapphireEngine::AddLine(A,B,glm::vec4(0,0,1,1), 5.0f);
     std::optional<glm::vec2> FinalPoint = std::nullopt;
     ObjectRef obj(null_ref);
     for (auto &object : Engine::GetActiveScene().Objects)
@@ -407,7 +461,6 @@ int SapphirePhysics::RigidBody::RayCast(lua_State *L)
         {
             glm::vec2 C = object.GetComponent<Transform>()->GetPoints()[i];
             glm::vec2 D = object.GetComponent<Transform>()->GetPoints()[(i + 1) % object.GetComponent<Transform>()->GetPoints().size()];
-            SapphireEngine::AddLine(C, D, glm::vec4(1,0,0,1), 5.0f);
             glm::vec2 CD = D - C;
             float tangent1 = (D.y - C.y) / (D.x - C.x);
             float offset1 = C.y - tangent1 * C.x;
@@ -493,10 +546,13 @@ int SapphirePhysics::RigidBody::SetVelocity(lua_State *L)
     lua_getfield(L, 1, "__userdata");
     SapphirePhysics::RigidBody* rb = static_cast<SapphirePhysics::RigidBody*>(lua_touserdata(L, -1));
     lua_pop(L, 1);
-    float x = (float)luaL_checknumber(L, 2);
-    float y = (float)luaL_checknumber(L, 3);
-    glm::vec3 velocity(x,y,0);
-    rb->Velocity = velocity;
+    lua_getfield(L, -1, "x");
+    float x = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    lua_getfield(L, -1, "y");
+    float y = lua_tonumber(L, -1);
+    lua_pop(L, 1);
+    rb->body->SetLinearVelocity(b2Vec2(x,y));
     return 0;
 }
 
@@ -515,4 +571,85 @@ int SapphirePhysics::RigidBody::GetVelocity(lua_State *L)
     lua_pushnumber(L, rb->Velocity.y);
     lua_setfield(L, -2, "y");
     return 1;
+}
+
+int SapphirePhysics::RigidBody::SetFriction(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    SapphirePhysics::RigidBody* rb = static_cast<SapphirePhysics::RigidBody*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float friction = (float)luaL_checknumber(L, 2);
+    rb->StaticFriction.Get() = friction;
+    Transform* transform = rb->transform;
+    b2Body* body = rb->body;
+    b2Fixture* fixture = body->GetFixtureList();
+    while (fixture) {
+        b2Fixture* nextFixture = fixture->GetNext();
+        body->DestroyFixture(fixture);
+        fixture = nextFixture;
+    }
+    // Define a box shape for the dynamic body
+    b2PolygonShape Box;
+    const glm::vec3 size = glm::vec3(abs(transform->GetSize().x) / 2.0f, abs(transform->GetSize().y)  / 2.0f, 0.0f);
+    Box.SetAsBox(size.x, size.y); // Box dimensions
+
+    float area = size.x * size.y;
+    float den = rb->Mass.Get() / area;
+    // Define fixture
+    b2FixtureDef dynamicFixtureDef;
+    dynamicFixtureDef.shape = &Box;
+    dynamicFixtureDef.density = den / 4.0f;
+    dynamicFixtureDef.restitution = 0.0f;
+    dynamicFixtureDef.friction = rb->StaticFriction.Get();
+
+    // Attach fixture to dynamic body
+    body->CreateFixture(&dynamicFixtureDef);
+    return 0;
+}
+
+int SapphirePhysics::RigidBody::SetKinematic(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    SapphirePhysics::RigidBody* rb = static_cast<SapphirePhysics::RigidBody*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    rb->Kinematic.Get() = true;
+    rb->body->SetType(b2_kinematicBody);
+    return 0;
+}
+
+int SapphirePhysics::RigidBody::SetMass(lua_State *L)
+{
+    luaL_checktype(L, 1, LUA_TTABLE);
+    lua_getfield(L, 1, "__userdata");
+    SapphirePhysics::RigidBody* rb = static_cast<SapphirePhysics::RigidBody*>(lua_touserdata(L, -1));
+    lua_pop(L, 1);
+    float mass = (float)luaL_checknumber(L, 2);
+    rb->Mass.Get() = mass;
+    Transform* transform = rb->transform;
+    b2Body* body = rb->body;
+    b2Fixture* fixture = body->GetFixtureList();
+    while (fixture) {
+        b2Fixture* nextFixture = fixture->GetNext();
+        body->DestroyFixture(fixture);
+        fixture = nextFixture;
+    }
+    // Define a box shape for the dynamic body
+    b2PolygonShape Box;
+    const glm::vec3 size = glm::vec3(abs(transform->GetSize().x) / 2.0f, abs(transform->GetSize().y)  / 2.0f, 0.0f);
+    Box.SetAsBox(size.x, size.y); // Box dimensions
+
+    float area = size.x * size.y;
+    float den = rb->Mass.Get() / area;
+    // Define fixture
+    b2FixtureDef dynamicFixtureDef;
+    dynamicFixtureDef.shape = &Box;
+    dynamicFixtureDef.restitution = 0.0f;
+    dynamicFixtureDef.density = den / 4.0f;
+    dynamicFixtureDef.friction = rb->StaticFriction.Get();
+
+    // Attach fixture to dynamic body
+    body->CreateFixture(&dynamicFixtureDef);
+    return 0;
 }

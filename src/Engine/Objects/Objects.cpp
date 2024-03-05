@@ -229,6 +229,21 @@ int Object::RemoveComponent(lua_State* L)
     return 0;
 }
 
+int Object::AddComponentLua(lua_State *L)
+{
+    ObjectRef* objRef = static_cast<ObjectRef*>(lua_touserdata(L, 1));
+    ObjectRef obj = *objRef;
+    const char* namec = lua_tostring(L, 2);
+    std::string name(namec);
+    std::string NameCopy = std::string(name);
+    NameCopy.erase(NameCopy.size() - 4, NameCopy.size());
+
+    std::shared_ptr<Component> NewComponent = std::make_shared<Component>("/"+name, NameCopy, obj->GetComponents().size(), obj);
+    std::pair<ObjectRef, std::shared_ptr<Component>> CompToAdd(obj,NewComponent);
+    ComponentsToAdd.push_back(CompToAdd);
+    return 0;
+}
+
 void Object::SavePrefab()
 {
     std::ofstream stream(Engine::GetMainPath() + SapphireEngine::Replace(this->Name, ' ', '_') + ".obj");

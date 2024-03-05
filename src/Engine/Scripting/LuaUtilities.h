@@ -21,9 +21,11 @@ namespace LuaUtilities{
     static int GetCameraSize(lua_State* L);
     static int SetCameraSize(lua_State* L);
     static int CreateObject(lua_State* L);
+    static int GetTime(lua_State* L);
     static int LoadObjectPrefab(lua_State* L);
     static int GetDeltaTime(lua_State* L);
     static int SetObject(lua_State* L);
+    static int OverlapCircle(lua_State* L);
     static int Vector(lua_State* L);
     int luaopen_SapphireEngine(lua_State* L);
 }

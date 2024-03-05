@@ -123,6 +123,7 @@ void GamePreview::OnGameRestart()
 {
     // This indicates that the game has been paused, and we should reset the start boolean so next time the user hits play
     Engine::GetActiveScene().Load(Engine::GetActiveScene().SceneFile);
+    Engine::GameTime = 0.0f;
     Start = true;
     Paused = false;
 }

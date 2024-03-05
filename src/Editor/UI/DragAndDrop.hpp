@@ -1,4 +1,5 @@
 #pragma once
+#include <GLFW/glfw3.h>
 
 
 template <typename T>
@@ -27,7 +28,9 @@ void DragAndDrop<T>::StartedDragging(T NewData)
 template <typename T>
 T *DragAndDrop<T>::ReceiveDrop(ImGuiWindow *window)
 {
-    ImVec2 CursorPos = ImGui::GetMousePos();
+    double xpos, ypos;
+    glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+    glm::vec2 CursorPos(xpos, ypos);
     glm::vec2 D(window->Pos.x, window->Pos.y); // Bottom left corner of window
     glm::vec2 A(window->Pos.x + window->Size.x, window->Pos.y + window->Size.y); // Top right corner
     if(!ImGui::IsMouseDown(ImGuiMouseButton_Left) && m_Dragging &&(D.x < CursorPos.x && D.y < CursorPos.y && A.x > CursorPos.x && A.y > CursorPos.y))
@@ -45,7 +48,9 @@ T *DragAndDrop<T>::ReceiveDrop(ImGuiWindow *window)
 template <typename T>
 T *DragAndDrop<T>::ReceiveDrop(const glm::vec2& pos,const glm::vec2& size)
 {
-    ImVec2 CursorPos = ImGui::GetMousePos();
+    double xpos, ypos;
+    glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+    glm::vec2 CursorPos(xpos, ypos);
     glm::vec2 D(pos.x, pos.y); // Bottom left corner of window
     glm::vec2 A(pos.x + size.x, pos.y + size.y); // Top right corner
     if(!ImGui::IsMouseDown(ImGuiMouseButton_Left) && m_Dragging &&(D.x < CursorPos.x && D.y < CursorPos.y && A.x > CursorPos.x && A.y > CursorPos.y))
@@ -64,7 +69,9 @@ T *DragAndDrop<T>::ReceiveDrop(const glm::vec2& pos,const glm::vec2& size)
 template <typename T>
 inline T *DragAndDrop<T>::ReceiveDropLoop(const glm::vec2 &pos, const glm::vec2 &size)
 {
-    ImVec2 CursorPos = ImGui::GetMousePos();
+    double xpos, ypos;
+    glfwGetCursorPos(glfwGetCurrentContext(), &xpos, &ypos);
+    glm::vec2 CursorPos(xpos, ypos);
     glm::vec2 D(pos.x, pos.y); // Bottom left corner of window
     glm::vec2 A(pos.x + size.x, pos.y + size.y); // Top right corner
     if(!ImGui::IsMouseDown(ImGuiMouseButton_Left) && m_Dragging &&(D.x < CursorPos.x && D.y < CursorPos.y && A.x > CursorPos.x && A.y > CursorPos.y))
