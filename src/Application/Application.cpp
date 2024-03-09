@@ -21,8 +21,8 @@ Application::Application(const glm::vec2& WindowDim, bool fullscreen,const std::
     //The window is gonna be maximized from the glfw hint above so the width and height are useless
     window = glfwCreateWindow(WindowDim.x, WindowDim.y, "Sapphire Engine", NULL, NULL);
     glfwMakeContextCurrent(window);
-    // if(glewInit() != GLEW_OK)
-    //     std::cout << "Error!" << std::endl;
+    if(glewInit() != GLEW_OK)
+        std::cout << "Error!" << std::endl;
     GLCall(glEnable(GL_BLEND));
     GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
     GLCall(glEnable(GL_MULTISAMPLE));

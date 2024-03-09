@@ -1,12 +1,13 @@
 #include "Menus.h"
 #include "Engine/Engine.h"
+#include "Editor/Editor.h"
 
 std::string Name;
-void Toolbar()
+void Toolbar(FileExplorer& fe)
 {
     if (ImGui::BeginMainMenuBar())
     {
-        FileMenu();
+        FileMenu(fe);
         EditMenu();
         ViewMenu();
         HelpMenu();
@@ -18,7 +19,7 @@ void Toolbar()
         ImGui::EndMainMenuBar();
     }
 }
-void FileMenu(){
+void FileMenu(FileExplorer& fe){
     if (ImGui::BeginMenu("File"))
     {
         if(ImGui::Button("Save"))
@@ -34,7 +35,7 @@ void FileMenu(){
             ImGui::OpenPopup("FileSaveMenu");
         }
         if(ImGui::Button("Export")){
-            // Engine::Get().Export();
+            Editor::Export(fe);
         }
         if (ImGui::BeginPopup("FileSaveMenu"))
         {

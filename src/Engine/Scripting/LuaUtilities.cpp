@@ -477,7 +477,10 @@ int LuaUtilities::GetMouseCoord(lua_State *L)
     lua_newtable(L);
     double x,y;
     glfwGetCursorPos(Engine::app->GetWindow(), &x, &y);
+    int width, height;
+    glfwGetWindowSize(Engine::app->GetWindow(), &width, &height);
     glm::vec2 FinalCoords = (Editor::WindowPos + Editor::WindowSize / 2.0f) - glm::vec2(x,y);
+    // glm::vec2 FinalCoords = glm::vec2(width, height) / 2.0f - glm::vec2(x,y);
     FinalCoords = FinalCoords TOUNITS;
     FinalCoords.x *= -1;
     FinalCoords += glm::vec2(Engine::GetCameraObject()->GetComponent<Transform>()->GetPosition());

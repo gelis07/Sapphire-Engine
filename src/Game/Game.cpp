@@ -1,6 +1,6 @@
 #include "Game.h"
 
-Game::Game() : Application(glm::vec2(960,540), false, "C:/Gelis/Programs/Flappy_Bird/Assets/"), engine()
+Game::Game() : Application(glm::vec2(1100,640), false, "GameAssets/"), engine()
 {
     engine.SetApp(this);
     std::ifstream stream(AppMainPath + "/../ProjectSettings.json");
@@ -11,14 +11,15 @@ Game::Game() : Application(glm::vec2(960,540), false, "C:/Gelis/Programs/Flappy_
         Engine::SettingsVariables[setting.key()]->Load(setting.value());
     }
     stream.close();
-    Engine::GetActiveScene().Load("bird.scene");
+    Engine::GetActiveScene().Load("Test.scene");
 }
 
 void Game::OnUpdate(const float DeltaTime)
 {
     int width,height;
     glfwGetWindowSize(window,&width, &height);
-    Engine::GetCameraObject()->GetComponent<Transform>()->SetSize(glm::vec3(width, height,0));
+    Engine::GetCameraObject()->GetComponent<Transform>()->SetSize(glm::vec3(width, height,0) TOUNITS);
+    GLCall(glViewport(0, 0, width, height));
     this->DeltaTime = SapphireEngine::Clamp(0.001f, 0.5f, this->DeltaTime);
     engine.Run();
 }

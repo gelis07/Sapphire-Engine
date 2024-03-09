@@ -193,12 +193,12 @@ void Hierachy::Display()
             Name = "##";
         }
         if(obj->Children.size() == 0 && obj->Parent == null_ref){
+            ImVec2 textSize = ImGui::CalcTextSize(Name.c_str());
             if (ImGui::Selectable((Name + "##" + std::to_string(obj->id)).c_str(), obj == viewport->SelectedObj))
             {
                 viewport->SelectedObj = obj;
                 Editor::SelectedObjChildID = -1;
             }
-            ImVec2 textSize = ImGui::CalcTextSize(Name.c_str());
             if(std::shared_ptr<ObjectRef>* ref = HierachyDrop.ReceiveDropLoop(glm::vec2(ImGui::GetItemRectMin().x, ImGui::GetItemRectMin().y), glm::vec2(textSize.x, textSize.y))){
                 if((**ref) != obj->GetRefID()){
                     obj->Children.push_back(**ref);

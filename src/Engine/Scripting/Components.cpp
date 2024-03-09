@@ -393,7 +393,6 @@ void Component::Render()
     {
         Var.second->RenderGUI(VariablesToUpdate);
     }
-    HierachyDrop.CalcDragging();
     CustomRendering();
 }
 

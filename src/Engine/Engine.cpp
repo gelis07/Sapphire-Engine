@@ -105,40 +105,6 @@ void Engine::ExecuteLua()
     }
 }
 
-void Engine::Export()
-{
-    // if(!std::filesystem::exists(MainPath + "/../" + "Build")){
-    //     std::filesystem::create_directories(MainPath + "/../" + "Build/Data");
-    // }
-    // //Copy pasting all the necessary dll files.
-    // FileExplorer::CopyAndOverwrite("glew32.dll", MainPath + "/../" + "Build/glew32.dll");
-    // FileExplorer::CopyAndOverwrite("glfw3.dll", MainPath + "/../" + "Build/glfw3.dll");
-    // FileExplorer::CopyAndOverwrite("lua54.dll", MainPath + "/../" + "Build/lua54.dll");
-    // if(!std::filesystem::exists(MainPath + "/../" + "Build/Shaders")){
-    //     std::filesystem::copy("Shaders", MainPath + "/../" + "Build/Shaders");
-    // }
-    // /*
-    // I know that this solution feels kinda cheap but I'm not really interested in making the most optimized builds
-    // And all of that stuff, so I found a quick solution that works for the current state of the engine and allows me to
-    // focus on the other stuff of the engine.
-    // */
-    // FileExplorer::CopyAndOverwrite("Sapphire-Engine-Runtime.exe", MainPath + "/../" + "Build/Game.exe");
-    // for (auto &&object : m_ActiveScene.Objects)
-    // {
-    //     for (auto &&component : object->GetComponents())
-    //     {
-    //         if(component->GetState() != nullptr){
-    //             system(("C:/Users/bagge/Downloads/lua-5.4.2_Win64_bin/luac54.exe -o " + MainPath + "/../" + "/Build/Data/"+ component->GetFile() + " " + MainPath + component->GetFile()).c_str());
-    //         }
-    //     }
-    // }
-    // for(const auto &file : FileExplorer::GetFiles()){
-    //     if(file.second->Name.erase(0, file.second->Name.size() - 5) != "scene") continue;
-    //     FileExplorer::CopyAndOverwrite(MainPath + file.second->Path,MainPath + "/../" + "Build/Data/" + file.second->Path);
-    // }
-    
-}
-
 Scene& Engine::GetActiveScene()
 {
     return m_ActiveScene;

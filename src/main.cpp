@@ -9,6 +9,7 @@ int main(void)
     if (!glfwInit())
         return -1; 
     
+
     // A little cool start up animation :)
     StartUp();
     std::string MainPath = "";

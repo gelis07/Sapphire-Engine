@@ -14,7 +14,7 @@ class FileExplorer : Window
         FileExplorer();
         void Display() override;
         const std::unordered_map<std::string, std::shared_ptr<File>>& GetFiles() {return m_Files;}
-        void CopyAndOverwrite(std::string&& CopyFrom, std::string&& PasteTo);
+        void CopyAndOverwrite(const std::string& CopyFrom, const std::string& PasteTo);
         const TextureAtlas& GetAtlas() {return m_MinIconAtlas;}
         std::optional<std::string> InputFieldResult();
     private:

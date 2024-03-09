@@ -25,16 +25,17 @@ class Editor : public Application{
         void DuplicateObj();
         void OnStart() override;
         void OnExit() override;
+        static void Export(FileExplorer& fe);
         inline static int SelectedObjID = -1;
         inline static int SelectedObjChildID = -1;
         inline static glm::vec2 WindowPos;
         inline static glm::vec2 WindowSize;
         static SapphireEngine::String ThemeName;
         static SapphireEngine::Float AASamples;
+        FileExplorer fe;
     private:
         Viewport vp;
         GamePreview gp;
-        FileExplorer fe;
         Hierachy hierachy;
         LogWindow logs;
         inline static float DeltaTime;

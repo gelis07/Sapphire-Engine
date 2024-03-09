@@ -9,7 +9,6 @@ class Engine{
     public:
         Engine(const Engine&) = delete;
         Engine(const std::string& mainPath = "");
-        void Export();
         static Scene& GetActiveScene();
         inline static const float& GetDeltaTime() {return app->GetDeltaTime();}
         void Run();

@@ -70,7 +70,7 @@ void Editor::OnUpdate(const float DeltaTime)
     ImGuiID dockspace_id = ImGui::GetID("MyDockSpace");
     ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), ImGuiDockNodeFlags_None);
     ImGui::End();
-    Toolbar();
+    Toolbar(fe);
     SapphireEngine::ClearData();
     for (auto &&window : Window::Windows)
     {
@@ -92,17 +92,14 @@ void Editor::OnUpdate(const float DeltaTime)
     }
     this->DeltaTime = DeltaTime;
     if(vp.SelectedObj != null_ref){
-        if(SelectedObjChildID == -1){
-            vp.SelectedObj->Inspect();
-        }else{
+        if(SelectedObjChildID != -1){
             if(SelectedObjChildID >= Engine::GetActiveScene().Objects[SelectedObjID].Children.size()){
                 SelectedObjChildID = -1;
-                vp.SelectedObj->Inspect();
-            }else{
-                vp.SelectedObj->Inspect();
             }
         }
+        vp.SelectedObj->Inspect();
     }
+    HierachyDrop.CalcDragging();
 }
 
 void Editor::DuplicateObj()
@@ -165,7 +162,43 @@ void Editor::OnExit()
         stream.close();
     }
 }
-//Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
+void Editor::Export(FileExplorer& fe)
+{
+    if(!std::filesystem::exists(MainPath + "/../" + "Build")){
+        std::filesystem::create_directories(MainPath + "/../" + "Build/GameAssets");
+        std::filesystem::create_directories(MainPath + "/../" + "Build/Assets");
+        std::filesystem::create_directories(MainPath + "/../" + "Build/Shaders");
+    }
+    /*
+    I know that this solution feels kinda cheap but I'm not really interested in making the most optimized builds
+    And all of that stuff, so I found a quick solution that works for the current state of the engine and allows me to
+    focus on the other stuff of the engine.
+    */
+    for(const auto &file : fe.GetFiles()){
+        // if(file.second->Name.erase(0, file.second->Name.size() - 5) != "scene") continue;
+        fe.CopyAndOverwrite(MainPath + file.second->Path, MainPath + "/../" + "Build/GameAssets/" + file.second->Path);
+    }
+    for (const auto &entry : std::filesystem::directory_iterator("bin/ExportTemplate"))
+    {
+        if(!std::filesystem::is_directory(entry.path())){
+            fe.CopyAndOverwrite(entry.path().string(),MainPath + "/../" + "Build/" + entry.path().filename().string());
+        }
+    }
+    for (const auto &entry : std::filesystem::directory_iterator("bin/ExportTemplate/Assets"))
+    {
+        if(!std::filesystem::is_directory(entry.path())){
+            fe.CopyAndOverwrite(entry.path().string(), MainPath + "/../" + "Build/Assets/" + entry.path().filename().string());
+        }
+    }
+    for (const auto &entry : std::filesystem::directory_iterator("bin/ExportTemplate/Shaders"))
+    {
+        if(!std::filesystem::is_directory(entry.path())){
+            fe.CopyAndOverwrite(entry.path().string(), MainPath + "/../" + "Build/Shaders/" + entry.path().filename().string());
+        }
+    }
+    fe.CopyAndOverwrite(MainPath + "/../ProjectSettings.json", MainPath + "/../" + "Build/ProjectSettings.json");
+}
+// Thanks The Cherno for the amazing tutorial! https://www.youtube.com/watch?v=Pegb5CZuibU
 bool DecomposeTransform(const glm::mat4& transform, glm::vec3& translation, glm::vec3& rotation, glm::vec3& scale)
 {
     // From glm::decompose in matrix_decompose.inl

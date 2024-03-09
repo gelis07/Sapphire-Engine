@@ -1,12 +1,12 @@
 #pragma once
 #include "ImGuiWindow.h"
+#include "FileExplorer/FileExplorer.h"
 
-
-void Toolbar();
+void Toolbar(FileExplorer& fe);
 void ViewMenu();
 void HelpMenu();
 void EditMenu();
-void FileMenu();
+void FileMenu(FileExplorer& fe);
 void OnThemeChange();
 void Load(std::string name);
 inline static float SatAmount;

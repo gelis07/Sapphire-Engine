@@ -76,7 +76,7 @@ const char *defaultScene = R"({
   }
 })";
 // I need this function because std::fileysten::copy_options::overwrite_existing still causes a crash if the file exists. After some research I think its a bug from gcc.
-void FileExplorer::CopyAndOverwrite(std::string &&CopyFrom, std::string &&PasteTo)
+void FileExplorer::CopyAndOverwrite(const std::string &CopyFrom, const std::string &PasteTo)
 {
     if (std::filesystem::exists(PasteTo))
     {
