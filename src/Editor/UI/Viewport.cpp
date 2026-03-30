@@ -325,15 +325,6 @@ void Hierachy::CreateMenu(ObjectRef SelectedObj)
             Obj.GetComponent<Renderer>()->Color.Get() = glm::vec4(1);
             scene->Add(std::move(Obj));
         }
-        if (ImGui::MenuItem("Create Sprite"))
-        {
-            std::stringstream ss;
-            ss << "Object: " << scene->Objects.size();
-            Object Obj = Object(ss.str());
-            Obj.GetComponent<Renderer>()->ShapeType = SapphireRenderer::RectangleT;
-            Obj.GetComponent<SapphirePhysics::RigidBody>()->ShapeType = static_cast<int>(Obj.GetComponent<Renderer>()->ShapeType);
-            scene->Add(std::move(Obj));
-        }
         ImGui::EndPopup();
     }
 }
