@@ -28,11 +28,18 @@ Editor::Editor(const std::string &mainPath) : Application(glm::vec2(960,540),tru
     MainPath = AppMainPath;
     CurrentPath = AppMainPath;
     std::ifstream stream(MainPath + "/../ProjectSettings.json");
-    nlohmann::ordered_json Data;
-    stream >> Data;
-    for (auto &&setting : Data.items())
+    if(stream.is_open())
     {
-        Engine::SettingsVariables[setting.key()]->Load(setting.value());
+        nlohmann::ordered_json Data;
+        stream >> Data;
+        for (auto &&setting : Data.items())
+        {
+            Engine::SettingsVariables[setting.key()]->Load(setting.value());
+        }
+    }else
+    {
+        std::ofstream newSettings(MainPath + "/../ProjectSettings.json");
+        newSettings << "{\n}";
     }
     stream.close();
     {
